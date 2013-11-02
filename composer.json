@@ -1,0 +1,22 @@
+{
+    "name": "dektrium/user",
+    "description": "User management for Yii 2",
+    "keywords": ["user", "dektrium", "yii"],
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Dmitry Erofeev",
+            "email": "dmeroff@gmail.com",
+            "homepage": "http://dmeroff.ru"
+        }
+    ],
+    "require": {
+        "yiisoft/yii2": "dev-master"
+    },
+    "autoload": {
+        "psr-0": {
+            "dektrium\\user\\": ""
+        }
+    },
+    "target-dir": "dektrium/user"
+}

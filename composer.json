@@ -1,6 +1,6 @@
 {
-    "name": "dektrium/user",
-    "description": "User management for Yii 2",
+    "name": "dektrium/yii2-user",
+    "description": "The user management module for Yii 2",
     "keywords": ["user", "dektrium", "yii"],
     "type": "yii2-extension",
     "license": "MIT",

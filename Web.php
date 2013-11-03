@@ -21,6 +21,9 @@ class Web extends Module
      * @var array custom module parameters (name => value).
      */
     public $params = [
-        'afterRegistrationRedirectUrl' => ['/user/auth/login']
+        'afterRegistrationRedirectUrl' => ['/user/auth/login'],
+        // The time you want the user will be remembered without asking for credentials.
+        // By default rememberFor is two weeks
+        'rememberFor' => 1209600
     ];
 }

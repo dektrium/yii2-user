@@ -37,12 +37,18 @@ class User extends ActiveRecord implements IdentityInterface
     public $password;
 
     /**
+     * @var bool Whether to remember the user.
+     */
+    public $rememberMe = false;
+
+    /**
      * @inheritdoc
      */
     public function scenarios()
     {
         return [
             'register' => ['username', 'email', 'password'],
+            'login'    => ['email', 'password']
         ];
     }
 
@@ -53,11 +59,13 @@ class User extends ActiveRecord implements IdentityInterface
     {
         return [
             ['username, email, password', 'required', 'on' => ['register']],
+            ['email, password', 'required', 'on' => ['login']],
             ['email', 'email'],
-            ['username, email', 'unique'],
+            ['username, email', 'unique', 'on' => ['register']],
             ['username', 'string', 'min' => 3, 'max' => 25],
             ['email', 'string', 'max' => 255],
-            ['password', 'string', 'min' => 6]
+            ['password', 'string', 'min' => 6],
+            ['rememberMe', 'boolean']
         ];
     }
 
@@ -144,5 +152,29 @@ class User extends ActiveRecord implements IdentityInterface
         } else {
             return false;
         }
+    }
+
+    /**
+     * Logs in a user using the provided email and password.
+     * @return boolean whether the user is logged in successfully
+     */
+    public function login()
+    {
+        if ($this->validate()) {
+            /** @var User $user */
+            $user = self::find(array('email' => $this->getAttribute('email')));
+            if ($user === null || !Security::validatePassword($this->password, $user->getAttribute('password_hash'))) {
+                $this->addError('password', 'Incorrect email or password.');
+                return false;
+            } else {
+                \Yii::$app->getUser()->login($user, $this->rememberMe ? \Yii::$app->getModule('user')->params['rememberFor'] : 0);
+                \Yii::$app->getSession()->set('user.id', $user->getAttribute('id'));
+                \Yii::$app->getSession()->set('user.username', $user->getAttribute('username'));
+                \Yii::$app->getSession()->set('user.email', $user->getAttribute('email'));
+                return true;
+            }
+        }
+
+        return false;
     }
 }

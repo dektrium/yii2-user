@@ -16,4 +16,11 @@ class Web extends Module
      * @var string the namespace that controller classes are in.
      */
     public $controllerNamespace = '\dektrium\user\controllers';
+
+    /**
+     * @var array custom module parameters (name => value).
+     */
+    public $params = [
+        'afterRegistrationRedirectUrl' => ['/user/auth/login']
+    ];
 }

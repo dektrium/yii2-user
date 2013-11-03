@@ -22,6 +22,9 @@ use yii\web\IdentityInterface;
  */
 class User extends ActiveRecord implements IdentityInterface
 {
+    const EVENT_BEFORE_REGISTER = 'before_registration';
+    const EVENT_AFTER_REGISTER  = 'after_registration';
+
     /**
      * @var string Plain password. Used for model validation.
      */
@@ -128,6 +131,23 @@ class User extends ActiveRecord implements IdentityInterface
             if ($this->isNewRecord) {
                 $this->setAttribute('auth_key', Security::generateRandomKey());
             }
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    /**
+     * Registers new user.
+     *
+     * @return bool
+     */
+    public function register()
+    {
+        $this->trigger(self::EVENT_BEFORE_REGISTER);
+        if($this->save()) {
+            \Yii::$app->getSession()->setFlash('success', 'Account has been created.');
+            $this->trigger(self::EVENT_AFTER_REGISTER);
             return true;
         } else {
             return false;

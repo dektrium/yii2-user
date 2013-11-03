@@ -25,5 +25,16 @@ class AuthController extends Controller
 
         return $this->render('login', ['model' => $model]);
     }
+
+    /**
+     * Logs the user out and then redirects to site/index.
+     *
+     * @return \yii\web\Response
+     */
+    public function actionLogout()
+    {
+        \Yii::$app->getUser()->logout();
+        return $this->redirect(['site/index']);
+    }
 }
  

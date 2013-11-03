@@ -2,6 +2,7 @@
     "name": "dektrium/user",
     "description": "User management for Yii 2",
     "keywords": ["user", "dektrium", "yii"],
+    "type": "yii2-extension",
     "license": "MIT",
     "authors": [
         {

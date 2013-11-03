@@ -15,13 +15,13 @@ class m131101_154101_init extends \yii\db\Migration
         $this->createTable('{{user}}', [
             // general
             'id'            => Schema::TYPE_PK,
-            'username'      => Schema::TYPE_STRING,
-            'email'         => Schema::TYPE_STRING,
-            'password_hash' => Schema::TYPE_STRING,
-            'auth_key'      => Schema::TYPE_STRING,
+            'username'      => Schema::TYPE_STRING.'(25) NOT NULL',
+            'email'         => Schema::TYPE_STRING.' NOT NULL',
+            'password_hash' => Schema::TYPE_STRING.'(60) NOT NULL',
+            'auth_key'      => Schema::TYPE_STRING.'(32) NOT NULL',
             // timestamps
-            'create_time'   => Schema::TYPE_INTEGER,
-            'update_time'   => Schema::TYPE_INTEGER
+            'create_time'   => Schema::TYPE_INTEGER.' NOT NULL',
+            'update_time'   => Schema::TYPE_INTEGER.' NOT NULL'
         ], $tableOptions);
 
         $this->createIndex('username_unique', '{{user}}', 'username', true);

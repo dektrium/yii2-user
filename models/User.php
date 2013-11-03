@@ -7,14 +7,13 @@ use yii\helpers\Security;
 use yii\web\IdentityInterface;
 
 /**
- * Class User
+ * User ActiveRecord model.
  *
  * @property integer $id
  * @property string  $username
  * @property string  $email
  * @property string  $password_hash
  * @property string  $auth_key
- * @property string  $token
  * @property integer $create_time
  * @property integer $update_time
  *
@@ -22,8 +21,15 @@ use yii\web\IdentityInterface;
  */
 class User extends ActiveRecord implements IdentityInterface
 {
+    /**
+     * The EVENT_BEFORE_REGISTER event occurs before saving the user in the registration process.
+     */
     const EVENT_BEFORE_REGISTER = 'before_registration';
-    const EVENT_AFTER_REGISTER  = 'after_registration';
+
+    /**
+     * The EVENT_AFTER_REGISTER event occurs after saving the user in the registration process.
+     */
+    const EVENT_AFTER_REGISTER = 'after_registration';
 
     /**
      * @var string Plain password. Used for model validation.
@@ -36,7 +42,7 @@ class User extends ActiveRecord implements IdentityInterface
     public function scenarios()
     {
         return [
-            'signup' => ['username', 'email', 'password'],
+            'register' => ['username', 'email', 'password'],
         ];
     }
 
@@ -46,28 +52,12 @@ class User extends ActiveRecord implements IdentityInterface
     public function rules()
     {
         return [
-            ['username, email, password', 'required', 'on' => ['signup']],
+            ['username, email, password', 'required', 'on' => ['register']],
             ['email', 'email'],
             ['username, email', 'unique'],
             ['username', 'string', 'min' => 3, 'max' => 25],
             ['email', 'string', 'max' => 255],
             ['password', 'string', 'min' => 6]
-        ];
-    }
-
-    /**
-     * @inheritdoc
-     */
-    public function behaviors()
-    {
-        return [
-            'timestamp' => [
-                'class' => AutoTimestamp::className(),
-                'attributes' => [
-                    ActiveRecord::EVENT_BEFORE_INSERT => ['create_time', 'update_time'],
-                    ActiveRecord::EVENT_BEFORE_UPDATE => 'update_time',
-                ]
-            ]
         ];
     }
 
@@ -130,7 +120,9 @@ class User extends ActiveRecord implements IdentityInterface
             }
             if ($this->isNewRecord) {
                 $this->setAttribute('auth_key', Security::generateRandomKey());
+                $this->setAttribute('create_time', time());
             }
+            $this->setAttribute('update_time', time());
             return true;
         } else {
             return false;

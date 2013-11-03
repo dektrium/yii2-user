@@ -15,7 +15,7 @@ class RegistrationController extends Controller
      */
     public function actionRegister()
     {
-        $model = new User(['scenario' => 'signup']);
+        $model = new User(['scenario' => 'register']);
 
         if ($model->load($_POST) && $model->register()) {
             return $this->redirect($this->module->params['afterRegistrationRedirectUrl']);

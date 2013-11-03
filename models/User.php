@@ -1,5 +1,6 @@
 <?php namespace dektrium\user\models;
 
+use dektrium\user\events\LoginEvent;
 use yii\behaviors\AutoTimestamp;
 use yii\db\ActiveRecord;
 use yii\helpers\Inflector;
@@ -188,13 +189,13 @@ class User extends ActiveRecord implements IdentityInterface
     public function login()
     {
         $this->_identity = self::find(array('email' => $this->getAttribute('email')));
-        $this->trigger(self::EVENT_BEFORE_LOGIN);
+        $this->trigger(self::EVENT_BEFORE_LOGIN, new LoginEvent(['identity' => $this->_identity]));
         if ($this->validate()) {
             \Yii::$app->getUser()->login($this->_identity, $this->rememberMe ? \Yii::$app->getModule('user')->params['rememberFor'] : 0);
             \Yii::$app->getSession()->set('user.id', $this->_identity->getAttribute('id'));
             \Yii::$app->getSession()->set('user.username', $this->_identity->getAttribute('username'));
             \Yii::$app->getSession()->set('user.email', $this->_identity->getAttribute('email'));
-            $this->trigger(self::EVENT_AFTER_LOGIN);
+            $this->trigger(self::EVENT_AFTER_LOGIN, new LoginEvent(['identity' => $this->_identity]));
             return true;
         }
 

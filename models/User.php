@@ -18,6 +18,10 @@ use yii\web\IdentityInterface;
  * @property integer $create_time
  * @property integer $update_time
  *
+ * @property integer $registration_ip
+ * @property integer $login_ip
+ * @property integer $login_time
+ *
  * @author Dmitry Erofeev <dmeroff@gmail.com>
  */
 class User extends ActiveRecord implements IdentityInterface

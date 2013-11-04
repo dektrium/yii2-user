@@ -6,6 +6,9 @@ CREATE TABLE IF NOT EXISTS `user` (
   `auth_key` varchar(32) NOT NULL,
   `create_time` int(11) NOT NULL,
   `update_time` int(11) NOT NULL,
+  `registration_ip` int(11) unsigned DEFAULT NULL,
+  `login_ip` int(11) unsigned DEFAULT NULL,
+  `login_time` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `username_unique` (`username`),
   UNIQUE KEY `email_unique` (`email`)

@@ -192,7 +192,7 @@ class User extends ActiveRecord implements IdentityInterface
      */
     public function login()
     {
-        $this->_identity = self::find(array('email' => $this->getAttribute('email')));
+        $this->_identity = static::findByEmail($this->getAttribute('email'));
         $this->trigger(self::EVENT_BEFORE_LOGIN, new LoginEvent(['identity' => $this->_identity]));
         if ($this->validate()) {
             \Yii::$app->getUser()->login($this->_identity, $this->rememberMe ? \Yii::$app->getModule('user')->params['rememberFor'] : 0);
@@ -204,5 +204,27 @@ class User extends ActiveRecord implements IdentityInterface
         }
 
         return false;
+    }
+
+    /**
+     * Finds a user by username.
+     *
+     * @param $username
+     * @return null|User
+     */
+    public static function findByUsername($username)
+    {
+        return static::find(['username' => $username]);
+    }
+
+    /**
+     * Finds a user by email.
+     *
+     * @param $email
+     * @return null|User
+     */
+    public static function findByEmail($email)
+    {
+        return static::find(['email' => $email]);
     }
 }

@@ -195,7 +195,7 @@ class User extends ActiveRecord implements IdentityInterface
         $this->_identity = static::findByEmail($this->getAttribute('email'));
         $this->trigger(self::EVENT_BEFORE_LOGIN, new LoginEvent(['identity' => $this->_identity]));
         if ($this->validate()) {
-            \Yii::$app->getUser()->login($this->_identity, $this->rememberMe ? \Yii::$app->getModule('user')->params['rememberFor'] : 0);
+            \Yii::$app->getUser()->login($this->_identity, $this->rememberMe ? \Yii::$app->getModule('user')->rememberFor : 0);
             \Yii::$app->getSession()->set('user.id', $this->_identity->getAttribute('id'));
             \Yii::$app->getSession()->set('user.username', $this->_identity->getAttribute('username'));
             \Yii::$app->getSession()->set('user.email', $this->_identity->getAttribute('email'));

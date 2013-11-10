@@ -49,7 +49,7 @@ class Confirmable extends Behavior
 	 */
 	public function confirm()
 	{
-		if ($this->owner->confirmed) {
+		if ($this->getIsConfirmed()) {
 			return true;
 		}
 

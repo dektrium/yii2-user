@@ -44,4 +44,15 @@ class WebModule extends Module
 	 * @var int The time before a sent confirmation token becomes invalid.
 	 */
 	public $confirmWithin = 86400;
+
+	/**
+	 * @inheritdoc
+	 */
+	public function init()
+	{
+		parent::init();
+		$this->setAliases([
+			'@user' => __DIR__
+		]);
+	}
 }

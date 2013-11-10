@@ -30,6 +30,7 @@ class Confirmable extends Behavior
 	{
 		return [
 			User::EVENT_BEFORE_REGISTER => 'generateConfirmationData',
+			User::EVENT_AFTER_REGISTER  => 'sendConfirmationMessage'
 		];
 	}
 
@@ -41,6 +42,21 @@ class Confirmable extends Behavior
         $this->owner->confirmation_token = Security::generateRandomKey();
         $this->owner->confirmation_sent_time = time();
     }
+
+	/**
+	 * Sends confirmation message to user's email address.
+	 */
+	public function sendConfirmationMessage()
+	{
+		/** @var \yii\mail\BaseMailer $mailer */
+		$mailer = \Yii::$app->mail;
+		$mailer->compose()
+			->setTo($this->owner->email)
+			->setFrom(\Yii::$app->params['adminEmail'])
+			->setSubject('Account confirmation')
+			->setHtmlBody(\Yii::$app->view->renderFile('@user/views/mail/confirmation.php', ['user' => $this->owner]))
+			->send();
+	}
 
 	/**
 	 * Confirms the user.

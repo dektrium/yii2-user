@@ -9,10 +9,15 @@ class TrackableTest extends \Codeception\TestCase\Test
     */
     protected $codeGuy;
 
+	public function setUp()
+	{
+		parent::setUp();
+		Yii::$app->getModule('user')->trackable = true;
+	}
+
     public function testRegistrationTrack()
     {
         $user = new \dektrium\user\models\User(['scenario' => 'register']);
-        $user->attachBehavior('trackable', \dektrium\user\behaviors\Trackable::className());
         $user->setAttributes([
             'username' => 'tester',
             'email' => 'tester@example.com',
@@ -30,7 +35,6 @@ class TrackableTest extends \Codeception\TestCase\Test
     public function testLoginTrack()
     {
         $user = new \dektrium\user\models\User(['scenario' => 'login']);
-        $user->attachBehavior('trackable', \dektrium\user\behaviors\Trackable::className());
         $user->setAttributes([
             'email' => 'user@example.com',
             'password' => 'qwerty'

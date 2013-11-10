@@ -24,4 +24,24 @@ class WebModule extends Module
      * @var array Url where the user will be redirected to after registration.
      */
     public $registrationRedirectUrl = ['/user/auth/login'];
+
+	/**
+	 * @var bool Whether to enable "Trackable" behavior.
+	 */
+	public $trackable = false;
+
+	/**
+	 * @var bool Whether to enable "Trackable" behavior.
+	 */
+	public $confirmable = false;
+
+	/**
+	 * @var bool Whether to allow login without confirmation.
+	 */
+	public $allowUnconfirmedLogin = false;
+
+	/**
+	 * @var int The time before a sent confirmation token becomes invalid.
+	 */
+	public $confirmWithin = 86400;
 }

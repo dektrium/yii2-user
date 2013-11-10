@@ -1,5 +1,7 @@
 <?php namespace dektrium\user\models;
 
+use dektrium\user\behaviors\Confirmable;
+use dektrium\user\behaviors\Trackable;
 use dektrium\user\events\LoginEvent;
 use yii\behaviors\AutoTimestamp;
 use yii\db\ActiveRecord;
@@ -60,6 +62,24 @@ class User extends ActiveRecord implements IdentityInterface
      * @var User
      */
     protected $_identity;
+
+	public function behaviors()
+	{
+		/** @var \dektrium\user\WebModule $module */
+		$module = \Yii::$app->getModule('user');
+		$behaviors = [];
+		if ($module->trackable) {
+			$behaviors['trackable'] = new Trackable();
+		}
+		if ($module->confirmable) {
+			$behaviors['confirmable'] = new Confirmable([
+				'allowUnconfirmedLogin' => $module->allowUnconfirmedLogin,
+				'confirmWithin'         => $module->confirmWithin
+			]);
+		}
+
+		return $behaviors;
+	}
 
     /**
      * @inheritdoc

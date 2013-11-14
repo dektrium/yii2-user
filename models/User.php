@@ -54,11 +54,6 @@ class User extends ActiveRecord implements IdentityInterface
     public $password;
 
     /**
-     * @var bool Whether to remember the user.
-     */
-    public $rememberMe = false;
-
-    /**
      * @var User
      */
     protected $_identity;
@@ -99,25 +94,12 @@ class User extends ActiveRecord implements IdentityInterface
     {
         return [
             ['username, email, password', 'required', 'on' => ['register']],
-            ['email, password', 'required', 'on' => ['login']],
             ['email', 'email'],
             ['username, email', 'unique', 'on' => ['register']],
             ['username', 'string', 'min' => 3, 'max' => 25],
             ['email', 'string', 'max' => 255],
             ['password', 'string', 'min' => 6],
-            ['password', 'validatePassword', 'on' => ['login']],
-            ['rememberMe', 'boolean']
         ];
-    }
-
-    /**
-     * Validates the password.
-     */
-    public function validatePassword()
-    {
-        if ($this->_identity === null || !Security::validatePassword($this->password, $this->_identity->getAttribute('password_hash'))) {
-            $this->addError('password', 'Incorrect email or password.');
-        }
     }
 
     /**
@@ -203,27 +185,6 @@ class User extends ActiveRecord implements IdentityInterface
         } else {
             return false;
         }
-    }
-
-    /**
-     * Logs in a user using the provided email and password.
-     *
-     * @return boolean whether the user is logged in successfully
-     */
-    public function login()
-    {
-        $this->_identity = static::findByEmail($this->getAttribute('email'));
-        $this->trigger(self::EVENT_BEFORE_LOGIN, new LoginEvent(['identity' => $this->_identity]));
-        if ($this->validate()) {
-            \Yii::$app->getUser()->login($this->_identity, $this->rememberMe ? \Yii::$app->getModule('user')->rememberFor : 0);
-            \Yii::$app->getSession()->set('user.id', $this->_identity->getAttribute('id'));
-            \Yii::$app->getSession()->set('user.username', $this->_identity->getAttribute('username'));
-            \Yii::$app->getSession()->set('user.email', $this->_identity->getAttribute('email'));
-            $this->trigger(self::EVENT_AFTER_LOGIN, new LoginEvent(['identity' => $this->_identity]));
-            return true;
-        }
-
-        return false;
     }
 
     /**

@@ -1,6 +1,6 @@
 <?php namespace dektrium\user\controllers;
 
-use dektrium\user\models\User;
+use dektrium\user\models\LoginForm;
 use yii\web\Controller;
 
 /**
@@ -17,7 +17,7 @@ class AuthController extends Controller
      */
     public function actionLogin()
     {
-        $model = new User(['scenario' => 'login']);
+        $model = new LoginForm();
 
         if ($model->load($_POST) && $model->login()) {
             return $this->redirect(\Yii::$app->getUser()->getReturnUrl());

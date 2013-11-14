@@ -63,9 +63,6 @@ class User extends ActiveRecord implements IdentityInterface
 		/** @var \dektrium\user\WebModule $module */
 		$module = \Yii::$app->getModule('user');
 		$behaviors = [];
-		if ($module->trackable) {
-			$behaviors['trackable'] = new Trackable();
-		}
 		if ($module->confirmable) {
 			$behaviors['confirmable'] = new Confirmable([
 				'allowUnconfirmedLogin' => $module->allowUnconfirmedLogin,
@@ -83,7 +80,6 @@ class User extends ActiveRecord implements IdentityInterface
     {
         return [
             'register' => ['username', 'email', 'password'],
-            'login'    => ['email', 'password']
         ];
     }
 
@@ -178,6 +174,9 @@ class User extends ActiveRecord implements IdentityInterface
     public function register()
     {
         $this->trigger(self::EVENT_BEFORE_REGISTER);
+        if (\Yii::$app->getModule('user')->trackable) {
+            $this->setAttribute('registration_ip', ip2long(\Yii::$app->getRequest()->getUserIP()));
+        }
         if ($this->save()) {
             \Yii::$app->getSession()->setFlash('success', 'Account has been created.');
             $this->trigger(self::EVENT_AFTER_REGISTER);

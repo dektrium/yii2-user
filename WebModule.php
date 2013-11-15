@@ -45,6 +45,21 @@ class WebModule extends Module
 	 */
 	public $confirmWithin = 86400;
 
+    /**
+     * @var string
+     */
+    public $confirmationMessageView = '@user/views/mail/confirmation.php';
+
+    /**
+     * @var string
+     */
+    public $confirmationMessageSubject = 'Account confirmation on Site.com';
+
+    /**
+     * @var string
+     */
+    public $messageSender = 'no-reply@example.com';
+
 	/**
 	 * @inheritdoc
 	 */

@@ -1,9 +1,5 @@
 <?php namespace dektrium\user\models;
 
-use dektrium\user\behaviors\Confirmable;
-use dektrium\user\behaviors\Trackable;
-use dektrium\user\events\LoginEvent;
-use yii\behaviors\AutoTimestamp;
 use yii\db\ActiveRecord;
 use yii\helpers\Inflector;
 use yii\helpers\Security;
@@ -23,6 +19,10 @@ use yii\web\IdentityInterface;
  * @property integer $registration_ip
  * @property integer $login_ip
  * @property integer $login_time
+ *
+ * @property string  $confirmation_token
+ * @property integer $confirmation_sent_time
+ * @property integer $confirmation_time
  *
  * @author Dmitry Erofeev <dmeroff@gmail.com>
  */

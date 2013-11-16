@@ -13,7 +13,7 @@ class CodeHelper extends \Codeception\Module
             'id' => 'testapp',
             'basePath' => __DIR__.'/../',
             'modules' => [
-                'user' => '\dektrium\user\WebModule'
+                'user' => '\dektrium\user\Module'
             ],
             'components' => [
                 'user' => [

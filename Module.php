@@ -1,18 +1,21 @@
 <?php namespace dektrium\user;
 
-use \yii\base\Module;
+use \yii\base\Module as BaseModule;
 
 /**
  * This is the main module class for the Dektrium user module.
  *
  * @author Dmitry Erofeev <dmeroff@gmail.com>
  */
-class WebModule extends Module
+class Module extends BaseModule
 {
     /**
-     * @var string the namespace that controller classes are in.
+     * @inheritdoc
      */
-    public $controllerNamespace = '\dektrium\user\controllers';
+    public $controllerMap = [
+        'registration' => '\dektrium\user\controllers\RegistrationController',
+        'auth' => '\dektrium\user\controllers\AuthController',
+    ];
 
     /**
      * @var int The time you want the user will be remembered without asking for credentials.
@@ -42,21 +45,22 @@ class WebModule extends Module
 
 	/**
 	 * @var int The time before a sent confirmation token becomes invalid.
+     * By default confirmWithin is 24 hours.
 	 */
 	public $confirmWithin = 86400;
 
     /**
-     * @var string
+     * @var string View that will be rendered by Mailer.compose().
      */
     public $confirmationMessageView = '@user/views/mail/confirmation.php';
 
     /**
-     * @var string
+     * @var string Subject of confirmation message.
      */
     public $confirmationMessageSubject = 'Account confirmation on Site.com';
 
     /**
-     * @var string
+     * @var string|array Message sender.
      */
     public $messageSender = 'no-reply@example.com';
 

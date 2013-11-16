@@ -17,7 +17,7 @@ class CodeHelper extends \Codeception\Module
             ],
             'components' => [
                 'user' => [
-                    'class' => '\dektrium\user\Components',
+                    'class' => '\dektrium\user\components\User',
                 ],
                 'db' => [
                     'class' => 'yii\db\Connection',

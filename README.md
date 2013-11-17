@@ -12,7 +12,7 @@ The preferred way to install this extension is through [composer](http://getcomp
 Either run
 
 ```
-php composer.phar require dektrium/yii2-user "*"
+$ php composer.phar require dektrium/yii2-user "dev-master"
 ```
 
 or add
@@ -36,16 +36,15 @@ And modify your application configuration as follows:
 ```php
 return [
 	'modules' => [
-		'user' => 'dektrium\user\WebModule',
+	    ...
+		'user' => 'dektrium\user\Module',
 		...
 	],
 	...
 	'components' => [
 	    ...
 	    'user' => [
-	        'class' => 'yii\web\User',
-	        'identityClass' => 'dektrium\user\models\User',
-	        'loginUrl' => ['/user/auth/login']
+	        'class' => 'dektrium\user\components\User',
 	    ],
 	    ...
 	]

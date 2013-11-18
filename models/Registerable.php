@@ -28,8 +28,8 @@ trait Registerable
             $this->setAttribute('registration_ip', ip2long(\Yii::$app->getRequest()->getUserIP()));
         }
         if ($this->save()) {
-            \Yii::$app->getSession()->setFlash('success', 'Account has been created.');
             if (\Yii::$app->controller->module->confirmable) {
+                \Yii::$app->getSession()->setFlash('confirmation_needed');
                 $this->sendConfirmationMessage();
             }
             return true;

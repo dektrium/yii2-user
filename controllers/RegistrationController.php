@@ -12,15 +12,22 @@ class RegistrationController extends Controller
 {
     /**
      * Displays the registration page.
+     *
+     * @return string
      */
     public function actionRegister()
     {
-        $model = new User(['scenario' => 'register']);
+        $model = \Yii::createObject([
+            'class'    => \Yii::$app->getUser()->identityClass,
+            'scenario' => 'register'
+        ]);
 
         if ($model->load($_POST) && $model->register()) {
-            return $this->redirect($this->module->registrationRedirectUrl);
+            return $this->render('success');
         }
 
-        return $this->render('register', ['model' => $model]);
+        return $this->render('register', [
+            'model' => $model
+        ]);
     }
 }

@@ -36,7 +36,7 @@ class Module extends BaseModule
 	/**
 	 * @var bool Whether to enable "Trackable" behavior.
 	 */
-	public $confirmable = false;
+	public $confirmable = true;
 
 	/**
 	 * @var bool Whether to allow login without confirmation.

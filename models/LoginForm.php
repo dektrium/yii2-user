@@ -61,7 +61,11 @@ class LoginForm extends Model
     public function validateConfirmation()
     {
         $module = \Yii::$app->controller->module;
-        if ($module->confirmable && !$module->allowUnconfirmedLogin && !$this->identity->isConfirmed) {
+        if ($this->identity !== null
+            && $module->confirmable
+            && !$module->allowUnconfirmedLogin
+            && !$this->identity->isConfirmed
+        ) {
             $this->addError('password', 'You must confirm your email before login');
         }
     }

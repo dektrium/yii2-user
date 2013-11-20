@@ -1,7 +1,9 @@
 <?php namespace dektrium\user\controllers;
 
 use dektrium\user\models\User;
+use yii\db\ActiveQuery;
 use yii\web\Controller;
+use yii\web\HttpException;
 
 /**
  * Controller that manages user registration process.
@@ -29,5 +31,20 @@ class RegistrationController extends Controller
         return $this->render('register', [
             'model' => $model
         ]);
+    }
+
+    public function actionConfirm($id, $token)
+    {
+        $query = new ActiveQuery(['modelClass' => \Yii::$app->getUser()->identityClass]);
+        /** @var \dektrium\user\models\User $user */
+        $user = $query->where(['id' => $id, 'confirmation_token' => $token])->one();
+        if ($user === null) {
+            throw new HttpException(404, 'User not found');
+        }
+        if ($user->confirm()) {
+            return $this->render('finish');
+        } else {
+            return $this->render('invalidToken');
+        }
     }
 }

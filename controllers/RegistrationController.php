@@ -34,6 +34,14 @@ class RegistrationController extends Controller
         ]);
     }
 
+    /**
+     * Confirms user's account.
+     *
+     * @param $id
+     * @param $token
+     * @return string
+     * @throws \yii\web\HttpException
+     */
     public function actionConfirm($id, $token)
     {
         $query = new ActiveQuery(['modelClass' => \Yii::$app->getUser()->identityClass]);
@@ -49,6 +57,11 @@ class RegistrationController extends Controller
         }
     }
 
+    /**
+     * Displays page where user can request new confirmation token.
+     * 
+     * @return string
+     */
     public function actionResend()
     {
         $model = new ResendForm();

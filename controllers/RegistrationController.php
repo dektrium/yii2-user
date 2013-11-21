@@ -1,5 +1,6 @@
 <?php namespace dektrium\user\controllers;
 
+use dektrium\user\models\ResendForm;
 use dektrium\user\models\User;
 use yii\db\ActiveQuery;
 use yii\web\Controller;
@@ -46,5 +47,18 @@ class RegistrationController extends Controller
         } else {
             return $this->render('invalidToken');
         }
+    }
+
+    public function actionResend()
+    {
+        $model = new ResendForm();
+
+        if ($model->load($_POST) && $model->resend()) {
+            return $this->render('success');
+        }
+
+        return $this->render('resend', [
+            'model' => $model
+        ]);
     }
 }

@@ -8,7 +8,7 @@ $this->title = 'Sign up';
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="site-register">
-    <?php if (Yii::$app->getSession()->hasFlash('confirmation_needed')): ?>
+    <?php if (Yii::$app->getSession()->hasFlash('confirmation_message_sent')): ?>
         <div class="alert alert-info">
             <h4>Awesome, almost there! We need to confirm your email address</h4>
             Please check your email and click the confirmation link to complete your registration. If you\'re having troubles,

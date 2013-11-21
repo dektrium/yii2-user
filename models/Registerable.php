@@ -29,7 +29,6 @@ trait Registerable
         }
         if ($this->save()) {
             if (\Yii::$app->controller->module->confirmable) {
-                \Yii::$app->getSession()->setFlash('confirmation_needed');
                 $this->sendConfirmationMessage();
             }
             return true;
@@ -93,6 +92,7 @@ trait Registerable
             ->setFrom(\Yii::$app->controller->module->messageSender)
             ->setSubject(\Yii::$app->controller->module->confirmationMessageSubject)
             ->send();
+        \Yii::$app->getSession()->setFlash('confirmation_message_sent');
     }
 
     /**

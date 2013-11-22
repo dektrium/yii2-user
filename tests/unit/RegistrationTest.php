@@ -61,7 +61,7 @@ class RegistrationTest extends \Codeception\TestCase\Test
         /** @var \dektrium\user\models\User $user */
         $user = \dektrium\user\models\User::find(2);
         $url = $user->getConfirmationUrl();
-        $this->assertEquals('http://localhost/index.php?r=user/registration/confirm&id=2&confirmation_token='.$user->confirmation_token, $url);
+        $this->assertEquals('http://localhost/index.php?r=user/registration/confirm&id=2&token='.$user->confirmation_token, $url);
     }
 
     public function testGetIsConfirmed()

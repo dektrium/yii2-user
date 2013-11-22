@@ -106,7 +106,7 @@ trait Registerable
         }
         return \Yii::$app->getUrlManager()->createAbsoluteUrl('/user/registration/confirm', [
             'id' => $this->id,
-            'confirmation_token' => $this->confirmation_token
+            'token' => $this->confirmation_token
         ]);
     }
 

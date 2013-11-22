@@ -1,6 +1,7 @@
 <?php namespace dektrium\user\controllers;
 
 use dektrium\user\models\LoginForm;
+use yii\web\AccessControl;
 use yii\web\Controller;
 use yii\web\VerbFilter;
 
@@ -17,6 +18,21 @@ class AuthController extends Controller
     public function behaviors()
     {
         return [
+            'access' => [
+                'class' => AccessControl::className(),
+                'rules' => [
+                    [
+                        'allow' => true,
+                        'actions' => ['login'],
+                        'roles' => ['?']
+                    ],
+                    [
+                        'allow' => true,
+                        'actions' => ['logout'],
+                        'roles' => ['@']
+                    ],
+                ]
+            ],
             'verbs' => [
                 'class'   => VerbFilter::className(),
                 'actions' => [

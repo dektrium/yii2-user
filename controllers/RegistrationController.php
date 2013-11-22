@@ -1,8 +1,8 @@
 <?php namespace dektrium\user\controllers;
 
 use dektrium\user\models\ResendForm;
-use dektrium\user\models\User;
 use yii\db\ActiveQuery;
+use yii\web\AccessControl;
 use yii\web\Controller;
 use yii\web\HttpException;
 
@@ -13,6 +13,30 @@ use yii\web\HttpException;
  */
 class RegistrationController extends Controller
 {
+    /**
+     * @inheritdoc
+     */
+    public function behaviors()
+    {
+        return [
+            'access' => [
+                'class' => AccessControl::className(),
+                'rules' => [
+                    [
+                        'allow' => true,
+                        'actions' => ['register'],
+                        'roles' => ['?']
+                    ],
+                    [
+                        'allow' => true,
+                        'actions' => ['confirm', 'resend'],
+                        'roles' => ['?', '@']
+                    ],
+                ]
+            ],
+        ];
+    }
+
     /**
      * Displays the registration page.
      *

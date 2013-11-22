@@ -78,6 +78,7 @@ class LoginForm extends Model
     {
         if ($this->validate()) {
             \Yii::$app->getUser()->login($this->identity, $this->rememberMe ? \Yii::$app->controller->module->rememberFor : 0);
+
             return true;
         } else {
             return false;
@@ -100,6 +101,7 @@ class LoginForm extends Model
         if (parent::beforeValidate()) {
             $query = new ActiveQuery(['modelClass' => \Yii::$app->getUser()->identityClass]);
             $this->identity = $query->where(['email' => $this->email])->one();
+
             return true;
         } else {
             return false;

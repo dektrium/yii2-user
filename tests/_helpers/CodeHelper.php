@@ -1,7 +1,7 @@
 <?php
 namespace Codeception\Module;
 
-// here you can define custom functions for CodeGuy 
+// here you can define custom functions for CodeGuy
 
 use yii\web\Application;
 

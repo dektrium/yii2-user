@@ -3,11 +3,8 @@
 // You should not change it manually as it will be overwritten on next build
 // @codingStandardsIgnoreFile
 
-
 use \Codeception\Maybe;
 use Codeception\Module\Filesystem;
-use Codeception\Module\TestHelper;
-use Codeception\Module\Yii2;
 use Codeception\Module\Db;
 
 /**
@@ -28,7 +25,7 @@ use Codeception\Module\Db;
 
 class TestGuy extends \Codeception\AbstractGuy
 {
-    
+
     /**
      * This method is generated.
      * Documentation taken from corresponding module.
@@ -41,16 +38,18 @@ class TestGuy extends \Codeception\AbstractGuy
      * @see Codeception\Module\Filesystem::amInPath()
      * @return \Codeception\Maybe
      */
-    public function amInPath($path) {
+    public function amInPath($path)
+    {
         $this->scenario->addStep(new \Codeception\Step\Condition('amInPath', func_get_args()));
         if ($this->scenario->running()) {
             $result = $this->scenario->runStep();
+
             return new Maybe($result);
         }
+
         return new Maybe();
     }
 
- 
     /**
      * This method is generated.
      * Documentation taken from corresponding module.
@@ -71,16 +70,19 @@ class TestGuy extends \Codeception\AbstractGuy
      * @see Codeception\Module\Filesystem::openFile()
      * @return \Codeception\Maybe
      */
-    public function openFile($filename) {
+    public function openFile($filename)
+    {
         $this->scenario->addStep(new \Codeception\Step\Action('openFile', func_get_args()));
         if ($this->scenario->running()) {
             $result = $this->scenario->runStep();
+
             return new Maybe($result);
         }
+
         return new Maybe();
     }
 
- 
+
     /**
      * This method is generated.
      * Documentation taken from corresponding module.
@@ -98,16 +100,19 @@ class TestGuy extends \Codeception\AbstractGuy
      * @see Codeception\Module\Filesystem::deleteFile()
      * @return \Codeception\Maybe
      */
-    public function deleteFile($filename) {
+    public function deleteFile($filename)
+    {
         $this->scenario->addStep(new \Codeception\Step\Action('deleteFile', func_get_args()));
         if ($this->scenario->running()) {
             $result = $this->scenario->runStep();
+
             return new Maybe($result);
         }
+
         return new Maybe();
     }
 
- 
+
     /**
      * This method is generated.
      * Documentation taken from corresponding module.
@@ -125,16 +130,19 @@ class TestGuy extends \Codeception\AbstractGuy
      * @see Codeception\Module\Filesystem::deleteDir()
      * @return \Codeception\Maybe
      */
-    public function deleteDir($dirname) {
+    public function deleteDir($dirname)
+    {
         $this->scenario->addStep(new \Codeception\Step\Action('deleteDir', func_get_args()));
         if ($this->scenario->running()) {
             $result = $this->scenario->runStep();
+
             return new Maybe($result);
         }
+
         return new Maybe();
     }
 
- 
+
     /**
      * This method is generated.
      * Documentation taken from corresponding module.
@@ -153,16 +161,19 @@ class TestGuy extends \Codeception\AbstractGuy
      * @see Codeception\Module\Filesystem::copyDir()
      * @return \Codeception\Maybe
      */
-    public function copyDir($src, $dst) {
+    public function copyDir($src, $dst)
+    {
         $this->scenario->addStep(new \Codeception\Step\Action('copyDir', func_get_args()));
         if ($this->scenario->running()) {
             $result = $this->scenario->runStep();
+
             return new Maybe($result);
         }
+
         return new Maybe();
     }
 
- 
+
     /**
      * This method is generated.
      * Documentation taken from corresponding module.
@@ -184,12 +195,15 @@ class TestGuy extends \Codeception\AbstractGuy
      * @see Codeception\Module\Filesystem::seeInThisFile()
      * @return \Codeception\Maybe
      */
-    public function canSeeInThisFile($text) {
+    public function canSeeInThisFile($text)
+    {
         $this->scenario->addStep(new \Codeception\Step\ConditionalAssertion('seeInThisFile', func_get_args()));
         if ($this->scenario->running()) {
             $result = $this->scenario->runStep();
+
             return new Maybe($result);
         }
+
         return new Maybe();
     }
     /**
@@ -212,16 +226,18 @@ class TestGuy extends \Codeception\AbstractGuy
      * @see Codeception\Module\Filesystem::seeInThisFile()
      * @return \Codeception\Maybe
      */
-    public function seeInThisFile($text) {
+    public function seeInThisFile($text)
+    {
         $this->scenario->addStep(new \Codeception\Step\Assertion('seeInThisFile', func_get_args()));
         if ($this->scenario->running()) {
             $result = $this->scenario->runStep();
+
             return new Maybe($result);
         }
+
         return new Maybe();
     }
 
- 
     /**
      * This method is generated.
      * Documentation taken from corresponding module.
@@ -244,12 +260,15 @@ class TestGuy extends \Codeception\AbstractGuy
      * @see Codeception\Module\Filesystem::seeFileContentsEqual()
      * @return \Codeception\Maybe
      */
-    public function canSeeFileContentsEqual($text) {
+    public function canSeeFileContentsEqual($text)
+    {
         $this->scenario->addStep(new \Codeception\Step\ConditionalAssertion('seeFileContentsEqual', func_get_args()));
         if ($this->scenario->running()) {
             $result = $this->scenario->runStep();
+
             return new Maybe($result);
         }
+
         return new Maybe();
     }
     /**
@@ -273,16 +292,19 @@ class TestGuy extends \Codeception\AbstractGuy
      * @see Codeception\Module\Filesystem::seeFileContentsEqual()
      * @return \Codeception\Maybe
      */
-    public function seeFileContentsEqual($text) {
+    public function seeFileContentsEqual($text)
+    {
         $this->scenario->addStep(new \Codeception\Step\Assertion('seeFileContentsEqual', func_get_args()));
         if ($this->scenario->running()) {
             $result = $this->scenario->runStep();
+
             return new Maybe($result);
         }
+
         return new Maybe();
     }
 
- 
+
     /**
      * This method is generated.
      * Documentation taken from corresponding module.
@@ -302,12 +324,15 @@ class TestGuy extends \Codeception\AbstractGuy
      * @see Codeception\Module\Filesystem::dontSeeInThisFile()
      * @return \Codeception\Maybe
      */
-    public function cantSeeInThisFile($text) {
+    public function cantSeeInThisFile($text)
+    {
         $this->scenario->addStep(new \Codeception\Step\ConditionalAssertion('dontSeeInThisFile', func_get_args()));
         if ($this->scenario->running()) {
             $result = $this->scenario->runStep();
+
             return new Maybe($result);
         }
+
         return new Maybe();
     }
     /**
@@ -328,16 +353,18 @@ class TestGuy extends \Codeception\AbstractGuy
      * @see Codeception\Module\Filesystem::dontSeeInThisFile()
      * @return \Codeception\Maybe
      */
-    public function dontSeeInThisFile($text) {
+    public function dontSeeInThisFile($text)
+    {
         $this->scenario->addStep(new \Codeception\Step\Assertion('dontSeeInThisFile', func_get_args()));
         if ($this->scenario->running()) {
             $result = $this->scenario->runStep();
+
             return new Maybe($result);
         }
+
         return new Maybe();
     }
 
- 
     /**
      * This method is generated.
      * Documentation taken from corresponding module.
@@ -347,16 +374,18 @@ class TestGuy extends \Codeception\AbstractGuy
      * @see Codeception\Module\Filesystem::deleteThisFile()
      * @return \Codeception\Maybe
      */
-    public function deleteThisFile() {
+    public function deleteThisFile()
+    {
         $this->scenario->addStep(new \Codeception\Step\Action('deleteThisFile', func_get_args()));
         if ($this->scenario->running()) {
             $result = $this->scenario->runStep();
+
             return new Maybe($result);
         }
+
         return new Maybe();
     }
 
- 
     /**
      * This method is generated.
      * Documentation taken from corresponding module.
@@ -377,12 +406,15 @@ class TestGuy extends \Codeception\AbstractGuy
      * @see Codeception\Module\Filesystem::seeFileFound()
      * @return \Codeception\Maybe
      */
-    public function canSeeFileFound($filename, $path = null) {
+    public function canSeeFileFound($filename, $path = null)
+    {
         $this->scenario->addStep(new \Codeception\Step\ConditionalAssertion('seeFileFound', func_get_args()));
         if ($this->scenario->running()) {
             $result = $this->scenario->runStep();
+
             return new Maybe($result);
         }
+
         return new Maybe();
     }
     /**
@@ -404,16 +436,19 @@ class TestGuy extends \Codeception\AbstractGuy
      * @see Codeception\Module\Filesystem::seeFileFound()
      * @return \Codeception\Maybe
      */
-    public function seeFileFound($filename, $path = null) {
+    public function seeFileFound($filename, $path = null)
+    {
         $this->scenario->addStep(new \Codeception\Step\Assertion('seeFileFound', func_get_args()));
         if ($this->scenario->running()) {
             $result = $this->scenario->runStep();
+
             return new Maybe($result);
         }
+
         return new Maybe();
     }
 
- 
+
     /**
      * This method is generated.
      * Documentation taken from corresponding module.
@@ -431,16 +466,19 @@ class TestGuy extends \Codeception\AbstractGuy
      * @see Codeception\Module\Filesystem::cleanDir()
      * @return \Codeception\Maybe
      */
-    public function cleanDir($dirname) {
+    public function cleanDir($dirname)
+    {
         $this->scenario->addStep(new \Codeception\Step\Action('cleanDir', func_get_args()));
         if ($this->scenario->running()) {
             $result = $this->scenario->runStep();
+
             return new Maybe($result);
         }
+
         return new Maybe();
     }
 
- 
+
     /**
      * This method is generated.
      * Documentation taken from corresponding module.
@@ -450,38 +488,44 @@ class TestGuy extends \Codeception\AbstractGuy
      * @see Codeception\Module::getName()
      * @return \Codeception\Maybe
      */
-    public function getName() {
+    public function getName()
+    {
         $this->scenario->addStep(new \Codeception\Step\Action('getName', func_get_args()));
         if ($this->scenario->running()) {
             $result = $this->scenario->runStep();
+
             return new Maybe($result);
         }
+
         return new Maybe();
     }
 
- 
+
     /**
      * This method is generated.
      * Documentation taken from corresponding module.
      * ----------------------------------------------
      *
-     * Authenticates user for HTTP_AUTH 
+     * Authenticates user for HTTP_AUTH
      *
      * @param $username
      * @param $password
      * @see Codeception\Util\Framework::amHttpAuthenticated()
      * @return \Codeception\Maybe
      */
-    public function amHttpAuthenticated($username, $password) {
+    public function amHttpAuthenticated($username, $password)
+    {
         $this->scenario->addStep(new \Codeception\Step\Condition('amHttpAuthenticated', func_get_args()));
         if ($this->scenario->running()) {
             $result = $this->scenario->runStep();
+
             return new Maybe($result);
         }
+
         return new Maybe();
     }
 
- 
+
     /**
      * This method is generated.
      * Documentation taken from corresponding module.
@@ -505,16 +549,19 @@ class TestGuy extends \Codeception\AbstractGuy
      * @see Codeception\Util\Framework::amOnPage()
      * @return \Codeception\Maybe
      */
-    public function amOnPage($page) {
+    public function amOnPage($page)
+    {
         $this->scenario->addStep(new \Codeception\Step\Condition('amOnPage', func_get_args()));
         if ($this->scenario->running()) {
             $result = $this->scenario->runStep();
+
             return new Maybe($result);
         }
+
         return new Maybe();
     }
 
- 
+
     /**
      * This method is generated.
      * Documentation taken from corresponding module.
@@ -551,16 +598,18 @@ class TestGuy extends \Codeception\AbstractGuy
      * @see Codeception\Util\Framework::click()
      * @return \Codeception\Maybe
      */
-    public function click($link, $context = null) {
+    public function click($link, $context = null)
+    {
         $this->scenario->addStep(new \Codeception\Step\Action('click', func_get_args()));
         if ($this->scenario->running()) {
             $result = $this->scenario->runStep();
+
             return new Maybe($result);
         }
+
         return new Maybe();
     }
 
- 
     /**
      * This method is generated.
      * Documentation taken from corresponding module.
@@ -585,12 +634,15 @@ class TestGuy extends \Codeception\AbstractGuy
      * @see Codeception\Util\Framework::see()
      * @return \Codeception\Maybe
      */
-    public function canSee($text, $selector = null) {
+    public function canSee($text, $selector = null)
+    {
         $this->scenario->addStep(new \Codeception\Step\ConditionalAssertion('see', func_get_args()));
         if ($this->scenario->running()) {
             $result = $this->scenario->runStep();
+
             return new Maybe($result);
         }
+
         return new Maybe();
     }
     /**
@@ -616,16 +668,19 @@ class TestGuy extends \Codeception\AbstractGuy
      * @see Codeception\Util\Framework::see()
      * @return \Codeception\Maybe
      */
-    public function see($text, $selector = null) {
+    public function see($text, $selector = null)
+    {
         $this->scenario->addStep(new \Codeception\Step\Assertion('see', func_get_args()));
         if ($this->scenario->running()) {
             $result = $this->scenario->runStep();
+
             return new Maybe($result);
         }
+
         return new Maybe();
     }
 
- 
+
     /**
      * This method is generated.
      * Documentation taken from corresponding module.
@@ -650,12 +705,15 @@ class TestGuy extends \Codeception\AbstractGuy
      * @see Codeception\Util\Framework::dontSee()
      * @return \Codeception\Maybe
      */
-    public function cantSee($text, $selector = null) {
+    public function cantSee($text, $selector = null)
+    {
         $this->scenario->addStep(new \Codeception\Step\ConditionalAssertion('dontSee', func_get_args()));
         if ($this->scenario->running()) {
             $result = $this->scenario->runStep();
+
             return new Maybe($result);
         }
+
         return new Maybe();
     }
     /**
@@ -681,16 +739,18 @@ class TestGuy extends \Codeception\AbstractGuy
      * @see Codeception\Util\Framework::dontSee()
      * @return \Codeception\Maybe
      */
-    public function dontSee($text, $selector = null) {
+    public function dontSee($text, $selector = null)
+    {
         $this->scenario->addStep(new \Codeception\Step\Assertion('dontSee', func_get_args()));
         if ($this->scenario->running()) {
             $result = $this->scenario->runStep();
+
             return new Maybe($result);
         }
+
         return new Maybe();
     }
 
- 
     /**
      * This method is generated.
      * Documentation taken from corresponding module.
@@ -714,12 +774,15 @@ class TestGuy extends \Codeception\AbstractGuy
      * @see Codeception\Util\Framework::seeLink()
      * @return \Codeception\Maybe
      */
-    public function canSeeLink($text, $url = null) {
+    public function canSeeLink($text, $url = null)
+    {
         $this->scenario->addStep(new \Codeception\Step\ConditionalAssertion('seeLink', func_get_args()));
         if ($this->scenario->running()) {
             $result = $this->scenario->runStep();
+
             return new Maybe($result);
         }
+
         return new Maybe();
     }
     /**
@@ -744,16 +807,19 @@ class TestGuy extends \Codeception\AbstractGuy
      * @see Codeception\Util\Framework::seeLink()
      * @return \Codeception\Maybe
      */
-    public function seeLink($text, $url = null) {
+    public function seeLink($text, $url = null)
+    {
         $this->scenario->addStep(new \Codeception\Step\Assertion('seeLink', func_get_args()));
         if ($this->scenario->running()) {
             $result = $this->scenario->runStep();
+
             return new Maybe($result);
         }
+
         return new Maybe();
     }
 
- 
+
     /**
      * This method is generated.
      * Documentation taken from corresponding module.
@@ -776,12 +842,15 @@ class TestGuy extends \Codeception\AbstractGuy
      * @see Codeception\Util\Framework::dontSeeLink()
      * @return \Codeception\Maybe
      */
-    public function cantSeeLink($text, $url = null) {
+    public function cantSeeLink($text, $url = null)
+    {
         $this->scenario->addStep(new \Codeception\Step\ConditionalAssertion('dontSeeLink', func_get_args()));
         if ($this->scenario->running()) {
             $result = $this->scenario->runStep();
+
             return new Maybe($result);
         }
+
         return new Maybe();
     }
     /**
@@ -805,16 +874,18 @@ class TestGuy extends \Codeception\AbstractGuy
      * @see Codeception\Util\Framework::dontSeeLink()
      * @return \Codeception\Maybe
      */
-    public function dontSeeLink($text, $url = null) {
+    public function dontSeeLink($text, $url = null)
+    {
         $this->scenario->addStep(new \Codeception\Step\Assertion('dontSeeLink', func_get_args()));
         if ($this->scenario->running()) {
             $result = $this->scenario->runStep();
+
             return new Maybe($result);
         }
+
         return new Maybe();
     }
 
- 
     /**
      * This method is generated.
      * Documentation taken from corresponding module.
@@ -836,12 +907,15 @@ class TestGuy extends \Codeception\AbstractGuy
      * @see Codeception\Util\Framework::seeInCurrentUrl()
      * @return \Codeception\Maybe
      */
-    public function canSeeInCurrentUrl($uri) {
+    public function canSeeInCurrentUrl($uri)
+    {
         $this->scenario->addStep(new \Codeception\Step\ConditionalAssertion('seeInCurrentUrl', func_get_args()));
         if ($this->scenario->running()) {
             $result = $this->scenario->runStep();
+
             return new Maybe($result);
         }
+
         return new Maybe();
     }
     /**
@@ -864,16 +938,19 @@ class TestGuy extends \Codeception\AbstractGuy
      * @see Codeception\Util\Framework::seeInCurrentUrl()
      * @return \Codeception\Maybe
      */
-    public function seeInCurrentUrl($uri) {
+    public function seeInCurrentUrl($uri)
+    {
         $this->scenario->addStep(new \Codeception\Step\Assertion('seeInCurrentUrl', func_get_args()));
         if ($this->scenario->running()) {
             $result = $this->scenario->runStep();
+
             return new Maybe($result);
         }
+
         return new Maybe();
     }
 
- 
+
     /**
      * This method is generated.
      * Documentation taken from corresponding module.
@@ -892,12 +969,15 @@ class TestGuy extends \Codeception\AbstractGuy
      * @see Codeception\Util\Framework::dontSeeInCurrentUrl()
      * @return \Codeception\Maybe
      */
-    public function cantSeeInCurrentUrl($uri) {
+    public function cantSeeInCurrentUrl($uri)
+    {
         $this->scenario->addStep(new \Codeception\Step\ConditionalAssertion('dontSeeInCurrentUrl', func_get_args()));
         if ($this->scenario->running()) {
             $result = $this->scenario->runStep();
+
             return new Maybe($result);
         }
+
         return new Maybe();
     }
     /**
@@ -917,16 +997,18 @@ class TestGuy extends \Codeception\AbstractGuy
      * @see Codeception\Util\Framework::dontSeeInCurrentUrl()
      * @return \Codeception\Maybe
      */
-    public function dontSeeInCurrentUrl($uri) {
+    public function dontSeeInCurrentUrl($uri)
+    {
         $this->scenario->addStep(new \Codeception\Step\Assertion('dontSeeInCurrentUrl', func_get_args()));
         if ($this->scenario->running()) {
             $result = $this->scenario->runStep();
+
             return new Maybe($result);
         }
+
         return new Maybe();
     }
 
- 
     /**
      * This method is generated.
      * Documentation taken from corresponding module.
@@ -947,12 +1029,15 @@ class TestGuy extends \Codeception\AbstractGuy
      * @see Codeception\Util\Framework::seeCurrentUrlEquals()
      * @return \Codeception\Maybe
      */
-    public function canSeeCurrentUrlEquals($uri) {
+    public function canSeeCurrentUrlEquals($uri)
+    {
         $this->scenario->addStep(new \Codeception\Step\ConditionalAssertion('seeCurrentUrlEquals', func_get_args()));
         if ($this->scenario->running()) {
             $result = $this->scenario->runStep();
+
             return new Maybe($result);
         }
+
         return new Maybe();
     }
     /**
@@ -974,16 +1059,19 @@ class TestGuy extends \Codeception\AbstractGuy
      * @see Codeception\Util\Framework::seeCurrentUrlEquals()
      * @return \Codeception\Maybe
      */
-    public function seeCurrentUrlEquals($uri) {
+    public function seeCurrentUrlEquals($uri)
+    {
         $this->scenario->addStep(new \Codeception\Step\Assertion('seeCurrentUrlEquals', func_get_args()));
         if ($this->scenario->running()) {
             $result = $this->scenario->runStep();
+
             return new Maybe($result);
         }
+
         return new Maybe();
     }
 
- 
+
     /**
      * This method is generated.
      * Documentation taken from corresponding module.
@@ -1004,12 +1092,15 @@ class TestGuy extends \Codeception\AbstractGuy
      * @see Codeception\Util\Framework::dontSeeCurrentUrlEquals()
      * @return \Codeception\Maybe
      */
-    public function cantSeeCurrentUrlEquals($uri) {
+    public function cantSeeCurrentUrlEquals($uri)
+    {
         $this->scenario->addStep(new \Codeception\Step\ConditionalAssertion('dontSeeCurrentUrlEquals', func_get_args()));
         if ($this->scenario->running()) {
             $result = $this->scenario->runStep();
+
             return new Maybe($result);
         }
+
         return new Maybe();
     }
     /**
@@ -1031,16 +1122,18 @@ class TestGuy extends \Codeception\AbstractGuy
      * @see Codeception\Util\Framework::dontSeeCurrentUrlEquals()
      * @return \Codeception\Maybe
      */
-    public function dontSeeCurrentUrlEquals($uri) {
+    public function dontSeeCurrentUrlEquals($uri)
+    {
         $this->scenario->addStep(new \Codeception\Step\Assertion('dontSeeCurrentUrlEquals', func_get_args()));
         if ($this->scenario->running()) {
             $result = $this->scenario->runStep();
+
             return new Maybe($result);
         }
+
         return new Maybe();
     }
 
- 
     /**
      * This method is generated.
      * Documentation taken from corresponding module.
@@ -1060,12 +1153,15 @@ class TestGuy extends \Codeception\AbstractGuy
      * @see Codeception\Util\Framework::seeCurrentUrlMatches()
      * @return \Codeception\Maybe
      */
-    public function canSeeCurrentUrlMatches($uri) {
+    public function canSeeCurrentUrlMatches($uri)
+    {
         $this->scenario->addStep(new \Codeception\Step\ConditionalAssertion('seeCurrentUrlMatches', func_get_args()));
         if ($this->scenario->running()) {
             $result = $this->scenario->runStep();
+
             return new Maybe($result);
         }
+
         return new Maybe();
     }
     /**
@@ -1086,16 +1182,19 @@ class TestGuy extends \Codeception\AbstractGuy
      * @see Codeception\Util\Framework::seeCurrentUrlMatches()
      * @return \Codeception\Maybe
      */
-    public function seeCurrentUrlMatches($uri) {
+    public function seeCurrentUrlMatches($uri)
+    {
         $this->scenario->addStep(new \Codeception\Step\Assertion('seeCurrentUrlMatches', func_get_args()));
         if ($this->scenario->running()) {
             $result = $this->scenario->runStep();
+
             return new Maybe($result);
         }
+
         return new Maybe();
     }
 
- 
+
     /**
      * This method is generated.
      * Documentation taken from corresponding module.
@@ -1115,12 +1214,15 @@ class TestGuy extends \Codeception\AbstractGuy
      * @see Codeception\Util\Framework::dontSeeCurrentUrlMatches()
      * @return \Codeception\Maybe
      */
-    public function cantSeeCurrentUrlMatches($uri) {
+    public function cantSeeCurrentUrlMatches($uri)
+    {
         $this->scenario->addStep(new \Codeception\Step\ConditionalAssertion('dontSeeCurrentUrlMatches', func_get_args()));
         if ($this->scenario->running()) {
             $result = $this->scenario->runStep();
+
             return new Maybe($result);
         }
+
         return new Maybe();
     }
     /**
@@ -1141,16 +1243,18 @@ class TestGuy extends \Codeception\AbstractGuy
      * @see Codeception\Util\Framework::dontSeeCurrentUrlMatches()
      * @return \Codeception\Maybe
      */
-    public function dontSeeCurrentUrlMatches($uri) {
+    public function dontSeeCurrentUrlMatches($uri)
+    {
         $this->scenario->addStep(new \Codeception\Step\Assertion('dontSeeCurrentUrlMatches', func_get_args()));
         if ($this->scenario->running()) {
             $result = $this->scenario->runStep();
+
             return new Maybe($result);
         }
+
         return new Maybe();
     }
 
- 
     /**
      * This method is generated.
      * Documentation taken from corresponding module.
@@ -1172,16 +1276,18 @@ class TestGuy extends \Codeception\AbstractGuy
      * @see Codeception\Util\Framework::grabFromCurrentUrl()
      * @return \Codeception\Maybe
      */
-    public function grabFromCurrentUrl($uri = null) {
+    public function grabFromCurrentUrl($uri = null)
+    {
         $this->scenario->addStep(new \Codeception\Step\Action('grabFromCurrentUrl', func_get_args()));
         if ($this->scenario->running()) {
             $result = $this->scenario->runStep();
+
             return new Maybe($result);
         }
+
         return new Maybe();
     }
 
- 
     /**
      * This method is generated.
      * Documentation taken from corresponding module.
@@ -1205,12 +1311,15 @@ class TestGuy extends \Codeception\AbstractGuy
      * @see Codeception\Util\Framework::seeCheckboxIsChecked()
      * @return \Codeception\Maybe
      */
-    public function canSeeCheckboxIsChecked($checkbox) {
+    public function canSeeCheckboxIsChecked($checkbox)
+    {
         $this->scenario->addStep(new \Codeception\Step\ConditionalAssertion('seeCheckboxIsChecked', func_get_args()));
         if ($this->scenario->running()) {
             $result = $this->scenario->runStep();
+
             return new Maybe($result);
         }
+
         return new Maybe();
     }
     /**
@@ -1235,16 +1344,19 @@ class TestGuy extends \Codeception\AbstractGuy
      * @see Codeception\Util\Framework::seeCheckboxIsChecked()
      * @return \Codeception\Maybe
      */
-    public function seeCheckboxIsChecked($checkbox) {
+    public function seeCheckboxIsChecked($checkbox)
+    {
         $this->scenario->addStep(new \Codeception\Step\Assertion('seeCheckboxIsChecked', func_get_args()));
         if ($this->scenario->running()) {
             $result = $this->scenario->runStep();
+
             return new Maybe($result);
         }
+
         return new Maybe();
     }
 
- 
+
     /**
      * This method is generated.
      * Documentation taken from corresponding module.
@@ -1267,12 +1379,15 @@ class TestGuy extends \Codeception\AbstractGuy
      * @see Codeception\Util\Framework::dontSeeCheckboxIsChecked()
      * @return \Codeception\Maybe
      */
-    public function cantSeeCheckboxIsChecked($checkbox) {
+    public function cantSeeCheckboxIsChecked($checkbox)
+    {
         $this->scenario->addStep(new \Codeception\Step\ConditionalAssertion('dontSeeCheckboxIsChecked', func_get_args()));
         if ($this->scenario->running()) {
             $result = $this->scenario->runStep();
+
             return new Maybe($result);
         }
+
         return new Maybe();
     }
     /**
@@ -1296,16 +1411,18 @@ class TestGuy extends \Codeception\AbstractGuy
      * @see Codeception\Util\Framework::dontSeeCheckboxIsChecked()
      * @return \Codeception\Maybe
      */
-    public function dontSeeCheckboxIsChecked($checkbox) {
+    public function dontSeeCheckboxIsChecked($checkbox)
+    {
         $this->scenario->addStep(new \Codeception\Step\Assertion('dontSeeCheckboxIsChecked', func_get_args()));
         if ($this->scenario->running()) {
             $result = $this->scenario->runStep();
+
             return new Maybe($result);
         }
+
         return new Maybe();
     }
 
- 
     /**
      * This method is generated.
      * Documentation taken from corresponding module.
@@ -1332,12 +1449,15 @@ class TestGuy extends \Codeception\AbstractGuy
      * @see Codeception\Util\Framework::seeInField()
      * @return \Codeception\Maybe
      */
-    public function canSeeInField($field, $value) {
+    public function canSeeInField($field, $value)
+    {
         $this->scenario->addStep(new \Codeception\Step\ConditionalAssertion('seeInField', func_get_args()));
         if ($this->scenario->running()) {
             $result = $this->scenario->runStep();
+
             return new Maybe($result);
         }
+
         return new Maybe();
     }
     /**
@@ -1365,16 +1485,19 @@ class TestGuy extends \Codeception\AbstractGuy
      * @see Codeception\Util\Framework::seeInField()
      * @return \Codeception\Maybe
      */
-    public function seeInField($field, $value) {
+    public function seeInField($field, $value)
+    {
         $this->scenario->addStep(new \Codeception\Step\Assertion('seeInField', func_get_args()));
         if ($this->scenario->running()) {
             $result = $this->scenario->runStep();
+
             return new Maybe($result);
         }
+
         return new Maybe();
     }
 
- 
+
     /**
      * This method is generated.
      * Documentation taken from corresponding module.
@@ -1400,12 +1523,15 @@ class TestGuy extends \Codeception\AbstractGuy
      * @see Codeception\Util\Framework::dontSeeInField()
      * @return \Codeception\Maybe
      */
-    public function cantSeeInField($field, $value) {
+    public function cantSeeInField($field, $value)
+    {
         $this->scenario->addStep(new \Codeception\Step\ConditionalAssertion('dontSeeInField', func_get_args()));
         if ($this->scenario->running()) {
             $result = $this->scenario->runStep();
+
             return new Maybe($result);
         }
+
         return new Maybe();
     }
     /**
@@ -1432,16 +1558,18 @@ class TestGuy extends \Codeception\AbstractGuy
      * @see Codeception\Util\Framework::dontSeeInField()
      * @return \Codeception\Maybe
      */
-    public function dontSeeInField($field, $value) {
+    public function dontSeeInField($field, $value)
+    {
         $this->scenario->addStep(new \Codeception\Step\Assertion('dontSeeInField', func_get_args()));
         if ($this->scenario->running()) {
             $result = $this->scenario->runStep();
+
             return new Maybe($result);
         }
+
         return new Maybe();
     }
 
- 
     /**
      * This method is generated.
      * Documentation taken from corresponding module.
@@ -1488,25 +1616,27 @@ class TestGuy extends \Codeception\AbstractGuy
      * @see Codeception\Util\Framework::submitForm()
      * @return \Codeception\Maybe
      */
-    public function submitForm($selector, $params) {
+    public function submitForm($selector, $params)
+    {
         $this->scenario->addStep(new \Codeception\Step\Action('submitForm', func_get_args()));
         if ($this->scenario->running()) {
             $result = $this->scenario->runStep();
+
             return new Maybe($result);
         }
+
         return new Maybe();
     }
 
- 
     /**
      * This method is generated.
      * Documentation taken from corresponding module.
      * ----------------------------------------------
      *
      * Fills a text field or textarea with value.
-     * 
+     *
      * Example:
-     * 
+     *
      * ``` php
      * <?php
      * $I->fillField("//input[@type='text']", "Hello World!");
@@ -1518,16 +1648,18 @@ class TestGuy extends \Codeception\AbstractGuy
      * @see Codeception\Util\Framework::fillField()
      * @return \Codeception\Maybe
      */
-    public function fillField($field, $value) {
+    public function fillField($field, $value)
+    {
         $this->scenario->addStep(new \Codeception\Step\Action('fillField', func_get_args()));
         if ($this->scenario->running()) {
             $result = $this->scenario->runStep();
+
             return new Maybe($result);
         }
+
         return new Maybe();
     }
 
- 
     /**
      * This method is generated.
      * Documentation taken from corresponding module.
@@ -1558,16 +1690,18 @@ class TestGuy extends \Codeception\AbstractGuy
      * @see Codeception\Util\Framework::selectOption()
      * @return \Codeception\Maybe
      */
-    public function selectOption($select, $option) {
+    public function selectOption($select, $option)
+    {
         $this->scenario->addStep(new \Codeception\Step\Action('selectOption', func_get_args()));
         if ($this->scenario->running()) {
             $result = $this->scenario->runStep();
+
             return new Maybe($result);
         }
+
         return new Maybe();
     }
 
- 
     /**
      * This method is generated.
      * Documentation taken from corresponding module.
@@ -1588,16 +1722,18 @@ class TestGuy extends \Codeception\AbstractGuy
      * @see Codeception\Util\Framework::checkOption()
      * @return \Codeception\Maybe
      */
-    public function checkOption($option) {
+    public function checkOption($option)
+    {
         $this->scenario->addStep(new \Codeception\Step\Action('checkOption', func_get_args()));
         if ($this->scenario->running()) {
             $result = $this->scenario->runStep();
+
             return new Maybe($result);
         }
+
         return new Maybe();
     }
 
- 
     /**
      * This method is generated.
      * Documentation taken from corresponding module.
@@ -1617,16 +1753,18 @@ class TestGuy extends \Codeception\AbstractGuy
      * @see Codeception\Util\Framework::uncheckOption()
      * @return \Codeception\Maybe
      */
-    public function uncheckOption($option) {
+    public function uncheckOption($option)
+    {
         $this->scenario->addStep(new \Codeception\Step\Action('uncheckOption', func_get_args()));
         if ($this->scenario->running()) {
             $result = $this->scenario->runStep();
+
             return new Maybe($result);
         }
+
         return new Maybe();
     }
 
- 
     /**
      * This method is generated.
      * Documentation taken from corresponding module.
@@ -1648,16 +1786,18 @@ class TestGuy extends \Codeception\AbstractGuy
      * @see Codeception\Util\Framework::attachFile()
      * @return \Codeception\Maybe
      */
-    public function attachFile($field, $filename) {
+    public function attachFile($field, $filename)
+    {
         $this->scenario->addStep(new \Codeception\Step\Action('attachFile', func_get_args()));
         if ($this->scenario->running()) {
             $result = $this->scenario->runStep();
+
             return new Maybe($result);
         }
+
         return new Maybe();
     }
 
- 
     /**
      * This method is generated.
      * Documentation taken from corresponding module.
@@ -1673,16 +1813,18 @@ class TestGuy extends \Codeception\AbstractGuy
      * @see Codeception\Util\Framework::sendAjaxGetRequest()
      * @return \Codeception\Maybe
      */
-    public function sendAjaxGetRequest($uri, $params = null) {
+    public function sendAjaxGetRequest($uri, $params = null)
+    {
         $this->scenario->addStep(new \Codeception\Step\Action('sendAjaxGetRequest', func_get_args()));
         if ($this->scenario->running()) {
             $result = $this->scenario->runStep();
+
             return new Maybe($result);
         }
+
         return new Maybe();
     }
 
- 
     /**
      * This method is generated.
      * Documentation taken from corresponding module.
@@ -1709,16 +1851,18 @@ class TestGuy extends \Codeception\AbstractGuy
      * @see Codeception\Util\Framework::sendAjaxPostRequest()
      * @return \Codeception\Maybe
      */
-    public function sendAjaxPostRequest($uri, $params = null) {
+    public function sendAjaxPostRequest($uri, $params = null)
+    {
         $this->scenario->addStep(new \Codeception\Step\Action('sendAjaxPostRequest', func_get_args()));
         if ($this->scenario->running()) {
             $result = $this->scenario->runStep();
+
             return new Maybe($result);
         }
+
         return new Maybe();
     }
 
- 
     /**
      * This method is generated.
      * Documentation taken from corresponding module.
@@ -1742,16 +1886,18 @@ class TestGuy extends \Codeception\AbstractGuy
      * @see Codeception\Util\Framework::grabTextFrom()
      * @return \Codeception\Maybe
      */
-    public function grabTextFrom($cssOrXPathOrRegex) {
+    public function grabTextFrom($cssOrXPathOrRegex)
+    {
         $this->scenario->addStep(new \Codeception\Step\Action('grabTextFrom', func_get_args()));
         if ($this->scenario->running()) {
             $result = $this->scenario->runStep();
+
             return new Maybe($result);
         }
+
         return new Maybe();
     }
 
- 
     /**
      * This method is generated.
      * Documentation taken from corresponding module.
@@ -1775,16 +1921,19 @@ class TestGuy extends \Codeception\AbstractGuy
      * @see Codeception\Util\Framework::grabValueFrom()
      * @return \Codeception\Maybe
      */
-    public function grabValueFrom($field) {
+    public function grabValueFrom($field)
+    {
         $this->scenario->addStep(new \Codeception\Step\Action('grabValueFrom', func_get_args()));
         if ($this->scenario->running()) {
             $result = $this->scenario->runStep();
+
             return new Maybe($result);
         }
+
         return new Maybe();
     }
 
- 
+
     /**
      * This method is generated.
      * Documentation taken from corresponding module.
@@ -1803,12 +1952,15 @@ class TestGuy extends \Codeception\AbstractGuy
      * @see Codeception\Util\Framework::seeElement()
      * @return \Codeception\Maybe
      */
-    public function canSeeElement($selector) {
+    public function canSeeElement($selector)
+    {
         $this->scenario->addStep(new \Codeception\Step\ConditionalAssertion('seeElement', func_get_args()));
         if ($this->scenario->running()) {
             $result = $this->scenario->runStep();
+
             return new Maybe($result);
         }
+
         return new Maybe();
     }
     /**
@@ -1828,16 +1980,18 @@ class TestGuy extends \Codeception\AbstractGuy
      * @see Codeception\Util\Framework::seeElement()
      * @return \Codeception\Maybe
      */
-    public function seeElement($selector) {
+    public function seeElement($selector)
+    {
         $this->scenario->addStep(new \Codeception\Step\Assertion('seeElement', func_get_args()));
         if ($this->scenario->running()) {
             $result = $this->scenario->runStep();
+
             return new Maybe($result);
         }
+
         return new Maybe();
     }
 
- 
     /**
      * This method is generated.
      * Documentation taken from corresponding module.
@@ -1846,7 +2000,7 @@ class TestGuy extends \Codeception\AbstractGuy
      * Checks if element does not exist (or is visible) on a page, matching it by CSS or XPath
      *
      * Example:
-     * 
+     *
      * ``` php
      * <?php
      * $I->dontSeeElement('.error');
@@ -1858,12 +2012,15 @@ class TestGuy extends \Codeception\AbstractGuy
      * @see Codeception\Util\Framework::dontSeeElement()
      * @return \Codeception\Maybe
      */
-    public function cantSeeElement($selector) {
+    public function cantSeeElement($selector)
+    {
         $this->scenario->addStep(new \Codeception\Step\ConditionalAssertion('dontSeeElement', func_get_args()));
         if ($this->scenario->running()) {
             $result = $this->scenario->runStep();
+
             return new Maybe($result);
         }
+
         return new Maybe();
     }
     /**
@@ -1874,7 +2031,7 @@ class TestGuy extends \Codeception\AbstractGuy
      * Checks if element does not exist (or is visible) on a page, matching it by CSS or XPath
      *
      * Example:
-     * 
+     *
      * ``` php
      * <?php
      * $I->dontSeeElement('.error');
@@ -1885,16 +2042,19 @@ class TestGuy extends \Codeception\AbstractGuy
      * @see Codeception\Util\Framework::dontSeeElement()
      * @return \Codeception\Maybe
      */
-    public function dontSeeElement($selector) {
+    public function dontSeeElement($selector)
+    {
         $this->scenario->addStep(new \Codeception\Step\Assertion('dontSeeElement', func_get_args()));
         if ($this->scenario->running()) {
             $result = $this->scenario->runStep();
+
             return new Maybe($result);
         }
+
         return new Maybe();
     }
 
- 
+
     /**
      * This method is generated.
      * Documentation taken from corresponding module.
@@ -1915,12 +2075,15 @@ class TestGuy extends \Codeception\AbstractGuy
      * @see Codeception\Util\Framework::seeOptionIsSelected()
      * @return \Codeception\Maybe
      */
-    public function canSeeOptionIsSelected($select, $optionText) {
+    public function canSeeOptionIsSelected($select, $optionText)
+    {
         $this->scenario->addStep(new \Codeception\Step\ConditionalAssertion('seeOptionIsSelected', func_get_args()));
         if ($this->scenario->running()) {
             $result = $this->scenario->runStep();
+
             return new Maybe($result);
         }
+
         return new Maybe();
     }
     /**
@@ -1942,16 +2105,18 @@ class TestGuy extends \Codeception\AbstractGuy
      * @see Codeception\Util\Framework::seeOptionIsSelected()
      * @return \Codeception\Maybe
      */
-    public function seeOptionIsSelected($select, $optionText) {
+    public function seeOptionIsSelected($select, $optionText)
+    {
         $this->scenario->addStep(new \Codeception\Step\Assertion('seeOptionIsSelected', func_get_args()));
         if ($this->scenario->running()) {
             $result = $this->scenario->runStep();
+
             return new Maybe($result);
         }
+
         return new Maybe();
     }
 
- 
     /**
      * This method is generated.
      * Documentation taken from corresponding module.
@@ -1972,12 +2137,15 @@ class TestGuy extends \Codeception\AbstractGuy
      * @see Codeception\Util\Framework::dontSeeOptionIsSelected()
      * @return \Codeception\Maybe
      */
-    public function cantSeeOptionIsSelected($select, $optionText) {
+    public function cantSeeOptionIsSelected($select, $optionText)
+    {
         $this->scenario->addStep(new \Codeception\Step\ConditionalAssertion('dontSeeOptionIsSelected', func_get_args()));
         if ($this->scenario->running()) {
             $result = $this->scenario->runStep();
+
             return new Maybe($result);
         }
+
         return new Maybe();
     }
     /**
@@ -1999,16 +2167,19 @@ class TestGuy extends \Codeception\AbstractGuy
      * @see Codeception\Util\Framework::dontSeeOptionIsSelected()
      * @return \Codeception\Maybe
      */
-    public function dontSeeOptionIsSelected($select, $optionText) {
+    public function dontSeeOptionIsSelected($select, $optionText)
+    {
         $this->scenario->addStep(new \Codeception\Step\Assertion('dontSeeOptionIsSelected', func_get_args()));
         if ($this->scenario->running()) {
             $result = $this->scenario->runStep();
+
             return new Maybe($result);
         }
+
         return new Maybe();
     }
 
- 
+
     /**
      * This method is generated.
      * Documentation taken from corresponding module.
@@ -2019,12 +2190,15 @@ class TestGuy extends \Codeception\AbstractGuy
      * @see Codeception\Util\Framework::seePageNotFound()
      * @return \Codeception\Maybe
      */
-    public function canSeePageNotFound() {
+    public function canSeePageNotFound()
+    {
         $this->scenario->addStep(new \Codeception\Step\ConditionalAssertion('seePageNotFound', func_get_args()));
         if ($this->scenario->running()) {
             $result = $this->scenario->runStep();
+
             return new Maybe($result);
         }
+
         return new Maybe();
     }
     /**
@@ -2036,16 +2210,18 @@ class TestGuy extends \Codeception\AbstractGuy
      * @see Codeception\Util\Framework::seePageNotFound()
      * @return \Codeception\Maybe
      */
-    public function seePageNotFound() {
+    public function seePageNotFound()
+    {
         $this->scenario->addStep(new \Codeception\Step\Assertion('seePageNotFound', func_get_args()));
         if ($this->scenario->running()) {
             $result = $this->scenario->runStep();
+
             return new Maybe($result);
         }
+
         return new Maybe();
     }
 
- 
     /**
      * This method is generated.
      * Documentation taken from corresponding module.
@@ -2059,12 +2235,15 @@ class TestGuy extends \Codeception\AbstractGuy
      * @see Codeception\Util\Framework::seeResponseCodeIs()
      * @return \Codeception\Maybe
      */
-    public function canSeeResponseCodeIs($code) {
+    public function canSeeResponseCodeIs($code)
+    {
         $this->scenario->addStep(new \Codeception\Step\ConditionalAssertion('seeResponseCodeIs', func_get_args()));
         if ($this->scenario->running()) {
             $result = $this->scenario->runStep();
+
             return new Maybe($result);
         }
+
         return new Maybe();
     }
     /**
@@ -2079,16 +2258,19 @@ class TestGuy extends \Codeception\AbstractGuy
      * @see Codeception\Util\Framework::seeResponseCodeIs()
      * @return \Codeception\Maybe
      */
-    public function seeResponseCodeIs($code) {
+    public function seeResponseCodeIs($code)
+    {
         $this->scenario->addStep(new \Codeception\Step\Assertion('seeResponseCodeIs', func_get_args()));
         if ($this->scenario->running()) {
             $result = $this->scenario->runStep();
+
             return new Maybe($result);
         }
+
         return new Maybe();
     }
 
- 
+
     /**
      * This method is generated.
      * Documentation taken from corresponding module.
@@ -2108,12 +2290,15 @@ class TestGuy extends \Codeception\AbstractGuy
      * @see Codeception\Util\Framework::seeInTitle()
      * @return \Codeception\Maybe
      */
-    public function canSeeInTitle($title) {
+    public function canSeeInTitle($title)
+    {
         $this->scenario->addStep(new \Codeception\Step\ConditionalAssertion('seeInTitle', func_get_args()));
         if ($this->scenario->running()) {
             $result = $this->scenario->runStep();
+
             return new Maybe($result);
         }
+
         return new Maybe();
     }
     /**
@@ -2134,16 +2319,18 @@ class TestGuy extends \Codeception\AbstractGuy
      * @see Codeception\Util\Framework::seeInTitle()
      * @return \Codeception\Maybe
      */
-    public function seeInTitle($title) {
+    public function seeInTitle($title)
+    {
         $this->scenario->addStep(new \Codeception\Step\Assertion('seeInTitle', func_get_args()));
         if ($this->scenario->running()) {
             $result = $this->scenario->runStep();
+
             return new Maybe($result);
         }
+
         return new Maybe();
     }
 
- 
     /**
      * This method is generated.
      * Documentation taken from corresponding module.
@@ -2157,12 +2344,15 @@ class TestGuy extends \Codeception\AbstractGuy
      * @see Codeception\Util\Framework::dontSeeInTitle()
      * @return \Codeception\Maybe
      */
-    public function cantSeeInTitle($title) {
+    public function cantSeeInTitle($title)
+    {
         $this->scenario->addStep(new \Codeception\Step\ConditionalAssertion('dontSeeInTitle', func_get_args()));
         if ($this->scenario->running()) {
             $result = $this->scenario->runStep();
+
             return new Maybe($result);
         }
+
         return new Maybe();
     }
     /**
@@ -2177,16 +2367,19 @@ class TestGuy extends \Codeception\AbstractGuy
      * @see Codeception\Util\Framework::dontSeeInTitle()
      * @return \Codeception\Maybe
      */
-    public function dontSeeInTitle($title) {
+    public function dontSeeInTitle($title)
+    {
         $this->scenario->addStep(new \Codeception\Step\Assertion('dontSeeInTitle', func_get_args()));
         if ($this->scenario->running()) {
             $result = $this->scenario->runStep();
+
             return new Maybe($result);
         }
+
         return new Maybe();
     }
 
- 
+
     /**
      * This method is generated.
      * Documentation taken from corresponding module.
@@ -2201,21 +2394,24 @@ class TestGuy extends \Codeception\AbstractGuy
      * ```
      *
      * @param $table
-     * @param array $data
+     * @param  array   $data
      * @return integer $id
      * @see Codeception\Module\Db::haveInDatabase()
      * @return \Codeception\Maybe
      */
-    public function haveInDatabase($table, $data) {
+    public function haveInDatabase($table, $data)
+    {
         $this->scenario->addStep(new \Codeception\Step\Action('haveInDatabase', func_get_args()));
         if ($this->scenario->running()) {
             $result = $this->scenario->runStep();
+
             return new Maybe($result);
         }
+
         return new Maybe();
     }
 
- 
+
     /**
      * This method is generated.
      * Documentation taken from corresponding module.
@@ -2244,12 +2440,15 @@ class TestGuy extends \Codeception\AbstractGuy
      * @see Codeception\Module\Db::seeInDatabase()
      * @return \Codeception\Maybe
      */
-    public function canSeeInDatabase($table, $criteria = null) {
+    public function canSeeInDatabase($table, $criteria = null)
+    {
         $this->scenario->addStep(new \Codeception\Step\ConditionalAssertion('seeInDatabase', func_get_args()));
         if ($this->scenario->running()) {
             $result = $this->scenario->runStep();
+
             return new Maybe($result);
         }
+
         return new Maybe();
     }
     /**
@@ -2279,16 +2478,18 @@ class TestGuy extends \Codeception\AbstractGuy
      * @see Codeception\Module\Db::seeInDatabase()
      * @return \Codeception\Maybe
      */
-    public function seeInDatabase($table, $criteria = null) {
+    public function seeInDatabase($table, $criteria = null)
+    {
         $this->scenario->addStep(new \Codeception\Step\Assertion('seeInDatabase', func_get_args()));
         if ($this->scenario->running()) {
             $result = $this->scenario->runStep();
+
             return new Maybe($result);
         }
+
         return new Maybe();
     }
 
- 
     /**
      * This method is generated.
      * Documentation taken from corresponding module.
@@ -2319,12 +2520,15 @@ class TestGuy extends \Codeception\AbstractGuy
      * @see Codeception\Module\Db::dontSeeInDatabase()
      * @return \Codeception\Maybe
      */
-    public function cantSeeInDatabase($table, $criteria = null) {
+    public function cantSeeInDatabase($table, $criteria = null)
+    {
         $this->scenario->addStep(new \Codeception\Step\ConditionalAssertion('dontSeeInDatabase', func_get_args()));
         if ($this->scenario->running()) {
             $result = $this->scenario->runStep();
+
             return new Maybe($result);
         }
+
         return new Maybe();
     }
     /**
@@ -2356,16 +2560,19 @@ class TestGuy extends \Codeception\AbstractGuy
      * @see Codeception\Module\Db::dontSeeInDatabase()
      * @return \Codeception\Maybe
      */
-    public function dontSeeInDatabase($table, $criteria = null) {
+    public function dontSeeInDatabase($table, $criteria = null)
+    {
         $this->scenario->addStep(new \Codeception\Step\Assertion('dontSeeInDatabase', func_get_args()));
         if ($this->scenario->running()) {
             $result = $this->scenario->runStep();
+
             return new Maybe($result);
         }
+
         return new Maybe();
     }
 
- 
+
     /**
      * This method is generated.
      * Documentation taken from corresponding module.
@@ -2385,18 +2592,20 @@ class TestGuy extends \Codeception\AbstractGuy
      * @version 1.1
      * @param $table
      * @param $column
-     * @param array $criteria
+     * @param  array $criteria
      * @return mixed
      * @see Codeception\Module\Db::grabFromDatabase()
      * @return \Codeception\Maybe
      */
-    public function grabFromDatabase($table, $column, $criteria = null) {
+    public function grabFromDatabase($table, $column, $criteria = null)
+    {
         $this->scenario->addStep(new \Codeception\Step\Action('grabFromDatabase', func_get_args()));
         if ($this->scenario->running()) {
             $result = $this->scenario->runStep();
+
             return new Maybe($result);
         }
+
         return new Maybe();
     }
 }
-

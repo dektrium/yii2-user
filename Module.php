@@ -28,26 +28,26 @@ class Module extends BaseModule
      */
     public $registrationRedirectUrl = ['/user/auth/login'];
 
-	/**
-	 * @var bool Whether to enable "Trackable" behavior.
-	 */
-	public $trackable = false;
+    /**
+     * @var bool Whether to enable "Trackable" behavior.
+     */
+    public $trackable = false;
 
-	/**
-	 * @var bool Whether to enable "Trackable" behavior.
-	 */
-	public $confirmable = true;
+    /**
+     * @var bool Whether to enable "Trackable" behavior.
+     */
+    public $confirmable = true;
 
-	/**
-	 * @var bool Whether to allow login without confirmation.
-	 */
-	public $allowUnconfirmedLogin = false;
+    /**
+     * @var bool Whether to allow login without confirmation.
+     */
+    public $allowUnconfirmedLogin = false;
 
-	/**
-	 * @var int The time before a sent confirmation token becomes invalid.
+    /**
+     * @var int The time before a sent confirmation token becomes invalid.
      * By default confirmWithin is 24 hours.
-	 */
-	public $confirmWithin = 86400;
+     */
+    public $confirmWithin = 86400;
 
     /**
      * @var string View that will be rendered by Mailer.compose().
@@ -64,14 +64,14 @@ class Module extends BaseModule
      */
     public $messageSender = 'no-reply@example.com';
 
-	/**
-	 * @inheritdoc
-	 */
-	public function init()
-	{
-		parent::init();
-		$this->setAliases([
-			'@user' => __DIR__
-		]);
-	}
+    /**
+     * @inheritdoc
+     */
+    public function init()
+    {
+        parent::init();
+        $this->setAliases([
+            '@user' => __DIR__
+        ]);
+    }
 }

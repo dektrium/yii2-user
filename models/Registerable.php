@@ -31,6 +31,7 @@ trait Registerable
             if (\Yii::$app->controller->module->confirmable) {
                 $this->sendConfirmationMessage();
             }
+
             return true;
         } else {
             return false;
@@ -96,7 +97,7 @@ trait Registerable
     }
 
     /**
-     * @return string Confirmation url.
+     * @return string            Confirmation url.
      * @throws \RuntimeException Whether dektrium\user\Module.confirmable is false.
      */
     public function getConfirmationUrl()
@@ -104,6 +105,7 @@ trait Registerable
         if (!\Yii::$app->controller->module->confirmable) {
             throw new \RuntimeException('You must enable dektrium\user\Module.confirmable to use method "confirm".');
         }
+
         return \Yii::$app->getUrlManager()->createAbsoluteUrl('/user/registration/confirm', [
             'id' => $this->id,
             'token' => $this->confirmation_token
@@ -121,6 +123,7 @@ trait Registerable
         if (!\Yii::$app->controller->module->confirmable) {
             throw new \RuntimeException('You must enable dektrium\user\Module.confirmable to use method "confirm".');
         }
+
         return $this->confirmation_time !== null;
     }
 
@@ -135,6 +138,7 @@ trait Registerable
         if (!\Yii::$app->controller->module->confirmable) {
             throw new \RuntimeException('You must enable dektrium\user\Module.confirmable to use method "confirm".');
         }
+
         return ($this->confirmation_sent_time + \Yii::$app->controller->module->confirmWithin) < time();
     }
 }

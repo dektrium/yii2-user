@@ -122,6 +122,7 @@ class User extends ActiveRecord implements IdentityInterface
                 $this->setAttribute('create_time', time());
             }
             $this->setAttribute('update_time', time());
+
             return true;
         } else {
             return false;

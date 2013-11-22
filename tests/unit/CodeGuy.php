@@ -3,7 +3,6 @@
 // You should not change it manually as it will be overwritten on next build
 // @codingStandardsIgnoreFile
 
-
 use \Codeception\Maybe;
 use Codeception\Module\CodeHelper;
 use Codeception\Module\Db;
@@ -26,7 +25,7 @@ use Codeception\Module\Db;
 
 class CodeGuy extends \Codeception\AbstractGuy
 {
-    
+
     /**
      * This method is generated.
      * Documentation taken from corresponding module.
@@ -36,16 +35,18 @@ class CodeGuy extends \Codeception\AbstractGuy
      * @see Codeception\Module\CodeHelper::mockApplication()
      * @return \Codeception\Maybe
      */
-    public function mockApplication($config = null) {
+    public function mockApplication($config = null)
+    {
         $this->scenario->addStep(new \Codeception\Step\Action('mockApplication', func_get_args()));
         if ($this->scenario->running()) {
             $result = $this->scenario->runStep();
+
             return new Maybe($result);
         }
+
         return new Maybe();
     }
 
- 
     /**
      * This method is generated.
      * Documentation taken from corresponding module.
@@ -55,16 +56,18 @@ class CodeGuy extends \Codeception\AbstractGuy
      * @see Codeception\Module\CodeHelper::destroyApplication()
      * @return \Codeception\Maybe
      */
-    public function destroyApplication() {
+    public function destroyApplication()
+    {
         $this->scenario->addStep(new \Codeception\Step\Action('destroyApplication', func_get_args()));
         if ($this->scenario->running()) {
             $result = $this->scenario->runStep();
+
             return new Maybe($result);
         }
+
         return new Maybe();
     }
 
- 
     /**
      * This method is generated.
      * Documentation taken from corresponding module.
@@ -74,16 +77,18 @@ class CodeGuy extends \Codeception\AbstractGuy
      * @see Codeception\Module::getName()
      * @return \Codeception\Maybe
      */
-    public function getName() {
+    public function getName()
+    {
         $this->scenario->addStep(new \Codeception\Step\Action('getName', func_get_args()));
         if ($this->scenario->running()) {
             $result = $this->scenario->runStep();
+
             return new Maybe($result);
         }
+
         return new Maybe();
     }
 
- 
     /**
      * This method is generated.
      * Documentation taken from corresponding module.
@@ -98,21 +103,23 @@ class CodeGuy extends \Codeception\AbstractGuy
      * ```
      *
      * @param $table
-     * @param array $data
+     * @param  array   $data
      * @return integer $id
      * @see Codeception\Module\Db::haveInDatabase()
      * @return \Codeception\Maybe
      */
-    public function haveInDatabase($table, $data) {
+    public function haveInDatabase($table, $data)
+    {
         $this->scenario->addStep(new \Codeception\Step\Action('haveInDatabase', func_get_args()));
         if ($this->scenario->running()) {
             $result = $this->scenario->runStep();
+
             return new Maybe($result);
         }
+
         return new Maybe();
     }
 
- 
     /**
      * This method is generated.
      * Documentation taken from corresponding module.
@@ -141,12 +148,15 @@ class CodeGuy extends \Codeception\AbstractGuy
      * @see Codeception\Module\Db::seeInDatabase()
      * @return \Codeception\Maybe
      */
-    public function canSeeInDatabase($table, $criteria = null) {
+    public function canSeeInDatabase($table, $criteria = null)
+    {
         $this->scenario->addStep(new \Codeception\Step\ConditionalAssertion('seeInDatabase', func_get_args()));
         if ($this->scenario->running()) {
             $result = $this->scenario->runStep();
+
             return new Maybe($result);
         }
+
         return new Maybe();
     }
     /**
@@ -176,16 +186,19 @@ class CodeGuy extends \Codeception\AbstractGuy
      * @see Codeception\Module\Db::seeInDatabase()
      * @return \Codeception\Maybe
      */
-    public function seeInDatabase($table, $criteria = null) {
+    public function seeInDatabase($table, $criteria = null)
+    {
         $this->scenario->addStep(new \Codeception\Step\Assertion('seeInDatabase', func_get_args()));
         if ($this->scenario->running()) {
             $result = $this->scenario->runStep();
+
             return new Maybe($result);
         }
+
         return new Maybe();
     }
 
- 
+
     /**
      * This method is generated.
      * Documentation taken from corresponding module.
@@ -216,12 +229,15 @@ class CodeGuy extends \Codeception\AbstractGuy
      * @see Codeception\Module\Db::dontSeeInDatabase()
      * @return \Codeception\Maybe
      */
-    public function cantSeeInDatabase($table, $criteria = null) {
+    public function cantSeeInDatabase($table, $criteria = null)
+    {
         $this->scenario->addStep(new \Codeception\Step\ConditionalAssertion('dontSeeInDatabase', func_get_args()));
         if ($this->scenario->running()) {
             $result = $this->scenario->runStep();
+
             return new Maybe($result);
         }
+
         return new Maybe();
     }
     /**
@@ -253,16 +269,18 @@ class CodeGuy extends \Codeception\AbstractGuy
      * @see Codeception\Module\Db::dontSeeInDatabase()
      * @return \Codeception\Maybe
      */
-    public function dontSeeInDatabase($table, $criteria = null) {
+    public function dontSeeInDatabase($table, $criteria = null)
+    {
         $this->scenario->addStep(new \Codeception\Step\Assertion('dontSeeInDatabase', func_get_args()));
         if ($this->scenario->running()) {
             $result = $this->scenario->runStep();
+
             return new Maybe($result);
         }
+
         return new Maybe();
     }
 
- 
     /**
      * This method is generated.
      * Documentation taken from corresponding module.
@@ -282,18 +300,20 @@ class CodeGuy extends \Codeception\AbstractGuy
      * @version 1.1
      * @param $table
      * @param $column
-     * @param array $criteria
+     * @param  array $criteria
      * @return mixed
      * @see Codeception\Module\Db::grabFromDatabase()
      * @return \Codeception\Maybe
      */
-    public function grabFromDatabase($table, $column, $criteria = null) {
+    public function grabFromDatabase($table, $column, $criteria = null)
+    {
         $this->scenario->addStep(new \Codeception\Step\Action('grabFromDatabase', func_get_args()));
         if ($this->scenario->running()) {
             $result = $this->scenario->runStep();
+
             return new Maybe($result);
         }
+
         return new Maybe();
     }
 }
-

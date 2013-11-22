@@ -83,7 +83,7 @@ class RegistrationController extends Controller
 
     /**
      * Displays page where user can request new confirmation token.
-     * 
+     *
      * @return string
      */
     public function actionResend()

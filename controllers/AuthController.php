@@ -2,6 +2,7 @@
 
 use dektrium\user\models\LoginForm;
 use yii\web\Controller;
+use yii\web\VerbFilter;
 
 /**
  * Controller that manages user authentication process.
@@ -10,6 +11,21 @@ use yii\web\Controller;
  */
 class AuthController extends Controller
 {
+    /**
+     * @inheritdoc
+     */
+    public function behaviors()
+    {
+        return [
+            'verbs' => [
+                'class'   => VerbFilter::className(),
+                'actions' => [
+                    'logout' => ['post']
+                ]
+            ]
+        ];
+    }
+
     /**
      * Displays the login page.
      *
@@ -20,21 +36,24 @@ class AuthController extends Controller
         $model = new LoginForm();
 
         if ($model->load($_POST) && $model->login()) {
-            return $this->redirect(\Yii::$app->getUser()->getReturnUrl());
+            return $this->goBack();
         }
 
-        return $this->render('login', ['model' => $model]);
+        return $this->render('login', [
+            'model' => $model
+        ]);
     }
 
     /**
-     * Logs the user out and then redirects to site/index.
+     * Logs the user out and then redirects to the homepage.
      *
      * @return \yii\web\Response
      */
     public function actionLogout()
     {
         \Yii::$app->getUser()->logout();
-        return $this->redirect(['site/index']);
+
+        return $this->goHome();
     }
 }
  

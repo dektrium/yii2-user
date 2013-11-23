@@ -57,4 +57,4 @@ Dektrium user module is released under the MIT License. See the bundled `LICENSE
 
 ## What is Dektrium?
 
-The goal of Dektrium project is to provide useful modules to your Yii2 application to make development easier.
+The goal of Dektrium project is to provide useful extensions to your Yii2 application to make development easier.

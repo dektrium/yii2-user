@@ -24,11 +24,11 @@ trait Registerable
         if (!$this->isNewRecord) {
             throw new \RuntimeException('You can not call "register" method on created user.');
         }
-        if (\Yii::$app->controller->module->trackable) {
+        if (\Yii::$app->getModule('user')->trackable) {
             $this->setAttribute('registration_ip', ip2long(\Yii::$app->getRequest()->getUserIP()));
         }
         if ($this->save()) {
-            if (\Yii::$app->controller->module->confirmable) {
+            if (\Yii::$app->getModule('user')->confirmable) {
                 $this->sendConfirmationMessage();
             }
 
@@ -46,7 +46,7 @@ trait Registerable
      */
     public function confirm()
     {
-        if (!\Yii::$app->controller->module->confirmable) {
+        if (!\Yii::$app->getModule('user')->confirmable) {
             throw new \RuntimeException('You must enable dektrium\user\Module.confirmable to use method "confirm".');
         } elseif ($this->getIsConfirmed()) {
             return true;
@@ -66,7 +66,7 @@ trait Registerable
      */
     public function generateConfirmationData()
     {
-        if (!\Yii::$app->controller->module->confirmable) {
+        if (!\Yii::$app->getModule('user')->confirmable) {
             throw new \RuntimeException('You must enable dektrium\user\Module.confirmable to use method "confirm".');
         }
         $this->confirmation_token = Security::generateRandomKey();
@@ -81,17 +81,17 @@ trait Registerable
      */
     public function sendConfirmationMessage()
     {
-        if (!\Yii::$app->controller->module->confirmable) {
+        if (!\Yii::$app->getModule('user')->confirmable) {
             throw new \RuntimeException('You must enable dektrium\user\Module.confirmable to use method "confirm".');
         }
         $this->generateConfirmationData();
         $this->save(false);
         /** @var \yii\mail\BaseMailer $mailer */
         $mailer = \Yii::$app->mail;
-        $mailer->compose(\Yii::$app->controller->module->confirmationMessageView, ['user' => $this])
+        $mailer->compose(\Yii::$app->getModule('user')->confirmationMessageView, ['user' => $this])
             ->setTo($this->email)
-            ->setFrom(\Yii::$app->controller->module->messageSender)
-            ->setSubject(\Yii::$app->controller->module->confirmationMessageSubject)
+            ->setFrom(\Yii::$app->getModule('user')->messageSender)
+            ->setSubject(\Yii::$app->getModule('user')->confirmationMessageSubject)
             ->send();
         \Yii::$app->getSession()->setFlash('confirmation_message_sent');
     }
@@ -102,7 +102,7 @@ trait Registerable
      */
     public function getConfirmationUrl()
     {
-        if (!\Yii::$app->controller->module->confirmable) {
+        if (!\Yii::$app->getModule('user')->confirmable) {
             throw new \RuntimeException('You must enable dektrium\user\Module.confirmable to use method "confirm".');
         }
 
@@ -120,7 +120,7 @@ trait Registerable
      */
     public function getIsConfirmed()
     {
-        if (!\Yii::$app->controller->module->confirmable) {
+        if (!\Yii::$app->getModule('user')->confirmable) {
             throw new \RuntimeException('You must enable dektrium\user\Module.confirmable to use method "confirm".');
         }
 
@@ -135,10 +135,10 @@ trait Registerable
      */
     public function getIsConfirmationPeriodExpired()
     {
-        if (!\Yii::$app->controller->module->confirmable) {
+        if (!\Yii::$app->getModule('user')->confirmable) {
             throw new \RuntimeException('You must enable dektrium\user\Module.confirmable to use method "confirm".');
         }
 
-        return ($this->confirmation_sent_time + \Yii::$app->controller->module->confirmWithin) < time();
+        return ($this->confirmation_sent_time + \Yii::$app->getModule('user')->confirmWithin) < time();
     }
 }

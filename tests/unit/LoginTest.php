@@ -35,6 +35,7 @@ class LoginTest extends \Codeception\TestCase\Test
         $this->assertTrue(Yii::$app->getUser()->getIsGuest());
         $this->assertTrue($model->login());
         $this->assertFalse(Yii::$app->getUser()->getIsGuest());
+        Yii::$app->getUser()->logout();
     }
 
     public function testUnconfirmedLogin()
@@ -52,5 +53,6 @@ class LoginTest extends \Codeception\TestCase\Test
         $model->email = 'unconfirmed@example.com';
         $model->password = 'unconfirmed';
         $this->assertTrue($model->login());
+        Yii::$app->getUser()->logout();
     }
 }

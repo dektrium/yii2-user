@@ -88,7 +88,9 @@ class RegistrationController extends Controller
      */
     public function actionResend()
     {
-        $model = new ResendForm();
+        $model = \Yii::createObject([
+            'class' => $this->module->resendForm
+        ]);
 
         if ($model->load($_POST) && $model->resend()) {
             return $this->render('success');

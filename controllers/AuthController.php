@@ -49,7 +49,9 @@ class AuthController extends Controller
      */
     public function actionLogin()
     {
-        $model = new LoginForm();
+        $model = \Yii::createObject([
+            'class' => $this->module->loginForm
+        ]);
 
         if ($model->load($_POST) && $model->login()) {
             return $this->goBack();

@@ -18,6 +18,16 @@ class Module extends BaseModule
     ];
 
     /**
+     * @var string Model that will be used in loginAction.
+     */
+    public $loginForm = '\dektrium\user\models\LoginForm';
+
+    /**
+     * @var string Model that will be used in resendAction.
+     */
+    public $resendForm = '\dektrium\user\models\ResendForm';
+
+    /**
      * @var int The time you want the user will be remembered without asking for credentials.
      * By default rememberFor is two weeks.
      */

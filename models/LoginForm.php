@@ -51,7 +51,7 @@ class LoginForm extends Model
     public function validatePassword()
     {
         if ($this->identity === null || !Security::validatePassword($this->password, $this->identity->password_hash)) {
-            $this->addError('password', 'Invalid login or password');
+            $this->addError('password', \Yii::t('user', 'Invalid email or password'));
         }
     }
 
@@ -66,7 +66,7 @@ class LoginForm extends Model
             && !$module->allowUnconfirmedLogin
             && !$this->identity->isConfirmed
         ) {
-            $this->addError('password', 'You must confirm your email before login');
+            $this->addError('email', \Yii::t('user', 'You must confirm your account before logging in'));
         }
     }
 

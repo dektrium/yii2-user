@@ -39,7 +39,7 @@ class ResendForm extends Model
     public function validateEmail()
     {
         if ($this->identity != null && $this->identity->isConfirmed) {
-            $this->addError('email', 'This account has already been confirmed');
+            $this->addError('email', Yii::t('user', 'This account has already been confirmed'));
         }
     }
 

@@ -77,7 +77,8 @@ class LoginForm extends Model
     public function login()
     {
         if ($this->validate()) {
-            \Yii::$app->getUser()->login($this->identity, $this->rememberMe ? \Yii::$app->controller->module->rememberFor : 0);
+            \Yii::$app->getUser()->login($this->identity, $this->rememberMe ?
+                \Yii::$app->getModule('user')->rememberFor : 0);
 
             return true;
         } else {

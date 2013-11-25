@@ -34,8 +34,10 @@ $this->params['breadcrumbs'][] = $this->title;
 
     <div class="form-group">
         <div class="col-lg-offset-1 col-lg-11">
-            <?= Html::submitButton('Login', ['class' => 'btn btn-primary']) ?>
+            <?= Html::submitButton('Login', ['class' => 'btn btn-primary']) ?><br>
+            <?= Html::a('Resend confirmation message', ['/user/registration/resend']) ?>
         </div>
+
     </div>
 
     <?php ActiveForm::end(); ?>

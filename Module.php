@@ -34,7 +34,7 @@ class Module extends BaseModule
     public $trackable = false;
 
     /**
-     * @var bool Whether to enable "Trackable" behavior.
+     * @var bool Whether to enable "Confirmable" behavior.
      */
     public $confirmable = true;
 

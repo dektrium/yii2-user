@@ -2,7 +2,7 @@
 $I = new TestGuy($scenario);
 $I->wantTo('test registration');
 $I->amOnPage('?r=user/registration/register');
-$I->see('Sign up');
+$I->see('Register');
 $I->fillField('#user-register-form-username', 'tester');
 $I->fillField('#user-register-form-email', 'tester@example.com');
 $I->fillField('#user-register-form-password', 'tester');

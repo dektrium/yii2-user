@@ -9,6 +9,8 @@ use \yii\base\Module as BaseModule;
  */
 class Module extends BaseModule
 {
+    const VERSION = '0.1.0-DEV';
+
     /**
      * @inheritdoc
      */
@@ -44,7 +46,7 @@ class Module extends BaseModule
     public $trackable = false;
 
     /**
-     * @var bool Whether to enable "Trackable" behavior.
+     * @var bool Whether to enable "Confirmable" behavior.
      */
     public $confirmable = true;
 
@@ -75,11 +77,23 @@ class Module extends BaseModule
     public $messageSender = 'no-reply@example.com';
 
     /**
+     * @var int Cost parameter used by the Blowfish hash algorithm.
+     */
+    public $cost = 10;
+
+    /**
      * @inheritdoc
      */
     public function init()
     {
         parent::init();
+        \Yii::$app->getI18n()->translations['user*'] = [
+            'class' => 'yii\i18n\PhpMessageSource',
+            'basePath' => __DIR__.'/messages',
+            'fileMap' => [
+                'user' => 'user.php'
+            ]
+        ];
         $this->setAliases([
             '@user' => __DIR__
         ]);

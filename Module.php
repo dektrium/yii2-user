@@ -65,6 +65,11 @@ class Module extends BaseModule
     public $messageSender = 'no-reply@example.com';
 
     /**
+     * @var int Cost parameter used by the Blowfish hash algorithm.
+     */
+    public $cost = 10;
+
+    /**
      * @inheritdoc
      */
     public function init()

@@ -115,7 +115,7 @@ class User extends ActiveRecord implements IdentityInterface
     {
         if (parent::beforeSave($insert)) {
             if ($this->isAttributeSafe('password') && !empty($this->password)) {
-                $this->setAttribute('password_hash', Security::generatePasswordHash($this->password));
+                $this->setAttribute('password_hash', Security::generatePasswordHash($this->password, \Yii::$app->getModule('user')->cost));
             }
             if ($this->isNewRecord) {
                 $this->setAttribute('auth_key', Security::generateRandomKey());

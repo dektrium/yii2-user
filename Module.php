@@ -70,6 +70,13 @@ class Module extends BaseModule
     public function init()
     {
         parent::init();
+        \Yii::$app->getI18n()->translations['user*'] = [
+            'class' => 'yii\i18n\PhpMessageSource',
+            'basePath' => __DIR__.'/messages',
+            'fileMap' => [
+                'user' => 'user.php'
+            ]
+        ];
         $this->setAliases([
             '@user' => __DIR__
         ]);

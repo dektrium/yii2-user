@@ -28,7 +28,6 @@ class CodeHelper extends \Codeception\Module
                 'mail' => [
                     'class' => 'yii\swiftmailer\Mailer',
                     'useFileTransport' => true,
-                    'htmlLayout' => '@app/_data/html.php'
                 ],
             ]
         ];

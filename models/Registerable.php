@@ -88,10 +88,14 @@ trait Registerable
         $this->save(false);
         /** @var \yii\mail\BaseMailer $mailer */
         $mailer = \Yii::$app->mail;
-        $mailer->compose(\Yii::$app->getModule('user')->confirmationMessageView, ['user' => $this])
+        $html = \Yii::$app->getView()->renderFile(\Yii::$app->getModule('user')->confirmationMessageView, [
+            'user' => $this
+        ]);
+        $mailer->compose()
             ->setTo($this->email)
             ->setFrom(\Yii::$app->getModule('user')->messageSender)
             ->setSubject(\Yii::$app->getModule('user')->confirmationMessageSubject)
+            ->setHtmlBody($html)
             ->send();
         \Yii::$app->getSession()->setFlash('confirmation_message_sent');
     }

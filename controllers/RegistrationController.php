@@ -1,6 +1,5 @@
 <?php namespace dektrium\user\controllers;
 
-use dektrium\user\models\ResendForm;
 use yii\db\ActiveQuery;
 use yii\web\AccessControl;
 use yii\web\Controller;

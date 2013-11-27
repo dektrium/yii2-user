@@ -1,6 +1,5 @@
 <?php namespace dektrium\user\controllers;
 
-use dektrium\user\models\LoginForm;
 use yii\web\AccessControl;
 use yii\web\Controller;
 use yii\web\VerbFilter;

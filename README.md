@@ -1,7 +1,7 @@
-Dektrium User Module
-==================
+Yii2-User
+=========
 
-Dektrium User Module is a flexible user registration and authentication module for Yii2. It provides user authentication and registration to your Yii2 site.
+Yii2-User is a flexible user registration and authentication module for Yii2. It provides user authentication and registration to your Yii2 site.
 
 **NOTE:** Module is in initial development. Anything may change at any time.
 
@@ -11,14 +11,14 @@ The preferred way to install this extension is through [composer](http://getcomp
 
 Either run
 
-```
-$ php composer.phar require dektrium/yii2-user "dev-master"
+```bash
+$ php composer.phar require dektrium/yii2-user "0.1.0"
 ```
 
 or add
 
 ```
-"dektrium/yii2-user": "dev-master"
+"dektrium/yii2-user": "0.1.0"
 ```
 
 to the require section of your `composer.json` file.

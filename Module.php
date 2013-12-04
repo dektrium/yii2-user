@@ -82,6 +82,11 @@ class Module extends BaseModule
     public $cost = 10;
 
     /**
+     * @var string
+     */
+    protected $loginType = 'email';
+
+    /**
      * @inheritdoc
      */
     public function init()
@@ -97,5 +102,28 @@ class Module extends BaseModule
         $this->setAliases([
             '@user' => __DIR__
         ]);
+    }
+
+    /**
+     * Sets login type. Allowed types: 'email', 'username', 'both'
+     *
+     * @param $value
+     * @throws \InvalidArgumentException
+     */
+    public function setLoginType($value)
+    {
+        $allowed = ['email', 'username', 'both'];
+        if (!in_array($value, $allowed)) {
+            throw new \InvalidArgumentException('Setting unknown login type');
+        }
+        $this->loginType = $value;
+    }
+
+    /**
+     * @return string Login type
+     */
+    public function getLoginType()
+    {
+        return $this->loginType;
     }
 }

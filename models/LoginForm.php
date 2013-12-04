@@ -14,7 +14,7 @@ class LoginForm extends Model
     /**
      * @var string
      */
-    public $email;
+    public $login;
 
     /**
      * @var string
@@ -37,10 +37,9 @@ class LoginForm extends Model
     public function rules()
     {
         return [
-            [['email', 'password'], 'required'],
-            ['email', 'email'],
+            [['login', 'password'], 'required'],
             ['password', 'validatePassword'],
-            ['email', 'validateConfirmation'],
+            ['login', 'validateConfirmation'],
             ['rememberMe', 'boolean'],
         ];
     }
@@ -101,8 +100,20 @@ class LoginForm extends Model
     {
         if (parent::beforeValidate()) {
             $query = new ActiveQuery(['modelClass' => \Yii::$app->getUser()->identityClass]);
-            $this->identity = $query->where(['email' => $this->email])->one();
-
+            switch (\Yii::$app->getModule('user')->loginType) {
+                case 'email':
+                    $condition = ['email' => $this->login];
+                    break;
+                case 'username':
+                    $condition = ['username' => $this->login];
+                    break;
+                case 'both':
+                    $condition = ['or', ['email' => $this->login], ['username' => $this->login]];
+                    break;
+                default:
+                    throw new \RuntimeException;
+            }
+            $this->identity = $query->where($condition)->one();
             return true;
         } else {
             return false;

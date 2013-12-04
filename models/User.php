@@ -54,6 +54,7 @@ class User extends ActiveRecord implements IdentityInterface
             [['username', 'email', 'password'], 'required', 'on' => ['register']],
             ['email', 'email'],
             [['username', 'email'], 'unique'],
+            ['username', 'match', 'pattern' => '/^[a-zA-Z]\w+$/'],
             ['username', 'string', 'min' => 3, 'max' => 25],
             ['email', 'string', 'max' => 255],
             ['password', 'string', 'min' => 6],

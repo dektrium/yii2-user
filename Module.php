@@ -9,7 +9,7 @@ use \yii\base\Module as BaseModule;
  */
 class Module extends BaseModule
 {
-    const VERSION = '0.1.0-DEV';
+    const VERSION = '0.2.0-DEV';
 
     /**
      * @inheritdoc

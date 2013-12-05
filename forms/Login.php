@@ -1,4 +1,4 @@
-<?php namespace dektrium\user\models;
+<?php namespace dektrium\user\forms;
 
 use yii\base\Model;
 use yii\db\ActiveQuery;
@@ -9,7 +9,7 @@ use yii\helpers\Security;
  *
  * @author Dmitry Erofeev <dmeroff@gmail.com>
  */
-class LoginForm extends Model
+class Login extends Model
 {
     /**
      * @var string
@@ -27,7 +27,7 @@ class LoginForm extends Model
     public $rememberMe = false;
 
     /**
-     * @var User
+     * @var \dektrium\user\models\User
      */
     protected $identity;
 

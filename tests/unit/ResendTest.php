@@ -22,7 +22,7 @@ class ResendTest extends \Codeception\TestCase\Test
 
     public function testValidation()
     {
-        $model = new \dektrium\user\models\ResendForm();
+        $model = new \dektrium\user\forms\Resend();
         $model->email = 'foobar@example.com';
         $this->assertFalse($model->validate());
         $model->email = 'user@example.com';
@@ -33,7 +33,7 @@ class ResendTest extends \Codeception\TestCase\Test
 
     public function testResend()
     {
-        $model = new \dektrium\user\models\ResendForm();
+        $model = new \dektrium\user\forms\Resend();
         $model->email = 'unconfirmed@example.com';
         $user = \dektrium\user\models\User::findByEmail('unconfirmed@example.com');
         $token = $user->confirmation_token;

@@ -22,7 +22,7 @@ class LoginTest extends \Codeception\TestCase\Test
 
     public function testLogin()
     {
-        $model = new \dektrium\user\models\LoginForm();
+        $model = new \dektrium\user\forms\Login();
         $this->assertFalse($model->login());
         $model->login = 'tester@example.com';
         $model->password = 'blablabla';
@@ -41,7 +41,7 @@ class LoginTest extends \Codeception\TestCase\Test
     public function testLoginByUsername()
     {
         Yii::$app->getModule('user')->loginType = 'username';
-        $model = new \dektrium\user\models\LoginForm();
+        $model = new \dektrium\user\forms\Login();
         $model->login = 'user';
         $model->password = 'qwerty';
         $this->assertTrue($model->login());
@@ -52,7 +52,7 @@ class LoginTest extends \Codeception\TestCase\Test
     public function testLoginByEmailOrUsername()
     {
         Yii::$app->getModule('user')->loginType = 'both';
-        $model = new \dektrium\user\models\LoginForm();
+        $model = new \dektrium\user\forms\Login();
         $model->login = 'user';
         $model->password = 'qwerty';
         $this->assertTrue($model->login());
@@ -69,7 +69,7 @@ class LoginTest extends \Codeception\TestCase\Test
     {
         Yii::$app->getModule('user')->confirmable = true;
         Yii::$app->getModule('user')->allowUnconfirmedLogin = false;
-        $model = new \dektrium\user\models\LoginForm();
+        $model = new \dektrium\user\forms\Login();
         $model->login = 'unconfirmed@example.com';
         $model->password = 'unconfirmed';
         $this->assertFalse($model->login());

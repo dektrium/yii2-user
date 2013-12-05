@@ -1,4 +1,4 @@
-<?php namespace dektrium\user\models;
+<?php namespace dektrium\user\forms;
 
 use yii\base\Model;
 use yii\db\ActiveQuery;
@@ -8,7 +8,7 @@ use yii\db\ActiveQuery;
  *
  * @author Dmitry Erofeev <dmeroff@gmail.com>
  */
-class ResendForm extends Model
+class Resend extends Model
 {
     /**
      * @var string
@@ -16,7 +16,7 @@ class ResendForm extends Model
     public $email;
 
     /**
-     * @var User
+     * @var \dektrium\user\models\User
      */
     protected $identity;
 

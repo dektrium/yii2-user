@@ -29,6 +29,7 @@ use yii\web\IdentityInterface;
 class User extends ActiveRecord implements IdentityInterface
 {
     use Registerable;
+    use Recoverable;
 
     /**
      * @var string Plain password. Used for model validation.

@@ -12,6 +12,8 @@ CREATE TABLE IF NOT EXISTS `user` (
   `confirmation_token` varchar(32) DEFAULT NULL,
   `confirmation_time` int(11) DEFAULT NULL,
   `confirmation_sent_time` int(11) DEFAULT NULL,
+  `recovery_token` varchar(32) DEFAULT NULL,
+  `recovery_sent_time` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `username_unique` (`username`),
   UNIQUE KEY `email_unique` (`email`)

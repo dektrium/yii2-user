@@ -77,6 +77,27 @@ class Module extends BaseModule
     public $messageSender = 'no-reply@example.com';
 
     /**
+     * @var bool Whether to enable "Recoverable" behavior.
+     */
+    public $recoverable = true;
+
+    /**
+     * @var int The time before a recovery token becomes invalid.
+     * By default recoverWithin is 6 hours.
+     */
+    public $recoverWithin = 21600;
+
+    /**
+     * @var string View that will be rendered by Mailer.compose() on password recovery.
+     */
+    public $recoveryMessageView = '@user/views/mail/recovery.php';
+
+    /**
+     * @var string Subject of recovery message.
+     */
+    public $recoveryMessageSubject = 'Password recovery on Site.com';
+
+    /**
      * @var int Cost parameter used by the Blowfish hash algorithm.
      */
     public $cost = 10;

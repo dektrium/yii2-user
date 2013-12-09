@@ -72,6 +72,7 @@ trait Registerable
         $this->confirmation_token = Security::generateRandomKey();
         $this->confirmation_sent_time = time();
         $this->confirmation_time = null;
+        $this->save(false);
     }
 
     /**
@@ -85,7 +86,6 @@ trait Registerable
             throw new \RuntimeException('You must enable dektrium\user\Module.confirmable to use method "confirm".');
         }
         $this->generateConfirmationData();
-        $this->save(false);
         /** @var \yii\mail\BaseMailer $mailer */
         $mailer = \Yii::$app->mail;
         $html = \Yii::$app->getView()->renderFile(\Yii::$app->getModule('user')->confirmationMessageView, [

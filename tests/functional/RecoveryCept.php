@@ -2,6 +2,9 @@
 $I = new TestGuy($scenario);
 $I->wantTo('recover my password');
 $I->amOnPage('/?r=user/recovery/request');
+$I->fillField('#recovery-form-email', 'unconfirmed@example.com');
+$I->click('Request password recovery');
+$I->see('You must confirm your account first');
 $I->fillField('#recovery-form-email', 'user@example.com');
 $I->click('Request password recovery');
 $I->see('You have been sent an email with instructions on how to reset your password.');

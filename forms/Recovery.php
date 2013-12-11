@@ -41,9 +41,22 @@ class Recovery extends Model
             ['email', 'required', 'on' => 'request'],
             ['email', 'email', 'on' => 'request'],
             ['email', 'exist', 'className' => '\dektrium\user\models\User', 'on' => 'request'],
+            ['email', 'validateUserConfirmed', 'on' => 'request'],
             ['password', 'required', 'on' => 'reset'],
             ['password', 'string', 'min' => 6, 'on' => 'reset']
         ];
+    }
+
+    /**
+     * Validates that user has confirmed email.
+     */
+    public function validateUserConfirmed()
+    {
+        $query = new ActiveQuery(['modelClass' => \Yii::$app->getUser()->identityClass]);
+        $this->identity = $query->where(['email' => $this->email])->one();
+        if ($this->identity !== null && \Yii::$app->getModule('user')->confirmable && !$this->identity->isConfirmed) {
+            $this->addError('email', 'You must confirm your account first');
+        }
     }
 
     /**
@@ -54,10 +67,7 @@ class Recovery extends Model
     public function sendRecoveryMessage()
     {
         if ($this->validate() && $this->scenario == 'request') {
-            $query = new ActiveQuery(['modelClass' => \Yii::$app->getUser()->identityClass]);
-            /** @var \dektrium\user\models\User $user */
-            $user = $query->where(['email' => $this->email])->one();
-            $user->sendRecoveryMessage();
+            $this->identity->sendRecoveryMessage();
             \Yii::$app->getSession()->setFlash('recovery_message_sent');
             return true;
         } else {

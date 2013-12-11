@@ -30,6 +30,11 @@ class Module extends BaseModule
     public $resendForm = '\dektrium\user\forms\Resend';
 
     /**
+     * @var string Model that will be used in recovery password process.
+     */
+    public $recoveryForm = '\dektrium\user\forms\Recovery';
+
+    /**
      * @var int The time you want the user will be remembered without asking for credentials.
      * By default rememberFor is two weeks.
      */

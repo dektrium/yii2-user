@@ -32,6 +32,7 @@ $this->params['breadcrumbs'][] = $this->title;
 <div class="form-group">
     <div class="col-lg-offset-1 col-lg-11">
         <?= Html::submitButton(Yii::t('user', 'Log in'), ['class' => 'btn btn-primary']) ?><br>
+        <?= Html::a(Yii::t('user', 'Forgot password?'), ['/user/recovery/request']) ?> |
         <?= Html::a(Yii::t('user', 'Request new confirmation message'), ['/user/registration/resend']) ?>
     </div>
 

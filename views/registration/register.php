@@ -30,7 +30,7 @@ $this->params['breadcrumbs'][] = $this->title;
 <div class="form-group">
     <div class="col-lg-offset-1 col-lg-11">
         <?= Html::submitButton(Yii::t('user', 'Register'), ['class' => 'btn btn-primary']) ?><br>
-        <?= Html::a(Yii::t('user', 'Request new confirmation message'), ['/user/registration/resend']) ?>
+        <?= Html::a(Yii::t('user', 'Didn\'t receive confirmation message?'), ['/user/registration/resend']) ?>
     </div>
 </div>
 

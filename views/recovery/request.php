@@ -7,7 +7,7 @@ use yii\widgets\ActiveForm;
  * @var yii\widgets\ActiveForm $form
  * @var dektrium\user\models\User $model
  */
-$this->title = Yii::t('user', 'Request password recovery');
+$this->title = Yii::t('user', 'Password recovery');
 $this->params['breadcrumbs'][] = $this->title;
 ?>
     <h1><?= Html::encode($this->title) ?></h1>
@@ -24,7 +24,7 @@ $this->params['breadcrumbs'][] = $this->title;
     <?= $form->field($model, 'email') ?>
     <div class="form-group">
         <div class="col-lg-offset-1 col-lg-11">
-            <?= Html::submitButton(Yii::t('user', 'Request password recovery'), ['class' => 'btn btn-primary']) ?><br>
+            <?= Html::submitButton(Yii::t('user', 'Send'), ['class' => 'btn btn-primary']) ?><br>
         </div>
 
     </div>

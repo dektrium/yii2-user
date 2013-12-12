@@ -17,6 +17,7 @@ class Module extends BaseModule
 	public $controllerMap = [
 		'registration' => '\dektrium\user\controllers\RegistrationController',
 		'auth' => '\dektrium\user\controllers\AuthController',
+		'recovery' => '\dektrium\user\controllers\RecoveryController',
 	];
 
 	/**

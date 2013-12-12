@@ -10,85 +10,85 @@ use yii\db\ActiveQuery;
  */
 class Resend extends Model
 {
-    /**
-     * @var string
-     */
-    public $email;
+	/**
+	 * @var string
+	 */
+	public $email;
 
-    /**
-     * @var \dektrium\user\models\User
-     */
-    protected $identity;
+	/**
+	 * @var \dektrium\user\models\User
+	 */
+	protected $identity;
 
-    /**
-     * @inheritdoc
-     */
-    public function attributeLabels()
-    {
-        return [
-            'email' => \Yii::t('user', 'Email'),
-        ];
-    }
+	/**
+	 * @inheritdoc
+	 */
+	public function attributeLabels()
+	{
+		return [
+			'email' => \Yii::t('user', 'Email'),
+		];
+	}
 
-    /**
-     * @inheritdoc
-     */
-    public function rules()
-    {
-        return [
-            ['email', 'required'],
-            ['email', 'email'],
-            ['email', 'exist', 'className' => '\dektrium\user\models\User'],
-            ['email', 'validateEmail']
-        ];
-    }
+	/**
+	 * @inheritdoc
+	 */
+	public function rules()
+	{
+		return [
+			['email', 'required'],
+			['email', 'email'],
+			['email', 'exist', 'className' => '\dektrium\user\models\User'],
+			['email', 'validateEmail']
+		];
+	}
 
-    /**
-     * Validates if user has already been confirmed or not.
-     */
-    public function validateEmail()
-    {
-        if ($this->identity != null && $this->identity->isConfirmed) {
-            $this->addError('email', \Yii::t('user', 'This account has already been confirmed'));
-        }
-    }
+	/**
+	 * Validates if user has already been confirmed or not.
+	 */
+	public function validateEmail()
+	{
+		if ($this->identity != null && $this->identity->isConfirmed) {
+			$this->addError('email', \Yii::t('user', 'This account has already been confirmed'));
+		}
+	}
 
-    /**
-     * Resends confirmation message to user.
-     *
-     * @return bool
-     */
-    public function resend()
-    {
-        if ($this->validate()) {
-            $this->identity->sendConfirmationMessage();
+	/**
+	 * Resends confirmation message to user.
+	 *
+	 * @return bool
+	 */
+	public function resend()
+	{
+		if ($this->validate()) {
+			$this->identity->sendConfirmationMessage();
 
-            return true;
-        } else {
-            return false;
-        }
-    }
+			return true;
+		} else {
+			return false;
+		}
+	}
 
-    /**
-     * @inheritdoc
-     */
-    public function beforeValidate()
-    {
-        if (parent::beforeValidate()) {
-            $query = new ActiveQuery(['modelClass' => \Yii::$app->getUser()->identityClass]);
-            $this->identity = $query->where(['email' => $this->email])->one();
+	/**
+	 * @inheritdoc
+	 */
+	public function beforeValidate()
+	{
+		if (parent::beforeValidate()) {
+			$query = new ActiveQuery(['modelClass' => \Yii::$app->getUser()->identityClass]);
+			$this->identity = $query->where(['email' => $this->email])->one();
 
-            return true;
-        } else {
-            return false;
-        }
-    }
+			return true;
+		} else {
+			return false;
+		}
+	}
 
-    /**
-     * @inheritdoc
-     */
-    public function formName()
-    {
-        return 'resend-form';
-    }
+	/**
+	 * @inheritdoc
+	 */
+	public function formName()
+	{
+		return 'resend-form';
+	}
 }

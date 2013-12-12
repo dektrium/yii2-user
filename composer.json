@@ -1,23 +1,23 @@
 {
-    "name": "dektrium/yii2-user",
-    "description": "The user management module for Yii 2",
-    "keywords": ["user", "dektrium", "yii"],
-    "type": "yii2-extension",
-    "license": "MIT",
-    "authors": [
-        {
-            "name": "Dmitry Erofeev",
-            "email": "dmeroff@gmail.com",
-            "homepage": "http://dmeroff.ru"
-        }
-    ],
-    "require": {
-        "yiisoft/yii2": "*"
-    },
-    "autoload": {
-        "psr-0": {
-            "dektrium\\user\\": ""
-        }
-    },
-    "target-dir": "dektrium/user"
+	"name": "dektrium/yii2-user",
+	"description": "The user management module for Yii 2",
+	"keywords": ["user", "dektrium", "yii"],
+	"type": "yii2-extension",
+	"license": "MIT",
+	"authors": [
+		{
+			"name": "Dmitry Erofeev",
+			"email": "dmeroff@gmail.com",
+			"homepage": "http://dmeroff.ru"
+		}
+	],
+	"require": {
+		"yiisoft/yii2": "*"
+	},
+	"autoload": {
+		"psr-0": {
+			"dektrium\\user\\": ""
+		}
+	},
+	"target-dir": "dektrium/user"
 }

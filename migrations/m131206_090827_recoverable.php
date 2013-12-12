@@ -7,15 +7,15 @@ use yii\db\Schema;
  */
 class m131206_090827_recoverable extends \yii\db\Migration
 {
-    public function up()
-    {
-        $this->addColumn('{{user}}', 'recovery_token', Schema::TYPE_STRING.'(32)');
-        $this->addColumn('{{user}}', 'recovery_sent_time', Schema::TYPE_INTEGER);
-    }
+	public function up()
+	{
+		$this->addColumn('{{user}}', 'recovery_token', Schema::TYPE_STRING . '(32)');
+		$this->addColumn('{{user}}', 'recovery_sent_time', Schema::TYPE_INTEGER);
+	}
 
-    public function down()
-    {
-        $this->dropColumn('{{user}}', 'recovery_sent_time');
-        $this->dropColumn('{{user}}', 'recovery_token');
-    }
+	public function down()
+	{
+		$this->dropColumn('{{user}}', 'recovery_sent_time');
+		$this->dropColumn('{{user}}', 'recovery_token');
+	}
 }

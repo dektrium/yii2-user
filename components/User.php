@@ -12,31 +12,31 @@ use yii\web\User as BaseUser;
  */
 class User extends BaseUser
 {
-    /**
-     * @inheritdoc
-     */
-    public $identityClass = '\dektrium\user\models\User';
+	/**
+	 * @inheritdoc
+	 */
+	public $identityClass = '\dektrium\user\models\User';
 
-    /**
-     * @inheritdoc
-     */
-    public $enableAutoLogin = true;
+	/**
+	 * @inheritdoc
+	 */
+	public $enableAutoLogin = true;
 
-    /**
-     * @inheritdoc
-     */
-    public $loginUrl = ['/user/auth/login'];
+	/**
+	 * @inheritdoc
+	 */
+	public $loginUrl = ['/user/auth/login'];
 
-    /**
-     * @inheritdoc
-     */
-    protected function afterLogin($identity, $cookieBased)
-    {
-        parent::afterLogin($identity, $cookieBased);
-        if (\Yii::$app->getModule('user')->trackable) {
-            $this->identity->setAttribute('login_ip', ip2long(\Yii::$app->getRequest()->getUserIP()));
-            $this->identity->setAttribute('login_time', time());
-            $this->identity->save(false);
-        }
-    }
+	/**
+	 * @inheritdoc
+	 */
+	protected function afterLogin($identity, $cookieBased)
+	{
+		parent::afterLogin($identity, $cookieBased);
+		if (\Yii::$app->getModule('user')->trackable) {
+			$this->identity->setAttribute('login_ip', ip2long(\Yii::$app->getRequest()->getUserIP()));
+			$this->identity->setAttribute('login_time', time());
+			$this->identity->save(false);
+		}
+	}
 }

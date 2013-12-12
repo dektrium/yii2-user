@@ -15,9 +15,13 @@ class RecoveryController extends Controller
 	 * Displays page where user can request new recovery message.
 	 *
 	 * @return string
+	 * @throws \yii\web\NotFoundHttpException
 	 */
 	public function actionRequest()
 	{
+		if (!$this->module->recoverable) {
+			throw new NotFoundHttpException();
+		}
 		/** @var \dektrium\user\forms\Recovery $model */
 		$model = \Yii::createObject([
 			'class' => $this->module->recoveryForm,
@@ -43,6 +47,9 @@ class RecoveryController extends Controller
 	 */
 	public function actionReset($id, $token)
 	{
+		if (!$this->module->recoverable) {
+			throw new NotFoundHttpException();
+		}
 		/** @var \dektrium\user\models\User $user */
 		$query = new ActiveQuery(['modelClass' => \Yii::$app->getUser()->identityClass]);
 		$user = $query->where(['id' => $id, 'recovery_token' => $token])->one();

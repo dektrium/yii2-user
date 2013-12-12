@@ -1,7 +1,7 @@
 Changelog
 =========
 
-## v0.2.0 [Work in progress]
+## v0.2.0 [12 December 2013]
 
 - Added russian translation
 - Added password recovery feature

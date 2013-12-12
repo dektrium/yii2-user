@@ -1,7 +1,14 @@
 Yii2-User
 =========
 
-Yii2-User is a flexible user registration and authentication module for Yii2. It provides user authentication and registration to your Yii2 site.
+Yii2-User is a flexible user management module for Yii2 that handles common tasks such as registration, authentication
+and password retrieval.
+
+Features include:
+
+* Registration support, with an optional confirmation per mail
+* Authentication support
+* Password recovery support
 
 **NOTE:** Module is in initial development. Anything may change at any time.
 
@@ -12,13 +19,17 @@ The preferred way to install this extension is through [composer](http://getcomp
 Either run
 
 ```bash
-$ php composer.phar require dektrium/yii2-user "0.1.0"
+$ php composer.phar require dektrium/yii2-user "~0.2@dev"
 ```
 
 or add
 
-```
-"dektrium/yii2-user": "0.1.0"
+```js
+{
+    "require": {
+        "dektrium/yii2-user": "~0.2@dev"
+    }
+}
 ```
 
 to the require section of your `composer.json` file.

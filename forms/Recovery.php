@@ -24,6 +24,17 @@ class Recovery extends Model
     /**
      * @inheritdoc
      */
+    public function attributeLabels()
+    {
+        return [
+            'email' => \Yii::t('user', 'Email'),
+            'password' => \Yii::t('user', 'Password'),
+        ];
+    }
+
+    /**
+     * @inheritdoc
+     */
     public function scenarios()
     {
         return [

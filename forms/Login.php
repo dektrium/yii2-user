@@ -34,6 +34,32 @@ class Login extends Model
     /**
      * @inheritdoc
      */
+    public function attributeLabels()
+    {
+        switch (\Yii::$app->getModule('user')->loginType) {
+            case 'email':
+                $loginLabel = 'Email';
+                break;
+            case 'username':
+                $loginLabel = 'Username';
+                break;
+            case 'both':
+                $loginLabel = 'Email or username';
+                break;
+            default:
+                throw new \RuntimeException;
+        }
+
+        return [
+            'login' => \Yii::t('user', $loginLabel),
+            'password' => \Yii::t('user', 'Password'),
+            'rememberMe' => \Yii::t('user', 'Remember me next time')
+        ];
+    }
+
+    /**
+     * @inheritdoc
+     */
     public function rules()
     {
         return [

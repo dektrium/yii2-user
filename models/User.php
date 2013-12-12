@@ -39,6 +39,18 @@ class User extends ActiveRecord implements IdentityInterface
     /**
      * @inheritdoc
      */
+    public function attributeLabels()
+    {
+        return [
+            'username' => \Yii::t('user', 'Username'),
+            'email' => \Yii::t('user', 'Email'),
+            'password' => \Yii::t('user', 'Password'),
+        ];
+    }
+
+    /**
+     * @inheritdoc
+     */
     public function scenarios()
     {
         return [

@@ -1,11 +1,12 @@
 <?php namespace dektrium\user\controllers;
 
-use dektrium\user\forms\Recovery;
 use yii\db\ActiveQuery;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 
 /**
+ * RecoveryController manages password recovery proccess.
+ *
  * @author Dmitry Erofeev <dmeroff@gmail.com>
  */
 class RecoveryController extends Controller
@@ -17,6 +18,7 @@ class RecoveryController extends Controller
      */
     public function actionRequest()
     {
+        /** @var \dektrium\user\forms\Recovery $model */
         $model = \Yii::createObject([
             'class' => $this->module->recoveryForm,
             'scenario' => 'request',
@@ -41,8 +43,8 @@ class RecoveryController extends Controller
      */
     public function actionReset($id, $token)
     {
-        $query = new ActiveQuery(['modelClass' => \Yii::$app->getUser()->identityClass]);
         /** @var \dektrium\user\models\User $user */
+        $query = new ActiveQuery(['modelClass' => \Yii::$app->getUser()->identityClass]);
         $user = $query->where(['id' => $id, 'recovery_token' => $token])->one();
         if ($user === null) {
             throw new NotFoundHttpException();

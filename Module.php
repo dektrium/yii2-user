@@ -21,7 +21,7 @@ class Module extends BaseModule
 	];
 
 	/**
-	 * @var array Actions on which captcha will be shown.gi
+	 * @var array Actions on which captcha will be shown.
 	 */
 	public $captcha = [];
 

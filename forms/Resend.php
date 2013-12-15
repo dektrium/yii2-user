@@ -16,6 +16,11 @@ class Resend extends Model
 	public $email;
 
 	/**
+	 * @var string
+	 */
+	public $verifyCode;
+
+	/**
 	 * @var \dektrium\user\models\User
 	 */
 	protected $identity;
@@ -27,6 +32,7 @@ class Resend extends Model
 	{
 		return [
 			'email' => \Yii::t('user', 'Email'),
+			'verifyCode' => \Yii::t('user', 'Verification Code'),
 		];
 	}
 
@@ -39,7 +45,8 @@ class Resend extends Model
 			['email', 'required'],
 			['email', 'email'],
 			['email', 'exist', 'className' => '\dektrium\user\models\User'],
-			['email', 'validateEmail']
+			['email', 'validateEmail'],
+			['verifyCode', 'captcha', 'skipOnEmpty' => !in_array('resend', \Yii::$app->getModule('user')->captcha)]
 		];
 	}
 

@@ -37,6 +37,18 @@ class RegistrationController extends Controller
 	}
 
 	/**
+	 * @inheritdoc
+	 */
+	public function actions()
+	{
+		return [
+			'captcha' => [
+				'class' => 'yii\captcha\CaptchaAction',
+			],
+		];
+	}
+
+	/**
 	 * Displays the registration page.
 	 *
 	 * @return string

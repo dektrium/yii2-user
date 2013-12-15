@@ -1,16 +1,35 @@
 <?php namespace dektrium\user\controllers;
 
 use yii\db\ActiveQuery;
+use yii\web\AccessControl;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 
 /**
- * RecoveryController manages password recovery proccess.
+ * RecoveryController manages password recovery process.
  *
  * @author Dmitry Erofeev <dmeroff@gmail.com>
  */
 class RecoveryController extends Controller
 {
+	/**
+	 * @inheritdoc
+	 */
+	public function behaviors()
+	{
+		return [
+			'access' => [
+				'class' => AccessControl::className(),
+				'rules' => [
+					[
+						'allow' => true,
+						'actions' => ['request', 'reset'],
+						'roles' => ['?']
+					],
+				]
+			],
+		];
+	}
 	/**
 	 * Displays page where user can request new recovery message.
 	 *

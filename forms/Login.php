@@ -27,6 +27,11 @@ class Login extends Model
 	public $rememberMe = false;
 
 	/**
+	 * @var string
+	 */
+	public $verifyCode;
+
+	/**
 	 * @var \dektrium\user\models\User
 	 */
 	protected $identity;
@@ -53,7 +58,8 @@ class Login extends Model
 		return [
 			'login' => \Yii::t('user', $loginLabel),
 			'password' => \Yii::t('user', 'Password'),
-			'rememberMe' => \Yii::t('user', 'Remember me next time')
+			'rememberMe' => \Yii::t('user', 'Remember me next time'),
+			'verifyCode' => \Yii::t('user', 'Verification Code'),
 		];
 	}
 
@@ -67,6 +73,7 @@ class Login extends Model
 			['password', 'validatePassword'],
 			['login', 'validateConfirmation'],
 			['rememberMe', 'boolean'],
+			['verifyCode', 'captcha', 'skipOnEmpty' => !in_array('login', \Yii::$app->getModule('user')->captcha)]
 		];
 	}
 

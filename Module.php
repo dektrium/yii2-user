@@ -9,7 +9,7 @@ use \yii\base\Module as BaseModule;
  */
 class Module extends BaseModule
 {
-	const VERSION = '0.2.0';
+	const VERSION = '0.3.0-DEV';
 
 	/**
 	 * @inheritdoc
@@ -19,6 +19,11 @@ class Module extends BaseModule
 		'auth' => '\dektrium\user\controllers\AuthController',
 		'recovery' => '\dektrium\user\controllers\RecoveryController',
 	];
+
+	/**
+	 * @var array Actions on which captcha will be shown.gi
+	 */
+	public $captcha = [];
 
 	/**
 	 * @var string Model that will be used in loginAction.

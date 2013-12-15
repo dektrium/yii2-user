@@ -25,6 +25,12 @@ $this->params['breadcrumbs'][] = $this->title;
 
 <?= $form->field($model, 'password')->passwordInput() ?>
 
+<?php if (in_array('login', Yii::$app->getModule('user')->captcha)): ?>
+	<?= $form->field($model, 'verifyCode')->widget(\yii\captcha\Captcha::className(), [
+		'options' => ['class' => 'form-control'],
+	]) ?>
+<?php endif ?>
+
 <?= $form->field($model, 'rememberMe', [
 	'template' => "<div class=\"col-lg-offset-1 col-lg-3\">{input}</div>\n<div class=\"col-lg-8\">{error}</div>",
 ])->checkbox() ?>

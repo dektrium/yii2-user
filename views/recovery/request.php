@@ -22,6 +22,13 @@ $this->params['breadcrumbs'][] = $this->title;
 ]); ?>
 
 <?= $form->field($model, 'email') ?>
+
+<?php if (in_array('recovery', Yii::$app->getModule('user')->captcha)): ?>
+	<?= $form->field($model, 'verifyCode')->widget(\yii\captcha\Captcha::className(), [
+		'options' => ['class' => 'form-control'],
+	]) ?>
+<?php endif ?>
+
 	<div class="form-group">
 		<div class="col-lg-offset-1 col-lg-11">
 			<?= Html::submitButton(Yii::t('user', 'Send'), ['class' => 'btn btn-primary']) ?><br>

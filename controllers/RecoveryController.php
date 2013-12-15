@@ -30,6 +30,19 @@ class RecoveryController extends Controller
 			],
 		];
 	}
+
+	/**
+	 * @inheritdoc
+	 */
+	public function actions()
+	{
+		return [
+			'captcha' => [
+				'class' => 'yii\captcha\CaptchaAction',
+			],
+		];
+	}
+
 	/**
 	 * Displays page where user can request new recovery message.
 	 *

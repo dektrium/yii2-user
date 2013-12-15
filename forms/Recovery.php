@@ -17,6 +17,11 @@ class Recovery extends Model
 	public $password;
 
 	/**
+	 * @var string
+	 */
+	public $verifyCode;
+
+	/**
 	 * @var User
 	 */
 	protected $identity;
@@ -29,6 +34,7 @@ class Recovery extends Model
 		return [
 			'email' => \Yii::t('user', 'Email'),
 			'password' => \Yii::t('user', 'Password'),
+			'verifyCode' => \Yii::t('user', 'Verification Code'),
 		];
 	}
 
@@ -38,7 +44,7 @@ class Recovery extends Model
 	public function scenarios()
 	{
 		return [
-			'request' => ['email'],
+			'request' => ['email', 'verifyCode'],
 			'reset' => ['password']
 		];
 	}
@@ -54,7 +60,8 @@ class Recovery extends Model
 			['email', 'exist', 'className' => '\dektrium\user\models\User', 'on' => 'request'],
 			['email', 'validateUserConfirmed', 'on' => 'request'],
 			['password', 'required', 'on' => 'reset'],
-			['password', 'string', 'min' => 6, 'on' => 'reset']
+			['password', 'string', 'min' => 6, 'on' => 'reset'],
+			['verifyCode', 'captcha', 'skipOnEmpty' => !in_array('recovery', \Yii::$app->getModule('user')->captcha)]
 		];
 	}
 

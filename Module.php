@@ -26,6 +26,11 @@ class Module extends BaseModule
 	public $captcha = [];
 
 	/**
+	 * @var string Model that will be used on registration process.
+	 */
+	public $registrationForm = '\dektrium\user\forms\Registration';
+
+	/**
 	 * @var string Model that will be used in loginAction.
 	 */
 	public $loginForm = '\dektrium\user\forms\Login';

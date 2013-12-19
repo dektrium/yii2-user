@@ -56,8 +56,7 @@ class RegistrationController extends Controller
 	public function actionRegister()
 	{
 		$model = \Yii::createObject([
-			'class' => \Yii::$app->getUser()->identityClass,
-			'scenario' => 'register'
+			'class' => $this->module->registrationForm,
 		]);
 
 		if ($model->load($_POST) && $model->register()) {

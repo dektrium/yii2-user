@@ -37,11 +37,6 @@ class User extends ActiveRecord implements IdentityInterface
 	public $password;
 
 	/**
-	 * @var string
-	 */
-	public $verifyCode;
-
-	/**
 	 * @inheritdoc
 	 */
 	public function attributeLabels()
@@ -60,7 +55,7 @@ class User extends ActiveRecord implements IdentityInterface
 	public function scenarios()
 	{
 		return [
-			'register' => ['username', 'email', 'password', 'verifyCode'],
+			'register' => ['username', 'email', 'password'],
 			'reset' => ['password'],
 		];
 	}
@@ -78,7 +73,6 @@ class User extends ActiveRecord implements IdentityInterface
 			['username', 'string', 'min' => 3, 'max' => 25],
 			['email', 'string', 'max' => 255],
 			['password', 'string', 'min' => 6],
-			['verifyCode', 'captcha', 'skipOnEmpty' => !in_array('register', \Yii::$app->getModule('user')->captcha)]
 		];
 	}
 

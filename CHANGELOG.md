@@ -1,6 +1,12 @@
 Changelog
 =========
 
+## v0.3.0 [Work in progress]
+
+- Added registration form class
+- Added optional captcha on login, registration, resend and recovery pages
+- Added access control in recovery controller
+
 ## v0.2.0 [12 December 2013]
 
 - Added russian translation

@@ -35,16 +35,6 @@ class RegistrationTest extends \Codeception\TestCase\Test
 		]);
 	}
 
-	public function testGenerateConfirmationData()
-	{
-		Yii::$app->getModule('user')->confirmable = true;
-		$user = new \dektrium\user\models\User();
-		$user->generateConfirmationData();
-		$this->assertInternalType('int', $user->confirmation_sent_time);
-		$this->assertInternalType('string', $user->confirmation_token);
-		$this->assertNull($user->confirmation_time);
-	}
-
 	public function testSendConfirmationMessage()
 	{
 		Yii::$app->getModule('user')->confirmable = true;
@@ -93,7 +83,7 @@ class RegistrationTest extends \Codeception\TestCase\Test
 	{
 		Yii::$app->getModule('user')->confirmable = true;
 		$user = \dektrium\user\models\User::find(2);
-		$user->generateConfirmationData();
+		$user->sendConfirmationMessage();
 		$this->assertFalse($user->getIsConfirmed());
 		$user->confirm();
 		$this->assertTrue($user->getIsConfirmed());

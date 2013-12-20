@@ -3,14 +3,14 @@
 use yii\helpers\Security;
 
 /**
- * Recoveralbe is responsible to reset the user password and send reset instructions.
+ * Recoveralbe is responsible for resetting the user password and send reset instructions.
  *
  * @property string  $recovery_token
  * @property integer $recovery_sent_time
  *
  * @author Dmitry Erofeev <dmeroff@gmail.com>
  */
-trait Recoverable
+trait RecoverableTrait
 {
 	/**
 	 * Checks if the password recovery happens before the token becomes invalid.
@@ -20,9 +20,6 @@ trait Recoverable
 	 */
 	public function getIsRecoveryPeriodExpired()
 	{
-		if (!\Yii::$app->getModule('user')->recoverable) {
-			throw new \RuntimeException('You must enable dektrium\user\Module.recoverable to use method this method');
-		}
 		return ($this->recovery_sent_time + \Yii::$app->getModule('user')->recoverWithin) < time();
 	}
 
@@ -32,9 +29,6 @@ trait Recoverable
 	 */
 	public function getRecoveryUrl()
 	{
-		if (!\Yii::$app->getModule('user')->recoverable) {
-			throw new \RuntimeException('You must enable dektrium\user\Module.recoverable to use method this method');
-		}
 		return \Yii::$app->getUrlManager()->createAbsoluteUrl('/user/recovery/reset', [
 			'id' => $this->id,
 			'token' => $this->recovery_token
@@ -47,15 +41,13 @@ trait Recoverable
 	public function sendRecoveryMessage()
 	{
 		$this->generateRecoveryData();
-		$html = \Yii::$app->getView()->renderFile(\Yii::$app->getModule('user')->recoveryMessageView, [
-			'user' => $this
-		]);
+		$html = \Yii::$app->getView()->renderFile($this->getModule()->recoveryMessageView, ['user' => $this]);
 		\Yii::$app->getMail()->compose()
-				  ->setTo($this->email)
-				  ->setFrom(\Yii::$app->getModule('user')->messageSender)
-				  ->setSubject(\Yii::$app->getModule('user')->recoveryMessageSubject)
-				  ->setHtmlBody($html)
-				  ->send();
+			  ->setTo($this->email)
+			  ->setFrom($this->getModule()->messageSender)
+			  ->setSubject($this->getModule()->recoveryMessageSubject)
+			  ->setHtmlBody($html)
+			  ->send();
 		\Yii::$app->getSession()->setFlash('recovery_message_sent');
 	}
 
@@ -65,11 +57,13 @@ trait Recoverable
 	 */
 	protected function generateRecoveryData()
 	{
-		if (!\Yii::$app->getModule('user')->recoverable) {
-			throw new \RuntimeException('You must enable dektrium\user\Module.recoverable to use method this method');
-		}
 		$this->recovery_token = Security::generateRandomKey();
 		$this->recovery_sent_time = time();
 		$this->save(false);
 	}
+
+	/**
+	 * @return \dektrium\user\Module
+	 */
+	abstract protected function getModule();
 }

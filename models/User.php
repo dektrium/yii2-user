@@ -26,10 +26,11 @@ use yii\web\IdentityInterface;
  *
  * @author Dmitry Erofeev <dmeroff@gmail.com>
  */
-class User extends ActiveRecord implements IdentityInterface
+class User extends ActiveRecord implements IdentityInterface, RegisterableInterface, ConfirmableInterface, RecoverableInterface
 {
-	use Registerable;
-	use Recoverable;
+	use RegisterableTrait;
+	use ConfirmableTrait;
+	use RecoverableTrait;
 
 	/**
 	 * @var string Plain password. Used for model validation.
@@ -165,5 +166,13 @@ class User extends ActiveRecord implements IdentityInterface
 	public static function findByEmail($email)
 	{
 		return static::find(['email' => $email]);
+	}
+
+	/**
+	 * @return null|\dektrium\user\Module
+	 */
+	protected function getModule()
+	{
+		return \Yii::$app->getModule('user');
 	}
 }

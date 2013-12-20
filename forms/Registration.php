@@ -56,6 +56,9 @@ class Registration extends Model
 				'password' => $this->password
 			]);
 			if ($user->register()) {
+				if (\Yii::$app->getModule('user')->confirmable) {
+					$user->sendConfirmationMessage();
+				}
 				return true;
 			} else {
 				return false;

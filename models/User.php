@@ -24,9 +24,13 @@ use yii\web\IdentityInterface;
  * @property integer $confirmation_sent_time
  * @property integer $confirmation_time
  *
+ * @property string  $recovery_token
+ * @property integer $recovery_sent_time
+ *
  * @author Dmitry Erofeev <dmeroff@gmail.com>
  */
-class User extends ActiveRecord implements IdentityInterface, RegisterableInterface, ConfirmableInterface, RecoverableInterface
+class User extends ActiveRecord implements
+	IdentityInterface, RegisterableInterface, ConfirmableInterface,	RecoverableInterface
 {
 	use RegisterableTrait;
 	use ConfirmableTrait;
@@ -36,19 +40,6 @@ class User extends ActiveRecord implements IdentityInterface, RegisterableInterf
 	 * @var string Plain password. Used for model validation.
 	 */
 	public $password;
-
-	/**
-	 * @inheritdoc
-	 */
-	public function attributeLabels()
-	{
-		return [
-			'username' => \Yii::t('user', 'Username'),
-			'email' => \Yii::t('user', 'Email'),
-			'password' => \Yii::t('user', 'Password'),
-			'verifyCode' => \Yii::t('user', 'Verification Code'),
-		];
-	}
 
 	/**
 	 * @inheritdoc
@@ -83,14 +74,6 @@ class User extends ActiveRecord implements IdentityInterface, RegisterableInterf
 	public static function tableName()
 	{
 		return '{{user}}';
-	}
-
-	/**
-	 * @inheritdoc
-	 */
-	public function formName()
-	{
-		return 'user-' . Inflector::camel2id($this->scenario) . '-form';
 	}
 
 	/**

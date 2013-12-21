@@ -1,5 +1,6 @@
 <?php namespace dektrium\user\forms;
 
+use dektrium\user\models\ConfirmableInterface;
 use yii\base\Model;
 use yii\db\ActiveQuery;
 
@@ -21,9 +22,9 @@ class Resend extends Model
 	public $verifyCode;
 
 	/**
-	 * @var \dektrium\user\models\User
+	 * @var \dektrium\user\models\ConfirmableInterface
 	 */
-	protected $identity;
+	private $_identity;
 
 	/**
 	 * @inheritdoc
@@ -44,9 +45,9 @@ class Resend extends Model
 		return [
 			['email', 'required'],
 			['email', 'email'],
-			['email', 'exist', 'className' => '\dektrium\user\models\User'],
+			['email', 'exist', 'className' => \Yii::$app->getUser()->identityClass],
 			['email', 'validateEmail'],
-			['verifyCode', 'captcha', 'skipOnEmpty' => !in_array('resend', \Yii::$app->getModule('user')->captcha)]
+			['verifyCode', 'captcha', 'skipOnEmpty' => !in_array('resend', $this->getModule()->captcha)]
 		];
 	}
 
@@ -55,7 +56,7 @@ class Resend extends Model
 	 */
 	public function validateEmail()
 	{
-		if ($this->identity != null && $this->identity->isConfirmed) {
+		if ($this->getIdentity() != null && $this->getIdentity()->getIsConfirmed()) {
 			$this->addError('email', \Yii::t('user', 'This account has already been confirmed'));
 		}
 	}
@@ -68,23 +69,7 @@ class Resend extends Model
 	public function resend()
 	{
 		if ($this->validate()) {
-			$this->identity->sendConfirmationMessage();
-
-			return true;
-		} else {
-			return false;
-		}
-	}
-
-	/**
-	 * @inheritdoc
-	 */
-	public function beforeValidate()
-	{
-		if (parent::beforeValidate()) {
-			$query = new ActiveQuery(['modelClass' => \Yii::$app->getUser()->identityClass]);
-			$this->identity = $query->where(['email' => $this->email])->one();
-
+			$this->getIdentity()->sendConfirmationMessage();
 			return true;
 		} else {
 			return false;
@@ -97,5 +82,34 @@ class Resend extends Model
 	public function formName()
 	{
 		return 'resend-form';
+	}
+
+	/**
+	 * @return \dektrium\user\models\ConfirmableInterface
+	 * @throws \RuntimeException
+	 */
+	protected function getIdentity()
+	{
+		if ($this->_identity == null) {
+			$query = new ActiveQuery([
+				'modelClass' => \Yii::$app->getUser()->identityClass
+			]);
+			$identity = $query->where(['email' => $this->email])->one();
+			if (!$identity instanceof ConfirmableInterface) {
+				throw new \RuntimeException(sprintf('"%s" must implement "%s" interface',
+					get_class($identity), '\dektrium\user\models\ConfirmableInterface'));
+			}
+			$this->_identity = $identity;
+		}
+
+		return $this->_identity;
+	}
+
+	/**
+	 * @return null|\dektrium\user\Module
+	 */
+	protected function getModule()
+	{
+		return \Yii::$app->getModule('user');
 	}
 }

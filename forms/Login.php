@@ -41,7 +41,7 @@ class Login extends Model
 	 */
 	public function attributeLabels()
 	{
-		switch (\Yii::$app->getModule('user')->loginType) {
+		switch ($this->getModule()->loginType) {
 			case 'email':
 				$loginLabel = 'Email';
 				break;
@@ -73,7 +73,7 @@ class Login extends Model
 			['password', 'validatePassword'],
 			['login', 'validateConfirmation'],
 			['rememberMe', 'boolean'],
-			['verifyCode', 'captcha', 'skipOnEmpty' => !in_array('login', \Yii::$app->getModule('user')->captcha)]
+			['verifyCode', 'captcha', 'skipOnEmpty' => !in_array('login', $this->getModule()->captcha)]
 		];
 	}
 
@@ -92,10 +92,9 @@ class Login extends Model
 	 */
 	public function validateConfirmation()
 	{
-		$module = \Yii::$app->controller->module;
 		if ($this->identity !== null
-			&& $module->confirmable
-			&& !$module->allowUnconfirmedLogin
+			&& $this->getModule()->confirmable
+			&& !$this->getModule()->allowUnconfirmedLogin
 			&& !$this->identity->isConfirmed
 		) {
 			$this->addError('login', \Yii::t('user', 'You must confirm your account before logging in'));
@@ -110,8 +109,7 @@ class Login extends Model
 	public function login()
 	{
 		if ($this->validate()) {
-			\Yii::$app->getUser()->login($this->identity, $this->rememberMe ?
-				\Yii::$app->getModule('user')->rememberFor : 0);
+			\Yii::$app->getUser()->login($this->identity, $this->rememberMe ? $this->getModule()->rememberFor : 0);
 
 			return true;
 		} else {
@@ -134,7 +132,7 @@ class Login extends Model
 	{
 		if (parent::beforeValidate()) {
 			$query = new ActiveQuery(['modelClass' => \Yii::$app->getUser()->identityClass]);
-			switch (\Yii::$app->getModule('user')->loginType) {
+			switch ($this->getModule()->loginType) {
 				case 'email':
 					$condition = ['email' => $this->login];
 					break;
@@ -152,5 +150,13 @@ class Login extends Model
 		} else {
 			return false;
 		}
+	}
+
+	/**
+	 * @return null|\dektrium\user\Module
+	 */
+	protected function getModule()
+	{
+		return \Yii::$app->getModule('user');
 	}
 }

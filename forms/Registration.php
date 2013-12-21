@@ -1,12 +1,34 @@
 <?php namespace dektrium\user\forms;
 
+use dektrium\user\models\ConfirmableInterface;
+use dektrium\user\models\RegisterableInterface;
 use yii\base\Model;
 
+/**
+ * Registration form.
+ *
+ * @author Dmitry Erofeev <dmeroff@gmail.com>
+ */
 class Registration extends Model
 {
+	/**
+	 * @var string
+	 */
 	public $username;
+
+	/**
+	 * @var string
+	 */
 	public $email;
+
+	/**
+	 * @var string
+	 */
 	public $password;
+
+	/**
+	 * @var string
+	 */
 	public $verifyCode;
 
 	/**
@@ -35,7 +57,7 @@ class Registration extends Model
 			['username', 'string', 'min' => 3, 'max' => 25],
 			['email', 'string', 'max' => 255],
 			['password', 'string', 'min' => 6],
-			['verifyCode', 'captcha', 'skipOnEmpty' => !in_array('register', \Yii::$app->getModule('user')->captcha)]
+			['verifyCode', 'captcha', 'skipOnEmpty' => !in_array('register', $this->getModule()->captcha)]
 		];
 	}
 
@@ -45,27 +67,22 @@ class Registration extends Model
 	public function register()
 	{
 		if ($this->validate()) {
-			/** @var \dektrium\user\models\User $user */
-			$user = \Yii::createObject([
-				'class' => \Yii::$app->getUser()->identityClass
-			]);
-			$user->scenario = 'register';
-			$user->setAttributes([
+			$identity = $this->getIdentity();
+			$identity->scenario = 'register';
+			$identity->setAttributes([
 				'username' => $this->username,
 				'email' => $this->email,
 				'password' => $this->password
 			]);
-			if ($user->register()) {
-				if (\Yii::$app->getModule('user')->confirmable) {
-					$user->sendConfirmationMessage();
+			if ($identity->register()) {
+				if ($this->getModule()->confirmable) {
+					$identity->sendConfirmationMessage();
 				}
 				return true;
-			} else {
-				return false;
 			}
-		} else {
-			return false;
 		}
+
+		return false;
 	}
 
 	/**
@@ -74,5 +91,33 @@ class Registration extends Model
 	public function formName()
 	{
 		return 'registration-form';
+	}
+
+	/**
+	 * @return \dektrium\user\models\User
+	 * @throws \RuntimeException
+	 */
+	protected function getIdentity()
+	{
+		$identity = \Yii::createObject([
+			'class' => \Yii::$app->getUser()->identityClass
+		]);
+		if (!$identity instanceof RegisterableInterface) {
+			throw new \RuntimeException(sprintf('"%s" must implement "%s" interface',
+				get_class($identity), '\dektrium\user\models\RegisterableInterface'));
+		} elseif ($this->getModule()->confirmable && !$identity instanceof ConfirmableInterface) {
+			throw new \RuntimeException(sprintf('"%s" must implement "%s" interface',
+				get_class($identity), '\dektrium\user\models\ConfirmableInterface'));
+		}
+
+		return $identity;
+	}
+
+	/**
+	 * @return null|\dektrium\user\Module
+	 */
+	protected function getModule()
+	{
+		return \Yii::$app->getModule('user');
 	}
 }

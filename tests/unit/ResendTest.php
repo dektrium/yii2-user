@@ -20,17 +20,6 @@ class ResendTest extends \Codeception\TestCase\Test
 		$this->codeGuy->destroyApplication();
 	}
 
-	public function testValidation()
-	{
-		$model = new \dektrium\user\forms\Resend();
-		$model->email = 'foobar@example.com';
-		$this->assertFalse($model->validate());
-		$model->email = 'user@example.com';
-		$this->assertFalse($model->validate());
-		$model->email = 'unconfirmed@example.com';
-		$this->assertTrue($model->validate());
-	}
-
 	public function testResend()
 	{
 		$model = new \dektrium\user\forms\Resend();

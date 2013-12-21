@@ -3,6 +3,8 @@ Changelog
 
 ## v0.3.0 [Work in progress]
 
+- Refactored forms
+- Extracted interfaces for identity class
 - Added registration form class
 - Added optional captcha on login, registration, resend and recovery pages
 - Added access control in recovery controller

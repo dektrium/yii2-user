@@ -1,9 +1,14 @@
 <?php namespace dektrium\user\forms;
 
-use dektrium\user\models\User;
+use dektrium\user\models\RecoverableInterface;
 use yii\base\Model;
 use yii\db\ActiveQuery;
 
+/**
+ * Recovery form manages requesting recovery token and resetting password.
+ *
+ * @author Dmitry Erofeev <dmeroff@gmail.com>
+ */
 class Recovery extends Model
 {
 	/**
@@ -22,9 +27,9 @@ class Recovery extends Model
 	public $verifyCode;
 
 	/**
-	 * @var User
+	 * @var RecoverableInterface
 	 */
-	protected $identity;
+	private $_identity;
 
 	/**
 	 * @inheritdoc
@@ -61,7 +66,7 @@ class Recovery extends Model
 			['email', 'validateUserConfirmed', 'on' => 'request'],
 			['password', 'required', 'on' => 'reset'],
 			['password', 'string', 'min' => 6, 'on' => 'reset'],
-			['verifyCode', 'captcha', 'skipOnEmpty' => !in_array('recovery', \Yii::$app->getModule('user')->captcha)]
+			['verifyCode', 'captcha', 'skipOnEmpty' => !in_array('recovery', $this->getModule()->captcha)]
 		];
 	}
 
@@ -72,7 +77,7 @@ class Recovery extends Model
 	{
 		$query = new ActiveQuery(['modelClass' => \Yii::$app->getUser()->identityClass]);
 		$this->identity = $query->where(['email' => $this->email])->one();
-		if ($this->identity !== null && \Yii::$app->getModule('user')->confirmable && !$this->identity->isConfirmed) {
+		if ($this->identity !== null && $this->getModule()->confirmable && !$this->identity->isConfirmed) {
 			$this->addError('email', 'You must confirm your account first');
 		}
 	}
@@ -108,27 +113,35 @@ class Recovery extends Model
 	 */
 	public function reset()
 	{
-		if ($this->validate()) {
-			$this->identity->scenario = 'reset';
-			$this->identity->password = $this->password;
-			$this->identity->recovery_token = null;
-			$this->identity->recovery_sent_time = null;
-			if ($this->identity->save()) {
-				\Yii::$app->getSession()->setFlash('password_reset');
-				return true;
-			} else {
-				return false;
-			}
-		} else {
-			return false;
+		if ($this->validate() && $this->identity->reset($this->password)) {
+			\Yii::$app->getSession()->setFlash('password_reset');
+			return true;
 		}
+
+		return false;
 	}
 
 	/**
-	 * @param User $user
+	 * @return RecoverableInterface
 	 */
-	public function setIdentity(User $user)
+	public function getIdentity()
 	{
-		$this->identity = $user;
+		return $this->_identity;
+	}
+
+	/**
+	 * @param RecoverableInterface $identity
+	 */
+	public function setIdentity(RecoverableInterface $identity)
+	{
+		$this->identity = $identity;
+	}
+
+	/**
+	 * @return null|\dektrium\user\Module
+	 */
+	protected function getModule()
+	{
+		return \Yii::$app->getModule('user');
 	}
 }

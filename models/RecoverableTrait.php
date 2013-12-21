@@ -3,7 +3,7 @@
 use yii\helpers\Security;
 
 /**
- * Recoveralbe is responsible for resetting the user password and send reset instructions.
+ * Recoverable is responsible for resetting the user password and send reset instructions.
  *
  * @property string  $recovery_token
  * @property integer $recovery_sent_time
@@ -12,6 +12,22 @@ use yii\helpers\Security;
  */
 trait RecoverableTrait
 {
+	/**
+	 * Resets password and sets recovery token to null
+	 *
+	 * @param  string $password
+	 * @return bool
+	 */
+	public function reset($password)
+	{
+		$this->scenario = 'reset';
+		$this->password = $password;
+		$this->recovery_token = null;
+		$this->recovery_sent_time = null;
+
+		return $this->save(false);
+	}
+
 	/**
 	 * Checks if the password recovery happens before the token becomes invalid.
 	 *

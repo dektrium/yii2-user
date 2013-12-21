@@ -8,6 +8,14 @@
 interface RecoverableInterface
 {
 	/**
+	 * Resets password and sets recovery token to null.
+	 *
+	 * @param $password
+	 * @return bool
+	 */
+	public function reset($password);
+
+	/**
 	 * Sends recovery password instructions by email.
 	 *
 	 * @return bool

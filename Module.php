@@ -57,6 +57,21 @@ class Module extends BaseModule
 	public $registrationRedirectUrl = ['/user/auth/login'];
 
 	/**
+	 * @var bool Whether to generate user password automatically.
+	 */
+	public $generatePassword = false;
+
+	/**
+	 * @var string View that will be rendered by Mailer.compose().
+	 */
+	public $welcomeMessageView = '@user/views/mail/welcome.php';
+
+	/**
+	 * @var string Subject of confirmation message.
+	 */
+	public $welcomeMessageSubject = 'Welcome to Site.com';
+
+	/**
 	 * @var bool Whether to enable "Trackable" behavior.
 	 */
 	public $trackable = false;

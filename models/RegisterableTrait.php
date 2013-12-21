@@ -16,24 +16,26 @@ trait RegisterableTrait
 	 */
 	public function register($generatePassword = false)
 	{
-		if (!$this->isNewRecord) {
+		if (!$this->getIsNewRecord()) {
 			throw new \RuntimeException('Calling "'.__CLASS__.'::register()" on existing user');
 		}
 
 		if ($generatePassword) {
 			$password = $this->generatePassword(8);
-			$this->setAttribute('password', $password);
-			// TODO: send welcome message
+			$this->password = $password;
+			$html = \Yii::$app->getView()->renderFile($this->getModule()->welcomeMessageView, [
+				'user' => $this,
+				'password' => $password
+			]);
+			\Yii::$app->getMail()->compose()
+				->setTo($this->email)
+				->setFrom($this->getModule()->messageSender)
+				->setSubject($this->getModule()->welcomeMessageSubject)
+				->setHtmlBody($html)
+				->send();
 		}
 
-		$this->trigger('beforeRegister');
-
-		if ($this->save()) {
-			$this->trigger('afterRegister');
-			return true;
-		} else {
-			return false;
-		}
+		return $this->save();
 	}
 
 	/**

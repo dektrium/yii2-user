@@ -49,8 +49,9 @@ class Registration extends Model
 	 */
 	public function rules()
 	{
+		$required = $this->getModule()->generatePassword ? ['username', 'email'] : ['username', 'email', 'password'];
 		return [
-			[['username', 'email', 'password'], 'required'],
+			[$required, 'required'],
 			['email', 'email'],
 			[['username', 'email'], 'unique', 'className' => '\dektrium\user\models\User'],
 			['username', 'match', 'pattern' => '/^[a-zA-Z]\w+$/'],
@@ -72,9 +73,11 @@ class Registration extends Model
 			$identity->setAttributes([
 				'username' => $this->username,
 				'email' => $this->email,
-				'password' => $this->password
 			]);
-			if ($identity->register()) {
+			if (!$this->getModule()->generatePassword) {
+				$identity->password = $this->password;
+			}
+			if ($identity->register($this->getModule()->generatePassword)) {
 				if ($this->getModule()->confirmable) {
 					$identity->sendConfirmationMessage();
 				}

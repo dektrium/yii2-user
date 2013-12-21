@@ -25,7 +25,9 @@ $this->params['breadcrumbs'][] = $this->title;
 
 <?= $form->field($model, 'email') ?>
 
-<?= $form->field($model, 'password')->passwordInput() ?>
+<?php if (!Yii::$app->getModule('user')->generatePassword): ?>
+	<?= $form->field($model, 'password')->passwordInput() ?>
+<?php endif ?>
 
 <?php if (in_array('register', Yii::$app->getModule('user')->captcha)): ?>
 	<?= $form->field($model, 'verifyCode')->widget(\yii\captcha\Captcha::className(), [

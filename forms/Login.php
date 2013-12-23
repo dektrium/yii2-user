@@ -43,21 +43,21 @@ class Login extends Model
 	{
 		switch ($this->getModule()->loginType) {
 			case 'email':
-				$loginLabel = 'Email';
+				$loginLabel = \Yii::t('user', 'Email');
 				break;
 			case 'username':
-				$loginLabel = 'Username';
+				$loginLabel = \Yii::t('user', 'Username');
 				break;
 			case 'both':
-				$loginLabel = 'Email or username';
+				$loginLabel = \Yii::t('user', 'Email or username');
 				break;
 			default:
 				throw new \RuntimeException;
 		}
 
 		return [
-			'login' => \Yii::t('user', $loginLabel),
-			'password' => \Yii::t('user', 'Password'),
+			'login'      => $loginLabel,
+			'password'   => \Yii::t('user', 'Password'),
 			'rememberMe' => \Yii::t('user', 'Remember me next time'),
 			'verifyCode' => \Yii::t('user', 'Verification Code'),
 		];
@@ -68,13 +68,18 @@ class Login extends Model
 	 */
 	public function rules()
 	{
-		return [
+		$rules = [
 			[['login', 'password'], 'required'],
 			['password', 'validatePassword'],
 			['login', 'validateConfirmation'],
 			['rememberMe', 'boolean'],
-			['verifyCode', 'captcha', 'skipOnEmpty' => !in_array('login', $this->getModule()->captcha)]
 		];
+
+		if (in_array('login', $this->getModule()->captcha)) {
+			$rules[] = ['verifyCode', 'captcha'];
+		}
+
+		return $rules;
 	}
 
 	/**
@@ -110,7 +115,6 @@ class Login extends Model
 	{
 		if ($this->validate()) {
 			\Yii::$app->getUser()->login($this->identity, $this->rememberMe ? $this->getModule()->rememberFor : 0);
-
 			return true;
 		} else {
 			return false;

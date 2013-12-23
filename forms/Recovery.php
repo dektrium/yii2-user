@@ -48,8 +48,13 @@ class Recovery extends Model
 	 */
 	public function scenarios()
 	{
+		$attributes = ['email'];
+		if (in_array('recovery', $this->getModule()->captcha)) {
+			$attributes[] = 'verifyCode';
+		}
+
 		return [
-			'request' => ['email', 'verifyCode'],
+			'request' => $attributes,
 			'reset' => ['password']
 		];
 	}
@@ -59,15 +64,20 @@ class Recovery extends Model
 	 */
 	public function rules()
 	{
-		return [
+		$rules = [
 			['email', 'required', 'on' => 'request'],
 			['email', 'email', 'on' => 'request'],
-			['email', 'exist', 'className' => '\dektrium\user\models\User', 'on' => 'request'],
+			['email', 'exist', 'className' => \Yii::$app->getUser()->identityClass, 'on' => 'request'],
 			['email', 'validateUserConfirmed', 'on' => 'request'],
 			['password', 'required', 'on' => 'reset'],
 			['password', 'string', 'min' => 6, 'on' => 'reset'],
-			['verifyCode', 'captcha', 'skipOnEmpty' => !in_array('recovery', $this->getModule()->captcha)]
 		];
+
+		if (in_array('recovery', $this->getModule()->captcha)) {
+			$rules[] = ['verifyCode', 'captcha', 'on' => 'request'];
+		}
+
+		return $rules;
 	}
 
 	/**

@@ -42,13 +42,18 @@ class Resend extends Model
 	 */
 	public function rules()
 	{
-		return [
+		$rules = [
 			['email', 'required'],
 			['email', 'email'],
 			['email', 'exist', 'className' => \Yii::$app->getUser()->identityClass],
 			['email', 'validateEmail'],
-			['verifyCode', 'captcha', 'skipOnEmpty' => !in_array('resend', $this->getModule()->captcha)]
 		];
+
+		if (in_array('resend', $this->getModule()->captcha)) {
+			$rules[] = ['verifyCode', 'captcha'];
+		}
+
+		return $rules;
 	}
 
 	/**

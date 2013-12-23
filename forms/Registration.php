@@ -37,10 +37,24 @@ class Registration extends Model
 	public function attributeLabels()
 	{
 		return [
-			'username' => \Yii::t('user', 'Username'),
-			'email' => \Yii::t('user', 'Email'),
-			'password' => \Yii::t('user', 'Password'),
+			'username'   => \Yii::t('user', 'Username'),
+			'email'      => \Yii::t('user', 'Email'),
+			'password'   => \Yii::t('user', 'Password'),
 			'verifyCode' => \Yii::t('user', 'Verification Code'),
+		];
+	}
+
+	/**
+	 * @inheritdoc
+	 */
+	public function scenarios()
+	{
+		$attributes = $this->getModule()->generatePassword ? ['username', 'email'] : ['username', 'email', 'password'];
+		if (in_array('register', $this->getModule()->captcha)) {
+			$attributes[] = 'verifyCode';
+		}
+		return [
+			'default' => $attributes
 		];
 	}
 
@@ -49,17 +63,26 @@ class Registration extends Model
 	 */
 	public function rules()
 	{
-		$required = $this->getModule()->generatePassword ? ['username', 'email'] : ['username', 'email', 'password'];
-		return [
-			[$required, 'required'],
+		$rules = [
 			['email', 'email'],
-			[['username', 'email'], 'unique', 'className' => '\dektrium\user\models\User'],
+			[['username', 'email'], 'unique', 'className' => \Yii::$app->getUser()->identityClass],
 			['username', 'match', 'pattern' => '/^[a-zA-Z]\w+$/'],
 			['username', 'string', 'min' => 3, 'max' => 25],
 			['email', 'string', 'max' => 255],
-			['password', 'string', 'min' => 6],
-			['verifyCode', 'captcha', 'skipOnEmpty' => !in_array('register', $this->getModule()->captcha)]
 		];
+
+		if ($this->getModule()->generatePassword) {
+			$rules[] = [['username', 'email'], 'required'];
+		} else {
+			$rules[] = [['username', 'email', 'password'], 'required'];
+			$rules[] = ['password', 'string', 'min' => 6];
+		}
+
+		if (in_array('register', $this->getModule()->captcha)) {
+			$rules[] = ['verifyCode', 'captcha'];
+		}
+
+		return $rules;
 	}
 
 	/**
@@ -69,7 +92,6 @@ class Registration extends Model
 	{
 		if ($this->validate()) {
 			$identity = $this->getIdentity();
-			$identity->scenario = 'register';
 			$identity->setAttributes([
 				'username' => $this->username,
 				'email' => $this->email,
@@ -103,7 +125,8 @@ class Registration extends Model
 	protected function getIdentity()
 	{
 		$identity = \Yii::createObject([
-			'class' => \Yii::$app->getUser()->identityClass
+			'class' => \Yii::$app->getUser()->identityClass,
+			'scenario' => 'register'
 		]);
 		if (!$identity instanceof RegisterableInterface) {
 			throw new \RuntimeException(sprintf('"%s" must implement "%s" interface',

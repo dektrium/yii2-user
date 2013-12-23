@@ -1,7 +1,4 @@
-<?php
-namespace Codeception\Module;
-
-// here you can define custom functions for WebGuy
+<?php namespace Codeception\Module;
 
 class WebHelper extends \Codeception\Module
 {

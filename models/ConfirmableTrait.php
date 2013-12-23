@@ -56,10 +56,11 @@ trait ConfirmableTrait
 	 */
 	public function getConfirmationUrl()
 	{
-		return \Yii::$app->getUrlManager()->createAbsoluteUrl('/user/registration/confirm', [
-			'id'    => $this->id,
-			'token' => $this->confirmation_token
-		]);
+		return $this->getIsConfirmed() ? null :
+			\Yii::$app->getUrlManager()->createAbsoluteUrl('/user/registration/confirm', [
+				'id'    => $this->id,
+				'token' => $this->confirmation_token
+			]);
 	}
 
 	/**

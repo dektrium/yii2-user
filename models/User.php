@@ -1,7 +1,6 @@
 <?php namespace dektrium\user\models;
 
 use yii\db\ActiveRecord;
-use yii\helpers\Inflector;
 use yii\helpers\Security;
 use yii\web\IdentityInterface;
 

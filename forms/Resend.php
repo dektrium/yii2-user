@@ -45,7 +45,7 @@ class Resend extends Model
 		$rules = [
 			['email', 'required'],
 			['email', 'email'],
-			['email', 'exist', 'className' => \Yii::$app->getUser()->identityClass],
+			['email', 'exist', 'targetClass' => \Yii::$app->getUser()->identityClass],
 			['email', 'validateEmail'],
 		];
 

@@ -67,7 +67,7 @@ class Recovery extends Model
 		$rules = [
 			['email', 'required', 'on' => 'request'],
 			['email', 'email', 'on' => 'request'],
-			['email', 'exist', 'className' => \Yii::$app->getUser()->identityClass, 'on' => 'request'],
+			['email', 'exist', 'targetClass' => \Yii::$app->getUser()->identityClass, 'on' => 'request'],
 			['email', 'validateUserConfirmed', 'on' => 'request'],
 			['password', 'required', 'on' => 'reset'],
 			['password', 'string', 'min' => 6, 'on' => 'reset'],

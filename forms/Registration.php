@@ -65,7 +65,7 @@ class Registration extends Model
 	{
 		$rules = [
 			['email', 'email'],
-			[['username', 'email'], 'unique', 'className' => \Yii::$app->getUser()->identityClass],
+			[['username', 'email'], 'unique', 'targetClass' => \Yii::$app->getUser()->identityClass],
 			['username', 'match', 'pattern' => '/^[a-zA-Z]\w+$/'],
 			['username', 'string', 'min' => 3, 'max' => 25],
 			['email', 'string', 'max' => 255],

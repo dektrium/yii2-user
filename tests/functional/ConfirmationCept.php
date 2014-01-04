@@ -1,6 +1,7 @@
 <?php
+
 $I = new TestGuy($scenario);
-$I->wantTo('test confirmation accounts');
+$I->wantTo('ensure that confirmation works');
 $I->amOnPage('?r=user/registration/confirm&id=2&token=NO2aCmBIjFQX624xmAc3VBu7Th3NJoa6');
 $I->see('Confirmation token is invalid');
 $token = 'ediCJUtMifAikHaYkL2Kz6LakTN50fa4';

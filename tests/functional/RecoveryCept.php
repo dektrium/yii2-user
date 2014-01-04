@@ -1,12 +1,16 @@
 <?php
+
+use tests\_pages\RecoveryPage;
+
 $I = new TestGuy($scenario);
-$I->wantTo('recover my password');
-$I->amOnPage('/?r=user/recovery/request');
-$I->fillField('#recovery-form-email', 'unconfirmed@example.com');
-$I->click('Send');
+$I->wantTo('ensure that password recovery works');
+
+$page = RecoveryPage::openBy($I);
+
+$page->resend('unconfirmed@example.com');
 $I->see('You must confirm your account first');
-$I->fillField('#recovery-form-email', 'user@example.com');
-$I->click('Send');
+
+$page->resend('user@example.com');
 $I->see('You have been sent an email with instructions on how to reset your password.');
 
 $I->haveInDatabase('user', [

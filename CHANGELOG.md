@@ -3,6 +3,7 @@ Changelog
 
 ## v0.3.0 [Work in progress]
 
+- Refactored test suite
 - Added 'simple' registration (when password is generated automatically)
 - Refactored forms
 - Extracted interfaces for identity class

@@ -1,6 +1,7 @@
 <?php namespace dektrium\user;
 
-use \yii\base\Module as BaseModule;
+use yii\base\Module as BaseModule;
+use yii\console\Application as ConsoleApplication;
 
 /**
  * This is the main module class for the Dektrium user module.
@@ -10,15 +11,6 @@ use \yii\base\Module as BaseModule;
 class Module extends BaseModule
 {
 	const VERSION = '0.3.0-DEV';
-
-	/**
-	 * @inheritdoc
-	 */
-	public $controllerMap = [
-		'registration' => '\dektrium\user\controllers\RegistrationController',
-		'auth' => '\dektrium\user\controllers\AuthController',
-		'recovery' => '\dektrium\user\controllers\RecoveryController',
-	];
 
 	/**
 	 * @var array Actions on which captcha will be shown.
@@ -147,13 +139,14 @@ class Module extends BaseModule
 		\Yii::$app->getI18n()->translations['user*'] = [
 			'class' => 'yii\i18n\PhpMessageSource',
 			'basePath' => __DIR__ . '/messages',
-			'fileMap' => [
-				'user' => 'user.php'
-			]
 		];
 		$this->setAliases([
 			'@user' => __DIR__
 		]);
+		if (\Yii::$app instanceof ConsoleApplication) {
+			$this->controllerNamespace = '\dektrium\user\commands';
+			$this->setControllerPath(__DIR__.'/commands');
+		}
 	}
 
 	/**

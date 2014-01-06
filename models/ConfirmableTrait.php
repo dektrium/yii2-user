@@ -48,7 +48,6 @@ trait ConfirmableTrait
 			->setSubject($this->getModule()->confirmationMessageSubject)
 			->setHtmlBody($html)
 			->send();
-		\Yii::$app->getSession()->setFlash('confirmation_message_sent');
 	}
 
 	/**

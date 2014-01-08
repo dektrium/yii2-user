@@ -75,6 +75,7 @@ class Resend extends Model
 	{
 		if ($this->validate()) {
 			$this->getIdentity()->sendConfirmationMessage();
+			\Yii::$app->getSession()->setFlash('confirmation_message_sent');
 			return true;
 		} else {
 			return false;

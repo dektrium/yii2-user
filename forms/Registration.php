@@ -102,6 +102,7 @@ class Registration extends Model
 			if ($identity->register($this->getModule()->generatePassword)) {
 				if ($this->getModule()->confirmable) {
 					$identity->sendConfirmationMessage();
+					\Yii::$app->getSession()->setFlash('confirmation_message_sent');
 				}
 				return true;
 			}

@@ -31,7 +31,6 @@ class ConfirmableTest extends TestCase
 		$this->assertTrue($user->getIsConfirmed());
 		$user->sendConfirmationMessage();
 		$this->assertFalse($user->getIsConfirmed());
-		$this->assertTrue(\Yii::$app->getSession()->hasFlash('confirmation_message_sent'));
 	}
 
 	public function testGetIsConfirmationPeriodExpired()

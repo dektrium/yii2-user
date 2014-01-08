@@ -79,7 +79,7 @@ trait ConfirmableTrait
 	 */
 	public function getIsConfirmationPeriodExpired()
 	{
-		return ($this->confirmation_sent_time + $this->getModule()->confirmWithin) < time();
+		return $this->confirmation_sent_time != null && ($this->confirmation_sent_time + $this->getModule()->confirmWithin) < time();
 	}
 
 	protected function generateConfirmationData()

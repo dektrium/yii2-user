@@ -11,5 +11,4 @@ modules:
     enabled: [Filesystem, TestHelper, Yii2, Db]
     config:
         Yii2:
-            entryScript: '../../web/index-test.php'
-            url: 'http://localhost/index.php'
+            configFile: 'tests/functional/_config.php'

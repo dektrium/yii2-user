@@ -5,7 +5,7 @@ use yii\widgets\ActiveForm;
 /**
  * @var yii\base\View $this
  * @var yii\widgets\ActiveForm $form
- * @var dektrium\user\models\User $model
+ * @var dektrium\user\forms\Registration $model
  */
 $this->title = Yii::t('user', 'Register');
 $this->params['breadcrumbs'][] = $this->title;

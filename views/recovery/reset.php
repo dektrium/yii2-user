@@ -5,7 +5,7 @@ use yii\widgets\ActiveForm;
 /**
  * @var yii\base\View $this
  * @var yii\widgets\ActiveForm $form
- * @var dektrium\user\models\ResendForm $model
+ * @var dektrium\user\forms\Recovery $model
  */
 $this->title = Yii::t('user', 'Reset password');
 $this->params['breadcrumbs'][] = $this->title;

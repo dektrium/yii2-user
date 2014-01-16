@@ -9,6 +9,8 @@ Features include:
 * Registration support, with an optional confirmation per mail
 * Authentication support
 * Password recovery support
+* Console commands
+* Unit and functional tests
 
 **NOTE:** Module is in initial development. Anything may change at any time.
 
@@ -19,7 +21,7 @@ The preferred way to install this extension is through [composer](http://getcomp
 Either run
 
 ```bash
-$ php composer.phar require dektrium/yii2-user "~0.2@dev"
+$ php composer.phar require dektrium/yii2-user "~0.3@dev"
 ```
 
 or add
@@ -27,7 +29,7 @@ or add
 ```js
 {
     "require": {
-        "dektrium/yii2-user": "~0.2@dev"
+        "dektrium/yii2-user": "~0.3@dev"
     }
 }
 ```
@@ -39,7 +41,7 @@ to the require section of your `composer.json` file.
 Once the extension is installed, simply run migrations:
 
 ```bash
-$ php yii migrate/up --migrationPath=@vendor/dektrium/yii2-user/dektrium/user/migrations
+$ php yii migrate/up --migrationPath=@vendor/dektrium/yii2-user/migrations
 ```
 
 And modify your application configuration as follows:

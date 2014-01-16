@@ -104,6 +104,10 @@ class Registration extends Model
 					$identity->sendConfirmationMessage();
 					\Yii::$app->getSession()->setFlash('confirmation_message_sent');
 				}
+				if ($this->getModule()->trackable) {
+					$identity->registration_ip = \Yii::$app->getRequest()->getUserIP();
+					$identity->save(false);
+				}
 				return true;
 			}
 		}

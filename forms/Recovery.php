@@ -1,6 +1,6 @@
 <?php namespace dektrium\user\forms;
 
-use dektrium\user\models\RecoverableInterface;
+use dektrium\user\models\UserInterface;
 use yii\base\Model;
 use yii\db\ActiveQuery;
 
@@ -27,7 +27,7 @@ class Recovery extends Model
 	public $verifyCode;
 
 	/**
-	 * @var RecoverableInterface
+	 * @var UserInterface
 	 */
 	private $_identity;
 
@@ -132,7 +132,7 @@ class Recovery extends Model
 	}
 
 	/**
-	 * @return RecoverableInterface
+	 * @return UserInterface
 	 */
 	public function getIdentity()
 	{
@@ -140,9 +140,9 @@ class Recovery extends Model
 	}
 
 	/**
-	 * @param RecoverableInterface $identity
+	 * @param UserInterface $identity
 	 */
-	public function setIdentity(RecoverableInterface $identity)
+	public function setIdentity(UserInterface $identity)
 	{
 		$this->identity = $identity;
 	}

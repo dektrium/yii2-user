@@ -2,7 +2,6 @@
 
 use yii\db\ActiveRecord;
 use yii\helpers\Security;
-use yii\web\IdentityInterface;
 
 /**
  * User ActiveRecord model.
@@ -28,8 +27,7 @@ use yii\web\IdentityInterface;
  *
  * @author Dmitry Erofeev <dmeroff@gmail.com>
  */
-class User extends ActiveRecord implements
-	IdentityInterface, RegisterableInterface, ConfirmableInterface,	RecoverableInterface
+class User extends ActiveRecord implements UserInterface
 {
 	use RegisterableTrait;
 	use ConfirmableTrait;

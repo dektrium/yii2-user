@@ -1,6 +1,6 @@
 <?php namespace dektrium\user\forms;
 
-use dektrium\user\models\ConfirmableInterface;
+use dektrium\user\models\UserInterface;
 use yii\base\Model;
 use yii\db\ActiveQuery;
 
@@ -101,9 +101,9 @@ class Resend extends Model
 				'modelClass' => \Yii::$app->getUser()->identityClass
 			]);
 			$identity = $query->where(['email' => $this->email])->one();
-			if (!$identity instanceof ConfirmableInterface) {
+			if (!$identity instanceof UserInterface) {
 				throw new \RuntimeException(sprintf('"%s" must implement "%s" interface',
-					get_class($identity), '\dektrium\user\models\ConfirmableInterface'));
+					get_class($identity), '\dektrium\user\models\UserInterface'));
 			}
 			$this->_identity = $identity;
 		}

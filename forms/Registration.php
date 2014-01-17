@@ -1,7 +1,6 @@
 <?php namespace dektrium\user\forms;
 
-use dektrium\user\models\ConfirmableInterface;
-use dektrium\user\models\RegisterableInterface;
+use dektrium\user\models\UserInterface;
 use yii\base\Model;
 
 /**
@@ -133,12 +132,9 @@ class Registration extends Model
 			'class' => \Yii::$app->getUser()->identityClass,
 			'scenario' => 'register'
 		]);
-		if (!$identity instanceof RegisterableInterface) {
+		if (!$identity instanceof UserInterface) {
 			throw new \RuntimeException(sprintf('"%s" must implement "%s" interface',
-				get_class($identity), '\dektrium\user\models\RegisterableInterface'));
-		} elseif ($this->getModule()->confirmable && !$identity instanceof ConfirmableInterface) {
-			throw new \RuntimeException(sprintf('"%s" must implement "%s" interface',
-				get_class($identity), '\dektrium\user\models\ConfirmableInterface'));
+				get_class($identity), '\dektrium\user\models\UserInterface'));
 		}
 
 		return $identity;

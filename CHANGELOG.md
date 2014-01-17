@@ -1,7 +1,7 @@
 Changelog
 =========
 
-## v0.3.0 [Work in progress]
+## v0.3.0 [16 January 2014]
 
 - Added console commands
 - Refactored test suite

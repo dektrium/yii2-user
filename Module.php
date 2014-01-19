@@ -31,16 +31,6 @@ class Module extends BaseModule
 	public $generatePassword = false;
 
 	/**
-	 * @var string View that will be rendered by Mailer.compose().
-	 */
-	public $welcomeMessageView = '@user/views/mail/welcome.php';
-
-	/**
-	 * @var string Subject of confirmation message.
-	 */
-	public $welcomeMessageSubject = 'Welcome to Site.com';
-
-	/**
 	 * @var bool Whether to enable "Trackable" behavior.
 	 */
 	public $trackable = false;
@@ -62,21 +52,6 @@ class Module extends BaseModule
 	public $confirmWithin = 86400;
 
 	/**
-	 * @var string View that will be rendered by Mailer.compose().
-	 */
-	public $confirmationMessageView = '@user/views/mail/confirmation.php';
-
-	/**
-	 * @var string Subject of confirmation message.
-	 */
-	public $confirmationMessageSubject = 'Account confirmation on Site.com';
-
-	/**
-	 * @var string|array Message sender.
-	 */
-	public $messageSender = 'no-reply@example.com';
-
-	/**
 	 * @var bool Whether to enable "Recoverable" behavior.
 	 */
 	public $recoverable = true;
@@ -88,19 +63,14 @@ class Module extends BaseModule
 	public $recoverWithin = 21600;
 
 	/**
-	 * @var string View that will be rendered by Mailer.compose() on password recovery.
-	 */
-	public $recoveryMessageView = '@user/views/mail/recovery.php';
-
-	/**
-	 * @var string Subject of recovery message.
-	 */
-	public $recoveryMessageSubject = 'Password recovery on Site.com';
-
-	/**
 	 * @var int Cost parameter used by the Blowfish hash algorithm.
 	 */
 	public $cost = 10;
+
+	/**
+	 * @var string
+	 */
+	public $emailViewPath = '@dektrium/user/views/mail';
 
 	/**
 	 * @var string
@@ -113,17 +83,17 @@ class Module extends BaseModule
 	public function init()
 	{
 		parent::init();
-		\Yii::$app->getI18n()->translations['user*'] = [
-			'class' => 'yii\i18n\PhpMessageSource',
-			'basePath' => __DIR__ . '/messages',
-		];
-		$this->setAliases([
-			'@user' => __DIR__
-		]);
+
 		if (\Yii::$app instanceof ConsoleApplication) {
 			$this->controllerNamespace = '\dektrium\user\commands';
 			$this->setControllerPath(__DIR__.'/commands');
 		}
+
+		\Yii::$app->getI18n()->translations['user*'] = [
+			'class' => 'yii\i18n\PhpMessageSource',
+			'basePath' => __DIR__ . '/messages',
+		];
+
 		$this->setComponents([
 			'factory' => [
 				'class' => '\dektrium\user\Factory'

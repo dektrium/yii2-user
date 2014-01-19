@@ -18,6 +18,10 @@ class RegisterableTest extends TestCase
 
 	public function testRegisterWithGeneratePassword()
 	{
+		// todo: fix here
+		// test is failing without following line
+		\Yii::$app->getModule('user');
+
 		$user = new User(['scenario' => 'register']);
 		$user->setAttributes([
 			'username' => 'tester2',

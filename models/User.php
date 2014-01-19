@@ -91,7 +91,7 @@ class User extends ActiveRecord implements UserInterface
 	 * Finds a user by username.
 	 *
 	 * @param $username
-	 * @return null|User
+	 * @return null|static
 	 */
 	public static function findByUsername($username)
 	{
@@ -102,7 +102,7 @@ class User extends ActiveRecord implements UserInterface
 	 * Finds a user by email.
 	 *
 	 * @param $email
-	 * @return null|User
+	 * @return null|static
 	 */
 	public static function findByEmail($email)
 	{
@@ -166,16 +166,8 @@ class User extends ActiveRecord implements UserInterface
 		if ($generatePassword) {
 			$password = $this->generatePassword(8);
 			$this->password = $password;
-			$html = \Yii::$app->getView()->renderFile($this->getModule()->welcomeMessageView, [
-				'user' => $this,
-				'password' => $password
-			]);
-			\Yii::$app->getMail()->compose()
-					  ->setTo($this->email)
-					  ->setFrom($this->getModule()->messageSender)
-					  ->setSubject($this->getModule()->welcomeMessageSubject)
-					  ->setHtmlBody($html)
-					  ->send();
+			$this->sendMessage(\Yii::t('user', 'Welcome to {sitename}', ['sitename' => \Yii::$app->name]),
+				'welcome', ['user' => $this, 'password' => $password]);
 		}
 
 		return $this->save();
@@ -233,20 +225,18 @@ class User extends ActiveRecord implements UserInterface
 	}
 
 	/**
-	 * Sends confirmation instructions by email.
+	 * Generates confirmation data and sends confirmation instructions by email.
 	 *
 	 * @return bool
 	 */
 	public function sendConfirmationMessage()
 	{
-		$this->generateConfirmationData();
-		$html = \Yii::$app->getView()->renderFile($this->getModule()->confirmationMessageView, ['user' => $this]);
-		\Yii::$app->getMail()->compose()
-				  ->setTo($this->email)
-				  ->setFrom($this->getModule()->messageSender)
-				  ->setSubject($this->getModule()->confirmationMessageSubject)
-				  ->setHtmlBody($html)
-				  ->send();
+		$this->confirmation_token = Security::generateRandomKey();
+		$this->confirmation_sent_time = time();
+		$this->confirmation_time = null;
+		$this->save(false);
+
+		return $this->sendMessage(\Yii::t('user', 'Please confirm your account'), 'confirmation', ['user' => $this]);
 	}
 
 	/**
@@ -279,17 +269,6 @@ class User extends ActiveRecord implements UserInterface
 	public function getIsConfirmationPeriodExpired()
 	{
 		return $this->confirmation_sent_time != null && ($this->confirmation_sent_time + $this->getModule()->confirmWithin) < time();
-	}
-
-	/**
-	 * Generates confirmation data.
-	 */
-	protected function generateConfirmationData()
-	{
-		$this->confirmation_token = Security::generateRandomKey();
-		$this->confirmation_sent_time = time();
-		$this->confirmation_time = null;
-		$this->save(false);
 	}
 
 	/**
@@ -330,29 +309,15 @@ class User extends ActiveRecord implements UserInterface
 	}
 
 	/**
-	 * Sends recovery message to user.
+	 * Generates recovery data and sends recovery message to user.
 	 */
 	public function sendRecoveryMessage()
-	{
-		$this->generateRecoveryData();
-		$html = \Yii::$app->getView()->renderFile($this->getModule()->recoveryMessageView, ['user' => $this]);
-		\Yii::$app->getMail()->compose()
-				  ->setTo($this->email)
-				  ->setFrom($this->getModule()->messageSender)
-				  ->setSubject($this->getModule()->recoveryMessageSubject)
-				  ->setHtmlBody($html)
-				  ->send();
-		\Yii::$app->getSession()->setFlash('recovery_message_sent');
-	}
-
-	/**
-	 * Generates recovery data.
-	 */
-	protected function generateRecoveryData()
 	{
 		$this->recovery_token = Security::generateRandomKey();
 		$this->recovery_sent_time = time();
 		$this->save(false);
+
+		return $this->sendMessage(\Yii::t('user', 'Please complete password reset'), 'recovery', ['user' => $this]);
 	}
 
 	/**
@@ -365,5 +330,24 @@ class User extends ActiveRecord implements UserInterface
 		}
 
 		return $this->_module;
+	}
+
+	/**
+	 * Sends message.
+	 *
+	 * @param  string $subject
+	 * @param  string $view
+	 * @param  array  $params
+	 *
+	 * @return bool
+	 */
+	protected function sendMessage($subject, $view, $params)
+	{
+		\Yii::$app->getMail()->viewPath = $this->getModule()->emailViewPath;
+
+		return \Yii::$app->getMail()->compose($view, $params)
+			->setTo($this->email)
+			->setSubject($subject)
+			->send();
 	}
 }

@@ -8,6 +8,8 @@ use yii\web\NotFoundHttpException;
 /**
  * RecoveryController manages password recovery process.
  *
+ * @property \dektrium\user\Module $module
+ *
  * @author Dmitry Erofeev <dmeroff@gmail.com>
  */
 class RecoveryController extends Controller
@@ -55,10 +57,7 @@ class RecoveryController extends Controller
 			throw new NotFoundHttpException();
 		}
 		/** @var \dektrium\user\forms\Recovery $model */
-		$model = \Yii::createObject([
-			'class' => $this->module->recoveryForm,
-			'scenario' => 'request',
-		]);
+		$model = $this->module->factory->createForm('recovery', ['scenario' => 'request']);
 
 		if ($model->load($_POST) && $model->sendRecoveryMessage()) {
 			return $this->render('messageSent');
@@ -83,15 +82,15 @@ class RecoveryController extends Controller
 			throw new NotFoundHttpException();
 		}
 		/** @var \dektrium\user\models\User $user */
-		$query = new ActiveQuery(['modelClass' => \Yii::$app->getUser()->identityClass]);
-		$user = $query->where(['id' => $id, 'recovery_token' => $token])->one();
+		$query = $this->module->factory->createQuery();
+		$user  = $query->where(['id' => $id, 'recovery_token' => $token])->one();
 		if ($user === null) {
 			throw new NotFoundHttpException();
 		} elseif ($user->getIsRecoveryPeriodExpired()) {
 			return $this->render('invalidToken');
 		}
-		$model = \Yii::createObject([
-			'class' => $this->module->recoveryForm,
+
+		$model = $this->module->factory->createForm('recovery', [
 			'scenario' => 'reset',
 			'identity' => $user
 		]);

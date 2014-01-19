@@ -64,7 +64,7 @@ class Registration extends Model
 	{
 		$rules = [
 			['email', 'email'],
-			[['username', 'email'], 'unique', 'targetClass' => \Yii::$app->getUser()->identityClass],
+			[['username', 'email'], 'unique', 'targetClass' => $this->getModule()->factory->modelClass],
 			['username', 'match', 'pattern' => '/^[a-zA-Z]\w+$/'],
 			['username', 'string', 'min' => 3, 'max' => 25],
 			['email', 'string', 'max' => 255],
@@ -90,7 +90,8 @@ class Registration extends Model
 	public function register()
 	{
 		if ($this->validate()) {
-			$identity = $this->getIdentity();
+			$identity = $this->getModule()->factory->createUser('register');
+			$identity->scenario = 'register';
 			$identity->setAttributes([
 				'username' => $this->username,
 				'email' => $this->email,
@@ -98,14 +99,13 @@ class Registration extends Model
 			if (!$this->getModule()->generatePassword) {
 				$identity->password = $this->password;
 			}
+			if ($this->getModule()->trackable) {
+				$identity->registration_ip = \Yii::$app->getRequest()->getUserIP();
+			}
 			if ($identity->register($this->getModule()->generatePassword)) {
 				if ($this->getModule()->confirmable) {
 					$identity->sendConfirmationMessage();
 					\Yii::$app->getSession()->setFlash('confirmation_message_sent');
-				}
-				if ($this->getModule()->trackable) {
-					$identity->registration_ip = \Yii::$app->getRequest()->getUserIP();
-					$identity->save(false);
 				}
 				return true;
 			}
@@ -120,24 +120,6 @@ class Registration extends Model
 	public function formName()
 	{
 		return 'registration-form';
-	}
-
-	/**
-	 * @return \dektrium\user\models\User
-	 * @throws \RuntimeException
-	 */
-	protected function getIdentity()
-	{
-		$identity = \Yii::createObject([
-			'class' => \Yii::$app->getUser()->identityClass,
-			'scenario' => 'register'
-		]);
-		if (!$identity instanceof UserInterface) {
-			throw new \RuntimeException(sprintf('"%s" must implement "%s" interface',
-				get_class($identity), '\dektrium\user\models\UserInterface'));
-		}
-
-		return $identity;
 	}
 
 	/**

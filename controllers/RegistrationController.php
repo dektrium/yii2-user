@@ -1,12 +1,13 @@
 <?php namespace dektrium\user\controllers;
 
-use yii\db\ActiveQuery;
 use yii\web\AccessControl;
 use yii\web\Controller;
 use yii\web\HttpException;
 
 /**
  * Controller that manages user registration process.
+ *
+ * @property \dektrium\user\Module $module
  *
  * @author Dmitry Erofeev <dmeroff@gmail.com>
  */
@@ -55,9 +56,7 @@ class RegistrationController extends Controller
 	 */
 	public function actionRegister()
 	{
-		$model = \Yii::createObject([
-			'class' => $this->module->registrationForm,
-		]);
+		$model = $this->module->factory->createForm('registration');
 
 		if ($model->load($_POST) && $model->register()) {
 			return $this->render('success');
@@ -78,7 +77,7 @@ class RegistrationController extends Controller
 	 */
 	public function actionConfirm($id, $token)
 	{
-		$query = new ActiveQuery(['modelClass' => \Yii::$app->getUser()->identityClass]);
+		$query = $this->module->factory->createQuery();
 		/** @var \dektrium\user\models\User $user */
 		$user = $query->where(['id' => $id, 'confirmation_token' => $token])->one();
 		if ($user === null) {
@@ -98,9 +97,7 @@ class RegistrationController extends Controller
 	 */
 	public function actionResend()
 	{
-		$model = \Yii::createObject([
-			'class' => $this->module->resendForm
-		]);
+		$model = $this->module->factory->createForm('resend');
 
 		if ($model->load($_POST) && $model->resend()) {
 			return $this->render('success');

@@ -6,6 +6,8 @@ use yii\console\Application as ConsoleApplication;
 /**
  * This is the main module class for the Dektrium user module.
  *
+ * @property Factory $factory
+ *
  * @author Dmitry Erofeev <dmeroff@gmail.com>
  */
 class Module extends BaseModule
@@ -18,35 +20,10 @@ class Module extends BaseModule
 	public $captcha = [];
 
 	/**
-	 * @var string Model that will be used on registration process.
-	 */
-	public $registrationForm = '\dektrium\user\forms\Registration';
-
-	/**
-	 * @var string Model that will be used in loginAction.
-	 */
-	public $loginForm = '\dektrium\user\forms\Login';
-
-	/**
-	 * @var string Model that will be used in resendAction.
-	 */
-	public $resendForm = '\dektrium\user\forms\Resend';
-
-	/**
-	 * @var string Model that will be used in recovery password process.
-	 */
-	public $recoveryForm = '\dektrium\user\forms\Recovery';
-
-	/**
 	 * @var int The time you want the user will be remembered without asking for credentials.
 	 * By default rememberFor is two weeks.
 	 */
 	public $rememberFor = 1209600;
-
-	/**
-	 * @var array Url where the user will be redirected to after registration.
-	 */
-	public $registrationRedirectUrl = ['/user/auth/login'];
 
 	/**
 	 * @var bool Whether to generate user password automatically.
@@ -147,6 +124,11 @@ class Module extends BaseModule
 			$this->controllerNamespace = '\dektrium\user\commands';
 			$this->setControllerPath(__DIR__.'/commands');
 		}
+		$this->setComponents([
+			'factory' => [
+				'class' => '\dektrium\user\Factory'
+			]
+		]);
 	}
 
 	/**

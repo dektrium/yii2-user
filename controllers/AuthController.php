@@ -7,6 +7,8 @@ use yii\web\VerbFilter;
 /**
  * Controller that manages user authentication process.
  *
+ * @property \dektrium\user\Module $module
+ *
  * @author Dmitry Erofeev <dmeroff@gmail.com>
  */
 class AuthController extends Controller
@@ -60,9 +62,7 @@ class AuthController extends Controller
 	 */
 	public function actionLogin()
 	{
-		$model = \Yii::createObject([
-			'class' => $this->module->loginForm
-		]);
+		$model = $this->module->factory->createForm('login');
 
 		if ($model->load($_POST) && $model->login()) {
 			return $this->goBack();

@@ -22,7 +22,7 @@ class Resend extends Model
 	public $verifyCode;
 
 	/**
-	 * @var \dektrium\user\models\ConfirmableInterface
+	 * @var \dektrium\user\models\UserInterface
 	 */
 	private $_identity;
 
@@ -45,7 +45,7 @@ class Resend extends Model
 		$rules = [
 			['email', 'required'],
 			['email', 'email'],
-			['email', 'exist', 'targetClass' => \Yii::$app->getUser()->identityClass],
+			['email', 'exist', 'targetClass' => $this->getModule()->factory->modelClass],
 			['email', 'validateEmail'],
 		];
 
@@ -91,21 +91,14 @@ class Resend extends Model
 	}
 
 	/**
-	 * @return \dektrium\user\models\ConfirmableInterface
+	 * @return \dektrium\user\models\UserInterface
 	 * @throws \RuntimeException
 	 */
 	protected function getIdentity()
 	{
 		if ($this->_identity == null) {
-			$query = new ActiveQuery([
-				'modelClass' => \Yii::$app->getUser()->identityClass
-			]);
-			$identity = $query->where(['email' => $this->email])->one();
-			if (!$identity instanceof UserInterface) {
-				throw new \RuntimeException(sprintf('"%s" must implement "%s" interface',
-					get_class($identity), '\dektrium\user\models\UserInterface'));
-			}
-			$this->_identity = $identity;
+			$query = $this->getModule()->factory->createQuery();
+			$this->_identity = $query->where(['email' => $this->email])->one();
 		}
 
 		return $this->_identity;

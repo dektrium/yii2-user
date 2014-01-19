@@ -135,7 +135,7 @@ class Login extends Model
 	public function beforeValidate()
 	{
 		if (parent::beforeValidate()) {
-			$query = new ActiveQuery(['modelClass' => \Yii::$app->getUser()->identityClass]);
+			$query = $this->getModule()->factory->createQuery();
 			switch ($this->getModule()->loginType) {
 				case 'email':
 					$condition = ['email' => $this->login];

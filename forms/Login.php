@@ -147,7 +147,7 @@ class Login extends Model
 					$condition = ['or', ['email' => $this->login], ['username' => $this->login]];
 					break;
 				default:
-					throw new \RuntimeException;
+					throw new \RuntimeException('Unknown login type');
 			}
 			$this->identity = $query->where($condition)->one();
 			return true;

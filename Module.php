@@ -20,6 +20,16 @@ class Module extends BaseModule
 	public $captcha = [];
 
 	/**
+	 * @var string Allowed types: 'email', 'username', 'both'
+	 */
+	public $loginType = 'email';
+
+	/**
+	 * @var bool Whether to allow login without confirmation.
+	 */
+	public $allowUnconfirmedLogin = false;
+
+	/**
 	 * @var int The time you want the user will be remembered without asking for credentials.
 	 * By default rememberFor is two weeks.
 	 */
@@ -31,19 +41,14 @@ class Module extends BaseModule
 	public $generatePassword = false;
 
 	/**
-	 * @var bool Whether to enable "Trackable" behavior.
+	 * @var bool Whether to track user's registration and sign in
 	 */
 	public $trackable = false;
 
 	/**
-	 * @var bool Whether to enable "Confirmable" behavior.
+	 * @var bool Whether confirmation needed
 	 */
 	public $confirmable = true;
-
-	/**
-	 * @var bool Whether to allow login without confirmation.
-	 */
-	public $allowUnconfirmedLogin = false;
 
 	/**
 	 * @var int The time before a sent confirmation token becomes invalid.
@@ -52,7 +57,7 @@ class Module extends BaseModule
 	public $confirmWithin = 86400;
 
 	/**
-	 * @var bool Whether to enable "Recoverable" behavior.
+	 * @var bool Whether to enable password recovery.
 	 */
 	public $recoverable = true;
 
@@ -71,11 +76,6 @@ class Module extends BaseModule
 	 * @var string
 	 */
 	public $emailViewPath = '@dektrium/user/views/mail';
-
-	/**
-	 * @var string
-	 */
-	protected $loginType = 'email';
 
 	/**
 	 * @inheritdoc
@@ -99,28 +99,5 @@ class Module extends BaseModule
 				'class' => '\dektrium\user\Factory'
 			]
 		]);
-	}
-
-	/**
-	 * Sets login type. Allowed types: 'email', 'username', 'both'
-	 *
-	 * @param $value
-	 * @throws \InvalidArgumentException
-	 */
-	public function setLoginType($value)
-	{
-		$allowed = ['email', 'username', 'both'];
-		if (!in_array($value, $allowed)) {
-			throw new \InvalidArgumentException('Setting unknown login type');
-		}
-		$this->loginType = $value;
-	}
-
-	/**
-	 * @return string Login type
-	 */
-	public function getLoginType()
-	{
-		return $this->loginType;
 	}
 }

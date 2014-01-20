@@ -5,18 +5,13 @@ use yii\web\User as BaseUser;
 /**
  * User is the class for the "user" application component that manages the user authentication status.
  *
- * @property \dektrium\user\models\User $identity The identity object associated with the currently logged user. Null
- * is returned if the user is not logged in (not authenticated).
+ * @property \dektrium\user\models\UserInterface $identity The identity object associated with the currently logged user.
+ * Null is returned if the user is not logged in (not authenticated).
  *
  * @author Dmitry Erofeev <dmeroff@gmail.com>
  */
 class User extends BaseUser
 {
-	/**
-	 * @inheritdoc
-	 */
-	public $identityClass = '\dektrium\user\models\User';
-
 	/**
 	 * @inheritdoc
 	 */
@@ -26,6 +21,17 @@ class User extends BaseUser
 	 * @inheritdoc
 	 */
 	public $loginUrl = ['/user/auth/login'];
+
+	/**
+	 * @inheritdoc
+	 */
+	public function init()
+	{
+		if ($this->identityClass == null) {
+			$this->identityClass = \Yii::$app->getModule('user')->factory->modelClass;
+		}
+		parent::init();
+	}
 
 	/**
 	 * @inheritdoc

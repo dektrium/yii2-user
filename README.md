@@ -16,53 +16,14 @@ Features include:
 
 ## Installation
 
-The preferred way to install this extension is through [composer](http://getcomposer.org/download/).
+All installation instructions are located in [installation guide](docs/installation.md).
 
-Either run
+## How to participate
 
-```bash
-$ php composer.phar require dektrium/yii2-user "~0.3@dev"
-```
+Your participation to User module is very welcome! You may participate in following ways:
 
-or add
-
-```js
-{
-    "require": {
-        "dektrium/yii2-user": "~0.3@dev"
-    }
-}
-```
-
-to the require section of your `composer.json` file.
-
-## Usage
-
-Once the extension is installed, simply run migrations:
-
-```bash
-$ php yii migrate/up --migrationPath=@vendor/dektrium/yii2-user/migrations
-```
-
-And modify your application configuration as follows:
-
-```php
-return [
-	'modules' => [
-	    ...
-		'user' => 'dektrium\user\Module',
-		...
-	],
-	...
-	'components' => [
-	    ...
-	    'user' => [
-	        'class' => 'dektrium\user\components\User',
-	    ],
-	    ...
-	]
-];
-```
+- [Report issues](https://github.com/dektrium/yii2-user/issues)
+- [Fix issues, develop features, write/polish documentation](docs/contributing.md)
 
 ## License
 

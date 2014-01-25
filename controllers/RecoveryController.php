@@ -1,6 +1,5 @@
 <?php namespace dektrium\user\controllers;
 
-use yii\db\ActiveQuery;
 use yii\web\AccessControl;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
@@ -46,6 +45,21 @@ class RecoveryController extends Controller
 	}
 
 	/**
+	 * @inheritdoc
+	 */
+	public function beforeAction($action)
+	{
+		if (parent::beforeAction($action)) {
+			if (!$this->module->recoverable) {
+				throw new NotFoundHttpException('Disabled by administrator');
+			}
+			return true;
+		} else {
+			return false;
+		}
+	}
+
+	/**
 	 * Displays page where user can request new recovery message.
 	 *
 	 * @return string
@@ -53,9 +67,6 @@ class RecoveryController extends Controller
 	 */
 	public function actionRequest()
 	{
-		if (!$this->module->recoverable) {
-			throw new NotFoundHttpException();
-		}
 		/** @var \dektrium\user\forms\Recovery $model */
 		$model = $this->module->factory->createForm('recovery', ['scenario' => 'request']);
 
@@ -78,9 +89,6 @@ class RecoveryController extends Controller
 	 */
 	public function actionReset($id, $token)
 	{
-		if (!$this->module->recoverable) {
-			throw new NotFoundHttpException();
-		}
 		/** @var \dektrium\user\models\User $user */
 		$query = $this->module->factory->createQuery();
 		$user  = $query->where(['id' => $id, 'recovery_token' => $token])->one();

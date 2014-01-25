@@ -2,7 +2,7 @@
 
 use yii\web\AccessControl;
 use yii\web\Controller;
-use yii\web\HttpException;
+use yii\web\NotFoundHttpException;
 
 /**
  * Controller that manages user registration process.
@@ -35,6 +35,21 @@ class RegistrationController extends Controller
 				]
 			],
 		];
+	}
+
+	/**
+	 * @inheritdoc
+	 */
+	public function beforeAction($action)
+	{
+		if (parent::beforeAction($action)) {
+			if (!$this->module->confirmable && in_array($action->id, ['confirm', 'resend'])) {
+				throw new NotFoundHttpException('Disabled by administrator');
+			}
+			return true;
+		} else {
+			return false;
+		}
 	}
 
 	/**
@@ -81,7 +96,7 @@ class RegistrationController extends Controller
 		/** @var \dektrium\user\models\User $user */
 		$user = $query->where(['id' => $id, 'confirmation_token' => $token])->one();
 		if ($user === null) {
-			throw new HttpException(404, 'User not found');
+			throw new NotFoundHttpException('User not found');
 		}
 		if ($user->confirm()) {
 			return $this->render('finish');

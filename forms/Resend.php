@@ -50,7 +50,7 @@ class Resend extends Model
 		];
 
 		if (in_array('resend', $this->getModule()->captcha)) {
-			$rules[] = ['verifyCode', 'captcha'];
+			$rules[] = ['verifyCode', 'captcha', 'captchaAction' => 'user/registration/captcha'];
 		}
 
 		return $rules;

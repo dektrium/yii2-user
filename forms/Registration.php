@@ -78,7 +78,7 @@ class Registration extends Model
 		}
 
 		if (in_array('register', $this->getModule()->captcha)) {
-			$rules[] = ['verifyCode', 'captcha'];
+			$rules[] = ['verifyCode', 'captcha', 'captchaAction' => 'user/registration/captcha'];
 		}
 
 		return $rules;

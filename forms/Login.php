@@ -76,7 +76,7 @@ class Login extends Model
 		];
 
 		if (in_array('login', $this->getModule()->captcha)) {
-			$rules[] = ['verifyCode', 'captcha'];
+			$rules[] = ['verifyCode', 'captcha', 'captchaAction' => 'user/auth/captcha'];
 		}
 
 		return $rules;

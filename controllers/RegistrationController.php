@@ -29,7 +29,7 @@ class RegistrationController extends Controller
 					],
 					[
 						'allow' => true,
-						'actions' => ['confirm', 'resend'],
+						'actions' => ['confirm', 'resend', 'captcha'],
 						'roles' => ['?', '@']
 					],
 				]

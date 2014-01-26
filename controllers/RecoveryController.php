@@ -24,7 +24,7 @@ class RecoveryController extends Controller
 				'rules' => [
 					[
 						'allow' => true,
-						'actions' => ['request', 'reset'],
+						'actions' => ['request', 'reset', 'captcha'],
 						'roles' => ['?']
 					],
 				]

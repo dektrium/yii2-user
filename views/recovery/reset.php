@@ -21,7 +21,7 @@ $this->params['breadcrumbs'][] = $this->title;
 	],
 ]); ?>
 
-<?= $form->field($model, 'password') ?>
+<?= $form->field($model, 'password')->passwordInput() ?>
 
 	<div class="form-group">
 		<div class="col-lg-offset-1 col-lg-11">

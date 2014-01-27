@@ -28,12 +28,6 @@ class FactoryTest extends Test
 		$this->assertInstanceOf('\yii\db\ActiveQuery', $query);
 	}
 
-	public function testCreateRegistrationForm()
-	{
-		$model = $this->factory->createForm('registration');
-		$this->assertInstanceOf('\dektrium\user\forms\Registration', $model);
-	}
-
 	public function testCreateResendForm()
 	{
 		$model = $this->factory->createForm('resend');

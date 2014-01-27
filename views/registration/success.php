@@ -3,13 +3,14 @@ use yii\helpers\Html;
 
 /**
  * @var yii\base\View $this
+ * @var dektrium\user\models\User $model
  */
-$this->title = Yii::$app->getSession()->hasFlash('confirmation_message_sent') ?
+$this->title = Yii::$app->getModule('user')->confirmable ?
 	Yii::t('user', 'Confirmation needed') :
 	Yii::t('user', 'Account has been created');
 $this->params['breadcrumbs'][] = $this->title;
 ?>
-<?php if (Yii::$app->getSession()->hasFlash('confirmation_message_sent')): ?>
+<?php if (Yii::$app->getModule('user')->confirmable): ?>
 	<div class="alert alert-info">
 		<h4><?= Yii::t('user', 'Awesome, almost there! We need to confirm your email address') ?></h4>
 		<?= Yii::t('user', 'Please check your email and click the confirmation link to complete your registration.') ?>

@@ -2,6 +2,9 @@ Changelog
 =========
 
 ## v0.4.0 [Work in progress]
+
+- Enabled Trackable as default
+- Removed Registration form
 - Fixed bug with captcha
 - Added prefix usage in migrations and model
 - Refactored way of sending emails

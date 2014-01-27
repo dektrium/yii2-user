@@ -71,10 +71,13 @@ class RegistrationController extends Controller
 	 */
 	public function actionRegister()
 	{
-		$model = $this->module->factory->createForm('registration');
+		$model = $this->module->factory->createUser();
+		$model->scenario = 'register';
 
 		if ($model->load($_POST) && $model->register()) {
-			return $this->render('success');
+			return $this->render('success', [
+				'model' => $model
+			]);
 		}
 
 		return $this->render('register', [

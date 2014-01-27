@@ -35,6 +35,11 @@ class User extends ActiveRecord implements UserInterface
 	public $password;
 
 	/**
+	 * @var string Verification code.
+	 */
+	public $verifyCode;
+
+	/**
 	 * @var \dektrium\user\Module
 	 */
 	private $_module;
@@ -44,8 +49,12 @@ class User extends ActiveRecord implements UserInterface
 	 */
 	public function scenarios()
 	{
+		$attributes = $this->getModule()->generatePassword ? ['username', 'email'] : ['username', 'email', 'password'];
+		if (in_array('register', $this->getModule()->captcha)) {
+			$attributes[] = 'verifyCode';
+		}
 		return [
-			'register' => ['username', 'email', 'password'],
+			'register' => $attributes,
 			'reset'    => ['password'],
 		];
 	}
@@ -55,15 +64,26 @@ class User extends ActiveRecord implements UserInterface
 	 */
 	public function rules()
 	{
-		return [
-			[['username', 'email', 'password'], 'required', 'on' => ['register']],
+		$rules = [
 			['email', 'email'],
 			[['username', 'email'], 'unique'],
 			['username', 'match', 'pattern' => '/^[a-zA-Z]\w+$/'],
 			['username', 'string', 'min' => 3, 'max' => 25],
 			['email', 'string', 'max' => 255],
-			['password', 'string', 'min' => 6],
 		];
+
+		if ($this->getModule()->generatePassword) {
+			$rules[] = [['username', 'email'], 'required'];
+		} else {
+			$rules[] = [['username', 'email', 'password'], 'required'];
+			$rules[] = ['password', 'string', 'min' => 6];
+		}
+
+		if (in_array('register', $this->getModule()->captcha)) {
+			$rules[] = ['verifyCode', 'captcha', 'captchaAction' => 'user/registration/captcha'];
+		}
+
+		return $rules;
 	}
 
 	/**
@@ -153,24 +173,35 @@ class User extends ActiveRecord implements UserInterface
 	/**
 	 * Registers a user.
 	 *
-	 * @param  bool $generatePassword Whether to generate password for user automatically.
 	 * @return bool
 	 * @throws \RuntimeException
 	 */
-	public function register($generatePassword = false)
+	public function register()
 	{
 		if (!$this->getIsNewRecord()) {
 			throw new \RuntimeException('Calling "'.__CLASS__.'::register()" on existing user');
 		}
 
-		if ($generatePassword) {
-			$password = $this->generatePassword(8);
-			$this->password = $password;
-			$this->sendMessage(\Yii::t('user', 'Welcome to {sitename}', ['sitename' => \Yii::$app->name]),
-				'welcome', ['user' => $this, 'password' => $password]);
+		if ($this->validate()) {
+			if ($this->getModule()->generatePassword) {
+				$this->password = $this->generatePassword(8);
+				$this->sendMessage(\Yii::t('user', 'Welcome to {sitename}', ['sitename' => \Yii::$app->name]),
+					'welcome', ['user' => $this, 'password' => $this->password]);
+			}
+
+			if ($this->getModule()->confirmable) {
+				$this->generateConfirmationData();
+				$this->sendMessage(\Yii::t('user', 'Please confirm your account'), 'confirmation', ['user' => $this]);
+			}
+
+			if ($this->getModule()->trackable) {
+				$this->setAttribute('registration_ip', \Yii::$app->getRequest()->getUserIP());
+			}
+
+			return $this->save(false);
 		}
 
-		return $this->save();
+		return false;
 	}
 
 	/**
@@ -225,18 +256,26 @@ class User extends ActiveRecord implements UserInterface
 	}
 
 	/**
-	 * Generates confirmation data and sends confirmation instructions by email.
+	 * Generates confirmation data and re-sends confirmation instructions by email.
 	 *
 	 * @return bool
 	 */
-	public function sendConfirmationMessage()
+	public function resend()
+	{
+		$this->generateConfirmationData();
+		$this->save(false);
+
+		return $this->sendMessage(\Yii::t('user', 'Please confirm your account'), 'confirmation', ['user' => $this]);
+	}
+
+	/**
+	 * Generates confirmation data.
+	 */
+	protected function generateConfirmationData()
 	{
 		$this->confirmation_token = Security::generateRandomKey();
 		$this->confirmation_sent_time = time();
 		$this->confirmation_time = null;
-		$this->save(false);
-
-		return $this->sendMessage(\Yii::t('user', 'Please confirm your account'), 'confirmation', ['user' => $this]);
 	}
 
 	/**

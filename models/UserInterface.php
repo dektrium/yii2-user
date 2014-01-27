@@ -7,10 +7,9 @@ interface UserInterface extends IdentityInterface
 	/**
 	 * Registers a user.
 	 *
-	 * @param  bool $generatePassword Whether to generate password for user automatically.
 	 * @return bool
 	 */
-	public function register($generatePassword = false);
+	public function register();
 
 	/**
 	 * Confirms a user by setting it's "confirmation_time" to actual time
@@ -20,11 +19,11 @@ interface UserInterface extends IdentityInterface
 	public function confirm();
 
 	/**
-	 * Sends confirmation instructions by email.
+	 * Re-sends confirmation instructions by email.
 	 *
 	 * @return bool
 	 */
-	public function sendConfirmationMessage();
+	public function resend();
 
 	/**
 	 * @return string Confirmation url.

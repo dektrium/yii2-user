@@ -19,11 +19,6 @@ class Factory extends Component
 	/**
 	 * @var string
 	 */
-	public $registrationFormClass = '\dektrium\user\forms\Registration';
-
-	/**
-	 * @var string
-	 */
 	public $resendFormClass = '\dektrium\user\forms\Resend';
 
 	/**

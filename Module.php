@@ -43,7 +43,7 @@ class Module extends BaseModule
 	/**
 	 * @var bool Whether to track user's registration and sign in
 	 */
-	public $trackable = false;
+	public $trackable = true;
 
 	/**
 	 * @var bool Whether confirmation needed

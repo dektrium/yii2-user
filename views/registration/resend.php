@@ -25,7 +25,7 @@ $this->params['breadcrumbs'][] = $this->title;
 
 <?php if (in_array('resend', Yii::$app->getModule('user')->captcha)): ?>
 	<?= $form->field($model, 'verifyCode')->widget(\yii\captcha\Captcha::className(), [
-		'captchaAction' => '/user/registration/captcha',
+		'captchaAction' => 'user/registration/captcha',
 		'options' => ['class' => 'form-control'],
 	]) ?>
 <?php endif ?>

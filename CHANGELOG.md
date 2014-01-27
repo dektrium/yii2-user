@@ -2,6 +2,8 @@ Changelog
 =========
 
 ## v0.4.0 [Work in progress]
+- Fixed bug with captcha
+- Added prefix usage in migrations and model
 - Refactored way of sending emails
 - Modified mail views with [Really Simple Responsive HTML Email Template](https://github.com/leemunroe/html-email-template)
 - Added factory class

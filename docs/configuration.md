@@ -19,7 +19,7 @@ All available configuration options are listed below with their default values:
 		// Whether to generate user's password automatically on registration.
 		'generatePassword' => false,
 		// Whether to track user's IP address on login and registration.
-		'trackable' => false,
+		'trackable' => true,
 		// Whether email confirmation is required.
 		'confirmable' => true,
 		// The time before a sent confirmation token becomes invalid.

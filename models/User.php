@@ -46,6 +46,7 @@ class User extends ActiveRecord implements UserInterface
 	{
 		return [
 			'register' => ['username', 'email', 'password'],
+			'create'   => ['username', 'email', 'password'],
 			'reset'    => ['password'],
 		];
 	}
@@ -56,7 +57,7 @@ class User extends ActiveRecord implements UserInterface
 	public function rules()
 	{
 		return [
-			[['username', 'email', 'password'], 'required', 'on' => ['register']],
+			[['username', 'email', 'password'], 'required', 'on' => ['register', 'create']],
 			['email', 'email'],
 			[['username', 'email'], 'unique'],
 			['username', 'match', 'pattern' => '/^[a-zA-Z]\w+$/'],

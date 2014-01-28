@@ -16,6 +16,18 @@ $this->params['breadcrumbs'][] = $this->title;
 
 	<h1><?= Html::encode($this->title) ?> <?= Html::a(Yii::t('user', 'Create user'), ['create'], ['class' => 'btn btn-success']) ?></h1>
 
+	<?php if (Yii::$app->getSession()->hasFlash('user_created')): ?>
+		<div class="alert alert-success">
+			<p>User has been successfully created</p>
+		</div>
+	<?php endif; ?>
+
+	<?php if (Yii::$app->getSession()->hasFlash('user_deleted')): ?>
+		<div class="alert alert-success">
+			<p>User has been successfully deleted</p>
+		</div>
+	<?php endif; ?>
+
 	<?php echo GridView::widget([
 		'dataProvider' => $dataProvider,
 		'filterModel' => $searchModel,

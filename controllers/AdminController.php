@@ -13,6 +13,10 @@ use yii\web\NotFoundHttpException;
  */
 class AdminController extends Controller
 {
+	/**
+	 * Lists all User models.
+	 * @return mixed
+	 */
 	public function actionIndex()
 	{
 		$searchModel  = new UserSearch();
@@ -20,7 +24,29 @@ class AdminController extends Controller
 
 		return $this->render('index', [
 			'dataProvider' => $dataProvider,
-			'searchModel' => $searchModel,
+			'searchModel'  => $searchModel,
+		]);
+	}
+
+	/**
+	 * Creates a new User model.
+	 * If creation is successful, the browser will be redirected to the 'index' page.
+	 * @return mixed
+	 */
+	public function actionCreate()
+	{
+		/** @var \dektrium\user\models\User $model */
+		$model = $this->module->factory->createUser();
+		$model->scenario = 'create';
+
+		if ($model->load($_POST) && $model->save()) {
+			$model->confirm();
+			\Yii::$app->getSession()->setFlash('user_created');
+			return $this->redirect(['index']);
+		}
+
+		return $this->render('create', [
+			'model' => $model
 		]);
 	}
 
@@ -33,7 +59,7 @@ class AdminController extends Controller
 	public function actionDelete($id)
 	{
 		$this->findModel($id)->delete();
-
+		\Yii::$app->getSession()->setFlash('user_deleted');
 		return $this->redirect(['index']);
 	}
 

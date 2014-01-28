@@ -3,6 +3,8 @@ Changelog
 
 ## v0.4.0 [Work in progress]
 
+- Added installation and configuration guide
+- Refactored forms
 - Enabled Trackable as default
 - Removed Registration form
 - Fixed bug with captcha

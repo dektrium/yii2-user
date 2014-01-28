@@ -14,6 +14,11 @@ Features include:
 
 **NOTE:** Module is in initial development. Anything may change at any time.
 
+## Documentation
+
+You can view the Yii2-user documentation in markdown format here:
+[Read the documentation](docs/index.md)
+
 ## Installation
 
 All installation instructions are located in [installation guide](docs/installation.md).

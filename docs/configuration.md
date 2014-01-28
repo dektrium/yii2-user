@@ -36,8 +36,6 @@ All available configuration options are listed below with their default values:
 		'factory' => [
 			// User class
 			'userClass' => '\dektrium\user\models\User',
-			// Registration form
-			'registrationFormClass' => '\dektrium\user\forms\Registration',
 			// Resend form
 			'resendFormClass' => '\dektrium\user\forms\Resend',
 			// Login form

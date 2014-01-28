@@ -1,7 +1,6 @@
 <?php namespace dektrium\user\forms;
 
 use yii\base\Model;
-use yii\db\ActiveQuery;
 use yii\helpers\Security;
 
 /**
@@ -34,7 +33,7 @@ class Login extends Model
 	/**
 	 * @var \dektrium\user\models\User
 	 */
-	protected $identity;
+	protected $user;
 
 	/**
 	 * @inheritdoc
@@ -71,7 +70,7 @@ class Login extends Model
 		$rules = [
 			[['login', 'password'], 'required'],
 			['password', 'validatePassword'],
-			['login', 'validateConfirmation'],
+			['login', 'validateUserActiveForLogin'],
 			['rememberMe', 'boolean'],
 		];
 
@@ -87,7 +86,7 @@ class Login extends Model
 	 */
 	public function validatePassword()
 	{
-		if ($this->identity === null || !Security::validatePassword($this->password, $this->identity->password_hash)) {
+		if ($this->user === null || !Security::validatePassword($this->password, $this->user->password_hash)) {
 			$this->addError('password', \Yii::t('user', 'Invalid login or password'));
 		}
 	}
@@ -95,13 +94,10 @@ class Login extends Model
 	/**
 	 * Validates whether user has confirmed his account.
 	 */
-	public function validateConfirmation()
+	public function validateUserActiveForLogin()
 	{
-		if ($this->identity !== null
-			&& $this->getModule()->confirmable
-			&& !$this->getModule()->allowUnconfirmedLogin
-			&& !$this->identity->isConfirmed
-		) {
+		$confirmationRequired = $this->getModule()->confirmable && !$this->getModule()->allowUnconfirmedLogin;
+		if ($this->user !== null && $confirmationRequired && !$this->user->isConfirmed) {
 			$this->addError('login', \Yii::t('user', 'You must confirm your account before logging in'));
 		}
 	}
@@ -114,8 +110,7 @@ class Login extends Model
 	public function login()
 	{
 		if ($this->validate()) {
-			\Yii::$app->getUser()->login($this->identity, $this->rememberMe ? $this->getModule()->rememberFor : 0);
-			return true;
+			return \Yii::$app->getUser()->login($this->user, $this->rememberMe ? $this->getModule()->rememberFor : 0);
 		} else {
 			return false;
 		}
@@ -149,7 +144,7 @@ class Login extends Model
 				default:
 					throw new \RuntimeException('Unknown login type');
 			}
-			$this->identity = $query->where($condition)->one();
+			$this->user = $query->where($condition)->one();
 			return true;
 		} else {
 			return false;

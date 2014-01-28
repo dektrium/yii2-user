@@ -117,8 +117,11 @@ class RegistrationController extends Controller
 	{
 		$model = $this->module->factory->createForm('resend');
 
-		if ($model->load($_POST) && $model->resend()) {
-			return $this->render('success');
+		if ($model->load($_POST) && $model->validate()) {
+			$model->getUser()->resend();
+			return $this->render('success', [
+				'model' => $model
+			]);
 		}
 
 		return $this->render('resend', [

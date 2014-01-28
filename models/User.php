@@ -195,7 +195,7 @@ class User extends ActiveRecord implements UserInterface
 			}
 
 			if ($this->getModule()->trackable) {
-				$this->setAttribute('registration_ip', \Yii::$app->getRequest()->getUserIP());
+				$this->setAttribute('registration_ip', ip2long(\Yii::$app->getRequest()->getUserIP()));
 			}
 
 			return $this->save(false);

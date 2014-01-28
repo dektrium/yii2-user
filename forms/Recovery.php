@@ -2,10 +2,11 @@
 
 use dektrium\user\models\UserInterface;
 use yii\base\Model;
-use yii\db\ActiveQuery;
 
 /**
  * Recovery form manages requesting recovery token and resetting password.
+ *
+ * @property UserInterface $user
  *
  * @author Dmitry Erofeev <dmeroff@gmail.com>
  */
@@ -29,7 +30,7 @@ class Recovery extends Model
 	/**
 	 * @var UserInterface
 	 */
-	private $_identity;
+	private $_user;
 
 	/**
 	 * @inheritdoc
@@ -86,25 +87,9 @@ class Recovery extends Model
 	public function validateUserConfirmed()
 	{
 		$query = $this->getModule()->factory->createQuery();
-		$this->identity = $query->where(['email' => $this->email])->one();
-		if ($this->identity !== null && $this->getModule()->confirmable && !$this->identity->isConfirmed) {
+		$this->user = $query->where(['email' => $this->email])->one();
+		if ($this->user !== null && $this->getModule()->confirmable && !$this->user->isConfirmed) {
 			$this->addError('email', 'You must confirm your account first');
-		}
-	}
-
-	/**
-	 * Validates form and sends recovery message to user.
-	 *
-	 * @return bool
-	 */
-	public function sendRecoveryMessage()
-	{
-		if ($this->validate() && $this->scenario == 'request') {
-			$this->identity->sendRecoveryMessage();
-			\Yii::$app->getSession()->setFlash('recovery_message_sent');
-			return true;
-		} else {
-			return false;
 		}
 	}
 
@@ -123,7 +108,7 @@ class Recovery extends Model
 	 */
 	public function reset()
 	{
-		if ($this->validate() && $this->identity->reset($this->password)) {
+		if ($this->validate() && $this->user->reset($this->password)) {
 			\Yii::$app->getSession()->setFlash('password_reset');
 			return true;
 		}
@@ -134,17 +119,17 @@ class Recovery extends Model
 	/**
 	 * @return UserInterface
 	 */
-	public function getIdentity()
+	public function getUser()
 	{
-		return $this->_identity;
+		return $this->_user;
 	}
 
 	/**
-	 * @param UserInterface $identity
+	 * @param UserInterface $user
 	 */
-	public function setIdentity(UserInterface $identity)
+	public function setUser(UserInterface $user)
 	{
-		$this->identity = $identity;
+		$this->_user = $user;
 	}
 
 	/**

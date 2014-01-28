@@ -67,11 +67,13 @@ class RecoveryController extends Controller
 	 */
 	public function actionRequest()
 	{
-		/** @var \dektrium\user\forms\Recovery $model */
 		$model = $this->module->factory->createForm('recovery', ['scenario' => 'request']);
 
-		if ($model->load($_POST) && $model->sendRecoveryMessage()) {
-			return $this->render('messageSent');
+		if ($model->load($_POST) && $model->validate()) {
+			$model->user->sendRecoveryMessage();
+			return $this->render('messageSent', [
+				'model' => $model
+			]);
 		}
 
 		return $this->render('request', [
@@ -100,7 +102,7 @@ class RecoveryController extends Controller
 
 		$model = $this->module->factory->createForm('recovery', [
 			'scenario' => 'reset',
-			'identity' => $user
+			'user'     => $user
 		]);
 
 		if ($model->load($_POST) && $model->reset()) {

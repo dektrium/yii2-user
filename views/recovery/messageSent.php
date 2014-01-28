@@ -1,8 +1,8 @@
 <?php
-use yii\helpers\Html;
 
 /**
  * @var yii\base\View $this
+ * @var dektrium\user\forms\Recovery $model
  */
 $this->title = Yii::t('user', 'Recovery message sent');
 $this->params['breadcrumbs'][] = $this->title;

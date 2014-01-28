@@ -1,8 +1,6 @@
 <?php namespace dektrium\user\forms;
 
-use dektrium\user\models\UserInterface;
 use yii\base\Model;
-use yii\db\ActiveQuery;
 
 /**
  * Model that manages resending confirmation tokens to users.
@@ -24,7 +22,7 @@ class Resend extends Model
 	/**
 	 * @var \dektrium\user\models\UserInterface
 	 */
-	private $_identity;
+	private $_user;
 
 	/**
 	 * @inheritdoc
@@ -61,24 +59,8 @@ class Resend extends Model
 	 */
 	public function validateEmail()
 	{
-		if ($this->getIdentity() != null && $this->getIdentity()->getIsConfirmed()) {
+		if ($this->getUser() != null && $this->getUser()->getIsConfirmed()) {
 			$this->addError('email', \Yii::t('user', 'This account has already been confirmed'));
-		}
-	}
-
-	/**
-	 * Resends confirmation message to user.
-	 *
-	 * @return bool
-	 */
-	public function resend()
-	{
-		if ($this->validate()) {
-			$this->getIdentity()->resend();
-			\Yii::$app->getSession()->setFlash('confirmation_message_sent');
-			return true;
-		} else {
-			return false;
 		}
 	}
 
@@ -92,16 +74,15 @@ class Resend extends Model
 
 	/**
 	 * @return \dektrium\user\models\UserInterface
-	 * @throws \RuntimeException
 	 */
-	protected function getIdentity()
+	public function getUser()
 	{
-		if ($this->_identity == null) {
+		if ($this->_user == null) {
 			$query = $this->getModule()->factory->createQuery();
-			$this->_identity = $query->where(['email' => $this->email])->one();
+			$this->_user = $query->where(['email' => $this->email])->one();
 		}
 
-		return $this->_identity;
+		return $this->_user;
 	}
 
 	/**

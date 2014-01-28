@@ -384,6 +384,10 @@ class User extends ActiveRecord implements UserInterface
 	{
 		\Yii::$app->getMail()->viewPath = $this->getModule()->emailViewPath;
 
+		if (empty(\Yii::$app->getMail()->messageConfig['from'])) {
+			\Yii::$app->getMail()->messageConfig['from'] = 'no-reply@example.com';
+		}
+
 		return \Yii::$app->getMail()->compose($view, $params)
 			->setTo($this->email)
 			->setSubject($subject)

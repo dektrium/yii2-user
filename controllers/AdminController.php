@@ -51,6 +51,60 @@ class AdminController extends Controller
 	}
 
 	/**
+	 * Updates an existing User model.
+	 * If update is successful, the browser will be redirected to the 'index' page.
+	 * @param integer $id
+	 * @return mixed
+	 */
+	public function actionUpdate($id)
+	{
+		$model = $this->findModel($id);
+		$model->scenario = 'update';
+
+		if ($model->load($_POST) && $model->save()) {
+			\Yii::$app->getSession()->setFlash('user_updated');
+			return $this->redirect(['index']);
+		}
+
+		return $this->render('update', [
+			'model' => $model
+		]);
+	}
+
+	/**
+	 * Confirms the User.
+	 * @param $id
+	 * @return \yii\web\Response
+	 */
+	public function actionConfirm($id)
+	{
+		$model = $this->findModel($id);
+		$model->confirmation_token = null;
+		$model->confirmation_sent_time = null;
+		$model->confirmation_time = time();
+		$model->save(false);
+		\Yii::$app->getSession()->setFlash('user_confirmed');
+
+		return $this->redirect(['update', 'id' => $id]);
+	}
+
+	/**
+	 * Deletes recovery tokens.
+	 * @param $id
+	 * @return \yii\web\Response
+	 */
+	public function actionDeleteTokens($id)
+	{
+		$model = $this->findModel($id);
+		$model->recovery_token = null;
+		$model->recovery_sent_time = null;
+		$model->save(false);
+		\Yii::$app->getSession()->setFlash('tokens_deleted');
+
+		return $this->redirect(['update', 'id' => $id]);
+	}
+
+	/**
 	 * Deletes an existing User model.
 	 * If deletion is successful, the browser will be redirected to the 'index' page.
 	 * @param integer $id

@@ -8,21 +8,34 @@ use yii\data\ActiveDataProvider;
  */
 class UserSearch extends Model
 {
-	public $id;
+	/**
+	 * @var string
+	 */
 	public $username;
-	public $email;
-	public $create_time;
-	public $update_time;
-	public $registration_ip;
-	public $login_ip;
-	public $login_time;
-	public $confirmation_time;
 
+	/**
+	 * @var string
+	 */
+	public $email;
+
+	/**
+	 * @var integer
+	 */
+	public $create_time;
+
+	/**
+	 * @var string
+	 */
+	public $registration_ip;
+
+	/**
+	 * @inheritdoc
+	 */
 	public function rules()
 	{
 		return [
-			[['id', 'create_time', 'update_time', 'registration_ip', 'login_ip', 'login_time', 'confirmation_time'], 'integer'],
-			[['username', 'email'], 'safe'],
+			[['create_time'], 'integer'],
+			[['username', 'email', 'registration_ip'], 'safe'],
 		];
 	}
 
@@ -32,24 +45,17 @@ class UserSearch extends Model
 	public function attributeLabels()
 	{
 		return [
-			'id' => 'ID',
-			'username' => 'Username',
-			'email' => 'Email',
-			'password_hash' => 'Password Hash',
-			'auth_key' => 'Auth Key',
-			'create_time' => 'Create Time',
-			'update_time' => 'Update Time',
-			'registration_ip' => 'Registration Ip',
-			'login_ip' => 'Login Ip',
-			'login_time' => 'Login Time',
-			'confirmation_token' => 'Confirmation Token',
-			'confirmation_time' => 'Confirmation Time',
-			'confirmation_sent_time' => 'Confirmation Sent Time',
-			'recovery_token' => 'Recovery Token',
-			'recovery_sent_time' => 'Recovery Sent Time',
+			'username' => \Yii::t('user', 'Username'),
+			'email' => \Yii::t('user', 'Email'),
+			'create_time' => \Yii::t('user', 'Registration time'),
+			'registration_ip' => \Yii::t('user', 'Registration ip'),
 		];
 	}
 
+	/**
+	 * @param $params
+	 * @return ActiveDataProvider
+	 */
 	public function search($params)
 	{
 		$query = User::find();
@@ -61,23 +67,26 @@ class UserSearch extends Model
 			return $dataProvider;
 		}
 
-		$this->addCondition($query, 'id');
 		$this->addCondition($query, 'username', true);
 		$this->addCondition($query, 'email', true);
 		$this->addCondition($query, 'create_time');
-		$this->addCondition($query, 'update_time');
 		$this->addCondition($query, 'registration_ip');
-		$this->addCondition($query, 'login_ip');
-		$this->addCondition($query, 'login_time');
-		$this->addCondition($query, 'confirmation_time');
 		return $dataProvider;
 	}
 
+	/**
+	 * @param $query
+	 * @param $attribute
+	 * @param bool $partialMatch
+	 */
 	protected function addCondition($query, $attribute, $partialMatch = false)
 	{
 		$value = $this->$attribute;
 		if (trim($value) === '') {
 			return;
+		}
+		if ($attribute == 'registration_ip') {
+			$value = ip2long($value);
 		}
 		if ($partialMatch) {
 			$query->andWhere(['like', $attribute, $value]);

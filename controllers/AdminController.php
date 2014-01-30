@@ -3,7 +3,6 @@
 use dektrium\user\models\UserSearch;
 use yii\web\AccessControl;
 use yii\web\Controller;
-use yii\web\ForbiddenHttpException;
 use yii\web\NotFoundHttpException;
 use yii\web\VerbFilter;
 

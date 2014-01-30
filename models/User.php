@@ -55,6 +55,8 @@ class User extends ActiveRecord implements UserInterface
 		}
 		return [
 			'register' => $attributes,
+			'create'   => ['username', 'email', 'password'],
+			'update'   => ['username', 'email', 'password'],
 			'reset'    => ['password'],
 		];
 	}
@@ -65,6 +67,8 @@ class User extends ActiveRecord implements UserInterface
 	public function rules()
 	{
 		$rules = [
+			[['username', 'email', 'password'], 'required', 'on' => ['create']],
+			[['username', 'email'], 'required', 'on' => ['update']],
 			['email', 'email'],
 			[['username', 'email'], 'unique'],
 			['username', 'match', 'pattern' => '/^[a-zA-Z]\w+$/'],
@@ -73,14 +77,14 @@ class User extends ActiveRecord implements UserInterface
 		];
 
 		if ($this->getModule()->generatePassword) {
-			$rules[] = [['username', 'email'], 'required'];
+			$rules[] = [['username', 'email'], 'required', 'on' => ['register']];
 		} else {
-			$rules[] = [['username', 'email', 'password'], 'required'];
-			$rules[] = ['password', 'string', 'min' => 6];
+			$rules[] = [['username', 'email', 'password'], 'required', 'on' => ['register']];
+			$rules[] = ['password', 'string', 'min' => 6, 'on' => ['register']];
 		}
 
 		if (in_array('register', $this->getModule()->captcha)) {
-			$rules[] = ['verifyCode', 'captcha', 'captchaAction' => 'user/registration/captcha'];
+			$rules[] = ['verifyCode', 'captcha', 'captchaAction' => 'user/registration/captcha', 'on' => ['register']];
 		}
 
 		return $rules;

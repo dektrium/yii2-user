@@ -1,8 +1,11 @@
 <?php namespace dektrium\user\controllers;
 
 use dektrium\user\models\UserSearch;
+use yii\web\AccessControl;
 use yii\web\Controller;
+use yii\web\ForbiddenHttpException;
 use yii\web\NotFoundHttpException;
+use yii\web\VerbFilter;
 
 /**
  * AdminController allows you to administrate users.
@@ -13,6 +16,37 @@ use yii\web\NotFoundHttpException;
  */
 class AdminController extends Controller
 {
+	/**
+	 * @inheritdoc
+	 */
+	public function behaviors()
+	{
+		return [
+			'verbs' => [
+				'class' => VerbFilter::className(),
+				'actions' => [
+					'delete' => ['post'],
+					'confirm' => ['post'],
+					'delete-tokens' => ['post'],
+				],
+			],
+			'access' => [
+				'class' => AccessControl::className(),
+				'rules' => [
+					[
+						'actions' => ['index', 'create', 'update', 'delete', 'confirm', 'delete-tokens'],
+						'allow' => true,
+						'roles' => ['@'],
+						'matchCallback' => function ($rule, $action) {
+							$user = \Yii::$app->getUser();
+							return $user->checkAccess('manageUsers') || in_array($user->identity->username, $this->module->admins);
+						}
+					],
+				]
+			]
+		];
+	}
+
 	/**
 	 * Lists all User models.
 	 * @return mixed

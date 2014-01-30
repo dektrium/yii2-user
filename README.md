@@ -10,6 +10,7 @@ Features include:
 * Authentication support
 * Password recovery support
 * Console commands
+* User management (create, update, delete, confirm)
 * Unit and functional tests
 
 **NOTE:** Module is in initial development. Anything may change at any time.

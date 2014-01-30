@@ -8,6 +8,8 @@ All available configuration options are listed below with their default values:
 	...
 	'user' => [
 		'class' => 'dektrium\user\Module',
+		// An array of usernames who can manage users
+		'admins' => ['your-username'],
 		// An array of pages on which captcha should be shown (e.g. ['registration', 'login', 'recovery', 'resend'])
 		'captcha' => [],
 		// Login type : email, username or both.

@@ -193,16 +193,18 @@ class User extends ActiveRecord implements UserInterface
 					'welcome', ['user' => $this, 'password' => $this->password]);
 			}
 
-			if ($this->getModule()->confirmable) {
-				$this->generateConfirmationData();
-				$this->sendMessage(\Yii::t('user', 'Please confirm your account'), 'confirmation', ['user' => $this]);
-			}
-
 			if ($this->getModule()->trackable) {
 				$this->setAttribute('registration_ip', ip2long(\Yii::$app->getRequest()->getUserIP()));
 			}
 
-			return $this->save(false);
+			if ($this->getModule()->confirmable) {
+				$this->generateConfirmationData();
+				$isSaved = $this->save(false);
+				$this->sendMessage(\Yii::t('user', 'Please confirm your account'), 'confirmation', ['user' => $this]);
+				return $isSaved;
+			} else {
+				return $this->save(false);
+			}
 		}
 
 		return false;

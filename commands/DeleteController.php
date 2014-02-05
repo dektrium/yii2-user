@@ -11,12 +11,13 @@
 
 namespace dektrium\user\commands;
 
-use dektrium\user\models\User;
 use yii\console\Controller;
 use yii\helpers\Console;
 
 /**
  * DeleteController allows you to delete user accounts.
+ *
+ * @property \dektrium\user\Module $module
  *
  * @author Dmitry Erofeev <dmeroff@gmail.com>
  */
@@ -30,7 +31,9 @@ class DeleteController extends Controller
 	public function actionIndex($email)
 	{
 		if ($this->confirm('Are you sure? Deleted user can not be restored!')) {
-			$user = User::findByEmail($email);
+			$query = $this->module->factory->createQuery();
+			/** @var \dektrium\user\models\User $user */
+			$user = $query->where(['email' => $email])->one();
 			if ($user === null) {
 				$this->stdout("User is not found!\n", Console::FG_RED);
 			} else {

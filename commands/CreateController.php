@@ -11,12 +11,13 @@
 
 namespace dektrium\user\commands;
 
-use dektrium\user\models\User;
 use yii\console\Controller;
 use yii\helpers\Console;
 
 /**
  * CreateController allows you to create user accounts.
+ *
+ * @property \dektrium\user\Module $module
  *
  * @author Dmitry Erofeev <dmeroff@gmail.com>
  */
@@ -25,7 +26,7 @@ class CreateController extends Controller
 	/**
 	 * @var bool Whether user should confirm account.
 	 */
-	public $confirmation = false;
+	public $confirmable = false;
 
 	/**
 	 * Creates new user.
@@ -36,22 +37,22 @@ class CreateController extends Controller
 	 */
 	public function actionIndex($email, $username, $password = null)
 	{
-		$user = new User(['scenario' => 'register']);
+		$this->module->trackable = false; // trackable should be disabled
+		$this->module->generatePassword = is_null($password);
+		$this->module->confirmable = $this->confirmable;
+		/** @var \dektrium\user\models\User $user */
+		$user = $this->module->factory->createUser();
+		$user->scenario = 'register';
 		$user->setAttributes([
 			'email'    => $email,
 			'username' => $username,
 			'password' => $password
 		]);
-		if ($user->register(is_null($password))) {
+		if (!$this->confirmable) {
+			$user->confirmation_time = time();
+		}
+		if ($user->register()) {
 			$this->stdout("User has been created!\n", Console::FG_GREEN);
-			if ($this->confirmation) {
-				$user->sendConfirmationMessage();
-				$this->stdout("Confirmation message has been sent!\n", Console::FG_GREEN);
-			} else {
-				// TODO: use 'confirm' method here
-				$user->confirmation_time = time();
-				$user->save(false);
-			}
 		} else {
 			$this->stdout("Please fix following errors:\n", Console::FG_RED);
 			foreach ($user->errors as $errors) {

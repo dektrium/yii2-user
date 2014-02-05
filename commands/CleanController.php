@@ -11,12 +11,13 @@
 
 namespace dektrium\user\commands;
 
-use dektrium\user\models\User;
 use yii\console\Controller;
 use yii\helpers\Console;
 
 /**
  * CleanController deletes unconfirmed users and out-of-dated tokens.
+ *
+ * @property \dektrium\user\Module $module
  *
  * @author Dmitry Erofeev <dmeroff@gmail.com>
  */
@@ -28,11 +29,12 @@ class CleanController extends Controller
 	public function actionTokens()
 	{
 		if ($this->confirm('Are you sure?', true)) {
-			/** @var User[] $users */
-			$users = User::find()
-						 ->where('confirmation_token IS NOT NULL')
-						 ->orWhere('recovery_token IS NOT NULL')
-						 ->all();
+			/** @var \dektrium\user\models\User[] $users */
+			$query = $this->module->factory->createQuery();
+			$users = $query->where('confirmation_token IS NOT NULL')
+						   ->orWhere('recovery_token IS NOT NULL')
+						   ->all();
+
 			foreach ($users as $user) {
 				if (!$user->getIsConfirmed() && $user->getIsConfirmationPeriodExpired()) {
 					$user->confirmation_token = null;
@@ -57,10 +59,11 @@ class CleanController extends Controller
 	{
 		if ($this->confirm('Are you sure?')) {
 			$count = 0;
-			/** @var User[] $users */
-			$users = User::find()->where(['confirmation_time' => null])->all();
+			/** @var \dektrium\user\models\User[] $users */
+			$query = $this->module->factory->createQuery();
+			$users = $query->where(['confirmation_time' => null])->all();
 			foreach ($users as $user) {
-				if (!$user->isConfirmed && $user->isConfirmationPeriodExpired && ($user->create_time + $days * 24 * 3600) < time()) {
+				if (!$user->getIsConfirmed() && $user->getIsConfirmationPeriodExpired() && ($user->create_time + $days * 24 * 3600) < time()) {
 					$user->delete();
 					$count++;
 				}

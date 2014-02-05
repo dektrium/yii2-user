@@ -3,6 +3,7 @@ Changelog
 
 ## v0.4.0 [Work in progress]
 
+- Added list of available actions
 - Added user management (create, update, delete, confirm)
 - Added installation and configuration guide
 - Refactored forms

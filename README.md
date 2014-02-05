@@ -24,12 +24,9 @@ You can view the Yii2-user documentation in markdown format here:
 
 All installation instructions are located in [installation guide](docs/installation.md).
 
-## How to participate
+## Contributing
 
-Your participation to User module is very welcome! You may participate in following ways:
-
-- [Report issues](https://github.com/dektrium/yii2-user/issues)
-- [Fix issues, develop features, write/polish documentation](docs/contributing.md)
+See contributing instructions in [CONTRIBUTING.md](CONTRIBUTING.md)
 
 ## License
 

@@ -8,8 +8,3 @@ Basics
 ======
 
 - [User management](user-management.md)
-
-Advanced topics
-===============
-
-- [Contributing](contributing.md)

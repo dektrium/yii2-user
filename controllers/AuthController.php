@@ -44,18 +44,6 @@ class AuthController extends Controller
 	}
 
 	/**
-	 * @inheritdoc
-	 */
-	public function actions()
-	{
-		return [
-			'captcha' => [
-				'class' => 'yii\captcha\CaptchaAction',
-			],
-		];
-	}
-
-	/**
 	 * Displays the login page.
 	 *
 	 * @return string|\yii\web\Response

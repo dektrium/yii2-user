@@ -35,18 +35,6 @@ class RecoveryController extends Controller
 	/**
 	 * @inheritdoc
 	 */
-	public function actions()
-	{
-		return [
-			'captcha' => [
-				'class' => 'yii\captcha\CaptchaAction',
-			],
-		];
-	}
-
-	/**
-	 * @inheritdoc
-	 */
 	public function beforeAction($action)
 	{
 		if (parent::beforeAction($action)) {

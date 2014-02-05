@@ -84,7 +84,7 @@ class User extends ActiveRecord implements UserInterface
 		}
 
 		if (in_array('register', $this->getModule()->captcha)) {
-			$rules[] = ['verifyCode', 'captcha', 'captchaAction' => 'user/registration/captcha', 'on' => ['register']];
+			$rules[] = ['verifyCode', 'captcha', 'captchaAction' => 'user/default/captcha', 'on' => ['register']];
 		}
 
 		return $rules;

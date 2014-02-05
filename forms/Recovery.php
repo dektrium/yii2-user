@@ -75,7 +75,7 @@ class Recovery extends Model
 		];
 
 		if (in_array('recovery', $this->getModule()->captcha)) {
-			$rules[] = ['verifyCode', 'captcha', 'on' => 'request', 'captchaAction' => 'user/recovery/captcha'];
+			$rules[] = ['verifyCode', 'captcha', 'on' => 'request', 'captchaAction' => 'user/default/captcha'];
 		}
 
 		return $rules;

@@ -1,7 +1,7 @@
 Changelog
 =========
 
-## v0.4.0 [Work in progress]
+## v0.4.0 [6 February 2014]
 
 - Added list of available actions
 - Added user management (create, update, delete, confirm)

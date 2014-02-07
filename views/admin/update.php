@@ -11,6 +11,8 @@ use yii\widgets\ActiveForm;
 $this->title = 'Update User';
 $this->params['breadcrumbs'][] = ['label' => 'Users', 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
+\dektrium\user\assets\Passfield::register($this);
+$this->registerJs(sprintf('$("#user-password").passField({"locale": "%s", "length": {"min": 6, "max": 40 }});', Yii::$app->language));
 ?>
 <div class="user-update">
 

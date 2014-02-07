@@ -1,6 +1,9 @@
 Changelog
 =========
 
+## v0.5.0 [Work in progress]
+- Added [Pass*Field library](http://antelle.github.io/passfield/index.html)
+
 ## v0.4.0 [6 February 2014]
 
 - Added list of available actions

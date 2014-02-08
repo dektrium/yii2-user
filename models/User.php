@@ -58,6 +58,14 @@ class User extends ActiveRecord implements UserInterface
 	/**
 	 * @inheritdoc
 	 */
+	public static function createQuery()
+	{
+		return new UserQuery(['modelClass' => get_called_class()]);
+	}
+
+	/**
+	 * @inheritdoc
+	 */
 	public function scenarios()
 	{
 		$attributes = $this->getModule()->generatePassword ? ['username', 'email'] : ['username', 'email', 'password'];

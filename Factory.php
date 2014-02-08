@@ -29,7 +29,7 @@ class Factory extends Component
 	/**
 	 * @var string
 	 */
-	public $queryClass = '\yii\db\ActiveQuery';
+	public $queryClass = '\dektrium\user\models\UserQuery';
 
 	/**
 	 * @var string

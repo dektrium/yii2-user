@@ -13,7 +13,6 @@ namespace dektrium\user;
 
 use dektrium\user\models\UserInterface;
 use yii\base\Component;
-use yii\db\ActiveQuery;
 
 /**
  * Factory component is used to create models and forms when needed.
@@ -26,6 +25,11 @@ class Factory extends Component
 	 * @var string
 	 */
 	public $modelClass = '\dektrium\user\models\User';
+
+	/**
+	 * @var string
+	 */
+	public $queryClass = '\yii\db\ActiveQuery';
 
 	/**
 	 * @var string
@@ -49,9 +53,10 @@ class Factory extends Component
 	 *
 	 * @throws \RuntimeException
 	 */
-	public function createUser()
+	public function createUser($config = [])
 	{
-		$model = \Yii::createObject($this->modelClass);
+		$config['class'] = $this->modelClass;
+		$model = \Yii::createObject($config);
 		if (!$model instanceof UserInterface) {
 			throw new \RuntimeException(sprintf('"%s" must implement "%s" interface',
 				get_class($model), '\dektrium\user\models\UserInterface'));
@@ -63,11 +68,11 @@ class Factory extends Component
 	/**
 	 * Creates new query for user class.
 	 *
-	 * @return ActiveQuery
+	 * @return \yii\db\ActiveQuery
 	 */
 	public function createQuery()
 	{
-		return new ActiveQuery(['modelClass' => $this->modelClass]);
+		return \Yii::createObject(['class' => $this->queryClass, 'modelClass' => $this->modelClass]);
 	}
 
 	/**

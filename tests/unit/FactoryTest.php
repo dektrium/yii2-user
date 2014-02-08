@@ -1,9 +1,9 @@
 <?php
 
 use \dektrium\user\Factory;
-use \Codeception\TestCase\Test;
+use \yii\codeception\TestCase;
 
-class FactoryTest extends Test
+class FactoryTest extends TestCase
 {
 	/**
 	 * @var Factory
@@ -18,31 +18,35 @@ class FactoryTest extends Test
 
 	public function testCreateUser()
 	{
-		$user = $this->factory->createUser();
-		$this->assertInstanceOf('\dektrium\user\models\User', $user);
+		$scenario = 'register';
+		$user = $this->factory->createUser(['scenario' => $scenario]);
+		$this->assertInstanceOf($this->factory->modelClass, $user);
+		$this->assertEquals($scenario, $user->scenario);
 	}
 
 	public function testCreateQuery()
 	{
 		$query = $this->factory->createQuery();
-		$this->assertInstanceOf('\yii\db\ActiveQuery', $query);
+		$this->assertInstanceOf($this->factory->queryClass, $query);
 	}
 
 	public function testCreateResendForm()
 	{
 		$model = $this->factory->createForm('resend');
-		$this->assertInstanceOf('\dektrium\user\forms\Resend', $model);
+		$this->assertInstanceOf($this->factory->resendFormClass, $model);
 	}
 
 	public function testCreateLoginForm()
 	{
 		$model = $this->factory->createForm('login');
-		$this->assertInstanceOf('\dektrium\user\forms\Login', $model);
+		$this->assertInstanceOf($this->factory->loginFormClass, $model);
 	}
 
 	public function testCreateRecoveryForm()
 	{
-		$model = $this->factory->createForm('recovery');
-		$this->assertInstanceOf('\dektrium\user\forms\Recovery', $model);
+		$scenario = 'register';
+		$model = $this->factory->createForm('recovery', ['scenario' => $scenario]);
+		$this->assertInstanceOf($this->factory->recoveryFormClass, $model);
+		$this->assertEquals($scenario, $model->scenario);
 	}
 }

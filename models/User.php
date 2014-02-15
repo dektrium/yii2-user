@@ -1,13 +1,13 @@
 <?php
 
 /*
-* This file is part of the Dektrium project.
-*
-* (c) Dektrium project <http://github.com/dektrium/>
-*
-* For the full copyright and license information, please view the LICENSE
-* file that was distributed with this source code.
-*/
+ * This file is part of the Dektrium project.
+ *
+ * (c) Dektrium project <http://github.com/dektrium/>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
 
 namespace dektrium\user\models;
 
@@ -22,19 +22,19 @@ use yii\helpers\Security;
  * @property string  $email
  * @property string  $password_hash
  * @property string  $auth_key
- * @property integer $create_time
- * @property integer $update_time
- *
- * @property integer $registration_ip
- * @property integer $login_ip
- * @property integer $login_time
- *
+ * @property integer $registered_from
+ * @property integer $logged_in_from
+ * @property integer $logged_in_at
  * @property string  $confirmation_token
- * @property integer $confirmation_sent_time
- * @property integer $confirmation_time
- *
+ * @property integer $confirmation_sent_at
+ * @property integer $confirmed_at
+ * @property string  $unconfirmed_email
  * @property string  $recovery_token
- * @property integer $recovery_sent_time
+ * @property integer $recovery_sent_at
+ * @property integer $blocked_at
+ * @property string  $role
+ * @property integer $created_at
+ * @property integer $updated_at
  *
  * @author Dmitry Erofeev <dmeroff@gmail.com>
  */
@@ -120,14 +120,19 @@ class User extends ActiveRecord implements UserInterface
 			}
 			if ($this->isNewRecord) {
 				$this->setAttribute('auth_key', Security::generateRandomKey());
-				$this->setAttribute('create_time', time());
+				$this->setAttribute('created_at', time());
 			}
-			$this->setAttribute('update_time', time());
+			$this->setAttribute('updated_at', time());
 
 			return true;
 		} else {
 			return false;
 		}
+	}
+
+	public function afterSave($insert)
+	{
+
 	}
 
 	/**
@@ -213,7 +218,7 @@ class User extends ActiveRecord implements UserInterface
 			}
 
 			if ($this->getModule()->trackable) {
-				$this->setAttribute('registration_ip', ip2long(\Yii::$app->getRequest()->getUserIP()));
+				$this->setAttribute('registered_from', ip2long(\Yii::$app->getRequest()->getUserIP()));
 			}
 
 			if ($this->getModule()->confirmable) {
@@ -274,8 +279,8 @@ class User extends ActiveRecord implements UserInterface
 		}
 
 		$this->confirmation_token = null;
-		$this->confirmation_sent_time = null;
-		$this->confirmation_time = time();
+		$this->confirmation_sent_at = null;
+		$this->confirmed_at = time();
 
 		return $this->save(false);
 	}
@@ -299,8 +304,8 @@ class User extends ActiveRecord implements UserInterface
 	protected function generateConfirmationData()
 	{
 		$this->confirmation_token = Security::generateRandomKey();
-		$this->confirmation_sent_time = time();
-		$this->confirmation_time = null;
+		$this->confirmation_sent_at = time();
+		$this->confirmed_at = null;
 	}
 
 	/**
@@ -322,7 +327,7 @@ class User extends ActiveRecord implements UserInterface
 	 */
 	public function getIsConfirmed()
 	{
-		return $this->confirmation_time !== null;
+		return $this->confirmed_at !== null;
 	}
 
 	/**
@@ -332,7 +337,7 @@ class User extends ActiveRecord implements UserInterface
 	 */
 	public function getIsConfirmationPeriodExpired()
 	{
-		return $this->confirmation_sent_time != null && ($this->confirmation_sent_time + $this->getModule()->confirmWithin) < time();
+		return $this->confirmation_sent_at != null && ($this->confirmation_sent_at + $this->getModule()->confirmWithin) < time();
 	}
 
 	/**
@@ -346,7 +351,7 @@ class User extends ActiveRecord implements UserInterface
 		$this->scenario = 'reset';
 		$this->password = $password;
 		$this->recovery_token = null;
-		$this->recovery_sent_time = null;
+		$this->recovery_sent_at = null;
 
 		return $this->save(false);
 	}
@@ -358,7 +363,7 @@ class User extends ActiveRecord implements UserInterface
 	 */
 	public function getIsRecoveryPeriodExpired()
 	{
-		return ($this->recovery_sent_time + $this->getModule()->recoverWithin) < time();
+		return ($this->recovery_sent_at + $this->getModule()->recoverWithin) < time();
 	}
 
 	/**
@@ -378,10 +383,38 @@ class User extends ActiveRecord implements UserInterface
 	public function sendRecoveryMessage()
 	{
 		$this->recovery_token = Security::generateRandomKey();
-		$this->recovery_sent_time = time();
+		$this->recovery_sent_at = time();
 		$this->save(false);
 
 		return $this->sendMessage(\Yii::t('user', 'Please complete password reset'), 'recovery', ['user' => $this]);
+	}
+
+	/**
+	 * Blocks the user by setting 'blocked_at' field to current time.
+	 */
+	public function block()
+	{
+		$this->blocked_at = time();
+
+		return $this->save(false);
+	}
+
+	/**
+	 * Blocks the user by setting 'blocked_at' field to null.
+	 */
+	public function unblock()
+	{
+		$this->blocked_at = null;
+
+		return $this->save(false);
+	}
+
+	/**
+	 * @return bool Whether user is blocked.
+	 */
+	public function getIsBlocked()
+	{
+		return !is_null($this->blocked_at);
 	}
 
 	/**

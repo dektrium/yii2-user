@@ -1,13 +1,13 @@
 <?php
 
 /*
-* This file is part of the Dektrium project.
-*
-* (c) Dektrium project <http://github.com/dektrium/>
-*
-* For the full copyright and license information, please view the LICENSE
-* file that was distributed with this source code.
-*/
+ * This file is part of the Dektrium project.
+ *
+ * (c) Dektrium project <http://github.com/dektrium/>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
 
 namespace dektrium\user\components;
 
@@ -51,8 +51,8 @@ class User extends BaseUser
 	{
 		parent::afterLogin($identity, $cookieBased);
 		if (\Yii::$app->getModule('user')->trackable) {
-			$this->identity->setAttribute('login_ip', ip2long(\Yii::$app->getRequest()->getUserIP()));
-			$this->identity->setAttribute('login_time', time());
+			$this->identity->setAttribute('logged_in_from', ip2long(\Yii::$app->getRequest()->getUserIP()));
+			$this->identity->setAttribute('logged_in_at', time());
 			$this->identity->save(false);
 		}
 	}

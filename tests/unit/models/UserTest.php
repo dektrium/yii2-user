@@ -62,12 +62,12 @@ class UserTest extends TestCase
 		\Yii::$app->getModule('user')->confirmWithin = 86400;
 		$user = new User([
 			'confirmation_token' => 'NNWJf_CoV8ocX3AsYK38CoOGkXUcpQK4',
-			'confirmation_sent_time' => time() - 192800
+			'confirmation_sent_at' => time() - 192800
 		]);
 		$this->assertTrue($user->getIsConfirmationPeriodExpired());
 		$user = new User([
 			'confirmation_token' => 'NNWJf_CoV8ocX3AsYK38CoOGkXUcpQK4',
-			'confirmation_sent_time' => time()
+			'confirmation_sent_at' => time()
 		]);
 		$this->assertFalse($user->getIsConfirmationPeriodExpired());
 	}
@@ -87,12 +87,12 @@ class UserTest extends TestCase
 		\Yii::$app->getModule('user')->recoverable = true;
 		$user = new User([
 			'recovery_token' => 'NNWJf_CoV8ocX3AsYK38CoOGkXUcpQK4',
-			'recovery_sent_time' => time() - 86400
+			'recovery_sent_at' => time() - 86400
 		]);
 		$this->assertTrue($user->getIsRecoveryPeriodExpired());
 		$user = new User([
 			'recovery_token' => 'NNWJf_CoV8ocX3AsYK38CoOGkXUcpQK4',
-			'recovery_sent_time' => time()
+			'recovery_sent_at' => time()
 		]);
 		$this->assertFalse($user->getIsRecoveryPeriodExpired());
 	}
@@ -103,7 +103,7 @@ class UserTest extends TestCase
 		$user = new User([
 			'id' => 999,
 			'recovery_token' => 'NNWJf_CoV8ocX3AsYK38CoOGkXUcpQK4',
-			'recovery_sent_time' => time() - 86400
+			'recovery_sent_at' => time() - 86400
 		]);
 		$this->assertEquals(
 			 'http://localhost/index.php?r=user/recovery/reset&id=999&token=NNWJf_CoV8ocX3AsYK38CoOGkXUcpQK4',
@@ -117,6 +117,16 @@ class UserTest extends TestCase
 		$user = User::find(1);
 		$user->sendRecoveryMessage();
 		$this->assertNotNull($user->recovery_token);
-		$this->assertNotNull($user->recovery_sent_time);
+		$this->assertNotNull($user->recovery_sent_at);
+	}
+
+	public function testBlock()
+	{
+		$user = User::find(1);
+		$this->assertFalse($user->getIsBlocked());
+		$user->block();
+		$this->assertTrue($user->getIsBlocked());
+		$user->unblock();
+		$this->assertFalse($user->getIsBlocked());
 	}
 }

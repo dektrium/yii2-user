@@ -46,7 +46,7 @@ class UserSearch extends Model
 	{
 		return [
 			[['create_time'], 'integer'],
-			[['username', 'email', 'registration_ip'], 'safe'],
+			[['username', 'email', 'registered_from'], 'safe'],
 		];
 	}
 
@@ -59,7 +59,7 @@ class UserSearch extends Model
 			'username' => \Yii::t('user', 'Username'),
 			'email' => \Yii::t('user', 'Email'),
 			'create_time' => \Yii::t('user', 'Registration time'),
-			'registration_ip' => \Yii::t('user', 'Registration ip'),
+			'registered_from' => \Yii::t('user', 'Registration ip'),
 		];
 	}
 
@@ -81,7 +81,7 @@ class UserSearch extends Model
 		$this->addCondition($query, 'username', true);
 		$this->addCondition($query, 'email', true);
 		$this->addCondition($query, 'create_time');
-		$this->addCondition($query, 'registration_ip');
+		$this->addCondition($query, 'registered_from');
 		return $dataProvider;
 	}
 
@@ -96,7 +96,7 @@ class UserSearch extends Model
 		if (trim($value) === '') {
 			return;
 		}
-		if ($attribute == 'registration_ip') {
+		if ($attribute == 'registered_from') {
 			$value = ip2long($value);
 		}
 		if ($partialMatch) {

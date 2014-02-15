@@ -27,7 +27,7 @@ class UserQuery extends ActiveQuery
 	 */
 	public function confirmed()
 	{
-		$this->andWhere('confirmation_time IS NOT NULL');
+		$this->andWhere('confirmed_at IS NOT NULL');
 
 		return $this;
 	}
@@ -39,7 +39,7 @@ class UserQuery extends ActiveQuery
 	 */
 	public function unconfirmed()
 	{
-		$this->andWhere('confirmation_time IS NULL');
+		$this->andWhere('confirmed_at IS NULL');
 
 		return $this;
 	}

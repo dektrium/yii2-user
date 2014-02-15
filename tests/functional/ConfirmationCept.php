@@ -9,7 +9,7 @@ $I->haveInDatabase('user', [
 	'email' => 'foobar@example.com',
 	'username' => 'foobar',
 	'confirmation_token' => $token,
-	'confirmation_sent_time' => time()
+	'confirmation_sent_at' => time()
 ]);
 $I->amOnPage('?r=user/registration/confirm&id=3' . '&token=' . $token);
 $I->see('Your account has been confirmed');

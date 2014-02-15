@@ -81,4 +81,19 @@ interface UserInterface extends IdentityInterface
 	 * @return bool
 	 */
 	public function getIsRecoveryPeriodExpired();
+
+	/**
+	 * Blocks the user by setting 'blocked_at' field to current time.
+	 */
+	public function block();
+
+	/**
+	 * Blocks the user by setting 'blocked_at' field to null.
+	 */
+	public function unblock();
+
+	/**
+	 * @return bool Whether user is blocked.
+	 */
+	public function getIsBlocked();
 }

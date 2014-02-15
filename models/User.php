@@ -136,28 +136,6 @@ class User extends ActiveRecord implements UserInterface
 	}
 
 	/**
-	 * Finds a user by username.
-	 *
-	 * @param $username
-	 * @return null|static
-	 */
-	public static function findByUsername($username)
-	{
-		return static::find(['username' => $username]);
-	}
-
-	/**
-	 * Finds a user by email.
-	 *
-	 * @param $email
-	 * @return null|static
-	 */
-	public static function findByEmail($email)
-	{
-		return static::find(['email' => $email]);
-	}
-
-	/**
 	 * @inheritdoc
 	 */
 	public static function tableName()
@@ -196,7 +174,6 @@ class User extends ActiveRecord implements UserInterface
 	{
 		return $this->getAttribute('auth_key') == $authKey;
 	}
-
 
 	/**
 	 * Registers a user.

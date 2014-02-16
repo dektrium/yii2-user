@@ -188,17 +188,18 @@ class User extends ActiveRecord implements UserInterface
 		}
 
 		if ($this->validate()) {
-			if ($this->getModule()->generatePassword) {
+			$module = $this->getModule();
+			if ($module->generatePassword) {
 				$this->password = $this->generatePassword(8);
 				$this->sendMessage(\Yii::t('user', 'Welcome to {sitename}', ['sitename' => \Yii::$app->name]),
 					'welcome', ['user' => $this, 'password' => $this->password]);
 			}
 
-			if ($this->getModule()->trackable) {
+			if ($module->trackable) {
 				$this->setAttribute('registered_from', ip2long(\Yii::$app->getRequest()->getUserIP()));
 			}
 
-			if ($this->getModule()->confirmable) {
+			if ($module->confirmable) {
 				$this->generateConfirmationData();
 				$isSaved = $this->save(false);
 				$this->sendMessage(\Yii::t('user', 'Please confirm your account'), 'confirmation', ['user' => $this]);
@@ -417,13 +418,14 @@ class User extends ActiveRecord implements UserInterface
 	 */
 	protected function sendMessage($subject, $view, $params)
 	{
-		\Yii::$app->getMail()->viewPath = $this->getModule()->emailViewPath;
+		$mail = \Yii::$app->getMail();
+		$mail->viewPath = $this->getModule()->emailViewPath;
 
 		if (empty(\Yii::$app->getMail()->messageConfig['from'])) {
-			\Yii::$app->getMail()->messageConfig['from'] = 'no-reply@example.com';
+			$mail->messageConfig['from'] = 'no-reply@example.com';
 		}
 
-		return \Yii::$app->getMail()->compose($view, $params)
+		return $mail->compose($view, $params)
 			->setTo($this->email)
 			->setSubject($subject)
 			->send();

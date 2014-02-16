@@ -63,6 +63,17 @@ class User extends ActiveRecord implements UserInterface
 		return new UserQuery(['modelClass' => get_called_class()]);
 	}
 
+	public function attributeLabels()
+	{
+		return [
+			'username' => \Yii::t('user', 'Username'),
+			'email' => \Yii::t('user', 'Email'),
+			'password' => \Yii::t('user', 'Password'),
+			'created_at' => \Yii::t('user', 'Registration time'),
+			'registered_from' => \Yii::t('user', 'Registered from'),
+		];
+	}
+
 	/**
 	 * @inheritdoc
 	 */

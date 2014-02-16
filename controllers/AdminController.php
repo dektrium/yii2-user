@@ -38,13 +38,14 @@ class AdminController extends Controller
 					'delete' => ['post'],
 					'confirm' => ['post'],
 					'delete-tokens' => ['post'],
+					'block' => ['post']
 				],
 			],
 			'access' => [
 				'class' => AccessControl::className(),
 				'rules' => [
 					[
-						'actions' => ['index', 'create', 'update', 'delete', 'confirm', 'delete-tokens'],
+						'actions' => ['index', 'create', 'update', 'delete', 'block', 'confirm', 'delete-tokens'],
 						'allow' => true,
 						'roles' => ['@'],
 						'matchCallback' => function ($rule, $action) {
@@ -85,7 +86,7 @@ class AdminController extends Controller
 
 		if ($model->load($_POST) && $model->save()) {
 			$model->confirm();
-			\Yii::$app->getSession()->setFlash('user_created');
+			\Yii::$app->getSession()->setFlash('admin_user', \Yii::t('user', 'User has been created'));
 			return $this->redirect(['index']);
 		}
 
@@ -106,7 +107,7 @@ class AdminController extends Controller
 		$model->scenario = 'update';
 
 		if ($model->load($_POST) && $model->save()) {
-			\Yii::$app->getSession()->setFlash('user_updated');
+			\Yii::$app->getSession()->setFlash('admin_user', \Yii::t('user', 'User has been updated'));
 			return $this->redirect(['index']);
 		}
 
@@ -124,10 +125,10 @@ class AdminController extends Controller
 	{
 		$model = $this->findModel($id);
 		$model->confirmation_token = null;
-		$model->confirmation_sent_time = null;
-		$model->confirmation_time = time();
+		$model->confirmation_sent_at = null;
+		$model->confirmed_at = time();
 		$model->save(false);
-		\Yii::$app->getSession()->setFlash('user_confirmed');
+		\Yii::$app->getSession()->setFlash('admin_user', \Yii::t('user', 'User has been confirmed'));
 
 		return $this->redirect(['update', 'id' => $id]);
 	}
@@ -141,9 +142,9 @@ class AdminController extends Controller
 	{
 		$model = $this->findModel($id);
 		$model->recovery_token = null;
-		$model->recovery_sent_time = null;
+		$model->recovery_sent_at = null;
 		$model->save(false);
-		\Yii::$app->getSession()->setFlash('tokens_deleted');
+		\Yii::$app->getSession()->setFlash('admin_user', \Yii::t('user', 'All user tokens have been deleted'));
 
 		return $this->redirect(['update', 'id' => $id]);
 	}
@@ -157,7 +158,27 @@ class AdminController extends Controller
 	public function actionDelete($id)
 	{
 		$this->findModel($id)->delete();
-		\Yii::$app->getSession()->setFlash('user_deleted');
+		\Yii::$app->getSession()->setFlash('admin_user', \Yii::t('user', 'User has been deleted'));
+		return $this->redirect(['index']);
+	}
+
+	/**
+	 * Blocks the user.
+	 *
+	 * @param $id
+	 * @return \yii\web\Response
+	 */
+	public function actionBlock($id)
+	{
+		$user = $this->findModel($id);
+		if ($user->getIsBlocked()) {
+			$user->unblock();
+			\Yii::$app->getSession()->setFlash('admin_user', \Yii::t('user', 'User has been unblocked'));
+		} else {
+			$user->block();
+			\Yii::$app->getSession()->setFlash('admin_user', \Yii::t('user', 'User has been blocked'));
+		}
+
 		return $this->redirect(['index']);
 	}
 

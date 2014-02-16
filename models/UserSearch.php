@@ -32,12 +32,12 @@ class UserSearch extends Model
 	/**
 	 * @var integer
 	 */
-	public $create_time;
+	public $created_at;
 
 	/**
 	 * @var string
 	 */
-	public $registration_ip;
+	public $registered_from;
 
 	/**
 	 * @inheritdoc
@@ -45,7 +45,7 @@ class UserSearch extends Model
 	public function rules()
 	{
 		return [
-			[['create_time'], 'integer'],
+			[['created_at'], 'integer'],
 			[['username', 'email', 'registered_from'], 'safe'],
 		];
 	}
@@ -58,7 +58,7 @@ class UserSearch extends Model
 		return [
 			'username' => \Yii::t('user', 'Username'),
 			'email' => \Yii::t('user', 'Email'),
-			'create_time' => \Yii::t('user', 'Registration time'),
+			'created_at' => \Yii::t('user', 'Registration time'),
 			'registered_from' => \Yii::t('user', 'Registration ip'),
 		];
 	}
@@ -80,7 +80,7 @@ class UserSearch extends Model
 
 		$this->addCondition($query, 'username', true);
 		$this->addCondition($query, 'email', true);
-		$this->addCondition($query, 'create_time');
+		$this->addCondition($query, 'created_at');
 		$this->addCondition($query, 'registered_from');
 		return $dataProvider;
 	}

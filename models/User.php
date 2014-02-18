@@ -141,9 +141,17 @@ class User extends ActiveRecord implements UserInterface
 		}
 	}
 
+	/**
+	 * @inheritdoc
+	 */
 	public function afterSave($insert)
 	{
-
+		if ($insert) {
+			$profile = new Profile();
+			$profile->user_id = $this->id;
+			$profile->save(false);
+		}
+		parent::afterSave($insert);
 	}
 
 	/**

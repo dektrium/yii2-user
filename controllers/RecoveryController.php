@@ -68,7 +68,7 @@ class RecoveryController extends Controller
 	{
 		$model = $this->module->factory->createForm('recovery', ['scenario' => 'request']);
 
-		if ($model->load($_POST) && $model->validate()) {
+		if ($model->load(\Yii::$app->getRequest()->post()) && $model->validate()) {
 			$model->user->sendRecoveryMessage();
 			return $this->render('messageSent', [
 				'model' => $model
@@ -104,7 +104,7 @@ class RecoveryController extends Controller
 			'user'     => $user
 		]);
 
-		if ($model->load($_POST) && $model->reset()) {
+		if ($model->load(\Yii::$app->getRequest()->post()) && $model->reset()) {
 			return $this->render('finish');
 		}
 

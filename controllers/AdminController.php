@@ -84,7 +84,7 @@ class AdminController extends Controller
 		$model = $this->module->factory->createUser();
 		$model->scenario = 'create';
 
-		if ($model->load($_POST) && $model->save()) {
+		if ($model->load(\Yii::$app->getRequest()->post()) && $model->save()) {
 			$model->confirm();
 			\Yii::$app->getSession()->setFlash('admin_user', \Yii::t('user', 'User has been created'));
 			return $this->redirect(['index']);
@@ -106,7 +106,7 @@ class AdminController extends Controller
 		$model = $this->findModel($id);
 		$model->scenario = 'update';
 
-		if ($model->load($_POST) && $model->save()) {
+		if ($model->load(\Yii::$app->getRequest()->post()) && $model->save()) {
 			\Yii::$app->getSession()->setFlash('admin_user', \Yii::t('user', 'User has been updated'));
 			return $this->redirect(['index']);
 		}

@@ -63,7 +63,7 @@ class AuthController extends Controller
 	{
 		$model = $this->module->factory->createForm('login');
 
-		if ($model->load($_POST) && $model->login()) {
+		if ($model->load(\Yii::$app->getRequest()->post()) && $model->login()) {
 			return $this->goBack();
 		}
 

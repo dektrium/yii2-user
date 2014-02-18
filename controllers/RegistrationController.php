@@ -73,7 +73,7 @@ class RegistrationController extends Controller
 		$model = $this->module->factory->createUser();
 		$model->scenario = 'register';
 
-		if ($model->load($_POST) && $model->register()) {
+		if ($model->load(\Yii::$app->getRequest()->post()) && $model->register()) {
 			return $this->render('success', [
 				'model' => $model
 			]);
@@ -116,7 +116,7 @@ class RegistrationController extends Controller
 	{
 		$model = $this->module->factory->createForm('resend');
 
-		if ($model->load($_POST) && $model->validate()) {
+		if ($model->load(\Yii::$app->getRequest()->post()) && $model->validate()) {
 			$model->getUser()->resend();
 			return $this->render('success', [
 				'model' => $model

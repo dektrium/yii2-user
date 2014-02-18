@@ -52,10 +52,10 @@ $this->registerJs(sprintf('$("#user-password").passField({"locale": "%s", "lengt
 			<div class="panel panel-default">
 				<div class="panel-heading">Trackable info</div>
 				<div class="panel-body">
-					<?= Yii::t('user', 'Registered at {0, date, MMMM dd, YYYY HH:mm} from {1}', [$model->create_time, is_null($model->registration_ip) ? 'N/D' : long2ip($model->registration_ip)]) ?>
+					<?= Yii::t('user', 'Registered at {0, date, MMMM dd, YYYY HH:mm} from {1}', [$model->created_at, is_null($model->registered_from) ? 'N/D' : long2ip($model->registered_from)]) ?>
 					<br/>
-					<?php if (!is_null($model->login_time)): ?>
-						<?= Yii::t('user', 'Last login at {0, date, MMMM dd, YYYY HH:mm} from {1}', [$model->login_time, long2ip($model->login_ip)]) ?>
+					<?php if (!is_null($model->logged_in_at)): ?>
+						<?= Yii::t('user', 'Last login at {0, date, MMMM dd, YYYY HH:mm} from {1}', [$model->logged_in_at, long2ip($model->logged_in_from)]) ?>
 					<?php else: ?>
 						<?= Yii::t('user', 'User has not logged in yet') ?>
 					<?php endif;?>

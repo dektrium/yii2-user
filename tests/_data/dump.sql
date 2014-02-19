@@ -44,3 +44,5 @@ ALTER TABLE `profile`
 INSERT INTO `user` (`id`, `username`, `email`, `password_hash`, `auth_key`, `created_at`, `updated_at`, `confirmation_token`, `confirmed_at`, `confirmation_sent_at`) VALUES
 (1, 'user', 'user@example.com', '$2y$13$qY.ImaYBppt66qez6B31QO92jc5DYVRzo5NxM1ivItkW74WsSG6Ui', '39HU0m5lpjWtqstFVGFjj6lFb7UZDeRq', 1383494773, 1383494773, NULL, 1383494773, NULL),
 (2, 'unconfirmed', 'unconfirmed@example.com', '$2y$13$CIH1LSMPzU9xDCywt3QO8uovAu2axp8hwuXVa72oI.1G/USsGyMBS', 'mhh1A6KfqQLmHP-MiWN0WB0M90Q2u5OE', 1384517855, 1384517855, 'NO2aCmBIjFQX624xmAc3VBu7Th3NJoa6', NULL, 1384517855);
+
+INSERT INTO `profile` (`user_id`) VALUES (1), (2);

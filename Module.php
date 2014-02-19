@@ -89,6 +89,11 @@ class Module extends BaseModule
 	public $emailViewPath = '@dektrium/user/views/mail';
 
 	/**
+	 * @var string|null Role that will be assigned to user on creation.
+	 */
+	public $defaultRole = null;
+
+	/**
 	 * @var array An array of administrator's usernames.
 	 */
 	public $admins = [];

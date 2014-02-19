@@ -85,8 +85,8 @@ class User extends ActiveRecord implements UserInterface
 		}
 		return [
 			'register' => $attributes,
-			'create'   => ['username', 'email', 'password'],
-			'update'   => ['username', 'email', 'password'],
+			'create'   => ['username', 'email', 'password', 'role'],
+			'update'   => ['username', 'email', 'password', 'role'],
 			'reset'    => ['password'],
 		];
 	}
@@ -103,7 +103,7 @@ class User extends ActiveRecord implements UserInterface
 			[['username', 'email'], 'unique'],
 			['username', 'match', 'pattern' => '/^[a-zA-Z]\w+$/'],
 			['username', 'string', 'min' => 3, 'max' => 25],
-			['email', 'string', 'max' => 255],
+			[['email', 'role'], 'string', 'max' => 255],
 		];
 
 		if ($this->getModule()->generatePassword) {
@@ -132,6 +132,7 @@ class User extends ActiveRecord implements UserInterface
 			if ($this->isNewRecord) {
 				$this->setAttribute('auth_key', Security::generateRandomKey());
 				$this->setAttribute('created_at', time());
+				$this->setAttribute('role', $this->getModule()->defaultRole);
 			}
 			$this->setAttribute('updated_at', time());
 

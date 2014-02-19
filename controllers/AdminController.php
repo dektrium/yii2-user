@@ -85,7 +85,6 @@ class AdminController extends Controller
 		$model->scenario = 'create';
 
 		if ($model->load(\Yii::$app->getRequest()->post()) && $model->save()) {
-			$model->confirm();
 			\Yii::$app->getSession()->setFlash('admin_user', \Yii::t('user', 'User has been created'));
 			return $this->redirect(['index']);
 		}

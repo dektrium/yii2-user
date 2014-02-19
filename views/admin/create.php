@@ -8,19 +8,19 @@ use yii\widgets\ActiveForm;
  * @var dektrium\user\models\User $model
  */
 
-$this->title = 'Create User';
-$this->params['breadcrumbs'][] = ['label' => 'Users', 'url' => ['index']];
+$this->title = Yii::t('user', 'Create user');
+$this->params['breadcrumbs'][] = ['label' => Yii::t('user', 'Users'), 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
+
 \dektrium\user\assets\Passfield::register($this);
-$this->registerJs(sprintf('$("#user-password").passField({"locale": "%s", "length": {"min": 6, "max": 40 }});', Yii::$app->language));
+$this->registerJs(sprintf('$("#user-password").passField({"locale": "%s"});', Yii::$app->language));
 ?>
-<div class="user-create">
 
-	<h1><?= Html::encode($this->title) ?></h1>
-
-
-	<div class="user-form">
-
+<div class="panel panel-default">
+	<div class="panel-heading">
+		<h3 class="panel-title"><?= Html::encode($this->title) ?></h3>
+	</div>
+	<div class="panel-body">
 		<?php $form = ActiveForm::begin(); ?>
 
 		<?= $form->field($model, 'username')->textInput(['maxlength' => 25]) ?>
@@ -29,12 +29,13 @@ $this->registerJs(sprintf('$("#user-password").passField({"locale": "%s", "lengt
 
 		<?= $form->field($model, 'password')->passwordInput() ?>
 
+		<?= $form->field($model, 'role')->textInput(['maxlength' => 255]) ?>
+
 		<div class="form-group">
-			<?= Html::submitButton('Create', ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>
+			<?= Html::submitButton(Yii::t('user', 'Create'), ['class' => 'btn btn-success']) ?>
 		</div>
 
 		<?php ActiveForm::end(); ?>
 
 	</div>
-
 </div>

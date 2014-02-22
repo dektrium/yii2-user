@@ -81,7 +81,8 @@ class Login extends Model
 		$rules = [
 			[['login', 'password'], 'required'],
 			['password', 'validatePassword'],
-			['login', 'validateUserActiveForLogin'],
+			['login', 'validateUserIsConfirmed'],
+			['login', 'validateUserIsNotBlocked'],
 			['rememberMe', 'boolean'],
 		];
 
@@ -105,11 +106,21 @@ class Login extends Model
 	/**
 	 * Validates whether user has confirmed his account.
 	 */
-	public function validateUserActiveForLogin()
+	public function validateUserIsConfirmed()
 	{
 		$confirmationRequired = $this->getModule()->confirmable && !$this->getModule()->allowUnconfirmedLogin;
 		if ($this->user !== null && $confirmationRequired && !$this->user->isConfirmed) {
 			$this->addError('login', \Yii::t('user', 'You must confirm your account before logging in'));
+		}
+	}
+
+	/**
+	 * Validates whether user is not blocked
+	 */
+	public function validateUserIsNotBlocked()
+	{
+		if ($this->user !== null && $this->user->getIsBlocked()) {
+			$this->addError('login', \Yii::t('user', 'Your account has been blocked'));
 		}
 	}
 

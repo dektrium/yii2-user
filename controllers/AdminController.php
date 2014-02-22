@@ -107,7 +107,7 @@ class AdminController extends Controller
 
 		if ($model->load(\Yii::$app->getRequest()->post()) && $model->save()) {
 			\Yii::$app->getSession()->setFlash('admin_user', \Yii::t('user', 'User has been updated'));
-			return $this->redirect(['index']);
+			return $this->refresh();
 		}
 
 		return $this->render('update', [

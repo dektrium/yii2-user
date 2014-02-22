@@ -122,11 +122,7 @@ class AdminController extends Controller
 	 */
 	public function actionConfirm($id)
 	{
-		$model = $this->findModel($id);
-		$model->confirmation_token = null;
-		$model->confirmation_sent_at = null;
-		$model->confirmed_at = time();
-		$model->save(false);
+		$this->findModel($id)->confirm(false);
 		\Yii::$app->getSession()->setFlash('admin_user', \Yii::t('user', 'User has been confirmed'));
 
 		return $this->redirect(['update', 'id' => $id]);

@@ -267,14 +267,17 @@ class User extends ActiveRecord implements UserInterface
 	/**
 	 * Confirms a user by setting it's "confirmation_time" to actual time
 	 *
+	 * @param bool $runValidation Whether to check if user has already been confirmed or confirmation token expired.
 	 * @return bool
 	 */
-	public function confirm()
+	public function confirm($runValidation = true)
 	{
-		if ($this->getIsConfirmed()) {
-			return true;
-		} elseif ($this->getIsConfirmationPeriodExpired()) {
-			return false;
+		if ($runValidation) {
+			if ($this->getIsConfirmed()) {
+				return true;
+			} elseif ($this->getIsConfirmationPeriodExpired()) {
+				return false;
+			}
 		}
 
 		$this->confirmation_token = null;

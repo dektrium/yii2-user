@@ -2,6 +2,7 @@ Changelog
 =========
 
 ## v0.5.0 [Work in progress]
+- Updated database schema
 - Added [Pass*Field library](http://antelle.github.io/passfield/index.html)
 
 ## v0.4.0 [6 February 2014]

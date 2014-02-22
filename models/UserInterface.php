@@ -25,9 +25,10 @@ interface UserInterface extends IdentityInterface
 	/**
 	 * Confirms a user by setting it's "confirmation_time" to actual time
 	 *
+	 * @param bool $runValidation Whether to check if user has already been confirmed or confirmation token expired.
 	 * @return bool
 	 */
-	public function confirm();
+	public function confirm($runValidation = true);
 
 	/**
 	 * Re-sends confirmation instructions by email.

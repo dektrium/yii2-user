@@ -317,7 +317,7 @@ class User extends ActiveRecord implements UserInterface
 	public function getConfirmationUrl()
 	{
 		return $this->getIsConfirmed() ? null :
-			\Yii::$app->getUrlManager()->createAbsoluteUrl('/user/registration/confirm', [
+			\Yii::$app->getUrlManager()->createAbsoluteUrl(['/user/registration/confirm',
 				'id'    => $this->id,
 				'token' => $this->confirmation_token
 			]);
@@ -374,7 +374,7 @@ class User extends ActiveRecord implements UserInterface
 	 */
 	public function getRecoveryUrl()
 	{
-		return \Yii::$app->getUrlManager()->createAbsoluteUrl('/user/recovery/reset', [
+		return \Yii::$app->getUrlManager()->createAbsoluteUrl(['/user/recovery/reset',
 			'id' => $this->id,
 			'token' => $this->recovery_token
 		]);

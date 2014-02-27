@@ -151,6 +151,7 @@ class User extends ActiveRecord implements UserInterface
 		if ($insert) {
 			$profile = new Profile();
 			$profile->user_id = $this->id;
+			$profile->gravatar_email = $this->email;
 			$profile->save(false);
 		}
 		parent::afterSave($insert);

@@ -43,9 +43,9 @@ class Profile extends ActiveRecord
 	public function rules()
 	{
 		return [
-			[['user_id'], 'required'],
-			[['user_id'], 'integer'],
 			[['bio'], 'string'],
+			[['public_email', 'gravatar_email'], 'email'],
+			['website', 'url'],
 			[['name', 'public_email', 'gravatar_email', 'location', 'website'], 'string', 'max' => 255],
 		];
 	}
@@ -58,7 +58,7 @@ class Profile extends ActiveRecord
 		return [
 			'name' => \Yii::t('user', 'Name'),
 			'public_email' => \Yii::t('user', 'Email (public)'),
-			'gravatar_email' => \Yii::t('user', 'Gravatar email (private)'),
+			'gravatar_email' => \Yii::t('user', 'Gravatar email'),
 			'location' => \Yii::t('user', 'Location'),
 			'website' => \Yii::t('user', 'Website'),
 			'bio' => \Yii::t('user', 'Bio'),

@@ -3,9 +3,9 @@
 /**
  * @var yii\web\View $this
  * @var yii\widgets\ActiveForm $form
- * @var dektrium\user\models\Profile $profile
+ * @var dektrium\user\models\User $model
  */
-$this->title = Yii::t('user', 'Profile settings');
+$this->title = Yii::t('user', 'Password settings');
 $this->params['breadcrumbs'][] = $this->title;
 
 ?>
@@ -39,7 +39,7 @@ $this->params['breadcrumbs'][] = $this->title;
 	<div class="col-md-9">
 		<div class="panel panel-default">
 			<div class="panel-heading">
-				<?= Yii::t('user', 'Public profile') ?>
+				<?= Yii::t('user', 'Password settings') ?>
 			</div>
 			<div class="panel-body">
 				<?php $form = \yii\widgets\ActiveForm::begin([
@@ -51,21 +51,13 @@ $this->params['breadcrumbs'][] = $this->title;
 					],
 				]); ?>
 
-				<?= $form->field($model, 'name') ?>
+				<?= $form->field($model, 'current_password')->passwordInput() ?>
 
-				<?= $form->field($model, 'public_email') ?>
-
-				<?= $form->field($model, 'website') ?>
-
-				<?= $form->field($model, 'location') ?>
-
-				<?= $form->field($model, 'gravatar_email')->hint(\yii\helpers\Html::a(Yii::t('user', 'Change your avatar at Gravatar.com'), 'http://gravatar.com')) ?>
-
-				<?= $form->field($model, 'bio')->textarea() ?>
+				<?= $form->field($model, 'password')->passwordInput() ?>
 
 				<div class="form-group">
 					<div class="col-lg-offset-3 col-lg-9">
-						<?= \yii\helpers\Html::submitButton(Yii::t('user', 'Update profile'), ['class' => 'btn btn-success']) ?><br>
+						<?= \yii\helpers\Html::submitButton(Yii::t('user', 'Update password'), ['class' => 'btn btn-success']) ?><br>
 					</div>
 				</div>
 

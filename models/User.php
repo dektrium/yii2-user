@@ -46,6 +46,11 @@ class User extends ActiveRecord implements UserInterface
 	public $password;
 
 	/**
+	 * @var string Current user's password.
+	 */
+	public $current_password;
+
+	/**
 	 * @var string Verification code.
 	 */
 	public $verifyCode;
@@ -89,6 +94,7 @@ class User extends ActiveRecord implements UserInterface
 			'create'   => ['username', 'email', 'password', 'role'],
 			'update'   => ['username', 'email', 'password', 'role'],
 			'reset'    => ['password'],
+			'passwordSettings' => ['current_password', 'password']
 		];
 	}
 
@@ -105,6 +111,9 @@ class User extends ActiveRecord implements UserInterface
 			['username', 'match', 'pattern' => '/^[a-zA-Z]\w+$/'],
 			['username', 'string', 'min' => 3, 'max' => 25],
 			[['email', 'role'], 'string', 'max' => 255],
+			[['current_password', 'password'], 'required', 'on' => 'passwordSettings'],
+			['current_password', 'validateCurrentPassword', 'on' => 'passwordSettings'],
+			['password', 'string', 'min' => 6, 'on' => 'passwordSettings']
 		];
 
 		if ($this->getModule()->generatePassword) {
@@ -119,6 +128,16 @@ class User extends ActiveRecord implements UserInterface
 		}
 
 		return $rules;
+	}
+
+	/**
+	 * Validates current password.
+	 */
+	public function validateCurrentPassword()
+	{
+		if (!empty($this->current_password) && !Security::validatePassword($this->current_password, $this->password_hash)) {
+			$this->addError('current_password', \Yii::t('user', 'Current password is not valid'));
+		}
 	}
 
 	/**

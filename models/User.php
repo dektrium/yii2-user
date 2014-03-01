@@ -150,7 +150,7 @@ class User extends ActiveRecord implements UserInterface
 	public function beforeSave($insert)
 	{
 		if (parent::beforeSave($insert)) {
-			if ($this->isAttributeSafe('password') && !empty($this->password)) {
+			if (($this->getModule()->generatePassword || $this->isAttributeSafe('password')) && !empty($this->password)) {
 				$this->setAttribute('password_hash', Security::generatePasswordHash($this->password, $this->getModule()->cost));
 			}
 			if ($this->isNewRecord) {

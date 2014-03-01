@@ -14,6 +14,8 @@ namespace dektrium\user\controllers;
 use dektrium\user\models\Profile;
 use yii\web\AccessControl;
 use yii\web\Controller;
+use yii\web\NotFoundHttpException;
+use yii\web\VerbFilter;
 
 /**
  * SettingsController manages updating user settings (e.g. profile, email and password).
@@ -35,12 +37,18 @@ class SettingsController extends Controller
 	public function behaviors()
 	{
 		return [
+			'verbs' => [
+				'class' => VerbFilter::className(),
+				'actions' => [
+					'reset' => ['post'],
+				],
+			],
 			'access' => [
 				'class' => AccessControl::className(),
 				'rules' => [
 					[
 						'allow' => true,
-						'actions' => ['profile', 'email', 'password'],
+						'actions' => ['profile', 'email', 'password', 'reset'],
 						'roles' => ['@']
 					],
 				]
@@ -74,7 +82,36 @@ class SettingsController extends Controller
 	 */
 	public function actionEmail()
 	{
-		return;
+		$query = $this->module->factory->createQuery();
+		$model = $query->where(['id' => \Yii::$app->getUser()->getIdentity()->getId()])->one();
+		$model->scenario = 'emailSettings';
+
+		if ($model->load($_POST) && $model->updateEmail()) {
+			$this->refresh();
+		}
+
+		return $this->render('email', [
+			'model' => $model
+		]);
+	}
+
+	/**
+	 * Resets email update.
+	 *
+	 * @return \yii\web\Response
+	 * @throws \yii\web\NotFoundHttpException
+	 */
+	public function actionReset()
+	{
+		if ($this->module->confirmable) {
+			$query = $this->module->factory->createQuery();
+			$model = $query->where(['id' => \Yii::$app->getUser()->getIdentity()->getId()])->one();
+			$model->resetEmailUpdate();
+			\Yii::$app->getSession()->setFlash('settings_saved', \Yii::t('user', 'Email change has been cancelled'));
+			return $this->redirect(['email']);
+		}
+
+		throw new NotFoundHttpException;
 	}
 
 	/**

@@ -94,7 +94,8 @@ class User extends ActiveRecord implements UserInterface
 			'create'   => ['username', 'email', 'password', 'role'],
 			'update'   => ['username', 'email', 'password', 'role'],
 			'reset'    => ['password'],
-			'passwordSettings' => ['current_password', 'password']
+			'passwordSettings' => ['current_password', 'password'],
+			'emailSettings' => ['unconfirmed_email', 'current_password'],
 		];
 	}
 
@@ -112,8 +113,11 @@ class User extends ActiveRecord implements UserInterface
 			['username', 'string', 'min' => 3, 'max' => 25],
 			[['email', 'role'], 'string', 'max' => 255],
 			[['current_password', 'password'], 'required', 'on' => 'passwordSettings'],
-			['current_password', 'validateCurrentPassword', 'on' => 'passwordSettings'],
-			['password', 'string', 'min' => 6, 'on' => 'passwordSettings']
+			['current_password', 'validateCurrentPassword', 'on' => ['passwordSettings', 'emailSettings']],
+			['password', 'string', 'min' => 6, 'on' => 'passwordSettings'],
+			[['unconfirmed_email', 'current_password'], 'required', 'on' => 'emailSettings'],
+			['unconfirmed_email', 'unique', 'targetAttribute' => 'email', 'on' => 'emailSettings'],
+			['unconfirmed_email', 'email', 'on' => 'emailSettings']
 		];
 
 		if ($this->getModule()->generatePassword) {
@@ -285,6 +289,43 @@ class User extends ActiveRecord implements UserInterface
 	}
 
 	/**
+	 * Updates email with new one. If confirmable option is enabled, it will send confirmation message to new email.
+	 *
+	 * @return bool
+	 */
+	public function updateEmail()
+	{
+		if ($this->validate()) {
+			if ($this->getModule()->confirmable) {
+				$this->confirmation_token = Security::generateRandomKey();
+				$this->confirmation_sent_at = time();
+				$this->save(false);
+				$this->sendMessage(\Yii::t('user', 'Please confirm your account'), 'confirmation', ['user' => $this]);
+			} else {
+				$this->email = $this->unconfirmed_email;
+				$this->unconfirmed_email = null;
+			}
+
+			return true;
+		}
+
+		return false;
+	}
+
+	/**
+	 * Resets unconfirmed email and confirmation data.
+	 */
+	public function resetEmailUpdate()
+	{
+		if ($this->getModule()->confirmable && !empty($this->unconfirmed_email)) {
+			$this->unconfirmed_email = null;
+			$this->confirmation_token = null;
+			$this->confirmation_sent_at = null;
+			$this->save(false);
+		}
+	}
+
+	/**
 	 * Confirms a user by setting it's "confirmation_time" to actual time
 	 *
 	 * @param bool $runValidation Whether to check if user has already been confirmed or confirmation token expired.
@@ -300,9 +341,16 @@ class User extends ActiveRecord implements UserInterface
 			}
 		}
 
+		if (empty($this->unconfirmed_email)) {
+			$this->confirmed_at = time();
+		} else {
+			$this->email = $this->unconfirmed_email;
+			$this->unconfirmed_email = null;
+		}
+
 		$this->confirmation_token = null;
 		$this->confirmation_sent_at = null;
-		$this->confirmed_at = time();
+
 
 		return $this->save(false);
 	}

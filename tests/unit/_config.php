@@ -2,10 +2,11 @@
 	require(__DIR__ . '/../../../../config/web.php'),
 	require(__DIR__ . '/../_config.php'),
 	[
-		'components' => [
-			'db' => [
-				'dsn' => 'mysql:host=localhost;dbname=dektrium_test',
-			],
+		'modules' => [
+			'user' => [
+				'trackable' => false,
+				'confirmable' => false,
+			]
 		],
 	]
 );

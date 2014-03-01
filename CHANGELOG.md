@@ -2,6 +2,9 @@ Changelog
 =========
 
 ## v0.5.0 [Work in progress]
+- Added user settings page
+- Updated admin views
+- Added account blocking
 - Updated database schema
 - Added [Pass*Field library](http://antelle.github.io/passfield/index.html)
 

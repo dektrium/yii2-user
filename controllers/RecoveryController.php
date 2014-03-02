@@ -91,7 +91,7 @@ class RecoveryController extends Controller
 	public function actionReset($id, $token)
 	{
 		/** @var \dektrium\user\models\User $user */
-		$query = $this->module->factory->createQuery();
+		$query = $this->module->factory->createUserQuery();
 		$user  = $query->where(['id' => $id, 'recovery_token' => $token])->one();
 		if ($user === null) {
 			throw new NotFoundHttpException();

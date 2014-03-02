@@ -63,9 +63,10 @@ class SettingsController extends Controller
 	 */
 	public function actionProfile()
 	{
-		$model = Profile::find(['user_id' => \Yii::$app->getUser()->getIdentity()->getId()]);
+		$query = $this->module->factory->createProfileQuery();
+		$model = $query->where(['user_id' => \Yii::$app->getUser()->getIdentity()->getId()])->one();
 
-		if ($model->load($_POST) && $model->save()) {
+		if ($model->load(\Yii::$app->getRequest()->post()) && $model->save()) {
 			\Yii::$app->getSession()->setFlash('settings_saved', \Yii::t('user', 'Profile updated successfully'));
 			return $this->refresh();
 		}
@@ -82,11 +83,11 @@ class SettingsController extends Controller
 	 */
 	public function actionEmail()
 	{
-		$query = $this->module->factory->createQuery();
+		$query = $this->module->factory->createUserQuery();
 		$model = $query->where(['id' => \Yii::$app->getUser()->getIdentity()->getId()])->one();
 		$model->scenario = 'emailSettings';
 
-		if ($model->load($_POST) && $model->updateEmail()) {
+		if ($model->load(\Yii::$app->getRequest()->post()) && $model->updateEmail()) {
 			$this->refresh();
 		}
 
@@ -104,7 +105,7 @@ class SettingsController extends Controller
 	public function actionReset()
 	{
 		if ($this->module->confirmable) {
-			$query = $this->module->factory->createQuery();
+			$query = $this->module->factory->createUserQuery();
 			$model = $query->where(['id' => \Yii::$app->getUser()->getIdentity()->getId()])->one();
 			$model->resetEmailUpdate();
 			\Yii::$app->getSession()->setFlash('settings_saved', \Yii::t('user', 'Email change has been cancelled'));
@@ -121,11 +122,11 @@ class SettingsController extends Controller
 	 */
 	public function actionPassword()
 	{
-		$query = $this->module->factory->createQuery();
+		$query = $this->module->factory->createUserQuery();
 		$model = $query->where(['id' => \Yii::$app->getUser()->getIdentity()->getId()])->one();
 		$model->scenario = 'passwordSettings';
 
-		if ($model->load($_POST) && $model->save()) {
+		if ($model->load(\Yii::$app->getRequest()->post()) && $model->save()) {
 			\Yii::$app->getSession()->setFlash('settings_saved', \Yii::t('user', 'Password updated successfully'));
 			$this->refresh();
 		}

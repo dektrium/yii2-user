@@ -152,7 +152,7 @@ class Login extends Model
 	public function beforeValidate()
 	{
 		if (parent::beforeValidate()) {
-			$query = $this->getModule()->factory->createQuery();
+			$query = $this->getModule()->factory->createUserQuery();
 			switch ($this->getModule()->loginType) {
 				case 'email':
 					$condition = ['email' => $this->login];

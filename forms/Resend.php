@@ -54,7 +54,7 @@ class Resend extends Model
 		$rules = [
 			['email', 'required'],
 			['email', 'email'],
-			['email', 'exist', 'targetClass' => $this->getModule()->factory->modelClass],
+			['email', 'exist', 'targetClass' => $this->getModule()->factory->userClass],
 			['email', 'validateEmail'],
 		];
 
@@ -89,7 +89,7 @@ class Resend extends Model
 	public function getUser()
 	{
 		if ($this->_user == null) {
-			$query = $this->getModule()->factory->createQuery();
+			$query = $this->getModule()->factory->createUserQuery();
 			$this->_user = $query->where(['email' => $this->email])->one();
 		}
 

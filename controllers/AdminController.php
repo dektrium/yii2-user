@@ -187,7 +187,7 @@ class AdminController extends Controller
 	protected function findModel($id)
 	{
 		/** @var \dektrium\user\models\User $user */
-		$user = $this->module->factory->createQuery()->where(['id' => $id])->one();
+		$user = $this->module->factory->createUserQuery()->where(['id' => $id])->one();
 		if ($id !== null && $user !== null) {
 			return $user;
 		} else {

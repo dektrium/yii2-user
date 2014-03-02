@@ -79,7 +79,7 @@ class Recovery extends Model
 		$rules = [
 			['email', 'required', 'on' => 'request'],
 			['email', 'email', 'on' => 'request'],
-			['email', 'exist', 'targetClass' => $this->getModule()->factory->modelClass, 'on' => 'request'],
+			['email', 'exist', 'targetClass' => $this->getModule()->factory->userClass, 'on' => 'request'],
 			['email', 'validateUserConfirmed', 'on' => 'request'],
 			['password', 'required', 'on' => 'reset'],
 			['password', 'string', 'min' => 6, 'on' => 'reset'],
@@ -97,7 +97,7 @@ class Recovery extends Model
 	 */
 	public function validateUserConfirmed()
 	{
-		$query = $this->getModule()->factory->createQuery();
+		$query = $this->getModule()->factory->createUserQuery();
 		$this->user = $query->where(['email' => $this->email])->one();
 		if ($this->user !== null && $this->getModule()->confirmable && !$this->user->isConfirmed) {
 			$this->addError('email', 'You must confirm your account first');

@@ -39,7 +39,7 @@ class User extends BaseUser
 	public function init()
 	{
 		if ($this->identityClass == null) {
-			$this->identityClass = \Yii::$app->getModule('user')->factory->modelClass;
+			$this->identityClass = \Yii::$app->getModule('user')->factory->userClass;
 		}
 		parent::init();
 	}

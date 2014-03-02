@@ -236,8 +236,7 @@ class User extends ActiveRecord implements UserInterface
 			$module = $this->getModule();
 			if ($module->generatePassword) {
 				$this->password = $this->generatePassword(8);
-				$this->sendMessage(\Yii::t('user', 'Welcome to {sitename}', ['sitename' => \Yii::$app->name]),
-					'welcome', ['user' => $this, 'password' => $this->password]);
+				$this->sendMessage($this->email, \Yii::t('user', 'Welcome to {sitename}', ['sitename' => \Yii::$app->name]), 'welcome', ['user' => $this, 'password' => $this->password]);
 			}
 
 			if ($module->trackable) {
@@ -247,7 +246,7 @@ class User extends ActiveRecord implements UserInterface
 			if ($module->confirmable) {
 				$this->generateConfirmationData();
 				$isSaved = $this->save(false);
-				$this->sendMessage(\Yii::t('user', 'Please confirm your account'), 'confirmation', ['user' => $this]);
+				$this->sendMessage($this->email, \Yii::t('user', 'Please confirm your account'), 'confirmation', ['user' => $this]);
 				return $isSaved;
 			} else {
 				return $this->save(false);
@@ -300,7 +299,7 @@ class User extends ActiveRecord implements UserInterface
 				$this->confirmation_token = Security::generateRandomKey();
 				$this->confirmation_sent_at = time();
 				$this->save(false);
-				$this->sendMessage(\Yii::t('user', 'Please confirm your account'), 'confirmation', ['user' => $this]);
+				$this->sendMessage($this->unconfirmed_email, \Yii::t('user', 'Please confirm your email'), 'reconfirmation', ['user' => $this]);
 			} else {
 				$this->email = $this->unconfirmed_email;
 				$this->unconfirmed_email = null;
@@ -365,7 +364,7 @@ class User extends ActiveRecord implements UserInterface
 		$this->generateConfirmationData();
 		$this->save(false);
 
-		return $this->sendMessage(\Yii::t('user', 'Please confirm your account'), 'confirmation', ['user' => $this]);
+		return $this->sendMessage($this->email, \Yii::t('user', 'Please confirm your account'), 'confirmation', ['user' => $this]);
 	}
 
 	/**
@@ -384,6 +383,18 @@ class User extends ActiveRecord implements UserInterface
 	public function getConfirmationUrl()
 	{
 		return $this->getIsConfirmed() ? null :
+			\Yii::$app->getUrlManager()->createAbsoluteUrl(['/user/registration/confirm',
+				'id'    => $this->id,
+				'token' => $this->confirmation_token
+			]);
+	}
+
+	/**
+	 * @return null|string Reconfirmation url.
+	 */
+	public function getReconfirmationUrl()
+	{
+		return is_null($this->unconfirmed_email) ? null :
 			\Yii::$app->getUrlManager()->createAbsoluteUrl(['/user/registration/confirm',
 				'id'    => $this->id,
 				'token' => $this->confirmation_token
@@ -456,7 +467,7 @@ class User extends ActiveRecord implements UserInterface
 		$this->recovery_sent_at = time();
 		$this->save(false);
 
-		return $this->sendMessage(\Yii::t('user', 'Please complete password reset'), 'recovery', ['user' => $this]);
+		return $this->sendMessage($this->email, \Yii::t('user', 'Please complete password reset'), 'recovery', ['user' => $this]);
 	}
 
 	/**
@@ -502,13 +513,14 @@ class User extends ActiveRecord implements UserInterface
 	/**
 	 * Sends message.
 	 *
+	 * @param $to
 	 * @param  string $subject
 	 * @param  string $view
-	 * @param  array  $params
+	 * @param  array $params
 	 *
 	 * @return bool
 	 */
-	protected function sendMessage($subject, $view, $params)
+	protected function sendMessage($to, $subject, $view, $params)
 	{
 		$mail = \Yii::$app->getMail();
 		$mail->viewPath = $this->getModule()->emailViewPath;
@@ -518,7 +530,7 @@ class User extends ActiveRecord implements UserInterface
 		}
 
 		return $mail->compose($view, $params)
-			->setTo($this->email)
+			->setTo($to)
 			->setSubject($subject)
 			->send();
 	}

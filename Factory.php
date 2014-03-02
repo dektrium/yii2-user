@@ -24,12 +24,22 @@ class Factory extends Component
 	/**
 	 * @var string
 	 */
-	public $modelClass = '\dektrium\user\models\User';
+	public $userClass = '\dektrium\user\models\User';
 
 	/**
 	 * @var string
 	 */
-	public $queryClass = '\dektrium\user\models\UserQuery';
+	public $profileClass = '\dektrium\user\models\Profile';
+
+	/**
+	 * @var string
+	 */
+	public $userQueryClass = '\dektrium\user\models\UserQuery';
+
+	/**
+	 * @var string
+	 */
+	public $profileQueryClass = '\yii\db\ActiveQuery';
 
 	/**
 	 * @var string
@@ -49,13 +59,13 @@ class Factory extends Component
 	/**
 	 * Creates new User model.
 	 *
+	 * @param  array $config
 	 * @return UserInterface
-	 *
 	 * @throws \RuntimeException
 	 */
 	public function createUser($config = [])
 	{
-		$config['class'] = $this->modelClass;
+		$config['class'] = $this->userClass;
 		$model = \Yii::createObject($config);
 		if (!$model instanceof UserInterface) {
 			throw new \RuntimeException(sprintf('"%s" must implement "%s" interface',
@@ -66,13 +76,36 @@ class Factory extends Component
 	}
 
 	/**
+	 * Creates new Profile model.
+	 *
+	 * @param  array $config
+	 * @return \dektrium\user\models\Profile
+	 */
+	public function createProfile($config = [])
+	{
+		$config['class'] = $this->profileClass;
+
+		return \Yii::createObject($config);
+	}
+
+	/**
 	 * Creates new query for user class.
 	 *
 	 * @return \yii\db\ActiveQuery
 	 */
-	public function createQuery()
+	public function createUserQuery()
 	{
-		return \Yii::createObject(['class' => $this->queryClass, 'modelClass' => $this->modelClass]);
+		return \Yii::createObject(['class' => $this->userQueryClass, 'modelClass' => $this->userClass]);
+	}
+
+	/**
+	 * Creates new query for user class.
+	 *
+	 * @return \yii\db\ActiveQuery
+	 */
+	public function createProfileQuery()
+	{
+		return \Yii::createObject(['class' => $this->profileQueryClass, 'modelClass' => $this->profileClass]);
 	}
 
 	/**

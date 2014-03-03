@@ -99,6 +99,11 @@ class Module extends BaseModule
 	public $admins = [];
 
 	/**
+	 * @var Factory
+	 */
+	private $_factory = ['class' => '\dektrium\user\Factory'];
+
+	/**
 	 * @inheritdoc
 	 */
 	public function init()
@@ -114,11 +119,28 @@ class Module extends BaseModule
 			'class' => 'yii\i18n\PhpMessageSource',
 			'basePath' => __DIR__ . '/messages',
 		];
+	}
 
-		$this->setComponents([
-			'factory' => [
-				'class' => '\dektrium\user\Factory'
-			]
-		]);
+	/**
+	 * @return Factory
+	 */
+	public function getFactory()
+	{
+		if (is_array($this->_factory)) {
+			$this->_factory = \Yii::createObject($this->_factory);
+		}
+
+		return $this->_factory;
+	}
+
+	/**
+	 * @param $config
+	 */
+	public function setFactory(array $config)
+	{
+		if (!isset($config['class'])) {
+			$config['class'] = '\dektrium\user\Factory';
+		}
+		$this->_factory = $config;
 	}
 }

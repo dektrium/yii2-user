@@ -47,9 +47,9 @@ class User extends BaseUser
 	/**
 	 * @inheritdoc
 	 */
-	protected function afterLogin($identity, $cookieBased)
+	protected function afterLogin($identity, $cookieBased, $duration)
 	{
-		parent::afterLogin($identity, $cookieBased);
+		parent::afterLogin($identity, $cookieBased, $duration);
 		if (\Yii::$app->getModule('user')->trackable) {
 			$this->identity->setAttribute('logged_in_from', ip2long(\Yii::$app->getRequest()->getUserIP()));
 			$this->identity->setAttribute('logged_in_at', time());

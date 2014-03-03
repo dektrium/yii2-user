@@ -2,20 +2,50 @@
 
 namespace Codeception\Module;
 
+use dektrium\user\tests\_fixtures\ProfileFixture;
+use dektrium\user\tests\_fixtures\UserFixture;
 use Guzzle\Http\Client;
+use yii\test\FixtureTrait;
+use Codeception\Module;
 
-class TestHelper extends \Codeception\Module
+class TestHelper extends Module
 {
+	/**
+	 * Redeclare visibility because codeception includes all public methods that not starts from "_"
+	 * and not excluded by module settings, in guy class.
+	 */
+	use FixtureTrait {
+		loadFixtures as protected;
+		fixtures as protected;
+		globalFixtures as protected;
+		unloadFixtures as protected;
+		getFixtures as protected;
+		getFixture as protected;
+	}
+
 	/**
 	 * @var \Guzzle\Http\Client
 	 */
 	private $mailcatcher;
 
-	public function __construct()
+	/**
+	 * Method called before any suite tests run. Loads User fixture login user
+	 * to use in acceptance and functional tests.
+	 * @param array $settings
+	 */
+	public function _beforeSuite($settings = array())
 	{
-		parent::__construct();
 		$this->mailcatcher = new Client('http://127.0.0.1:1080');
 		$this->cleanMessages();
+		$this->loadFixtures();
+	}
+
+	/**
+	 * Method is called after all suite tests run
+	 */
+	public function _afterSuite()
+	{
+		$this->unloadFixtures();
 	}
 
 	public function cleanMessages()
@@ -77,5 +107,19 @@ class TestHelper extends \Codeception\Module
 		$response = $this->mailcatcher->get("/messages/{$email->id}.json")->send();
 		$email = json_decode($response->getBody());
 		$this->assertContains($needle, $email->recipients, $description);
+	}
+
+	protected function fixtures()
+	{
+		return [
+			'user' => [
+				'class' => UserFixture::className(),
+				'dataFile' => '@tests/_fixtures/init_user.php'
+			],
+			'profile' => [
+				'class' => ProfileFixture::className(),
+				'dataFile' => '@tests/_fixtures/init_profile.php'
+			],
+		];
 	}
 }

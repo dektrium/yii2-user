@@ -11,6 +11,7 @@
 
 namespace dektrium\user\models;
 
+use yii\base\NotSupportedException;
 use yii\db\ActiveRecord;
 use yii\helpers\Security;
 
@@ -194,6 +195,14 @@ class User extends ActiveRecord implements UserInterface
 	public static function findIdentity($id)
 	{
 		return static::find($id);
+	}
+
+	/**
+	 * @inheritdoc
+	 */
+	public static function findIdentityByAccessToken($token)
+	{
+		throw new NotSupportedException('"findIdentityByAccessToken" is not implemented.');
 	}
 
 	/**

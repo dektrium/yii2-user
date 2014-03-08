@@ -40,4 +40,15 @@ return [
 		'blocked_at' => $time,
 		'confirmed_at' => $time
 	],
+	[
+		'username' => 'andrew',
+		'email' => 'andrew@example.com',
+		'password_hash' => '$2y$13$qY.ImaYBppt66qez6B31QO92jc5DYVRzo5NxM1ivItkW74WsSG6Ui',
+		'auth_key' => 'qxYa315rqRgCOjYGk82GFHMEAV3T82AX',
+		'created_at' => $time - 21601,
+		'updated_at' => $time - 21601,
+		'confirmed_at' => $time - 21601,
+		'recovery_sent_at' => $time - 21601,
+		'recovery_token' => 'dghFKJA6JvjTKLAwyE5w2XD9b2lmBXLE'
+	],
 ];

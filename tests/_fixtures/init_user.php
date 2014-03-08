@@ -20,4 +20,14 @@ return [
 		'confirmation_token' => 'NO2aCmBIjFQX624xmAc3VBu7Th3NJoa6',
 		'confirmation_sent_at' => $time
 	],
+	[
+		'username' => 'john',
+		'email' => 'john@example.com',
+		'password_hash' => '$2y$13$qY.ImaYBppt66qez6B31QO92jc5DYVRzo5NxM1ivItkW74WsSG6Ui',
+		'auth_key' => 'h6OS9csJbZEOW59ZILmJxU6bCiqVno9A',
+		'created_at' => $time - 86401,
+		'updated_at' => $time - 86401,
+		'confirmation_token' => 'qxYa315rqRgCOjYGk82GFHMEAV3T82AX',
+		'confirmation_sent_at' => $time - 86401
+	],
 ];

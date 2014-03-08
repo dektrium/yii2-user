@@ -33,7 +33,7 @@ class TestHelper extends Module
 	 * to use in acceptance and functional tests.
 	 * @param array $settings
 	 */
-	public function _beforeSuite($settings = array())
+	public function _beforeSuite($settings = [])
 	{
 		$this->mailcatcher = new Client('http://127.0.0.1:1080');
 		$this->cleanMessages();

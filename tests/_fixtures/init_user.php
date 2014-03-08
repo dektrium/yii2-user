@@ -30,4 +30,14 @@ return [
 		'confirmation_token' => 'qxYa315rqRgCOjYGk82GFHMEAV3T82AX',
 		'confirmation_sent_at' => $time - 86401
 	],
+	[
+		'username' => 'blocked',
+		'email' => 'blocked@example.com',
+		'password_hash' => '$2y$13$qY.ImaYBppt66qez6B31QO92jc5DYVRzo5NxM1ivItkW74WsSG6Ui',
+		'auth_key' => 'TnXTrtLdj-YJBlG2A6jFHJreKgbsLYCa',
+		'created_at' => $time,
+		'updated_at' => $time,
+		'blocked_at' => $time,
+		'confirmed_at' => $time
+	],
 ];

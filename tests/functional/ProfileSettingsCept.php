@@ -2,6 +2,7 @@
 
 use dektrium\user\tests\_pages\ProfileSettingsPage;
 use dektrium\user\tests\_pages\LoginPage;
+use dektrium\user\models\Profile;
 
 $I = new TestGuy($scenario);
 $I->wantTo('ensure that profile settings works');
@@ -20,7 +21,7 @@ $page = ProfileSettingsPage::openBy($I);
 $page->update($name, $public_email, $website, $location, $gravatar_email, $bio);
 
 $I->see('Profile updated successfully');
-$I->seeInDatabase('profile', [
+$I->seeRecord(Profile::className(), [
 	'user_id' => 1,
 	'name' => $name,
 	'public_email' => $public_email,

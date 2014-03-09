@@ -1,7 +1,7 @@
 <?php
 
-use tests\_pages\CreatePage;
-use tests\_pages\LoginPage;
+use dektrium\user\tests\_pages\CreatePage;
+use dektrium\user\tests\_pages\LoginPage;
 
 $I = new TestGuy($scenario);
 $I->wantTo('ensure that user creation works');

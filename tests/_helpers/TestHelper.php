@@ -2,6 +2,7 @@
 
 namespace Codeception\Module;
 
+use Codeception\TestCase;
 use dektrium\user\tests\_fixtures\ProfileFixture;
 use dektrium\user\tests\_fixtures\UserFixture;
 use Guzzle\Http\Client;
@@ -37,15 +38,18 @@ class TestHelper extends Module
 	{
 		$this->mailcatcher = new Client('http://127.0.0.1:1080');
 		$this->cleanMessages();
-		$this->loadFixtures();
 	}
 
-	/**
-	 * Method is called after all suite tests run
-	 */
-	public function _afterSuite()
+	public function _before(TestCase $test)
+	{
+		$this->loadFixtures();
+		parent::_before($test);
+	}
+
+	public function _after(TestCase $test)
 	{
 		$this->unloadFixtures();
+		parent::_after($test);
 	}
 
 	public function cleanMessages()

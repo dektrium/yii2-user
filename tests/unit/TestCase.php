@@ -19,6 +19,12 @@ class TestCase extends YiiTestCase
 		parent::setUp();
 	}
 
+	public function tearDown()
+	{
+		$this->unloadFixtures();
+		parent::tearDown();
+	}
+
 	public function cleanMessages()
 	{
 		$this->mailcatcher->delete('/messages')->send();

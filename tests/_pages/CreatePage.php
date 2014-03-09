@@ -1,6 +1,6 @@
 <?php
 
-namespace tests\_pages;
+namespace dektrium\user\tests\_pages;
 
 use yii\codeception\BasePage;
 

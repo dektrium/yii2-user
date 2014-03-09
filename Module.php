@@ -111,8 +111,7 @@ class Module extends BaseModule
 		parent::init();
 
 		if (\Yii::$app instanceof ConsoleApplication) {
-			$this->controllerNamespace = '\dektrium\user\commands';
-			$this->setControllerPath(__DIR__.'/commands');
+			$this->controllerNamespace = 'dektrium\user\commands';
 		}
 
 		\Yii::$app->getI18n()->translations['user*'] = [

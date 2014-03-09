@@ -22,5 +22,3 @@ $page->create('toster', 'toster@example.com', 'toster');
 $I->see('User has been created');
 $I->see('toster');
 $I->see('toster@example.com');
-
-Yii::$app->getUser()->logout();

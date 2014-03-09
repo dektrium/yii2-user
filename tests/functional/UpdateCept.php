@@ -15,5 +15,3 @@ $page->update('new_toster', 'new_toster@example.com');
 $I->see('User has been updated');
 $I->see('new_toster');
 $I->see('new_toster@example.com');
-
-Yii::$app->getUser()->logout();

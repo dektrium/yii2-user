@@ -2,6 +2,7 @@ Changelog
 =========
 
 ## v0.5.0 [Work in progress]
+- Refactored tests
 - Added user settings page
 - Updated admin views
 - Added account blocking

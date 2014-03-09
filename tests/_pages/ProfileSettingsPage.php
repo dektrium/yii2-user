@@ -1,6 +1,6 @@
 <?php
 
-namespace tests\_pages;
+namespace dektrium\user\tests\_pages;
 
 use yii\codeception\BasePage;
 
@@ -19,7 +19,7 @@ class ProfileSettingsPage extends BasePage
 	 * @param $gravatar_email
 	 * @param $bio
 	 */
-	public function update($name, $email, $website, $location, $gravatar_email, $bio)
+	public function update($name = null, $email = null, $website = null, $location = null, $gravatar_email = null, $bio = null)
 	{
 		$this->guy->fillField('#profile-name', $name);
 		$this->guy->fillField('#profile-public_email', $email);

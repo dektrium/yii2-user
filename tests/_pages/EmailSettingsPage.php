@@ -1,6 +1,6 @@
 <?php
 
-namespace tests\_pages;
+namespace dektrium\user\tests\_pages;
 
 use yii\codeception\BasePage;
 
@@ -15,7 +15,7 @@ class EmailSettingsPage extends BasePage
 	 * @param $currentPassword
 	 * @param $email
 	 */
-	public function update($currentPassword, $email)
+	public function updateEmail($currentPassword, $email)
 	{
 		$this->guy->fillField('#user-current_password', $currentPassword);
 		$this->guy->fillField('#user-unconfirmed_email', $email);

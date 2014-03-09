@@ -1,13 +1,12 @@
 <?php
 
-use tests\_pages\ProfileSettingsPage;
-use tests\_pages\LoginPage;
+use dektrium\user\tests\_pages\ProfileSettingsPage;
+use dektrium\user\tests\_pages\LoginPage;
 
 $I = new TestGuy($scenario);
 $I->wantTo('ensure that profile settings works');
 
 $loginPage = LoginPage::openBy($I);
-
 $loginPage->login('user@example.com', 'qwerty');
 
 $name = 'Tester';
@@ -30,5 +29,3 @@ $I->seeInDatabase('profile', [
 	'gravatar_email' => $gravatar_email,
 	'bio' => $bio
 ]);
-
-Yii::$app->getUser()->logout();

@@ -1,6 +1,6 @@
 <?php
 
-namespace tests\_pages;
+namespace dektrium\user\tests\_pages;
 
 use yii\codeception\BasePage;
 
@@ -15,7 +15,7 @@ class PasswordSettingsPage extends BasePage
 	 * @param $currentPassword
 	 * @param $password
 	 */
-	public function update($currentPassword, $password)
+	public function updatePassword($currentPassword, $password)
 	{
 		$this->guy->fillField('#user-current_password', $currentPassword);
 		$this->guy->fillField('#user-password', $password);

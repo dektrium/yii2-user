@@ -1,7 +1,7 @@
 <?php
 
-use tests\_pages\PasswordSettingsPage;
-use tests\_pages\LoginPage;
+use dektrium\user\tests\_pages\PasswordSettingsPage;
+use dektrium\user\tests\_pages\LoginPage;
 
 $I = new TestGuy($scenario);
 $I->wantTo('ensure that profile settings works');
@@ -9,20 +9,15 @@ $I->wantTo('ensure that profile settings works');
 $loginPage = LoginPage::openBy($I);
 $loginPage->login('user@example.com', 'qwerty');
 
+$I->amGoingTo('try to change current password');
 $page = PasswordSettingsPage::openBy($I);
-$page->update('wrong', 'new_password');
+$page->updatePassword('wrong', 'new_password');
 $I->see('Current password is not valid');
-
-$page->update('qwerty', 'new_password');
+$page->updatePassword('qwerty', 'new_password');
 $I->see('Password updated successfully');
 
-Yii::$app->getUser()->logout();
-
-$loginPage = LoginPage::openBy($I);
-$loginPage->login('user@example.com', 'qwerty');
-$I->see('Invalid login or password');
-
-$loginPage->login('user@example.com', 'new_password');
-$I->see('Logout');
-
-Yii::$app->getUser()->logout();
+$I->amGoingTo('try to change password back');
+$page->updatePassword('qwerty', 'qwerty');
+$I->see('Current password is not valid');
+$page->updatePassword('new_password', 'qwerty');
+$I->see('Password updated successfully');

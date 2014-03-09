@@ -34,7 +34,7 @@ class Login extends Model
 	/**
 	 * @var bool Whether to remember the user.
 	 */
-	public $rememberMe = true;
+	public $rememberMe = false;
 
 	/**
 	 * @var string

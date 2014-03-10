@@ -51,4 +51,15 @@ return [
 		'recovery_sent_at' => $time - 21601,
 		'recovery_token' => 'dghFKJA6JvjTKLAwyE5w2XD9b2lmBXLE'
 	],
+	[
+		'username' => 'alex',
+		'email' => 'alex@example.com',
+		'password_hash' => '$2y$13$qY.ImaYBppt66qez6B31QO92jc5DYVRzo5NxM1ivItkW74WsSG6Ui',
+		'auth_key' => 'zQh1A65We0AmHPOMiWN0WB0M90Q24ziU',
+		'created_at' => $time,
+		'updated_at' => $time,
+		'confirmed_at' => $time,
+		'recovery_token' => 'NO2aCmBIjFQX624xmAc3VBu7Th3NJoa6',
+		'recovery_sent_at' => $time
+	],
 ];

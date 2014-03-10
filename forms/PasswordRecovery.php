@@ -96,6 +96,30 @@ class PasswordRecovery extends Model
 	}
 
 	/**
+	 * Resets user's password.
+	 *
+	 * @return bool
+	 */
+	public function resetPassword()
+	{
+		if ($this->validate()) {
+			$this->_user->reset($this->password);
+			return true;
+		}
+
+		return false;
+	}
+
+	/**
+	 * @inheritdoc
+	 */
+	public function formName()
+	{
+		return 'recovery-form';
+	}
+
+
+	/**
 	 * @return null|\dektrium\user\Module
 	 */
 	protected function getModule()

@@ -19,6 +19,11 @@ class PasswordRecoveryRequest extends Model
 	public $email;
 
 	/**
+	 * @var string
+	 */
+	public $verifyCode;
+
+	/**
 	 * @var \dektrium\user\models\UserInterface
 	 */
 	private $_user;
@@ -59,6 +64,29 @@ class PasswordRecoveryRequest extends Model
 				'skipOnEmpty' => !in_array('recovery', $this->module->captcha)
 			]
 		];
+	}
+
+	/**
+	 * Sends recovery message.
+	 *
+	 * @return bool
+	 */
+	public function sendRecoveryMessage()
+	{
+		if ($this->validate()) {
+			$this->_user->sendRecoveryMessage();
+			return true;
+		}
+
+		return false;
+	}
+
+	/**
+	 * @inheritdoc
+	 */
+	public function formName()
+	{
+		return 'recovery-request-form';
 	}
 
 	/**

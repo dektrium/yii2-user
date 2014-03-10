@@ -11,6 +11,7 @@
 
 namespace dektrium\user\controllers;
 
+use yii\base\InvalidParamException;
 use yii\web\AccessControl;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
@@ -66,10 +67,9 @@ class RecoveryController extends Controller
 	 */
 	public function actionRequest()
 	{
-		$model = $this->module->factory->createForm('recovery', ['scenario' => 'request']);
+		$model = $this->module->factory->createForm('passwordRecoveryRequest');
 
-		if ($model->load(\Yii::$app->getRequest()->post()) && $model->validate()) {
-			$model->user->sendRecoveryMessage();
+		if ($model->load(\Yii::$app->getRequest()->post()) && $model->sendRecoveryMessage()) {
 			return $this->render('messageSent', [
 				'model' => $model
 			]);
@@ -90,21 +90,16 @@ class RecoveryController extends Controller
 	 */
 	public function actionReset($id, $token)
 	{
-		/** @var \dektrium\user\models\User $user */
-		$query = $this->module->factory->createUserQuery();
-		$user  = $query->where(['id' => $id, 'recovery_token' => $token])->one();
-		if ($user === null) {
-			throw new NotFoundHttpException();
-		} elseif ($user->getIsRecoveryPeriodExpired()) {
+		try {
+			$model = $this->module->factory->createForm('passwordRecovery', [
+				'id' => $id,
+				'token' => $token
+			]);
+		} catch (InvalidParamException $e) {
 			return $this->render('invalidToken');
 		}
 
-		$model = $this->module->factory->createForm('recovery', [
-			'scenario' => 'reset',
-			'user'     => $user
-		]);
-
-		if ($model->load(\Yii::$app->getRequest()->post()) && $model->reset()) {
+		if ($model->load(\Yii::$app->getRequest()->post()) && $model->resetPassword()) {
 			return $this->render('finish');
 		}
 

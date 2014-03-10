@@ -54,7 +54,13 @@ class Factory extends Component
 	/**
 	 * @var string
 	 */
-	public $recoveryFormClass = '\dektrium\user\forms\Recovery';
+	public $passwordRecoveryFormClass = '\dektrium\user\forms\PasswordRecovery';
+
+	/**
+	 * @var string
+	 */
+	public $passwordRecoveryRequestFormClass = '\dektrium\user\forms\PasswordRecoveryRequest';
+
 
 	/**
 	 * Creates new User model.

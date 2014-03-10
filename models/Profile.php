@@ -79,4 +79,12 @@ class Profile extends ActiveRecord
 			return false;
 		}
 	}
+
+	/**
+	 * @return \yii\db\ActiveQueryInterface
+	 */
+	public function getUser()
+	{
+		return $this->hasOne('\dektrium\user\models\User', ['id' => 'user_id']);
+	}
 }

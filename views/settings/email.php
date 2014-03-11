@@ -1,5 +1,7 @@
 <?php
 
+use yii\helpers\Url;
+
 /**
  * @var yii\web\View $this
  * @var yii\widgets\ActiveForm $form
@@ -44,7 +46,7 @@ $this->params['breadcrumbs'][] = $this->title;
 			<div class="panel-body">
 				<?php if (!empty($model->unconfirmed_email)): ?>
 					<div class="alert alert-warning"><?= Yii::t('user', 'Before your email will be changed we need you to confirm your new email address') ?>
-						<?= \yii\helpers\Html::a(Yii::t('user', 'Cancel email change'), $this->context->createUrl('reset'), ['class' => 'btn btn-danger btn-xs', 'data-method' => 'post']) ?>
+						<?= \yii\helpers\Html::a(Yii::t('user', 'Cancel email change'), Url::to(['reset']), ['class' => 'btn btn-danger btn-xs', 'data-method' => 'post']) ?>
 					</div>
 				<?php endif; ?>
 				<?php $form = \yii\widgets\ActiveForm::begin([

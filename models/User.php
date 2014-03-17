@@ -12,6 +12,7 @@
 namespace dektrium\user\models;
 
 use yii\base\NotSupportedException;
+use yii\behaviors\TimestampBehavior;
 use yii\db\ActiveRecord;
 use yii\helpers\Security;
 
@@ -41,6 +42,9 @@ use yii\helpers\Security;
  */
 class User extends ActiveRecord implements UserInterface
 {
+	const EVENT_BEFORE_REGISTER = 'before_register';
+	const EVENT_AFTER_REGISTER = 'after_register';
+
 	/**
 	 * @var string Plain password. Used for model validation.
 	 */
@@ -62,6 +66,14 @@ class User extends ActiveRecord implements UserInterface
 	private $_module;
 
 	/**
+	 * @return \yii\db\ActiveQueryInterface
+	 */
+	public function getProfile()
+	{
+		return $this->hasOne($this->_module->factory->profileClass, ['user_id' => 'id']);
+	}
+
+	/**
 	 * @inheritdoc
 	 */
 	public static function createQuery($config = [])
@@ -78,6 +90,16 @@ class User extends ActiveRecord implements UserInterface
 			'password' => \Yii::t('user', 'Password'),
 			'created_at' => \Yii::t('user', 'Registration time'),
 			'registered_from' => \Yii::t('user', 'Registered from'),
+		];
+	}
+
+	/**
+	 * @inheritdoc
+	 */
+	public function behaviors()
+	{
+		return [
+			TimestampBehavior::className(),
 		];
 	}
 
@@ -148,42 +170,6 @@ class User extends ActiveRecord implements UserInterface
 	/**
 	 * @inheritdoc
 	 */
-	public function beforeSave($insert)
-	{
-		if (parent::beforeSave($insert)) {
-			if (($this->getModule()->generatePassword || $this->isAttributeSafe('password')) && !empty($this->password)) {
-				$this->setAttribute('password_hash', Security::generatePasswordHash($this->password, $this->getModule()->cost));
-			}
-			if ($this->isNewRecord) {
-				$this->setAttribute('auth_key', Security::generateRandomKey());
-				$this->setAttribute('created_at', time());
-				$this->setAttribute('role', $this->getModule()->defaultRole);
-			}
-			$this->setAttribute('updated_at', time());
-
-			return true;
-		} else {
-			return false;
-		}
-	}
-
-	/**
-	 * @inheritdoc
-	 */
-	public function afterSave($insert)
-	{
-		if ($insert) {
-			$profile = new Profile();
-			$profile->user_id = $this->id;
-			$profile->gravatar_email = $this->email;
-			$profile->save(false);
-		}
-		parent::afterSave($insert);
-	}
-
-	/**
-	 * @inheritdoc
-	 */
 	public static function tableName()
 	{
 		return '{{%user}}';
@@ -230,6 +216,41 @@ class User extends ActiveRecord implements UserInterface
 	}
 
 	/**
+	 * This method is called at the beginning of user registration process.
+	 */
+	protected function beforeRegister()
+	{
+		$this->trigger(self::EVENT_BEFORE_REGISTER);
+		if ($this->_module->generatePassword) {
+			$this->password = $this->generatePassword(8);
+		}
+		if ($this->_module->trackable) {
+			$this->setAttribute('registered_from', ip2long(\Yii::$app->getRequest()->getUserIP()));
+		}
+		if ($this->_module->confirmable) {
+			$this->generateConfirmationData();
+		}
+	}
+
+	/**
+	 * This method is called at the end of user registration process.
+	 */
+	protected function afterRegister()
+	{
+		if ($this->_module->generatePassword) {
+			$this->sendMessage($this->email, \Yii::t('user', 'Welcome to {sitename}', ['sitename' => \Yii::$app->name]),
+				'welcome', ['user' => $this, 'password' => $this->password]
+			);
+		}
+		if ($this->_module->confirmable) {
+			$this->sendMessage($this->email, \Yii::t('user', 'Please confirm your account'),
+				'confirmation',	['user' => $this]
+			);
+		}
+		$this->trigger(self::EVENT_AFTER_REGISTER);
+	}
+
+	/**
 	 * Registers a user.
 	 *
 	 * @return bool
@@ -242,23 +263,18 @@ class User extends ActiveRecord implements UserInterface
 		}
 
 		if ($this->validate()) {
-			$module = $this->getModule();
-			if ($module->generatePassword) {
-				$this->password = $this->generatePassword(8);
-				$this->sendMessage($this->email, \Yii::t('user', 'Welcome to {sitename}', ['sitename' => \Yii::$app->name]), 'welcome', ['user' => $this, 'password' => $this->password]);
-			}
-
-			if ($module->trackable) {
-				$this->setAttribute('registered_from', ip2long(\Yii::$app->getRequest()->getUserIP()));
-			}
-
-			if ($module->confirmable) {
-				$this->generateConfirmationData();
-				$isSaved = $this->save(false);
-				$this->sendMessage($this->email, \Yii::t('user', 'Please confirm your account'), 'confirmation', ['user' => $this]);
-				return $isSaved;
-			} else {
-				return $this->save(false);
+			$this->beforeRegister();
+			$this->setAttribute('password_hash', Security::generatePasswordHash($this->password, $this->_module->cost));
+			$this->setAttribute('auth_key', Security::generateRandomKey());
+			$this->setAttribute('role', $this->getModule()->defaultRole);
+			if ($this->save(false)) {
+				$profile = $this->_module->factory->createProfile([
+					'user_id' => $this->id,
+					'gravatar_email' => $this->email
+				]);
+				$profile->save(false);
+				$this->afterRegister();
+				return true;
 			}
 		}
 

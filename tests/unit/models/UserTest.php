@@ -3,6 +3,7 @@
 namespace dektrium\user\tests\models;
 
 use Codeception\Specify;
+use dektrium\user\models\Profile;
 use dektrium\user\models\User;
 use dektrium\user\tests\_fixtures\UserFixture;
 use dektrium\user\tests\unit\TestCase;
@@ -100,6 +101,15 @@ class UserTest extends TestCase
 			verify($user->password)->notNull();
 			verify($user->password_hash)->notNull();
 			verify(Security::validatePassword($user->password, $user->password_hash))->true();
+		});
+
+		$this->specify('profile should be created after registration', function () {
+			$user = new User(['scenario' => 'register']);
+			$user->username = 'john_doe';
+			$user->email = 'john_doe@example.com';
+			$user->password = 'qwerty';
+			verify($user->register())->true();
+			verify($user->profile->gravatar_email)->equals('john_doe@example.com');
 		});
 	}
 

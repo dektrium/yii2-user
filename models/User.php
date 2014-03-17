@@ -11,6 +11,7 @@
 
 namespace dektrium\user\models;
 
+use dektrium\user\helpers\Password;
 use yii\base\NotSupportedException;
 use yii\behaviors\TimestampBehavior;
 use yii\db\ActiveRecord;
@@ -162,7 +163,7 @@ class User extends ActiveRecord implements UserInterface
 	 */
 	public function validateCurrentPassword()
 	{
-		if (!empty($this->current_password) && !Security::validatePassword($this->current_password, $this->password_hash)) {
+		if (!empty($this->current_password) && !Password::validate($this->current_password, $this->password_hash)) {
 			$this->addError('current_password', \Yii::t('user', 'Current password is not valid'));
 		}
 	}
@@ -222,10 +223,10 @@ class User extends ActiveRecord implements UserInterface
 	{
 		$this->trigger(self::EVENT_BEFORE_REGISTER);
 		if ($this->_module->generatePassword) {
-			$this->password = $this->generatePassword(8);
+			$this->password = Password::generate(8);
 		}
 		if ($this->_module->trackable) {
-			$this->setAttribute('registered_from', ip2long(\Yii::$app->getRequest()->getUserIP()));
+			$this->setAttribute('registered_from', ip2long(\Yii::$app->request->userIP));
 		}
 		if ($this->_module->confirmable) {
 			$this->generateConfirmationData();
@@ -264,7 +265,7 @@ class User extends ActiveRecord implements UserInterface
 
 		if ($this->validate()) {
 			$this->beforeRegister();
-			$this->setAttribute('password_hash', Security::generatePasswordHash($this->password, $this->_module->cost));
+			$this->setAttribute('password_hash', Password::hash($this->password));
 			$this->setAttribute('auth_key', Security::generateRandomKey());
 			$this->setAttribute('role', $this->getModule()->defaultRole);
 			if ($this->save(false)) {
@@ -279,37 +280,6 @@ class User extends ActiveRecord implements UserInterface
 		}
 
 		return false;
-	}
-
-	/**
-	 * Generates user-friendly random password containing at least one lower case letter, one uppercase letter and one
-	 * digit. The remaining characters in the password are chosen at random from those four sets.
-	 * @see https://gist.github.com/tylerhall/521810
-	 * @param $length
-	 * @return string
-	 */
-	protected function generatePassword($length)
-	{
-		$sets = [
-			'abcdefghjkmnpqrstuvwxyz',
-			'ABCDEFGHJKMNPQRSTUVWXYZ',
-			'23456789'
-		];
-		$all = '';
-		$password = '';
-		foreach($sets as $set) {
-			$password .= $set[array_rand(str_split($set))];
-			$all .= $set;
-		}
-
-		$all = str_split($all);
-		for ($i = 0; $i < $length - count($sets); $i++) {
-			$password .= $all[array_rand($all)];
-		}
-
-		$password = str_shuffle($password);
-
-		return $password;
 	}
 
 	/**

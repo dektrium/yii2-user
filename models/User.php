@@ -16,6 +16,7 @@ use yii\base\NotSupportedException;
 use yii\behaviors\TimestampBehavior;
 use yii\db\ActiveRecord;
 use yii\helpers\Security;
+use yii\helpers\Url;
 
 /**
  * User ActiveRecord model.
@@ -377,11 +378,10 @@ class User extends ActiveRecord implements UserInterface
 	 */
 	public function getConfirmationUrl()
 	{
-		return $this->getIsConfirmed() ? null :
-			\Yii::$app->getUrlManager()->createAbsoluteUrl(['/user/registration/confirm',
+		return $this->getIsConfirmed() ? null : Url::toRoute(['/user/registration/confirm',
 				'id'    => $this->id,
 				'token' => $this->confirmation_token
-			]);
+			], true);
 	}
 
 	/**
@@ -389,11 +389,10 @@ class User extends ActiveRecord implements UserInterface
 	 */
 	public function getReconfirmationUrl()
 	{
-		return is_null($this->unconfirmed_email) ? null :
-			\Yii::$app->getUrlManager()->createAbsoluteUrl(['/user/registration/confirm',
+		return is_null($this->unconfirmed_email) ? null : Url::toRoute(['/user/registration/confirm',
 				'id'    => $this->id,
 				'token' => $this->confirmation_token
-			]);
+			], true);
 	}
 
 	/**
@@ -447,10 +446,10 @@ class User extends ActiveRecord implements UserInterface
 	 */
 	public function getRecoveryUrl()
 	{
-		return \Yii::$app->getUrlManager()->createAbsoluteUrl(['/user/recovery/reset',
+		return Url::toRoute(['/user/recovery/reset',
 			'id' => $this->id,
 			'token' => $this->recovery_token
-		]);
+		], true);
 	}
 
 	/**

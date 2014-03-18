@@ -28,9 +28,9 @@ class CleanController extends Controller
      */
     public function actionTokens()
     {
-        if ($this->confirm('Are you sure?', true)) {
+        if ($this->confirm(\Yii::t('user', 'Are you sure?'), true)) {
             /** @var \dektrium\user\models\User[] $users */
-            $query = $this->module->factory->createQuery();
+            $query = $this->module->factory->createUserQuery();
             $users = $query->where('confirmation_token IS NOT NULL')
                            ->orWhere('recovery_token IS NOT NULL')
                            ->all();
@@ -38,15 +38,15 @@ class CleanController extends Controller
             foreach ($users as $user) {
                 if (!$user->getIsConfirmed() && $user->getIsConfirmationPeriodExpired()) {
                     $user->confirmation_token = null;
-                    $user->confirmation_sent_time = null;
+                    $user->confirmation_sent_at = null;
                 }
                 if ($user->getIsRecoveryPeriodExpired()) {
                     $user->recovery_token = null;
-                    $user->recovery_sent_time = null;
+                    $user->recovery_sent_at = null;
                 }
                 $user->save(false);
             }
-            $this->stdout("Finished! All tokens have been deleted\n", Console::FG_GREEN);
+            $this->stdout(\Yii::t('user', 'Finished! All tokens have been deleted') . "\n", Console::FG_GREEN);
         }
     }
 
@@ -57,18 +57,18 @@ class CleanController extends Controller
      */
     public function actionUnconfirmed($days = 7)
     {
-        if ($this->confirm('Are you sure?')) {
+        if ($this->confirm(\Yii::t('user', 'Are you sure?'))) {
             $count = 0;
             /** @var \dektrium\user\models\User[] $users */
-            $query = $this->module->factory->createQuery();
+            $query = $this->module->factory->createUserQuery();
             $users = $query->where(['confirmation_time' => null])->all();
             foreach ($users as $user) {
-                if (!$user->getIsConfirmed() && $user->getIsConfirmationPeriodExpired() && ($user->create_time + $days * 24 * 3600) < time()) {
+                if (!$user->getIsConfirmed() && $user->getIsConfirmationPeriodExpired() && ($user->created_at + $days * 24 * 3600) < time()) {
                     $user->delete();
                     $count++;
                 }
             }
-            $this->stdout("Finished! $count users have been deleted.\n", Console::FG_GREEN);
+            $this->stdout(\Yii::t('user', 'Finished! {count} users have been deleted', ['count' => $count]) . "\n", Console::FG_GREEN);
         }
     }
 }

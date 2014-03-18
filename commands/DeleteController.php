@@ -30,17 +30,17 @@ class DeleteController extends Controller
      */
     public function actionIndex($email)
     {
-        if ($this->confirm('Are you sure? Deleted user can not be restored!')) {
-            $query = $this->module->factory->createQuery();
+        if ($this->confirm(\Yii::t('user', 'Are you sure? Deleted user can not be restored!'))) {
+            $query = $this->module->factory->createUserQuery();
             /** @var \dektrium\user\models\User $user */
             $user = $query->where(['email' => $email])->one();
             if ($user === null) {
-                $this->stdout("User is not found!\n", Console::FG_RED);
+                $this->stdout(\Yii::t('user', 'User is not found!') . "\n", Console::FG_RED);
             } else {
                 if ($user->delete()) {
-                    $this->stdout("User has been deleted!\n", Console::FG_GREEN);
+                    $this->stdout("\n", Console::FG_GREEN);
                 } else {
-                    $this->stdout("Error occurred while deleting user\n", Console::FG_RED);
+                    $this->stdout(\Yii::t('user', 'Error occurred while deleting user!') . "\n", Console::FG_RED);
                 }
             }
         }

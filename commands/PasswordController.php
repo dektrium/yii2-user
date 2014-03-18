@@ -31,16 +31,16 @@ class PasswordController extends Controller
      */
     public function actionIndex($email, $password)
     {
-        $query = $this->module->factory->createQuery();
+        $query = $this->module->factory->createUserQuery();
         /** @var \dektrium\user\models\User $user */
         $user = $query->where(['email' => $email])->one();
         if ($user === null) {
-            $this->stdout("User is not found!\n", Console::FG_RED);
+            $this->stdout(\Yii::t('user', 'User is not found!') . "\n", Console::FG_RED);
         } else {
             if ($user->resetPassword($password)) {
-                $this->stdout("Password has been changed!\n", Console::FG_GREEN);
+                $this->stdout(\Yii::t('user', 'Password has been changed!') . "\n", Console::FG_GREEN);
             } else {
-                $this->stdout("Error occurred while changing password\n", Console::FG_RED);
+                $this->stdout(\Yii::t('user', 'Error occurred while changing password!') . "\n", Console::FG_RED);
             }
         }
     }

@@ -38,23 +38,22 @@ class CreateController extends Controller
     public function actionIndex($email, $username, $password = null)
     {
         $this->module->trackable = false; // trackable should be disabled
-        $this->module->generatePassword = is_null($password);
         $this->module->confirmable = $this->confirmable;
         /** @var \dektrium\user\models\User $user */
         $user = $this->module->factory->createUser();
-        $user->scenario = 'register';
+        $user->scenario = is_null($password) ? 'short_register' : 'register';
         $user->setAttributes([
             'email'    => $email,
             'username' => $username,
             'password' => $password
         ]);
         if (!$this->confirmable) {
-            $user->confirmation_time = time();
+            $user->confirmed_at = time();
         }
         if ($user->register()) {
-            $this->stdout("User has been created!\n", Console::FG_GREEN);
+            $this->stdout(\Yii::t('user', 'User has been created') . "!\n", Console::FG_GREEN);
         } else {
-            $this->stdout("Please fix following errors:\n", Console::FG_RED);
+            $this->stdout(\Yii::t('user', 'Please fix following errors:') . "\n", Console::FG_RED);
             foreach ($user->errors as $errors) {
                 foreach ($errors as $error) {
                     $this->stdout(" - ".$error."\n", Console::FG_RED);
@@ -66,8 +65,8 @@ class CreateController extends Controller
     /**
      * @inheritdoc
      */
-    public function globalOptions()
+    public function options($id)
     {
-        return array_merge(parent::globalOptions(), ['confirmation']);
+        return array_merge(parent::options($id), ['confirmable']);
     }
 }

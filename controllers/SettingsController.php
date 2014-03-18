@@ -126,7 +126,7 @@ class SettingsController extends Controller
 		$model = $query->where(['id' => \Yii::$app->getUser()->getIdentity()->getId()])->one();
 		$model->scenario = 'passwordSettings';
 
-		if ($model->load(\Yii::$app->getRequest()->post()) && $model->save()) {
+		if ($model->load(\Yii::$app->getRequest()->post()) && $model->updatePassword()) {
 			\Yii::$app->getSession()->setFlash('settings_saved', \Yii::t('user', 'Password updated successfully'));
 			$this->refresh();
 		}

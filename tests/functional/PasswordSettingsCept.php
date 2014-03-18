@@ -4,7 +4,7 @@ use dektrium\user\tests\_pages\PasswordSettingsPage;
 use dektrium\user\tests\_pages\LoginPage;
 
 $I = new TestGuy($scenario);
-$I->wantTo('ensure that profile settings works');
+$I->wantTo('ensure that password settings works');
 
 $loginPage = LoginPage::openBy($I);
 $loginPage->login('user@example.com', 'qwerty');

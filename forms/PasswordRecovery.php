@@ -103,7 +103,7 @@ class PasswordRecovery extends Model
 	public function resetPassword()
 	{
 		if ($this->validate()) {
-			$this->_user->reset($this->password);
+			$this->_user->resetPassword($this->password);
 			return true;
 		}
 

@@ -17,7 +17,7 @@ use yii\helpers\Html;
 	<?= Yii::t('user', 'To complete the process, please click the link below') ?>
 </p>
 <p style="font-family: 'Helvetica Neue', 'Helvetica', Helvetica, Arial, sans-serif; font-size: 14px; line-height: 1.6; font-weight: normal; margin: 0 0 10px; padding: 0;">
-	<?= Html::a(Html::encode($user->getReconfirmationUrl()), $user->getReconfirmationUrl()); ?>
+	<?= Html::a(Html::encode($user->getConfirmationUrl()), $user->getConfirmationUrl()); ?>
 </p>
 <p style="font-family: 'Helvetica Neue', 'Helvetica', Helvetica, Arial, sans-serif; font-size: 14px; line-height: 1.6; font-weight: normal; margin: 0 0 10px; padding: 0;">
 	<?= Yii::t('user', 'If you have problems, please paste the above URL into your web browser') ?>

@@ -39,6 +39,14 @@ use yii\helpers\Url;
  * @property string  $role
  * @property integer $created_at
  * @property integer $updated_at
+ * @property string  $confirmationUrl
+ * @property boolean $isConfirmed
+ * @property boolean $isConfirmationPeriodExpired
+ * @property string  $recoveryUrl
+ * @property boolean $isRecoveryPeriodExpired
+ * @property boolean $isBlocked
+ *
+ * @property \dektrium\user\Module $module
  *
  * @author Dmitry Erofeev <dmeroff@gmail.com>
  */
@@ -118,7 +126,6 @@ class User extends ActiveRecord implements UserInterface
 			'register' => $attributes,
 			'create'   => ['username', 'email', 'password', 'role'],
 			'update'   => ['username', 'email', 'password', 'role'],
-			'reset'    => ['password'],
 			'passwordSettings' => ['current_password', 'password'],
 			'emailSettings' => ['unconfirmed_email', 'current_password'],
 		];
@@ -130,8 +137,8 @@ class User extends ActiveRecord implements UserInterface
 	public function rules()
 	{
 		$rules = [
-			[['username', 'email', 'password'], 'required', 'on' => ['create']],
-			[['username', 'email'], 'required', 'on' => ['update']],
+			[['username', 'email'], 'required', 'on' => ['create', 'update']],
+			['password', 'required', 'on' => ['create']],
 			['email', 'email'],
 			[['username', 'email'], 'unique'],
 			['username', 'match', 'pattern' => '/^[a-zA-Z]\w+$/'],
@@ -321,6 +328,21 @@ class User extends ActiveRecord implements UserInterface
 	}
 
 	/**
+	 * Updates user's password.
+	 *
+	 * @return bool
+	 */
+	public function updatePassword()
+	{
+		if ($this->validate()) {
+			$this->password_hash = Password::hash($this->password);
+			return $this->save(false);
+		}
+
+		return false;
+	}
+
+	/**
 	 * Confirms a user by setting it's "confirmation_time" to actual time
 	 *
 	 * @param bool $runValidation Whether to check if user has already been confirmed or confirmation token expired.
@@ -378,21 +400,11 @@ class User extends ActiveRecord implements UserInterface
 	 */
 	public function getConfirmationUrl()
 	{
-		return $this->getIsConfirmed() ? null : Url::toRoute(['/user/registration/confirm',
-				'id'    => $this->id,
-				'token' => $this->confirmation_token
-			], true);
-	}
+		if (is_null($this->confirmation_token)) {
+			return null;
+		}
 
-	/**
-	 * @return null|string Reconfirmation url.
-	 */
-	public function getReconfirmationUrl()
-	{
-		return is_null($this->unconfirmed_email) ? null : Url::toRoute(['/user/registration/confirm',
-				'id'    => $this->id,
-				'token' => $this->confirmation_token
-			], true);
+		return Url::toRoute(['/user/registration/confirm', 'id' => $this->id, 'token' => $this->confirmation_token], true);
 	}
 
 	/**
@@ -421,12 +433,13 @@ class User extends ActiveRecord implements UserInterface
 	 * @param  string $password
 	 * @return bool
 	 */
-	public function reset($password)
+	public function resetPassword($password)
 	{
-		$this->scenario = 'reset';
-		$this->password = $password;
-		$this->recovery_token = null;
-		$this->recovery_sent_at = null;
+		$this->setAttributes([
+			'password_hash'    => Password::hash($password),
+			'recovery_token'   => null,
+			'recovery_sent_at' => null
+		], false);
 
 		return $this->save(false);
 	}

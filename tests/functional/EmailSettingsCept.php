@@ -26,7 +26,7 @@ $I->seeRecord(User::className(), [
 $user = $I->grabRecord(User::className(), ['id' => 1]);
 $email = $I->getLastMessage();
 $I->seeEmailIsSent();
-$I->seeEmailHtmlContains(Html::encode($user->getReconfirmationUrl()), $email);
+$I->seeEmailHtmlContains(Html::encode($user->getConfirmationUrl()), $email);
 
 Yii::$app->getUser()->logout();
 

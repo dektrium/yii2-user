@@ -62,7 +62,7 @@ interface UserInterface extends IdentityInterface
 	 * @param $password
 	 * @return bool
 	 */
-	public function reset($password);
+	public function resetPassword($password);
 
 	/**
 	 * Sends recovery password instructions by email.

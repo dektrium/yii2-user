@@ -213,7 +213,7 @@ class UserTest extends TestCase
 			$this->assertEmailIsSent();
 			$this->assertEmailRecipientsContain('<another_email@example.com>', $email);
 			$this->assertEmailSubjectContains('Please confirm your email', $email);
-			$this->assertEmailHtmlContains(Html::encode($this->user->getReconfirmationUrl()), $email);
+			$this->assertEmailHtmlContains(Html::encode($this->user->getConfirmationUrl()), $email);
 		});
 
 		$this->specify('email reconfirmation should be reset', function () {
@@ -227,6 +227,7 @@ class UserTest extends TestCase
 
 	public function testRecoverable()
 	{
+		\Yii::$app->getModule('user')->recoverable = true;
 		$this->user = User::find(1);
 		$this->user->sendRecoveryMessage();
 

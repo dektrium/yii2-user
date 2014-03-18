@@ -37,7 +37,7 @@ class PasswordController extends Controller
 		if ($user === null) {
 			$this->stdout("User is not found!\n", Console::FG_RED);
 		} else {
-			if ($user->reset($password)) {
+			if ($user->resetPassword($password)) {
 				$this->stdout("Password has been changed!\n", Console::FG_GREEN);
 			} else {
 				$this->stdout("Error occurred while changing password\n", Console::FG_RED);

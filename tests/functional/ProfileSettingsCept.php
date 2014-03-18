@@ -22,11 +22,11 @@ $page->update($name, $public_email, $website, $location, $gravatar_email, $bio);
 
 $I->see('Profile updated successfully');
 $I->seeRecord(Profile::className(), [
-	'user_id' => 1,
-	'name' => $name,
-	'public_email' => $public_email,
-	'website' => $website,
-	'location' => $location,
-	'gravatar_email' => $gravatar_email,
-	'bio' => $bio
+    'user_id' => 1,
+    'name' => $name,
+    'public_email' => $public_email,
+    'website' => $website,
+    'location' => $location,
+    'gravatar_email' => $gravatar_email,
+    'bio' => $bio
 ]);

@@ -26,113 +26,115 @@ use yii\web\VerbFilter;
  */
 class SettingsController extends Controller
 {
-	/**
-	 * @inheritdoc
-	 */
-	public $defaultAction = 'profile';
+    /**
+     * @inheritdoc
+     */
+    public $defaultAction = 'profile';
 
-	/**
-	 * @inheritdoc
-	 */
-	public function behaviors()
-	{
-		return [
-			'verbs' => [
-				'class' => VerbFilter::className(),
-				'actions' => [
-					'reset' => ['post'],
-				],
-			],
-			'access' => [
-				'class' => AccessControl::className(),
-				'rules' => [
-					[
-						'allow' => true,
-						'actions' => ['profile', 'email', 'password', 'reset'],
-						'roles' => ['@']
-					],
-				]
-			],
-		];
-	}
+    /**
+     * @inheritdoc
+     */
+    public function behaviors()
+    {
+        return [
+            'verbs' => [
+                'class' => VerbFilter::className(),
+                'actions' => [
+                    'reset' => ['post'],
+                ],
+            ],
+            'access' => [
+                'class' => AccessControl::className(),
+                'rules' => [
+                    [
+                        'allow' => true,
+                        'actions' => ['profile', 'email', 'password', 'reset'],
+                        'roles' => ['@']
+                    ],
+                ]
+            ],
+        ];
+    }
 
-	/**
-	 * Shows profile settings form.
-	 *
-	 * @return string|\yii\web\Response
-	 */
-	public function actionProfile()
-	{
-		$query = $this->module->factory->createProfileQuery();
-		$model = $query->where(['user_id' => \Yii::$app->getUser()->getIdentity()->getId()])->one();
+    /**
+     * Shows profile settings form.
+     *
+     * @return string|\yii\web\Response
+     */
+    public function actionProfile()
+    {
+        $query = $this->module->factory->createProfileQuery();
+        $model = $query->where(['user_id' => \Yii::$app->getUser()->getIdentity()->getId()])->one();
 
-		if ($model->load(\Yii::$app->getRequest()->post()) && $model->save()) {
-			\Yii::$app->getSession()->setFlash('settings_saved', \Yii::t('user', 'Profile updated successfully'));
-			return $this->refresh();
-		}
+        if ($model->load(\Yii::$app->getRequest()->post()) && $model->save()) {
+            \Yii::$app->getSession()->setFlash('settings_saved', \Yii::t('user', 'Profile updated successfully'));
 
-		return $this->render('profile', [
-			'model' => $model
-		]);
-	}
+            return $this->refresh();
+        }
 
-	/**
-	 * Shows email settings form.
-	 *
-	 * @return string|\yii\web\Response
-	 */
-	public function actionEmail()
-	{
-		$query = $this->module->factory->createUserQuery();
-		$model = $query->where(['id' => \Yii::$app->getUser()->getIdentity()->getId()])->one();
-		$model->scenario = 'update_email';
+        return $this->render('profile', [
+            'model' => $model
+        ]);
+    }
 
-		if ($model->load(\Yii::$app->getRequest()->post()) && $model->updateEmail()) {
-			$this->refresh();
-		}
+    /**
+     * Shows email settings form.
+     *
+     * @return string|\yii\web\Response
+     */
+    public function actionEmail()
+    {
+        $query = $this->module->factory->createUserQuery();
+        $model = $query->where(['id' => \Yii::$app->getUser()->getIdentity()->getId()])->one();
+        $model->scenario = 'update_email';
 
-		return $this->render('email', [
-			'model' => $model
-		]);
-	}
+        if ($model->load(\Yii::$app->getRequest()->post()) && $model->updateEmail()) {
+            $this->refresh();
+        }
 
-	/**
-	 * Resets email update.
-	 *
-	 * @return \yii\web\Response
-	 * @throws \yii\web\NotFoundHttpException
-	 */
-	public function actionReset()
-	{
-		if ($this->module->confirmable) {
-			$query = $this->module->factory->createUserQuery();
-			$model = $query->where(['id' => \Yii::$app->getUser()->getIdentity()->getId()])->one();
-			$model->resetEmailUpdate();
-			\Yii::$app->getSession()->setFlash('settings_saved', \Yii::t('user', 'Email change has been cancelled'));
-			return $this->redirect(['email']);
-		}
+        return $this->render('email', [
+            'model' => $model
+        ]);
+    }
 
-		throw new NotFoundHttpException;
-	}
+    /**
+     * Resets email update.
+     *
+     * @return \yii\web\Response
+     * @throws \yii\web\NotFoundHttpException
+     */
+    public function actionReset()
+    {
+        if ($this->module->confirmable) {
+            $query = $this->module->factory->createUserQuery();
+            $model = $query->where(['id' => \Yii::$app->getUser()->getIdentity()->getId()])->one();
+            $model->resetEmailUpdate();
+            \Yii::$app->getSession()->setFlash('settings_saved', \Yii::t('user', 'Email change has been cancelled'));
 
-	/**
-	 * Shows password settings form.
-	 *
-	 * @return string|\yii\web\Response
-	 */
-	public function actionPassword()
-	{
-		$query = $this->module->factory->createUserQuery();
-		$model = $query->where(['id' => \Yii::$app->getUser()->getIdentity()->getId()])->one();
-		$model->scenario = 'update_password';
+            return $this->redirect(['email']);
+        }
 
-		if ($model->load(\Yii::$app->getRequest()->post()) && $model->updatePassword()) {
-			\Yii::$app->getSession()->setFlash('settings_saved', \Yii::t('user', 'Password updated successfully'));
-			$this->refresh();
-		}
+        throw new NotFoundHttpException;
+    }
 
-		return $this->render('password', [
-			'model' => $model
-		]);
-	}
+    /**
+     * Shows password settings form.
+     *
+     * @return string|\yii\web\Response
+     */
+    public function actionPassword()
+    {
+        $query = $this->module->factory->createUserQuery();
+        $model = $query->where(['id' => \Yii::$app->getUser()->getIdentity()->getId()])->one();
+        $model->scenario = 'update_password';
+
+        if ($model->load(\Yii::$app->getRequest()->post()) && $model->updatePassword()) {
+            \Yii::$app->getSession()->setFlash('settings_saved', \Yii::t('user', 'Password updated successfully'));
+            $this->refresh();
+        }
+
+        return $this->render('password', [
+            'model' => $model
+        ]);
+    }
 }

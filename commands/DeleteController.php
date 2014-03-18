@@ -23,26 +23,26 @@ use yii\helpers\Console;
  */
 class DeleteController extends Controller
 {
-	/**
-	 * Deletes a user by email.
-	 *
-	 * @param string $email
-	 */
-	public function actionIndex($email)
-	{
-		if ($this->confirm('Are you sure? Deleted user can not be restored!')) {
-			$query = $this->module->factory->createQuery();
-			/** @var \dektrium\user\models\User $user */
-			$user = $query->where(['email' => $email])->one();
-			if ($user === null) {
-				$this->stdout("User is not found!\n", Console::FG_RED);
-			} else {
-				if ($user->delete()) {
-					$this->stdout("User has been deleted!\n", Console::FG_GREEN);
-				} else {
-					$this->stdout("Error occurred while deleting user\n", Console::FG_RED);
-				}
-			}
-		}
-	}
+    /**
+     * Deletes a user by email.
+     *
+     * @param string $email
+     */
+    public function actionIndex($email)
+    {
+        if ($this->confirm('Are you sure? Deleted user can not be restored!')) {
+            $query = $this->module->factory->createQuery();
+            /** @var \dektrium\user\models\User $user */
+            $user = $query->where(['email' => $email])->one();
+            if ($user === null) {
+                $this->stdout("User is not found!\n", Console::FG_RED);
+            } else {
+                if ($user->delete()) {
+                    $this->stdout("User has been deleted!\n", Console::FG_GREEN);
+                } else {
+                    $this->stdout("Error occurred while deleting user\n", Console::FG_RED);
+                }
+            }
+        }
+    }
 }

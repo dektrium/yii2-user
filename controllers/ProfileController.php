@@ -23,54 +23,54 @@ use yii\web\Controller;
  */
 class ProfileController extends Controller
 {
-	/**
-	 * @inheritdoc
-	 */
-	public function behaviors()
-	{
-		return [
-			'access' => [
-				'class' => AccessControl::className(),
-				'rules' => [
-					[
-						'allow' => true,
-						'actions' => ['index'],
-						'roles' => ['@']
-					],
-					[
-						'allow' => true,
-						'actions' => ['show'],
-						'roles' => ['?', '@']
-					],
-				]
-			],
-		];
-	}
+    /**
+     * @inheritdoc
+     */
+    public function behaviors()
+    {
+        return [
+            'access' => [
+                'class' => AccessControl::className(),
+                'rules' => [
+                    [
+                        'allow' => true,
+                        'actions' => ['index'],
+                        'roles' => ['@']
+                    ],
+                    [
+                        'allow' => true,
+                        'actions' => ['show'],
+                        'roles' => ['?', '@']
+                    ],
+                ]
+            ],
+        ];
+    }
 
-	/**
-	 * Redirects to current user's profile.
-	 *
-	 * @return \yii\web\Response
-	 */
-	public function actionIndex()
-	{
-		return $this->redirect(['show', 'id' => \Yii::$app->getUser()->getId()]);
-	}
+    /**
+     * Redirects to current user's profile.
+     *
+     * @return \yii\web\Response
+     */
+    public function actionIndex()
+    {
+        return $this->redirect(['show', 'id' => \Yii::$app->getUser()->getId()]);
+    }
 
-	/**
-	 * Shows user's profile.
-	 *
-	 * @param $id
-	 *
-	 * @return \yii\web\Response
-	 */
-	public function actionShow($id)
-	{
-		$query = $this->module->factory->createProfileQuery();
-		$profile = $query->where(['user_id' => $id])->with('user')->one();
+    /**
+     * Shows user's profile.
+     *
+     * @param $id
+     *
+     * @return \yii\web\Response
+     */
+    public function actionShow($id)
+    {
+        $query = $this->module->factory->createProfileQuery();
+        $profile = $query->where(['user_id' => $id])->with('user')->one();
 
-		return $this->render('show', [
-			'profile' => $profile
-		]);
-	}
+        return $this->render('show', [
+            'profile' => $profile
+        ]);
+    }
 }

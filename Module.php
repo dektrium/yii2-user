@@ -23,123 +23,123 @@ use yii\console\Application as ConsoleApplication;
  */
 class Module extends BaseModule
 {
-	const VERSION = '0.5.0-DEV';
+    const VERSION = '0.5.0-DEV';
 
-	/**
-	 * @var array Actions on which captcha will be shown.
-	 */
-	public $captcha = [];
+    /**
+     * @var array Actions on which captcha will be shown.
+     */
+    public $captcha = [];
 
-	/**
-	 * @var string Allowed types: 'email', 'username', 'both'
-	 */
-	public $loginType = 'email';
+    /**
+     * @var string Allowed types: 'email', 'username', 'both'
+     */
+    public $loginType = 'email';
 
-	/**
-	 * @var bool Whether to allow login without confirmation.
-	 */
-	public $allowUnconfirmedLogin = false;
+    /**
+     * @var bool Whether to allow login without confirmation.
+     */
+    public $allowUnconfirmedLogin = false;
 
-	/**
-	 * @var int The time you want the user will be remembered without asking for credentials.
-	 * By default rememberFor is two weeks.
-	 */
-	public $rememberFor = 1209600;
+    /**
+     * @var int The time you want the user will be remembered without asking for credentials.
+     * By default rememberFor is two weeks.
+     */
+    public $rememberFor = 1209600;
 
-	/**
-	 * @var bool Whether to generate user password automatically.
-	 */
-	public $generatePassword = false;
+    /**
+     * @var bool Whether to generate user password automatically.
+     */
+    public $generatePassword = false;
 
-	/**
-	 * @var bool Whether to track user's registration and sign in
-	 */
-	public $trackable = true;
+    /**
+     * @var bool Whether to track user's registration and sign in
+     */
+    public $trackable = true;
 
-	/**
-	 * @var bool Whether confirmation needed
-	 */
-	public $confirmable = true;
+    /**
+     * @var bool Whether confirmation needed
+     */
+    public $confirmable = true;
 
-	/**
-	 * @var int The time before a sent confirmation token becomes invalid.
-	 * By default confirmWithin is 24 hours.
-	 */
-	public $confirmWithin = 86400;
+    /**
+     * @var int The time before a sent confirmation token becomes invalid.
+     * By default confirmWithin is 24 hours.
+     */
+    public $confirmWithin = 86400;
 
-	/**
-	 * @var bool Whether to enable password recovery.
-	 */
-	public $recoverable = true;
+    /**
+     * @var bool Whether to enable password recovery.
+     */
+    public $recoverable = true;
 
-	/**
-	 * @var int The time before a recovery token becomes invalid.
-	 * By default recoverWithin is 6 hours.
-	 */
-	public $recoverWithin = 21600;
+    /**
+     * @var int The time before a recovery token becomes invalid.
+     * By default recoverWithin is 6 hours.
+     */
+    public $recoverWithin = 21600;
 
-	/**
-	 * @var int Cost parameter used by the Blowfish hash algorithm.
-	 */
-	public $cost = 10;
+    /**
+     * @var int Cost parameter used by the Blowfish hash algorithm.
+     */
+    public $cost = 10;
 
-	/**
-	 * @var string
-	 */
-	public $emailViewPath = '@dektrium/user/views/mail';
+    /**
+     * @var string
+     */
+    public $emailViewPath = '@dektrium/user/views/mail';
 
-	/**
-	 * @var string|null Role that will be assigned to user on creation.
-	 */
-	public $defaultRole = null;
+    /**
+     * @var string|null Role that will be assigned to user on creation.
+     */
+    public $defaultRole = null;
 
-	/**
-	 * @var array An array of administrator's usernames.
-	 */
-	public $admins = [];
+    /**
+     * @var array An array of administrator's usernames.
+     */
+    public $admins = [];
 
-	/**
-	 * @var Factory
-	 */
-	private $_factory = ['class' => '\dektrium\user\Factory'];
+    /**
+     * @var Factory
+     */
+    private $_factory = ['class' => '\dektrium\user\Factory'];
 
-	/**
-	 * @inheritdoc
-	 */
-	public function init()
-	{
-		parent::init();
+    /**
+     * @inheritdoc
+     */
+    public function init()
+    {
+        parent::init();
 
-		if (\Yii::$app instanceof ConsoleApplication) {
-			$this->controllerNamespace = 'dektrium\user\commands';
-		}
+        if (\Yii::$app instanceof ConsoleApplication) {
+            $this->controllerNamespace = 'dektrium\user\commands';
+        }
 
-		\Yii::$app->getI18n()->translations['user*'] = [
-			'class' => 'yii\i18n\PhpMessageSource',
-			'basePath' => __DIR__ . '/messages',
-		];
-	}
+        \Yii::$app->getI18n()->translations['user*'] = [
+            'class' => 'yii\i18n\PhpMessageSource',
+            'basePath' => __DIR__ . '/messages',
+        ];
+    }
 
-	/**
-	 * @return Factory
-	 */
-	public function getFactory()
-	{
-		if (is_array($this->_factory)) {
-			$this->_factory = \Yii::createObject($this->_factory);
-		}
+    /**
+     * @return Factory
+     */
+    public function getFactory()
+    {
+        if (is_array($this->_factory)) {
+            $this->_factory = \Yii::createObject($this->_factory);
+        }
 
-		return $this->_factory;
-	}
+        return $this->_factory;
+    }
 
-	/**
-	 * @param $config
-	 */
-	public function setFactory(array $config)
-	{
-		if (!isset($config['class'])) {
-			$config['class'] = '\dektrium\user\Factory';
-		}
-		$this->_factory = $config;
-	}
+    /**
+     * @param $config
+     */
+    public function setFactory(array $config)
+    {
+        if (!isset($config['class'])) {
+            $config['class'] = '\dektrium\user\Factory';
+        }
+        $this->_factory = $config;
+    }
 }

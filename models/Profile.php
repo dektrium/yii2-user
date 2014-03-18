@@ -29,62 +29,63 @@ use yii\db\ActiveRecord;
  */
 class Profile extends ActiveRecord
 {
-	/**
-	 * @inheritdoc
-	 */
-	public static function tableName()
-	{
-		return '{{%profile}}';
-	}
+    /**
+     * @inheritdoc
+     */
+    public static function tableName()
+    {
+        return '{{%profile}}';
+    }
 
-	/**
-	 * @inheritdoc
-	 */
-	public function rules()
-	{
-		return [
-			[['bio'], 'string'],
-			[['public_email', 'gravatar_email'], 'email'],
-			['website', 'url'],
-			[['name', 'public_email', 'gravatar_email', 'location', 'website'], 'string', 'max' => 255],
-		];
-	}
+    /**
+     * @inheritdoc
+     */
+    public function rules()
+    {
+        return [
+            [['bio'], 'string'],
+            [['public_email', 'gravatar_email'], 'email'],
+            ['website', 'url'],
+            [['name', 'public_email', 'gravatar_email', 'location', 'website'], 'string', 'max' => 255],
+        ];
+    }
 
-	/**
-	 * @inheritdoc
-	 */
-	public function attributeLabels()
-	{
-		return [
-			'name' => \Yii::t('user', 'Name'),
-			'public_email' => \Yii::t('user', 'Email (public)'),
-			'gravatar_email' => \Yii::t('user', 'Gravatar email'),
-			'location' => \Yii::t('user', 'Location'),
-			'website' => \Yii::t('user', 'Website'),
-			'bio' => \Yii::t('user', 'Bio'),
-		];
-	}
+    /**
+     * @inheritdoc
+     */
+    public function attributeLabels()
+    {
+        return [
+            'name' => \Yii::t('user', 'Name'),
+            'public_email' => \Yii::t('user', 'Email (public)'),
+            'gravatar_email' => \Yii::t('user', 'Gravatar email'),
+            'location' => \Yii::t('user', 'Location'),
+            'website' => \Yii::t('user', 'Website'),
+            'bio' => \Yii::t('user', 'Bio'),
+        ];
+    }
 
-	/**
-	 * @inheritdoc
-	 */
-	public function beforeSave($insert)
-	{
-		if (parent::beforeSave($insert)) {
-			if ($this->isAttributeChanged('gravatar_email')) {
-				$this->setAttribute('gravatar_id', md5($this->getAttribute('gravatar_email')));
-			}
-			return true;
-		} else {
-			return false;
-		}
-	}
+    /**
+     * @inheritdoc
+     */
+    public function beforeSave($insert)
+    {
+        if (parent::beforeSave($insert)) {
+            if ($this->isAttributeChanged('gravatar_email')) {
+                $this->setAttribute('gravatar_id', md5($this->getAttribute('gravatar_email')));
+            }
 
-	/**
-	 * @return \yii\db\ActiveQueryInterface
-	 */
-	public function getUser()
-	{
-		return $this->hasOne('\dektrium\user\models\User', ['id' => 'user_id']);
-	}
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    /**
+     * @return \yii\db\ActiveQueryInterface
+     */
+    public function getUser()
+    {
+        return $this->hasOne('\dektrium\user\models\User', ['id' => 'user_id']);
+    }
 }

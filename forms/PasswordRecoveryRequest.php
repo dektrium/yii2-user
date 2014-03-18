@@ -13,87 +13,88 @@ use yii\base\Model;
  */
 class PasswordRecoveryRequest extends Model
 {
-	/**
-	 * @var string
-	 */
-	public $email;
+    /**
+     * @var string
+     */
+    public $email;
 
-	/**
-	 * @var string
-	 */
-	public $verifyCode;
+    /**
+     * @var string
+     */
+    public $verifyCode;
 
-	/**
-	 * @var \dektrium\user\models\UserInterface
-	 */
-	private $_user;
+    /**
+     * @var \dektrium\user\models\UserInterface
+     */
+    private $_user;
 
-	/**
-	 * @inheritdoc
-	 */
-	public function attributeLabels()
-	{
-		return [
-			'email'      => \Yii::t('user', 'Email'),
-			'verifyCode' => \Yii::t('user', 'Captcha'),
-		];
-	}
+    /**
+     * @inheritdoc
+     */
+    public function attributeLabels()
+    {
+        return [
+            'email'      => \Yii::t('user', 'Email'),
+            'verifyCode' => \Yii::t('user', 'Captcha'),
+        ];
+    }
 
-	/**
-	 * @inheritdoc
-	 */
-	public function rules()
-	{
-		return [
-			['email', 'filter', 'filter' => 'trim'],
-			['email', 'required'],
-			['email', 'email'],
-			['email', 'exist',
-				'targetClass' => $this->module->factory->userClass,
-				'message' => \Yii::t('user', 'There is no user with such email.')
-			],
-			['email', function ($attribute) {
-				$query = $this->getModule()->factory->createUserQuery();
-				$this->_user = $query->where(['email' => $this->email])->one();
-				if ($this->_user !== null && $this->getModule()->confirmable && !$this->_user->getIsConfirmed()) {
-					$this->addError($attribute, \Yii::t('user', 'You must confirm your account first'));
-				}
-			}],
-			['verifyCode', 'captcha',
-				'captchaAction' => 'user/default/captcha',
-				'skipOnEmpty' => !in_array('recovery', $this->module->captcha)
-			]
-		];
-	}
+    /**
+     * @inheritdoc
+     */
+    public function rules()
+    {
+        return [
+            ['email', 'filter', 'filter' => 'trim'],
+            ['email', 'required'],
+            ['email', 'email'],
+            ['email', 'exist',
+                'targetClass' => $this->module->factory->userClass,
+                'message' => \Yii::t('user', 'There is no user with such email.')
+            ],
+            ['email', function ($attribute) {
+                $query = $this->getModule()->factory->createUserQuery();
+                $this->_user = $query->where(['email' => $this->email])->one();
+                if ($this->_user !== null && $this->getModule()->confirmable && !$this->_user->getIsConfirmed()) {
+                    $this->addError($attribute, \Yii::t('user', 'You must confirm your account first'));
+                }
+            }],
+            ['verifyCode', 'captcha',
+                'captchaAction' => 'user/default/captcha',
+                'skipOnEmpty' => !in_array('recovery', $this->module->captcha)
+            ]
+        ];
+    }
 
-	/**
-	 * Sends recovery message.
-	 *
-	 * @return bool
-	 */
-	public function sendRecoveryMessage()
-	{
-		if ($this->validate()) {
-			$this->_user->sendRecoveryMessage();
-			return true;
-		}
+    /**
+     * Sends recovery message.
+     *
+     * @return bool
+     */
+    public function sendRecoveryMessage()
+    {
+        if ($this->validate()) {
+            $this->_user->sendRecoveryMessage();
 
-		return false;
-	}
+            return true;
+        }
 
-	/**
-	 * @inheritdoc
-	 */
-	public function formName()
-	{
-		return 'recovery-request-form';
-	}
+        return false;
+    }
 
-	/**
-	 * @return null|\dektrium\user\Module
-	 */
-	protected function getModule()
-	{
-		return \Yii::$app->getModule('user');
-	}
+    /**
+     * @inheritdoc
+     */
+    public function formName()
+    {
+        return 'recovery-request-form';
+    }
+
+    /**
+     * @return null|\dektrium\user\Module
+     */
+    protected function getModule()
+    {
+        return \Yii::$app->getModule('user');
+    }
 }

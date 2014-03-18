@@ -6,17 +6,17 @@ use yii\codeception\BasePage;
 
 class RecoveryPage extends BasePage
 {
-	/**
-	 * @var string
-	 */
-	public $route = '/user/recovery/request';
+    /**
+     * @var string
+     */
+    public $route = '/user/recovery/request';
 
-	/**
-	 * @param $email
-	 */
-	public function resend($email)
-	{
-		$this->guy->fillField('#recovery-request-form-email', $email);
-		$this->guy->click('Send');
-	}
+    /**
+     * @param $email
+     */
+    public function resend($email)
+    {
+        $this->guy->fillField('#recovery-request-form-email', $email);
+        $this->guy->click('Send');
+    }
 }

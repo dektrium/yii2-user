@@ -24,63 +24,63 @@ use yii\web\VerbFilter;
  */
 class AuthController extends Controller
 {
-	/**
-	 * @inheritdoc
-	 */
-	public function behaviors()
-	{
-		return [
-			'access' => [
-				'class' => AccessControl::className(),
-				'rules' => [
-					[
-						'allow' => true,
-						'actions' => ['login', 'captcha'],
-						'roles' => ['?']
-					],
-					[
-						'allow' => true,
-						'actions' => ['logout'],
-						'roles' => ['@']
-					],
-				]
-			],
-			'verbs' => [
-				'class' => VerbFilter::className(),
-				'actions' => [
-					'logout' => ['post']
-				]
-			]
-		];
-	}
+    /**
+     * @inheritdoc
+     */
+    public function behaviors()
+    {
+        return [
+            'access' => [
+                'class' => AccessControl::className(),
+                'rules' => [
+                    [
+                        'allow' => true,
+                        'actions' => ['login', 'captcha'],
+                        'roles' => ['?']
+                    ],
+                    [
+                        'allow' => true,
+                        'actions' => ['logout'],
+                        'roles' => ['@']
+                    ],
+                ]
+            ],
+            'verbs' => [
+                'class' => VerbFilter::className(),
+                'actions' => [
+                    'logout' => ['post']
+                ]
+            ]
+        ];
+    }
 
-	/**
-	 * Displays the login page.
-	 *
-	 * @return string|\yii\web\Response
-	 */
-	public function actionLogin()
-	{
-		$model = $this->module->factory->createForm('login');
+    /**
+     * Displays the login page.
+     *
+     * @return string|\yii\web\Response
+     */
+    public function actionLogin()
+    {
+        $model = $this->module->factory->createForm('login');
 
-		if ($model->load(\Yii::$app->getRequest()->post()) && $model->login()) {
-			return $this->goBack();
-		}
+        if ($model->load(\Yii::$app->getRequest()->post()) && $model->login()) {
+            return $this->goBack();
+        }
 
-		return $this->render('login', [
-			'model' => $model
-		]);
-	}
+        return $this->render('login', [
+            'model' => $model
+        ]);
+    }
 
-	/**
-	 * Logs the user out and then redirects to the homepage.
-	 *
-	 * @return \yii\web\Response
-	 */
-	public function actionLogout()
-	{
-		\Yii::$app->getUser()->logout();
+    /**
+     * Logs the user out and then redirects to the homepage.
+     *
+     * @return \yii\web\Response
+     */
+    public function actionLogout()
+    {
+        \Yii::$app->getUser()->logout();
 
-		return $this->goHome();
-	}
+        return $this->goHome();
+    }
 }

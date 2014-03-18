@@ -20,57 +20,57 @@ use yii\helpers\Security;
  */
 class Password
 {
-	/**
-	 * Wrapper for yii security helper method.
-	 *
-	 * @param $password
-	 * @return string
-	 */
-	public static function hash($password)
-	{
-		return Security::generatePasswordHash($password, \Yii::$app->getModule('user')->cost);
-	}
+    /**
+     * Wrapper for yii security helper method.
+     *
+     * @param $password
+     * @return string
+     */
+    public static function hash($password)
+    {
+        return Security::generatePasswordHash($password, \Yii::$app->getModule('user')->cost);
+    }
 
-	/**
-	 * Wrapper for yii security helper method.
-	 *
-	 * @param $password
-	 * @param $hash
-	 * @return bool
-	 */
-	public static function validate($password, $hash)
-	{
-		return Security::validatePassword($password, $hash);
-	}
+    /**
+     * Wrapper for yii security helper method.
+     *
+     * @param $password
+     * @param $hash
+     * @return bool
+     */
+    public static function validate($password, $hash)
+    {
+        return Security::validatePassword($password, $hash);
+    }
 
-	/**
-	 * Generates user-friendly random password containing at least one lower case letter, one uppercase letter and one
-	 * digit. The remaining characters in the password are chosen at random from those three sets.
-	 * @see https://gist.github.com/tylerhall/521810
-	 * @param $length
-	 * @return string
-	 */
-	public static function generate($length)
-	{
-		$sets = [
-			'abcdefghjkmnpqrstuvwxyz',
-			'ABCDEFGHJKMNPQRSTUVWXYZ',
-			'23456789'
-		];
-		$all = '';
-		$password = '';
-		foreach($sets as $set) {
-			$password .= $set[array_rand(str_split($set))];
-			$all .= $set;
-		}
+    /**
+     * Generates user-friendly random password containing at least one lower case letter, one uppercase letter and one
+     * digit. The remaining characters in the password are chosen at random from those three sets.
+     * @see https://gist.github.com/tylerhall/521810
+     * @param $length
+     * @return string
+     */
+    public static function generate($length)
+    {
+        $sets = [
+            'abcdefghjkmnpqrstuvwxyz',
+            'ABCDEFGHJKMNPQRSTUVWXYZ',
+            '23456789'
+        ];
+        $all = '';
+        $password = '';
+        foreach ($sets as $set) {
+            $password .= $set[array_rand(str_split($set))];
+            $all .= $set;
+        }
 
-		$all = str_split($all);
-		for ($i = 0; $i < $length - count($sets); $i++) {
-			$password .= $all[array_rand($all)];
-		}
+        $all = str_split($all);
+        for ($i = 0; $i < $length - count($sets); $i++) {
+            $password .= $all[array_rand($all)];
+        }
 
-		$password = str_shuffle($password);
+        $password = str_shuffle($password);
 
-		return $password;
-	}
+        return $password;
+    }
 }

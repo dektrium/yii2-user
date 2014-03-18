@@ -52,489 +52,491 @@ use yii\helpers\Url;
  */
 class User extends ActiveRecord implements UserInterface
 {
-	const EVENT_BEFORE_REGISTER = 'before_register';
-	const EVENT_AFTER_REGISTER = 'after_register';
+    const EVENT_BEFORE_REGISTER = 'before_register';
+    const EVENT_AFTER_REGISTER = 'after_register';
 
-	/**
-	 * @var string Plain password. Used for model validation.
-	 */
-	public $password;
+    /**
+     * @var string Plain password. Used for model validation.
+     */
+    public $password;
 
-	/**
-	 * @var string Current user's password.
-	 */
-	public $current_password;
+    /**
+     * @var string Current user's password.
+     */
+    public $current_password;
 
-	/**
-	 * @var string Verification code.
-	 */
-	public $verify_code;
+    /**
+     * @var string Verification code.
+     */
+    public $verify_code;
 
-	/**
-	 * @var \dektrium\user\Module
-	 */
-	private $_module;
+    /**
+     * @var \dektrium\user\Module
+     */
+    private $_module;
 
-	/**
-	 * @return \yii\db\ActiveQueryInterface
-	 */
-	public function getProfile()
-	{
-		return $this->hasOne($this->_module->factory->profileClass, ['user_id' => 'id']);
-	}
+    /**
+     * @return \yii\db\ActiveQueryInterface
+     */
+    public function getProfile()
+    {
+        return $this->hasOne($this->_module->factory->profileClass, ['user_id' => 'id']);
+    }
 
-	/**
-	 * @inheritdoc
-	 */
-	public static function createQuery($config = [])
-	{
-		$config['modelClass'] = get_called_class();
-		return new UserQuery($config);
-	}
+    /**
+     * @inheritdoc
+     */
+    public static function createQuery($config = [])
+    {
+        $config['modelClass'] = get_called_class();
 
-	/**
-	 * @inheritdoc
-	 */
-	public function attributeLabels()
-	{
-		return [
-			'username' => \Yii::t('user', 'Username'),
-			'email' => \Yii::t('user', 'Email'),
-			'password' => \Yii::t('user', 'Password'),
-			'created_at' => \Yii::t('user', 'Registration time'),
-			'registered_from' => \Yii::t('user', 'Registered from'),
-		];
-	}
+        return new UserQuery($config);
+    }
 
-	/**
-	 * @inheritdoc
-	 */
-	public function behaviors()
-	{
-		return [
-			TimestampBehavior::className(),
-		];
-	}
+    /**
+     * @inheritdoc
+     */
+    public function attributeLabels()
+    {
+        return [
+            'username' => \Yii::t('user', 'Username'),
+            'email' => \Yii::t('user', 'Email'),
+            'password' => \Yii::t('user', 'Password'),
+            'created_at' => \Yii::t('user', 'Registration time'),
+            'registered_from' => \Yii::t('user', 'Registered from'),
+        ];
+    }
 
-	/**
-	 * @inheritdoc
-	 */
-	public function scenarios()
-	{
-		return [
-			'register'        => ['username', 'email', 'password', 'verify_code'],
-			'short_register'  => ['username', 'email', 'verify_code'],
-			'create'          => ['username', 'email', 'password', 'role'],
-			'update'          => ['username', 'email', 'password', 'role'],
-			'update_password' => ['password', 'current_password'],
-			'update_email'    => ['unconfirmed_email', 'current_password']
-		];
-	}
+    /**
+     * @inheritdoc
+     */
+    public function behaviors()
+    {
+        return [
+            TimestampBehavior::className(),
+        ];
+    }
 
-	/**
-	 * @inheritdoc
-	 */
-	public function rules()
-	{
-		return [
-			// username rules
-			['username', 'required', 'on' => ['register', 'short_register', 'create', 'update']],
-			['username', 'match', 'pattern' => '/^[a-zA-Z]\w+$/'],
-			['username', 'string', 'min' => 3, 'max' => 25],
-			['username', 'unique'],
+    /**
+     * @inheritdoc
+     */
+    public function scenarios()
+    {
+        return [
+            'register'        => ['username', 'email', 'password', 'verify_code'],
+            'short_register'  => ['username', 'email', 'verify_code'],
+            'create'          => ['username', 'email', 'password', 'role'],
+            'update'          => ['username', 'email', 'password', 'role'],
+            'update_password' => ['password', 'current_password'],
+            'update_email'    => ['unconfirmed_email', 'current_password']
+        ];
+    }
 
-			// email rules
-			['email', 'required', 'on' => ['register', 'short_register', 'create', 'update', 'update_email']],
-			['email', 'email'],
-			['email', 'string', 'max' => 255],
-			['email', 'unique'],
+    /**
+     * @inheritdoc
+     */
+    public function rules()
+    {
+        return [
+            // username rules
+            ['username', 'required', 'on' => ['register', 'short_register', 'create', 'update']],
+            ['username', 'match', 'pattern' => '/^[a-zA-Z]\w+$/'],
+            ['username', 'string', 'min' => 3, 'max' => 25],
+            ['username', 'unique'],
 
-			// unconfirmed email rules
-			['unconfirmed_email', 'required', 'on' => 'update_email'],
-			['unconfirmed_email', 'unique', 'targetAttribute' => 'email', 'on' => 'update_email'],
-			['unconfirmed_email', 'email', 'on' => 'update_email'],
+            // email rules
+            ['email', 'required', 'on' => ['register', 'short_register', 'create', 'update', 'update_email']],
+            ['email', 'email'],
+            ['email', 'string', 'max' => 255],
+            ['email', 'unique'],
 
-			// password rules
-			['password', 'required', 'on' => ['register', 'create']],
-			['password', 'string', 'min' => 6, 'on' => ['register', 'update_password', 'create']],
+            // unconfirmed email rules
+            ['unconfirmed_email', 'required', 'on' => 'update_email'],
+            ['unconfirmed_email', 'unique', 'targetAttribute' => 'email', 'on' => 'update_email'],
+            ['unconfirmed_email', 'email', 'on' => 'update_email'],
 
-			// current password rules
-			['current_password', 'required', 'on' => ['update_email', 'update_password']],
-			['current_password', function ($attr) {
-				if (!empty($this->$attr) && !Password::validate($this->$attr, $this->password_hash)) {
-					$this->addError($attr, \Yii::t('user', 'Current password is not valid'));
-				}
-			}, 'on' => ['update_email', 'update_password']],
+            // password rules
+            ['password', 'required', 'on' => ['register', 'create']],
+            ['password', 'string', 'min' => 6, 'on' => ['register', 'update_password', 'create']],
 
-			// captcha
-			['verify_code', 'captcha', 'captchaAction' => 'user/default/captcha', 'on' => ['register'],
-				'skipOnEmpty' => !in_array('register', $this->getModule()->captcha)]
-		];
-	}
+            // current password rules
+            ['current_password', 'required', 'on' => ['update_email', 'update_password']],
+            ['current_password', function ($attr) {
+                if (!empty($this->$attr) && !Password::validate($this->$attr, $this->password_hash)) {
+                    $this->addError($attr, \Yii::t('user', 'Current password is not valid'));
+                }
+            }, 'on' => ['update_email', 'update_password']],
 
-	/**
-	 * @inheritdoc
-	 */
-	public static function tableName()
-	{
-		return '{{%user}}';
-	}
+            // captcha
+            ['verify_code', 'captcha', 'captchaAction' => 'user/default/captcha', 'on' => ['register'],
+                'skipOnEmpty' => !in_array('register', $this->getModule()->captcha)]
+        ];
+    }
 
-	/**
-	 * @inheritdoc
-	 */
-	public static function findIdentity($id)
-	{
-		return static::find($id);
-	}
+    /**
+     * @inheritdoc
+     */
+    public static function tableName()
+    {
+        return '{{%user}}';
+    }
 
-	/**
-	 * @inheritdoc
-	 */
-	public static function findIdentityByAccessToken($token)
-	{
-		throw new NotSupportedException('"findIdentityByAccessToken" is not implemented.');
-	}
+    /**
+     * @inheritdoc
+     */
+    public static function findIdentity($id)
+    {
+        return static::find($id);
+    }
 
-	/**
-	 * @inheritdoc
-	 */
-	public function getId()
-	{
-		return $this->getAttribute('id');
-	}
+    /**
+     * @inheritdoc
+     */
+    public static function findIdentityByAccessToken($token)
+    {
+        throw new NotSupportedException('"findIdentityByAccessToken" is not implemented.');
+    }
 
-	/**
-	 * @inheritdoc
-	 */
-	public function getAuthKey()
-	{
-		return $this->getAttribute('auth_key');
-	}
+    /**
+     * @inheritdoc
+     */
+    public function getId()
+    {
+        return $this->getAttribute('id');
+    }
 
-	/**
-	 * @inheritdoc
-	 */
-	public function validateAuthKey($authKey)
-	{
-		return $this->getAttribute('auth_key') == $authKey;
-	}
+    /**
+     * @inheritdoc
+     */
+    public function getAuthKey()
+    {
+        return $this->getAttribute('auth_key');
+    }
 
-	/**
-	 * This method is called at the beginning of user registration process.
-	 */
-	protected function beforeRegister()
-	{
-		$this->trigger(self::EVENT_BEFORE_REGISTER);
-		if ($this->scenario == 'short_register') {
-			$this->password = Password::generate(8);
-		}
-		if ($this->_module->trackable) {
-			$this->setAttribute('registered_from', ip2long(\Yii::$app->request->userIP));
-		}
-		if ($this->_module->confirmable) {
-			$this->generateConfirmationData();
-		}
-	}
+    /**
+     * @inheritdoc
+     */
+    public function validateAuthKey($authKey)
+    {
+        return $this->getAttribute('auth_key') == $authKey;
+    }
 
-	/**
-	 * This method is called at the end of user registration process.
-	 */
-	protected function afterRegister()
-	{
-		if ($this->scenario == 'short_register') {
-			$this->sendMessage($this->email, \Yii::t('user', 'Welcome to {sitename}', ['sitename' => \Yii::$app->name]),
-				'welcome', ['user' => $this, 'password' => $this->password]
-			);
-		}
-		if ($this->_module->confirmable) {
-			$this->sendMessage($this->email, \Yii::t('user', 'Please confirm your account'),
-				'confirmation',	['user' => $this]
-			);
-		}
-		$this->trigger(self::EVENT_AFTER_REGISTER);
-	}
+    /**
+     * This method is called at the beginning of user registration process.
+     */
+    protected function beforeRegister()
+    {
+        $this->trigger(self::EVENT_BEFORE_REGISTER);
+        if ($this->scenario == 'short_register') {
+            $this->password = Password::generate(8);
+        }
+        if ($this->_module->trackable) {
+            $this->setAttribute('registered_from', ip2long(\Yii::$app->request->userIP));
+        }
+        if ($this->_module->confirmable) {
+            $this->generateConfirmationData();
+        }
+    }
 
-	/**
-	 * Registers a user.
-	 *
-	 * @return bool
-	 * @throws \RuntimeException
-	 */
-	public function register()
-	{
-		if (!$this->getIsNewRecord()) {
-			throw new \RuntimeException('Calling "'.__CLASS__.'::register()" on existing user');
-		}
+    /**
+     * This method is called at the end of user registration process.
+     */
+    protected function afterRegister()
+    {
+        if ($this->scenario == 'short_register') {
+            $this->sendMessage($this->email, \Yii::t('user', 'Welcome to {sitename}', ['sitename' => \Yii::$app->name]),
+                'welcome', ['user' => $this, 'password' => $this->password]
+            );
+        }
+        if ($this->_module->confirmable) {
+            $this->sendMessage($this->email, \Yii::t('user', 'Please confirm your account'),
+                'confirmation',	['user' => $this]
+            );
+        }
+        $this->trigger(self::EVENT_AFTER_REGISTER);
+    }
 
-		if ($this->validate()) {
-			$this->beforeRegister();
-			$this->setAttribute('password_hash', Password::hash($this->password));
-			$this->setAttribute('auth_key', Security::generateRandomKey());
-			$this->setAttribute('role', $this->getModule()->defaultRole);
-			if ($this->save(false)) {
-				$profile = $this->_module->factory->createProfile([
-					'user_id' => $this->id,
-					'gravatar_email' => $this->email
-				]);
-				$profile->save(false);
-				$this->afterRegister();
-				return true;
-			}
-		}
+    /**
+     * Registers a user.
+     *
+     * @return bool
+     * @throws \RuntimeException
+     */
+    public function register()
+    {
+        if (!$this->getIsNewRecord()) {
+            throw new \RuntimeException('Calling "'.__CLASS__.'::register()" on existing user');
+        }
 
-		return false;
-	}
+        if ($this->validate()) {
+            $this->beforeRegister();
+            $this->setAttribute('password_hash', Password::hash($this->password));
+            $this->setAttribute('auth_key', Security::generateRandomKey());
+            $this->setAttribute('role', $this->getModule()->defaultRole);
+            if ($this->save(false)) {
+                $profile = $this->_module->factory->createProfile([
+                    'user_id' => $this->id,
+                    'gravatar_email' => $this->email
+                ]);
+                $profile->save(false);
+                $this->afterRegister();
 
-	/**
-	 * Updates email with new one. If confirmable option is enabled, it will send confirmation message to new email.
-	 *
-	 * @return bool
-	 */
-	public function updateEmail()
-	{
-		if ($this->validate()) {
-			if ($this->getModule()->confirmable) {
-				$this->confirmation_token = Security::generateRandomKey();
-				$this->confirmation_sent_at = time();
-				$this->save(false);
-				$this->sendMessage($this->unconfirmed_email, \Yii::t('user', 'Please confirm your email'), 'reconfirmation', ['user' => $this]);
-			} else {
-				$this->email = $this->unconfirmed_email;
-				$this->unconfirmed_email = null;
-			}
+                return true;
+            }
+        }
 
-			return true;
-		}
+        return false;
+    }
 
-		return false;
-	}
+    /**
+     * Updates email with new one. If confirmable option is enabled, it will send confirmation message to new email.
+     *
+     * @return bool
+     */
+    public function updateEmail()
+    {
+        if ($this->validate()) {
+            if ($this->getModule()->confirmable) {
+                $this->confirmation_token = Security::generateRandomKey();
+                $this->confirmation_sent_at = time();
+                $this->save(false);
+                $this->sendMessage($this->unconfirmed_email, \Yii::t('user', 'Please confirm your email'), 'reconfirmation', ['user' => $this]);
+            } else {
+                $this->email = $this->unconfirmed_email;
+                $this->unconfirmed_email = null;
+            }
 
-	/**
-	 * Resets unconfirmed email and confirmation data.
-	 */
-	public function resetEmailUpdate()
-	{
-		if ($this->getModule()->confirmable && !empty($this->unconfirmed_email)) {
-			$this->unconfirmed_email = null;
-			$this->confirmation_token = null;
-			$this->confirmation_sent_at = null;
-			$this->save(false);
-		}
-	}
+            return true;
+        }
 
-	/**
-	 * Updates user's password.
-	 *
-	 * @return bool
-	 */
-	public function updatePassword()
-	{
-		if ($this->validate()) {
-			$this->password_hash = Password::hash($this->password);
-			return $this->save(false);
-		}
+        return false;
+    }
 
-		return false;
-	}
+    /**
+     * Resets unconfirmed email and confirmation data.
+     */
+    public function resetEmailUpdate()
+    {
+        if ($this->getModule()->confirmable && !empty($this->unconfirmed_email)) {
+            $this->unconfirmed_email = null;
+            $this->confirmation_token = null;
+            $this->confirmation_sent_at = null;
+            $this->save(false);
+        }
+    }
 
-	/**
-	 * Confirms a user by setting it's "confirmation_time" to actual time
-	 *
-	 * @param bool $runValidation Whether to check if user has already been confirmed or confirmation token expired.
-	 * @return bool
-	 */
-	public function confirm($runValidation = true)
-	{
-		if ($runValidation) {
-			if ($this->getIsConfirmed()) {
-				return true;
-			} elseif ($this->getIsConfirmationPeriodExpired()) {
-				return false;
-			}
-		}
+    /**
+     * Updates user's password.
+     *
+     * @return bool
+     */
+    public function updatePassword()
+    {
+        if ($this->validate()) {
+            $this->password_hash = Password::hash($this->password);
 
-		if (empty($this->unconfirmed_email)) {
-			$this->confirmed_at = time();
-		} else {
-			$this->email = $this->unconfirmed_email;
-			$this->unconfirmed_email = null;
-		}
+            return $this->save(false);
+        }
 
-		$this->confirmation_token = null;
-		$this->confirmation_sent_at = null;
+        return false;
+    }
 
+    /**
+     * Confirms a user by setting it's "confirmation_time" to actual time
+     *
+     * @param  bool $runValidation Whether to check if user has already been confirmed or confirmation token expired.
+     * @return bool
+     */
+    public function confirm($runValidation = true)
+    {
+        if ($runValidation) {
+            if ($this->getIsConfirmed()) {
+                return true;
+            } elseif ($this->getIsConfirmationPeriodExpired()) {
+                return false;
+            }
+        }
 
-		return $this->save(false);
-	}
+        if (empty($this->unconfirmed_email)) {
+            $this->confirmed_at = time();
+        } else {
+            $this->email = $this->unconfirmed_email;
+            $this->unconfirmed_email = null;
+        }
 
-	/**
-	 * Generates confirmation data and re-sends confirmation instructions by email.
-	 *
-	 * @return bool
-	 */
-	public function resend()
-	{
-		$this->generateConfirmationData();
-		$this->save(false);
+        $this->confirmation_token = null;
+        $this->confirmation_sent_at = null;
 
-		return $this->sendMessage($this->email, \Yii::t('user', 'Please confirm your account'), 'confirmation', ['user' => $this]);
-	}
+        return $this->save(false);
+    }
 
-	/**
-	 * Generates confirmation data.
-	 */
-	protected function generateConfirmationData()
-	{
-		$this->confirmation_token = Security::generateRandomKey();
-		$this->confirmation_sent_at = time();
-		$this->confirmed_at = null;
-	}
+    /**
+     * Generates confirmation data and re-sends confirmation instructions by email.
+     *
+     * @return bool
+     */
+    public function resend()
+    {
+        $this->generateConfirmationData();
+        $this->save(false);
 
-	/**
-	 * @return string Confirmation url.
-	 */
-	public function getConfirmationUrl()
-	{
-		if (is_null($this->confirmation_token)) {
-			return null;
-		}
+        return $this->sendMessage($this->email, \Yii::t('user', 'Please confirm your account'), 'confirmation', ['user' => $this]);
+    }
 
-		return Url::toRoute(['/user/registration/confirm', 'id' => $this->id, 'token' => $this->confirmation_token], true);
-	}
+    /**
+     * Generates confirmation data.
+     */
+    protected function generateConfirmationData()
+    {
+        $this->confirmation_token = Security::generateRandomKey();
+        $this->confirmation_sent_at = time();
+        $this->confirmed_at = null;
+    }
 
-	/**
-	 * Verifies whether a user is confirmed or not.
-	 *
-	 * @return bool
-	 */
-	public function getIsConfirmed()
-	{
-		return $this->confirmed_at !== null;
-	}
+    /**
+     * @return string Confirmation url.
+     */
+    public function getConfirmationUrl()
+    {
+        if (is_null($this->confirmation_token)) {
+            return null;
+        }
 
-	/**
-	 * Checks if the user confirmation happens before the token becomes invalid.
-	 *
-	 * @return bool
-	 */
-	public function getIsConfirmationPeriodExpired()
-	{
-		return $this->confirmation_sent_at != null && ($this->confirmation_sent_at + $this->getModule()->confirmWithin) < time();
-	}
+        return Url::toRoute(['/user/registration/confirm', 'id' => $this->id, 'token' => $this->confirmation_token], true);
+    }
 
-	/**
-	 * Resets password and sets recovery token to null
-	 *
-	 * @param  string $password
-	 * @return bool
-	 */
-	public function resetPassword($password)
-	{
-		$this->setAttributes([
-			'password_hash'    => Password::hash($password),
-			'recovery_token'   => null,
-			'recovery_sent_at' => null
-		], false);
+    /**
+     * Verifies whether a user is confirmed or not.
+     *
+     * @return bool
+     */
+    public function getIsConfirmed()
+    {
+        return $this->confirmed_at !== null;
+    }
 
-		return $this->save(false);
-	}
+    /**
+     * Checks if the user confirmation happens before the token becomes invalid.
+     *
+     * @return bool
+     */
+    public function getIsConfirmationPeriodExpired()
+    {
+        return $this->confirmation_sent_at != null && ($this->confirmation_sent_at + $this->getModule()->confirmWithin) < time();
+    }
 
-	/**
-	 * Checks if the password recovery happens before the token becomes invalid.
-	 *
-	 * @return bool
-	 */
-	public function getIsRecoveryPeriodExpired()
-	{
-		return ($this->recovery_sent_at + $this->getModule()->recoverWithin) < time();
-	}
+    /**
+     * Resets password and sets recovery token to null
+     *
+     * @param  string $password
+     * @return bool
+     */
+    public function resetPassword($password)
+    {
+        $this->setAttributes([
+            'password_hash'    => Password::hash($password),
+            'recovery_token'   => null,
+            'recovery_sent_at' => null
+        ], false);
 
-	/**
-	 * @return string Recovery url
-	 */
-	public function getRecoveryUrl()
-	{
-		return Url::toRoute(['/user/recovery/reset',
-			'id' => $this->id,
-			'token' => $this->recovery_token
-		], true);
-	}
+        return $this->save(false);
+    }
 
-	/**
-	 * Generates recovery data and sends recovery message to user.
-	 */
-	public function sendRecoveryMessage()
-	{
-		$this->recovery_token = Security::generateRandomKey();
-		$this->recovery_sent_at = time();
-		$this->save(false);
+    /**
+     * Checks if the password recovery happens before the token becomes invalid.
+     *
+     * @return bool
+     */
+    public function getIsRecoveryPeriodExpired()
+    {
+        return ($this->recovery_sent_at + $this->getModule()->recoverWithin) < time();
+    }
 
-		return $this->sendMessage($this->email, \Yii::t('user', 'Please complete password reset'), 'recovery', ['user' => $this]);
-	}
+    /**
+     * @return string Recovery url
+     */
+    public function getRecoveryUrl()
+    {
+        return Url::toRoute(['/user/recovery/reset',
+            'id' => $this->id,
+            'token' => $this->recovery_token
+        ], true);
+    }
 
-	/**
-	 * Blocks the user by setting 'blocked_at' field to current time.
-	 */
-	public function block()
-	{
-		$this->blocked_at = time();
+    /**
+     * Generates recovery data and sends recovery message to user.
+     */
+    public function sendRecoveryMessage()
+    {
+        $this->recovery_token = Security::generateRandomKey();
+        $this->recovery_sent_at = time();
+        $this->save(false);
 
-		return $this->save(false);
-	}
+        return $this->sendMessage($this->email, \Yii::t('user', 'Please complete password reset'), 'recovery', ['user' => $this]);
+    }
 
-	/**
-	 * Blocks the user by setting 'blocked_at' field to null.
-	 */
-	public function unblock()
-	{
-		$this->blocked_at = null;
+    /**
+     * Blocks the user by setting 'blocked_at' field to current time.
+     */
+    public function block()
+    {
+        $this->blocked_at = time();
 
-		return $this->save(false);
-	}
+        return $this->save(false);
+    }
 
-	/**
-	 * @return bool Whether user is blocked.
-	 */
-	public function getIsBlocked()
-	{
-		return !is_null($this->blocked_at);
-	}
+    /**
+     * Blocks the user by setting 'blocked_at' field to null.
+     */
+    public function unblock()
+    {
+        $this->blocked_at = null;
 
-	/**
-	 * @return null|\dektrium\user\Module
-	 */
-	protected function getModule()
-	{
-		if ($this->_module == null) {
-			$this->_module = \Yii::$app->getModule('user');
-		}
+        return $this->save(false);
+    }
 
-		return $this->_module;
-	}
+    /**
+     * @return bool Whether user is blocked.
+     */
+    public function getIsBlocked()
+    {
+        return !is_null($this->blocked_at);
+    }
 
-	/**
-	 * Sends message.
-	 *
-	 * @param $to
-	 * @param  string $subject
-	 * @param  string $view
-	 * @param  array $params
-	 *
-	 * @return bool
-	 */
-	protected function sendMessage($to, $subject, $view, $params)
-	{
-		$mail = \Yii::$app->getMail();
-		$mail->viewPath = $this->getModule()->emailViewPath;
+    /**
+     * @return null|\dektrium\user\Module
+     */
+    protected function getModule()
+    {
+        if ($this->_module == null) {
+            $this->_module = \Yii::$app->getModule('user');
+        }
 
-		if (empty(\Yii::$app->getMail()->messageConfig['from'])) {
-			$mail->messageConfig['from'] = 'no-reply@example.com';
-		}
+        return $this->_module;
+    }
 
-		return $mail->compose($view, $params)
-			->setTo($to)
-			->setSubject($subject)
-			->send();
-	}
+    /**
+     * Sends message.
+     *
+     * @param $to
+     * @param string $subject
+     * @param string $view
+     * @param array  $params
+     *
+     * @return bool
+     */
+    protected function sendMessage($to, $subject, $view, $params)
+    {
+        $mail = \Yii::$app->getMail();
+        $mail->viewPath = $this->getModule()->emailViewPath;
+
+        if (empty(\Yii::$app->getMail()->messageConfig['from'])) {
+            $mail->messageConfig['from'] = 'no-reply@example.com';
+        }
+
+        return $mail->compose($view, $params)
+            ->setTo($to)
+            ->setSubject($subject)
+            ->send();
+    }
 }

@@ -25,86 +25,87 @@ use yii\web\NotFoundHttpException;
  */
 class RecoveryController extends Controller
 {
-	/**
-	 * @inheritdoc
-	 */
-	public function behaviors()
-	{
-		return [
-			'access' => [
-				'class' => AccessControl::className(),
-				'rules' => [
-					[
-						'allow' => true,
-						'actions' => ['request', 'reset', 'captcha'],
-						'roles' => ['?']
-					],
-				]
-			],
-		];
-	}
+    /**
+     * @inheritdoc
+     */
+    public function behaviors()
+    {
+        return [
+            'access' => [
+                'class' => AccessControl::className(),
+                'rules' => [
+                    [
+                        'allow' => true,
+                        'actions' => ['request', 'reset', 'captcha'],
+                        'roles' => ['?']
+                    ],
+                ]
+            ],
+        ];
+    }
 
-	/**
-	 * @inheritdoc
-	 */
-	public function beforeAction($action)
-	{
-		if (parent::beforeAction($action)) {
-			if (!$this->module->recoverable) {
-				throw new NotFoundHttpException('Disabled by administrator');
-			}
-			return true;
-		} else {
-			return false;
-		}
-	}
+    /**
+     * @inheritdoc
+     */
+    public function beforeAction($action)
+    {
+        if (parent::beforeAction($action)) {
+            if (!$this->module->recoverable) {
+                throw new NotFoundHttpException('Disabled by administrator');
+            }
 
-	/**
-	 * Displays page where user can request new recovery message.
-	 *
-	 * @return string
-	 * @throws \yii\web\NotFoundHttpException
-	 */
-	public function actionRequest()
-	{
-		$model = $this->module->factory->createForm('passwordRecoveryRequest');
+            return true;
+        } else {
+            return false;
+        }
+    }
 
-		if ($model->load(\Yii::$app->getRequest()->post()) && $model->sendRecoveryMessage()) {
-			return $this->render('messageSent', [
-				'model' => $model
-			]);
-		}
+    /**
+     * Displays page where user can request new recovery message.
+     *
+     * @return string
+     * @throws \yii\web\NotFoundHttpException
+     */
+    public function actionRequest()
+    {
+        $model = $this->module->factory->createForm('passwordRecoveryRequest');
 
-		return $this->render('request', [
-			'model' => $model
-		]);
-	}
+        if ($model->load(\Yii::$app->getRequest()->post()) && $model->sendRecoveryMessage()) {
+            return $this->render('messageSent', [
+                'model' => $model
+            ]);
+        }
 
-	/**
-	 * Displays page where user can reset password.
-	 *
-	 * @param $id
-	 * @param $token
-	 * @return string
-	 * @throws \yii\web\NotFoundHttpException
-	 */
-	public function actionReset($id, $token)
-	{
-		try {
-			$model = $this->module->factory->createForm('passwordRecovery', [
-				'id' => $id,
-				'token' => $token
-			]);
-		} catch (InvalidParamException $e) {
-			return $this->render('invalidToken');
-		}
+        return $this->render('request', [
+            'model' => $model
+        ]);
+    }
 
-		if ($model->load(\Yii::$app->getRequest()->post()) && $model->resetPassword()) {
-			return $this->render('finish');
-		}
+    /**
+     * Displays page where user can reset password.
+     *
+     * @param $id
+     * @param $token
+     * @return string
+     * @throws \yii\web\NotFoundHttpException
+     */
+    public function actionReset($id, $token)
+    {
+        try {
+            $model = $this->module->factory->createForm('passwordRecovery', [
+                'id' => $id,
+                'token' => $token
+            ]);
+        } catch (InvalidParamException $e) {
+            return $this->render('invalidToken');
+        }
 
-		return $this->render('reset', [
-			'model' => $model
-		]);
-	}
+        if ($model->load(\Yii::$app->getRequest()->post()) && $model->resetPassword()) {
+            return $this->render('finish');
+        }
+
+        return $this->render('reset', [
+            'model' => $model
+        ]);
+    }
 }

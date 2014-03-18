@@ -23,25 +23,25 @@ use yii\helpers\Console;
  */
 class PasswordController extends Controller
 {
-	/**
-	 * Changes user's password to given.
-	 *
-	 * @param string $email
-	 * @param string $password
-	 */
-	public function actionIndex($email, $password)
-	{
-		$query = $this->module->factory->createQuery();
-		/** @var \dektrium\user\models\User $user */
-		$user = $query->where(['email' => $email])->one();
-		if ($user === null) {
-			$this->stdout("User is not found!\n", Console::FG_RED);
-		} else {
-			if ($user->resetPassword($password)) {
-				$this->stdout("Password has been changed!\n", Console::FG_GREEN);
-			} else {
-				$this->stdout("Error occurred while changing password\n", Console::FG_RED);
-			}
-		}
-	}
+    /**
+     * Changes user's password to given.
+     *
+     * @param string $email
+     * @param string $password
+     */
+    public function actionIndex($email, $password)
+    {
+        $query = $this->module->factory->createQuery();
+        /** @var \dektrium\user\models\User $user */
+        $user = $query->where(['email' => $email])->one();
+        if ($user === null) {
+            $this->stdout("User is not found!\n", Console::FG_RED);
+        } else {
+            if ($user->resetPassword($password)) {
+                $this->stdout("Password has been changed!\n", Console::FG_GREEN);
+            } else {
+                $this->stdout("Error occurred while changing password\n", Console::FG_RED);
+            }
+        }
+    }
 }

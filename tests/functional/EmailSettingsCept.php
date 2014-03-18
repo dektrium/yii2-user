@@ -19,9 +19,9 @@ $I->see('Current password is not valid');
 $page->updateEmail('qwerty', 'new_email@example.com');
 $I->see('Before your email will be changed we need you to confirm your new email address');
 $I->seeRecord(User::className(), [
-	'id' => 1,
-	'email' => 'user@example.com',
-	'unconfirmed_email' => 'new_email@example.com'
+    'id' => 1,
+    'email' => 'user@example.com',
+    'unconfirmed_email' => 'new_email@example.com'
 ]);
 $user = $I->grabRecord(User::className(), ['id' => 1]);
 $email = $I->getLastMessage();
@@ -42,7 +42,7 @@ $I->see('Invalid login or password');
 $loginPage->login('new_email@example.com', 'qwerty');
 $I->see('Logout');
 $I->seeRecord(User::className(), [
-	'id' => 1,
-	'email' => 'new_email@example.com',
-	'unconfirmed_email' => null
+    'id' => 1,
+    'email' => 'new_email@example.com',
+    'unconfirmed_email' => null
 ]);

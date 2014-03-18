@@ -2,7 +2,6 @@
 
 use dektrium\user\tests\_pages\ResendPage;
 use dektrium\user\models\User;
-use yii\helpers\Html;
 
 $I = new TestGuy($scenario);
 $I->wantTo('ensure that resending of confirmation tokens works');

@@ -23,37 +23,37 @@ use yii\web\User as BaseUser;
  */
 class User extends BaseUser
 {
-	/**
-	 * @inheritdoc
-	 */
-	public $enableAutoLogin = true;
+    /**
+     * @inheritdoc
+     */
+    public $enableAutoLogin = true;
 
-	/**
-	 * @inheritdoc
-	 */
-	public $loginUrl = ['/user/auth/login'];
+    /**
+     * @inheritdoc
+     */
+    public $loginUrl = ['/user/auth/login'];
 
-	/**
-	 * @inheritdoc
-	 */
-	public function init()
-	{
-		if ($this->identityClass == null) {
-			$this->identityClass = \Yii::$app->getModule('user')->factory->userClass;
-		}
-		parent::init();
-	}
+    /**
+     * @inheritdoc
+     */
+    public function init()
+    {
+        if ($this->identityClass == null) {
+            $this->identityClass = \Yii::$app->getModule('user')->factory->userClass;
+        }
+        parent::init();
+    }
 
-	/**
-	 * @inheritdoc
-	 */
-	protected function afterLogin($identity, $cookieBased, $duration)
-	{
-		parent::afterLogin($identity, $cookieBased, $duration);
-		if (\Yii::$app->getModule('user')->trackable) {
-			$this->identity->setAttribute('logged_in_from', ip2long(\Yii::$app->getRequest()->getUserIP()));
-			$this->identity->setAttribute('logged_in_at', time());
-			$this->identity->save(false);
-		}
-	}
+    /**
+     * @inheritdoc
+     */
+    protected function afterLogin($identity, $cookieBased, $duration)
+    {
+        parent::afterLogin($identity, $cookieBased, $duration);
+        if (\Yii::$app->getModule('user')->trackable) {
+            $this->identity->setAttribute('logged_in_from', ip2long(\Yii::$app->getRequest()->getUserIP()));
+            $this->identity->setAttribute('logged_in_at', time());
+            $this->identity->save(false);
+        }
+    }
 }

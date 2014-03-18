@@ -2,6 +2,8 @@ Changelog
 =========
 
 ## v0.5.0 [Work in progress]
+- Refactored User model
+- Added profile page
 - Refactored tests
 - Added user settings page
 - Updated admin views

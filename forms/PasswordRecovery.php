@@ -23,107 +23,108 @@ use yii\base\Model;
  */
 class PasswordRecovery extends Model
 {
-	/**
-	 * @var string
-	 */
-	public $password;
+    /**
+     * @var string
+     */
+    public $password;
 
-	/**
-	 * @var integer
-	 */
-	public $id;
+    /**
+     * @var integer
+     */
+    public $id;
 
-	/**
-	 * @var string
-	 */
-	public $token;
+    /**
+     * @var string
+     */
+    public $token;
 
-	/**
-	 * @var \dektrium\user\models\User
-	 */
-	private $_user;
+    /**
+     * @var \dektrium\user\models\User
+     */
+    private $_user;
 
-	/**
-	 * @inheritdoc
-	 * @throws \yii\base\InvalidParamException
-	 */
-	public function init()
-	{
-		parent::init();
-		if ($this->id == null || $this->token == null) {
-			throw new \RuntimeException('Id and token should be passed to config');
-		}
-		
-		$query = $this->module->factory->createUserQuery();
-		$this->_user = $query->where(['id' => $this->id, 'recovery_token' => $this->token])->one();
-		if (!$this->_user) {
-			throw new InvalidParamException('Wrong password reset token');
-		}
-		if ($this->_user->isRecoveryPeriodExpired) {
-			throw new InvalidParamException('Token has been expired');
-		}
-	}
+    /**
+     * @inheritdoc
+     * @throws \yii\base\InvalidParamException
+     */
+    public function init()
+    {
+        parent::init();
+        if ($this->id == null || $this->token == null) {
+            throw new \RuntimeException('Id and token should be passed to config');
+        }
 
-	/**
-	 * @inheritdoc
-	 */
-	public function attributeLabels()
-	{
-		return [
-			'password' => \Yii::t('user', 'Password'),
-		];
-	}
+        $query = $this->module->factory->createUserQuery();
+        $this->_user = $query->where(['id' => $this->id, 'recovery_token' => $this->token])->one();
+        if (!$this->_user) {
+            throw new InvalidParamException('Wrong password reset token');
+        }
+        if ($this->_user->isRecoveryPeriodExpired) {
+            throw new InvalidParamException('Token has been expired');
+        }
+    }
 
-	/**
-	 * @inheritdoc
-	 */
-	public function scenarios()
-	{
-		return [
-			'default' => ['password']
-		];
-	}
+    /**
+     * @inheritdoc
+     */
+    public function attributeLabels()
+    {
+        return [
+            'password' => \Yii::t('user', 'Password'),
+        ];
+    }
 
-	/**
-	 * @inheritdoc
-	 */
-	public function rules()
-	{
-		return [
-			['password', 'required'],
-			['password', 'string', 'min' => 6],
-		];
-	}
+    /**
+     * @inheritdoc
+     */
+    public function scenarios()
+    {
+        return [
+            'default' => ['password']
+        ];
+    }
 
-	/**
-	 * Resets user's password.
-	 *
-	 * @return bool
-	 */
-	public function resetPassword()
-	{
-		if ($this->validate()) {
-			$this->_user->resetPassword($this->password);
-			return true;
-		}
+    /**
+     * @inheritdoc
+     */
+    public function rules()
+    {
+        return [
+            ['password', 'required'],
+            ['password', 'string', 'min' => 6],
+        ];
+    }
 
-		return false;
-	}
+    /**
+     * Resets user's password.
+     *
+     * @return bool
+     */
+    public function resetPassword()
+    {
+        if ($this->validate()) {
+            $this->_user->resetPassword($this->password);
 
-	/**
-	 * @inheritdoc
-	 */
-	public function formName()
-	{
-		return 'recovery-form';
-	}
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function formName()
+    {
+        return 'recovery-form';
+    }
 
 
-	/**
-	 * @return null|\dektrium\user\Module
-	 */
-	protected function getModule()
-	{
-		return \Yii::$app->getModule('user');
-	}
+    /**
+     * @return null|\dektrium\user\Module
+     */
+    protected function getModule()
+    {
+        return \Yii::$app->getModule('user');
+    }
 }

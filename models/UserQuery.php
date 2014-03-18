@@ -20,27 +20,27 @@ use yii\db\ActiveQuery;
  */
 class UserQuery extends ActiveQuery
 {
-	/**
-	 * Only confirmed users.
-	 *
-	 * @return $this
-	 */
-	public function confirmed()
-	{
-		$this->andWhere('confirmed_at IS NOT NULL');
+    /**
+     * Only confirmed users.
+     *
+     * @return $this
+     */
+    public function confirmed()
+    {
+        $this->andWhere('confirmed_at IS NOT NULL');
 
-		return $this;
-	}
+        return $this;
+    }
 
-	/**
-	 * Only unconfirmed users.
-	 *
-	 * @return $this
-	 */
-	public function unconfirmed()
-	{
-		$this->andWhere('confirmed_at IS NULL');
+    /**
+     * Only unconfirmed users.
+     *
+     * @return $this
+     */
+    public function unconfirmed()
+    {
+        $this->andWhere('confirmed_at IS NULL');
 
-		return $this;
-	}
+        return $this;
+    }
 }

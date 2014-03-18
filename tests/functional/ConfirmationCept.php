@@ -11,6 +11,6 @@ $I->amGoingTo('check that user get confirmed');
 $I->amOnPage('?r=user/registration/confirm&id=2&token=NO2aCmBIjFQX624xmAc3VBu7Th3NJoa6');
 $I->see('Your account has been confirmed');
 $I->grabRecord('\dektrium\user\models\User', [
-	'id' => 2,
-	'confirmation_token' => null,
+    'id' => 2,
+    'confirmation_token' => null,
 ]);

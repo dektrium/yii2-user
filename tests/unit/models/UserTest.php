@@ -39,6 +39,7 @@ class UserTest extends TestCase
 
 	public function testValidation()
 	{
+		\Yii::$app->getModule('user');
 		$this->user = new User(['scenario' => 'register']);
 
 		$this->specify('username is valid', function () {
@@ -86,8 +87,7 @@ class UserTest extends TestCase
 		});
 
 		$this->specify('user should be registered without password if special option is set', function () {
-			\Yii::$app->getModule('user')->generatePassword = true;
-			$user = new User(['scenario' => 'register']);
+			$user = new User(['scenario' => 'short_register']);
 			$user->username = 'another_tester';
 			$user->email = 'another_tester@example.com';
 			verify($user->register())->true();
@@ -191,7 +191,7 @@ class UserTest extends TestCase
 	public function testEmailSettings()
 	{
 		$this->user = User::find(1);
-		$this->user->scenario = 'emailSettings';
+		$this->user->scenario = 'update_email';
 		$this->user->unconfirmed_email = 'new_email@example.com';
 		$this->user->current_password = 'qwerty';
 		$this->user->updateEmail();

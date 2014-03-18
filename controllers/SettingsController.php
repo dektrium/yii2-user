@@ -85,7 +85,7 @@ class SettingsController extends Controller
 	{
 		$query = $this->module->factory->createUserQuery();
 		$model = $query->where(['id' => \Yii::$app->getUser()->getIdentity()->getId()])->one();
-		$model->scenario = 'emailSettings';
+		$model->scenario = 'update_email';
 
 		if ($model->load(\Yii::$app->getRequest()->post()) && $model->updateEmail()) {
 			$this->refresh();
@@ -124,7 +124,7 @@ class SettingsController extends Controller
 	{
 		$query = $this->module->factory->createUserQuery();
 		$model = $query->where(['id' => \Yii::$app->getUser()->getIdentity()->getId()])->one();
-		$model->scenario = 'passwordSettings';
+		$model->scenario = 'update_password';
 
 		if ($model->load(\Yii::$app->getRequest()->post()) && $model->updatePassword()) {
 			\Yii::$app->getSession()->setFlash('settings_saved', \Yii::t('user', 'Password updated successfully'));

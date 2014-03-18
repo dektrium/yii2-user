@@ -22,7 +22,3 @@ $I->seeRecord(User::className(), ['confirmation_token' => 'NO2aCmBIjFQX624xmAc3V
 $page->resend('unconfirmed@example.com');
 $I->see('Awesome, almost there! We need to confirm your email address');
 $I->dontSeeRecord(User::className(), ['confirmation_token' => 'NO2aCmBIjFQX624xmAc3VBu7Th3NJoa6']);
-$user = $I->grabRecord(User::className(), ['username' => 'unconfirmed']);
-$I->seeEmailIsSent();
-$email = $I->getLastMessage();
-$I->seeEmailHtmlContains(Html::encode($user->getConfirmationUrl()), $email);

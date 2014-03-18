@@ -68,7 +68,7 @@ class User extends ActiveRecord implements UserInterface
 	/**
 	 * @var string Verification code.
 	 */
-	public $verifyCode;
+	public $verify_code;
 
 	/**
 	 * @var \dektrium\user\Module
@@ -92,6 +92,9 @@ class User extends ActiveRecord implements UserInterface
 		return new UserQuery($config);
 	}
 
+	/**
+	 * @inheritdoc
+	 */
 	public function attributeLabels()
 	{
 		return [
@@ -118,16 +121,13 @@ class User extends ActiveRecord implements UserInterface
 	 */
 	public function scenarios()
 	{
-		$attributes = $this->getModule()->generatePassword ? ['username', 'email'] : ['username', 'email', 'password'];
-		if (in_array('register', $this->getModule()->captcha)) {
-			$attributes[] = 'verifyCode';
-		}
 		return [
-			'register' => $attributes,
-			'create'   => ['username', 'email', 'password', 'role'],
-			'update'   => ['username', 'email', 'password', 'role'],
-			'passwordSettings' => ['current_password', 'password'],
-			'emailSettings' => ['unconfirmed_email', 'current_password'],
+			'register'        => ['username', 'email', 'password', 'verify_code'],
+			'short_register'  => ['username', 'email', 'verify_code'],
+			'create'          => ['username', 'email', 'password', 'role'],
+			'update'          => ['username', 'email', 'password', 'role'],
+			'update_password' => ['password', 'current_password'],
+			'update_email'    => ['unconfirmed_email', 'current_password']
 		];
 	}
 
@@ -136,44 +136,40 @@ class User extends ActiveRecord implements UserInterface
 	 */
 	public function rules()
 	{
-		$rules = [
-			[['username', 'email'], 'required', 'on' => ['create', 'update']],
-			['password', 'required', 'on' => ['create']],
-			['email', 'email'],
-			[['username', 'email'], 'unique'],
+		return [
+			// username rules
+			['username', 'required', 'on' => ['register', 'short_register', 'create', 'update']],
 			['username', 'match', 'pattern' => '/^[a-zA-Z]\w+$/'],
 			['username', 'string', 'min' => 3, 'max' => 25],
-			[['email', 'role'], 'string', 'max' => 255],
-			[['current_password', 'password'], 'required', 'on' => 'passwordSettings'],
-			['current_password', 'validateCurrentPassword', 'on' => ['passwordSettings', 'emailSettings']],
-			['password', 'string', 'min' => 6, 'on' => 'passwordSettings'],
-			[['unconfirmed_email', 'current_password'], 'required', 'on' => 'emailSettings'],
-			['unconfirmed_email', 'unique', 'targetAttribute' => 'email', 'on' => 'emailSettings'],
-			['unconfirmed_email', 'email', 'on' => 'emailSettings']
+			['username', 'unique'],
+
+			// email rules
+			['email', 'required', 'on' => ['register', 'short_register', 'create', 'update', 'update_email']],
+			['email', 'email'],
+			['email', 'string', 'max' => 255],
+			['email', 'unique'],
+
+			// unconfirmed email rules
+			['unconfirmed_email', 'required', 'on' => 'update_email'],
+			['unconfirmed_email', 'unique', 'targetAttribute' => 'email', 'on' => 'update_email'],
+			['unconfirmed_email', 'email', 'on' => 'update_email'],
+
+			// password rules
+			['password', 'required', 'on' => ['register', 'create']],
+			['password', 'string', 'min' => 6, 'on' => ['register', 'update_password', 'create']],
+
+			// current password rules
+			['current_password', 'required', 'on' => ['update_email', 'update_password']],
+			['current_password', function ($attr) {
+				if (!empty($this->$attr) && !Password::validate($this->$attr, $this->password_hash)) {
+					$this->addError($attr, \Yii::t('user', 'Current password is not valid'));
+				}
+			}, 'on' => ['update_email', 'update_password']],
+
+			// captcha
+			['verify_code', 'captcha', 'captchaAction' => 'user/default/captcha', 'on' => ['register'],
+				'skipOnEmpty' => !in_array('register', $this->getModule()->captcha)]
 		];
-
-		if ($this->getModule()->generatePassword) {
-			$rules[] = [['username', 'email'], 'required', 'on' => ['register']];
-		} else {
-			$rules[] = [['username', 'email', 'password'], 'required', 'on' => ['register']];
-			$rules[] = ['password', 'string', 'min' => 6, 'on' => ['register']];
-		}
-
-		if (in_array('register', $this->getModule()->captcha)) {
-			$rules[] = ['verifyCode', 'captcha', 'captchaAction' => 'user/default/captcha', 'on' => ['register']];
-		}
-
-		return $rules;
-	}
-
-	/**
-	 * Validates current password.
-	 */
-	public function validateCurrentPassword()
-	{
-		if (!empty($this->current_password) && !Password::validate($this->current_password, $this->password_hash)) {
-			$this->addError('current_password', \Yii::t('user', 'Current password is not valid'));
-		}
 	}
 
 	/**
@@ -230,7 +226,7 @@ class User extends ActiveRecord implements UserInterface
 	protected function beforeRegister()
 	{
 		$this->trigger(self::EVENT_BEFORE_REGISTER);
-		if ($this->_module->generatePassword) {
+		if ($this->scenario == 'short_register') {
 			$this->password = Password::generate(8);
 		}
 		if ($this->_module->trackable) {
@@ -246,7 +242,7 @@ class User extends ActiveRecord implements UserInterface
 	 */
 	protected function afterRegister()
 	{
-		if ($this->_module->generatePassword) {
+		if ($this->scenario == 'short_register') {
 			$this->sendMessage($this->email, \Yii::t('user', 'Welcome to {sitename}', ['sitename' => \Yii::$app->name]),
 				'welcome', ['user' => $this, 'password' => $this->password]
 			);

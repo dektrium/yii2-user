@@ -8,3 +8,8 @@ Basics
 ======
 
 - [User management](user-management.md)
+
+Overriding
+==========
+
+- [Overriding views](overriding-views.md)

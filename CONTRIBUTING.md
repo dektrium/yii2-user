@@ -1,5 +1,4 @@
-Contributing
-============
+# Contributing
 
 First of all, thank you for contributing, you are awesome!
 

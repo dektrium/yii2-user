@@ -1,6 +1,6 @@
-Upgrade instructions
-====================
+# Upgrade instructions
 
-## v0.4.0 -> v0.5.0
+## Upgrading to v0.5.0
 
-- Database schema has been updated. You can drop user table and apply new migration OR update your database structure manually as described in migration class.
+- Database schema has been updated. You can drop user table and apply new migration OR update your database structure
+manually as described in migration class.

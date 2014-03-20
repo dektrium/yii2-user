@@ -22,5 +22,5 @@ $I->haveRecord('\dektrium\user\models\User', ['email' => 'tester@example.com', '
 $I->expect('confirmation email has been sent');
 $I->seeEmailIsSent();
 $email = $I->getLastMessage();
-$I->seeEmailSubjectContains('Please confirm your account', $email);
+$I->seeEmailSubjectContains('Please confirm your email', $email);
 $I->seeEmailRecipientsContain('<tester@example.com>', $email);

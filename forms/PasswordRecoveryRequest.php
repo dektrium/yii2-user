@@ -56,7 +56,7 @@ class PasswordRecoveryRequest extends Model
                 $query = $this->getModule()->factory->createUserQuery();
                 $this->_user = $query->where(['email' => $this->email])->one();
                 if ($this->_user !== null && $this->getModule()->confirmable && !$this->_user->getIsConfirmed()) {
-                    $this->addError($attribute, \Yii::t('user', 'You must confirm your account first'));
+                    $this->addError($attribute, \Yii::t('user', 'You need to confirm your email address'));
                 }
             }],
             ['verifyCode', 'captcha',

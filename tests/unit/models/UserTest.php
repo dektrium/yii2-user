@@ -144,7 +144,7 @@ class UserTest extends TestCase
             $email = $this->getLastMessage();
             $this->assertEmailIsSent();
             $this->assertEmailRecipientsContain('<tester@example.com>', $email);
-            $this->assertEmailSubjectContains('Please confirm your account', $email);
+            $this->assertEmailSubjectContains('Please confirm your email', $email);
             $this->assertEmailHtmlContains(Html::encode($this->user->getConfirmationUrl()), $email);
         });
 

@@ -20,7 +20,7 @@ $I->see('Invalid login or password');
 
 $I->amGoingTo('try to login with unconfirmed account');
 $page->login('unconfirmed@example.com', 'qwerty');
-$I->see('You must confirm your account before logging in');
+$I->see('You need to confirm your email address');
 
 $I->amGoingTo('try to login with blocked account');
 $page->login('blocked@example.com', 'qwerty');

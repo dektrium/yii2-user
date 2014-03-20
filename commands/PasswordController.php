@@ -38,9 +38,9 @@ class PasswordController extends Controller
             $this->stdout(\Yii::t('user', 'User is not found!') . "\n", Console::FG_RED);
         } else {
             if ($user->resetPassword($password)) {
-                $this->stdout(\Yii::t('user', 'Password has been changed!') . "\n", Console::FG_GREEN);
+                $this->stdout(\Yii::t('user', 'Password has been changed') . "\n", Console::FG_GREEN);
             } else {
-                $this->stdout(\Yii::t('user', 'Error occurred while changing password!') . "\n", Console::FG_RED);
+                $this->stdout(\Yii::t('user', 'Error occurred while changing password') . "\n", Console::FG_RED);
             }
         }
     }

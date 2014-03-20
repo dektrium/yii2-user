@@ -14,10 +14,10 @@ $page = PasswordSettingsPage::openBy($I);
 $page->updatePassword('wrong', 'new_password');
 $I->see('Current password is not valid');
 $page->updatePassword('qwerty', 'new_password');
-$I->see('Password updated successfully');
+$I->see('Password has been changed');
 
 $I->amGoingTo('try to change password back');
 $page->updatePassword('qwerty', 'qwerty');
 $I->see('Current password is not valid');
 $page->updatePassword('new_password', 'qwerty');
-$I->see('Password updated successfully');
+$I->see('Password has been changed');

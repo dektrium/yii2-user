@@ -249,7 +249,7 @@ class User extends ActiveRecord implements UserInterface
             );
         }
         if ($this->_module->confirmable) {
-            $this->sendMessage($this->email, \Yii::t('user', 'Please confirm your account'),
+            $this->sendMessage($this->email, \Yii::t('user', 'Please confirm your email'),
                 'confirmation',	['user' => $this]
             );
         }
@@ -380,7 +380,7 @@ class User extends ActiveRecord implements UserInterface
         $this->generateConfirmationData();
         $this->save(false);
 
-        return $this->sendMessage($this->email, \Yii::t('user', 'Please confirm your account'), 'confirmation', ['user' => $this]);
+        return $this->sendMessage($this->email, \Yii::t('user', 'Please confirm your email'), 'confirmation', ['user' => $this]);
     }
 
     /**

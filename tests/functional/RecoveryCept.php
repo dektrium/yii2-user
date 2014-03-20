@@ -12,7 +12,7 @@ $page = RecoveryPage::openBy($I);
 
 $I->amGoingTo('try to request recovery token for unconfirmed account');
 $page->resend('unconfirmed@example.com');
-$I->see('You must confirm your account first');
+$I->see('You need to confirm your email address');
 
 $I->amGoingTo('try to request recovery token');
 $page->resend('user@example.com');

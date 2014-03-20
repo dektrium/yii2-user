@@ -110,7 +110,7 @@ class Login extends Model
     {
         $confirmationRequired = $this->getModule()->confirmable && !$this->getModule()->allowUnconfirmedLogin;
         if ($this->user !== null && $confirmationRequired && !$this->user->isConfirmed) {
-            $this->addError('login', \Yii::t('user', 'You must confirm your account before logging in'));
+            $this->addError('login', \Yii::t('user', 'You need to confirm your email address'));
         }
     }
 

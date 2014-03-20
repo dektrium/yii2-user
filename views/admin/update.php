@@ -33,9 +33,9 @@ $this->registerJs(sprintf('$("#user-password").passField(%s);', json_encode(['lo
         <?= Html::a(Yii::t('user', 'Delete recovery tokens'), ['delete-tokens', 'id' => $model->id], ['class' => 'btn btn-warning btn-xs', 'data-method' => 'post']) ?>
     <?php endif; ?>
     <?php if ($model->getIsBlocked()): ?>
-        <?= Html::a(Yii::t('user', 'Unblock user'), ['block', 'id' => $model->id], ['class' => 'btn btn-success btn-xs', 'data-method' => 'post', 'data-confirm' => Yii::t('user', 'Are you sure to block this user?')]) ?>
+        <?= Html::a(Yii::t('user', 'Unblock'), ['block', 'id' => $model->id], ['class' => 'btn btn-success btn-xs', 'data-method' => 'post', 'data-confirm' => Yii::t('user', 'Are you sure to block this user?')]) ?>
     <?php else: ?>
-        <?= Html::a(Yii::t('user', 'Block user'), ['block', 'id' => $model->id], ['class' => 'btn btn-danger btn-xs', 'data-method' => 'post', 'data-confirm' => Yii::t('user', 'Are you sure to block this user?')]) ?>
+        <?= Html::a(Yii::t('user', 'Block'), ['block', 'id' => $model->id], ['class' => 'btn btn-danger btn-xs', 'data-method' => 'post', 'data-confirm' => Yii::t('user', 'Are you sure to block this user?')]) ?>
     <?php endif; ?>
 </h1>
 

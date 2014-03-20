@@ -26,11 +26,6 @@ class Resend extends Model
     public $email;
 
     /**
-     * @var string
-     */
-    public $verifyCode;
-
-    /**
      * @var \dektrium\user\models\UserInterface
      */
     private $_user;
@@ -42,7 +37,6 @@ class Resend extends Model
     {
         return [
             'email' => \Yii::t('user', 'Email'),
-            'verifyCode' => \Yii::t('user', 'Verification Code'),
         ];
     }
 
@@ -51,18 +45,12 @@ class Resend extends Model
      */
     public function rules()
     {
-        $rules = [
+        return [
             ['email', 'required'],
             ['email', 'email'],
             ['email', 'exist', 'targetClass' => $this->getModule()->factory->userClass],
             ['email', 'validateEmail'],
         ];
-
-        if (in_array('resend', $this->getModule()->captcha)) {
-            $rules[] = ['verifyCode', 'captcha', 'captchaAction' => 'user/default/captcha'];
-        }
-
-        return $rules;
     }
 
     /**

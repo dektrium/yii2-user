@@ -66,11 +66,6 @@ class User extends ActiveRecord implements UserInterface
     public $current_password;
 
     /**
-     * @var string Verification code.
-     */
-    public $verify_code;
-
-    /**
      * @var \dektrium\user\Module
      */
     private $_module;
@@ -123,8 +118,8 @@ class User extends ActiveRecord implements UserInterface
     public function scenarios()
     {
         return [
-            'register'        => ['username', 'email', 'password', 'verify_code'],
-            'short_register'  => ['username', 'email', 'verify_code'],
+            'register'        => ['username', 'email', 'password'],
+            'short_register'  => ['username', 'email'],
             'create'          => ['username', 'email', 'password', 'role'],
             'update'          => ['username', 'email', 'password', 'role'],
             'update_password' => ['password', 'current_password'],
@@ -166,10 +161,6 @@ class User extends ActiveRecord implements UserInterface
                     $this->addError($attr, \Yii::t('user', 'Current password is not valid'));
                 }
             }, 'on' => ['update_email', 'update_password']],
-
-            // captcha
-            ['verify_code', 'captcha', 'captchaAction' => 'user/default/captcha', 'on' => ['register'],
-                'skipOnEmpty' => !in_array('register', $this->getModule()->captcha)]
         ];
     }
 

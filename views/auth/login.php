@@ -36,13 +36,6 @@ $this->params['breadcrumbs'][] = $this->title;
 
                 <?= $form->field($model, 'password')->passwordInput()->label(Yii::t('user', 'Password') . ' (' . Html::a(Yii::t('user', 'Forgot password?'), ['/user/recovery/request']) . ')') ?>
 
-                <?php if (in_array('login', Yii::$app->getModule('user')->captcha)): ?>
-                    <?= $form->field($model, 'verifyCode')->widget(\yii\captcha\Captcha::className(), [
-                        'captchaAction' => 'user/default/captcha',
-                        'options' => ['class' => 'form-control'],
-                    ]) ?>
-                <?php endif ?>
-
                 <?= $form->field($model, 'rememberMe')->checkbox() ?>
 
                 <?= Html::submitButton(Yii::t('user', 'Sign in'), ['class' => 'btn btn-primary btn-block']) ?>

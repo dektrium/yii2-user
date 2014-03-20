@@ -37,13 +37,6 @@ $this->registerJs(sprintf('$("#recovery-form-password").passField(%s);', json_en
 
                 <?= $form->field($model, 'password')->passwordInput() ?>
 
-                <?php if (in_array('recovery', Yii::$app->getModule('user')->captcha)): ?>
-                    <?= $form->field($model, 'verifyCode')->widget(\yii\captcha\Captcha::className(), [
-                        'captchaAction' => 'user/default/captcha',
-                        'options' => ['class' => 'form-control'],
-                    ]) ?>
-                <?php endif ?>
-
                 <?= Html::submitButton(Yii::t('user', 'Finish'), ['class' => 'btn btn-success btn-block']) ?><br>
 
                 <?php ActiveForm::end(); ?>

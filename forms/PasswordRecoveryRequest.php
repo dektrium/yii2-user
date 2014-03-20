@@ -19,11 +19,6 @@ class PasswordRecoveryRequest extends Model
     public $email;
 
     /**
-     * @var string
-     */
-    public $verifyCode;
-
-    /**
      * @var \dektrium\user\models\UserInterface
      */
     private $_user;
@@ -35,7 +30,6 @@ class PasswordRecoveryRequest extends Model
     {
         return [
             'email'      => \Yii::t('user', 'Email'),
-            'verifyCode' => \Yii::t('user', 'Captcha'),
         ];
     }
 
@@ -59,10 +53,6 @@ class PasswordRecoveryRequest extends Model
                     $this->addError($attribute, \Yii::t('user', 'You need to confirm your email address'));
                 }
             }],
-            ['verifyCode', 'captcha',
-                'captchaAction' => 'user/default/captcha',
-                'skipOnEmpty' => !in_array('recovery', $this->module->captcha)
-            ]
         ];
     }
 

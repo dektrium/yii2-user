@@ -40,7 +40,7 @@ class RegistrationController extends Controller
                     ],
                     [
                         'allow' => true,
-                        'actions' => ['confirm', 'resend', 'captcha'],
+                        'actions' => ['confirm', 'resend'],
                         'roles' => ['?', '@']
                     ],
                 ]
@@ -98,14 +98,11 @@ class RegistrationController extends Controller
         $query = $this->module->factory->createUserQuery();
         /** @var \dektrium\user\models\User $user */
         $user = $query->where(['id' => $id, 'confirmation_token' => $token])->one();
-        if ($user === null) {
-            throw new NotFoundHttpException('User not found');
-        }
-        if ($user->confirm()) {
-            return $this->render('finish');
-        } else {
+        if ($user === null || !$user->confirm()) {
             return $this->render('invalidToken');
         }
+
+        return $this->render('finish');
     }
 
     /**

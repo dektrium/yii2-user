@@ -43,13 +43,6 @@ $this->registerJs(sprintf('$("#user-password").passField(%s);', json_encode(['lo
                     <?= $form->field($model, 'password')->passwordInput() ?>
                 <?php endif ?>
 
-                <?php if (in_array('register', Yii::$app->getModule('user')->captcha)): ?>
-                    <?= $form->field($model, 'verifyCode')->widget(\yii\captcha\Captcha::className(), [
-                        'captchaAction' => 'user/default/captcha',
-                        'options' => ['class' => 'form-control'],
-                    ]) ?>
-                <?php endif ?>
-
                 <?= Html::submitButton(Yii::t('user', 'Sign up'), ['class' => 'btn btn-success btn-block']) ?>
 
                 <?php ActiveForm::end(); ?>

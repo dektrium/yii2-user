@@ -35,7 +35,7 @@ class AuthController extends Controller
                 'rules' => [
                     [
                         'allow' => true,
-                        'actions' => ['login', 'captcha'],
+                        'actions' => ['login'],
                         'roles' => ['?']
                     ],
                     [

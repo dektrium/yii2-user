@@ -35,20 +35,4 @@ class ResendTest extends TestCase
         ]);
         $this->assertTrue($form->validate());
     }
-
-    public function testCaptcha()
-    {
-        $form = new Resend();
-        $form->setAttributes([
-            'email' => 'unconfirmed@example.com',
-        ]);
-        $this->assertTrue($form->validate());
-
-        \Yii::$app->getModule('user')->captcha[] = 'resend';
-        $form = new Resend();
-        $form->setAttributes([
-            'email' => 'unconfirmed@example.com',
-        ]);
-        $this->assertFalse($form->validate());
-    }
 }

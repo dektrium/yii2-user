@@ -26,11 +26,6 @@ class Module extends BaseModule
     const VERSION = '0.5.0';
 
     /**
-     * @var array Actions on which captcha will be shown.
-     */
-    public $captcha = [];
-
-    /**
      * @var string Allowed types: 'email', 'username', 'both'
      */
     public $loginType = 'email';

@@ -90,21 +90,4 @@ class LoginTest extends TestCase
         \Yii::$app->getModule('user')->allowUnconfirmedLogin = true;
         $this->assertTrue($form->validate());
     }
-
-    public function testCaptcha()
-    {
-        $form = new Login();
-        $form->setAttributes([
-            'login' => 'user@example.com',
-            'password' => 'qwerty'
-        ]);
-        $this->assertTrue($form->validate());
-        \Yii::$app->getModule('user')->captcha[] = 'login';
-        $form = new Login();
-        $form->setAttributes([
-            'login' => 'user@example.com',
-            'password' => 'qwerty'
-        ]);
-        $this->assertFalse($form->validate());
-    }
 }

@@ -34,13 +34,6 @@ $this->params['breadcrumbs'][] = $this->title;
 
                 <?= $form->field($model, 'email')->textInput(['autofocus' => true]) ?>
 
-                <?php if (in_array('recovery', Yii::$app->getModule('user')->captcha)): ?>
-                    <?= $form->field($model, 'verifyCode')->widget(\yii\captcha\Captcha::className(), [
-                        'captchaAction' => 'user/default/captcha',
-                        'options' => ['class' => 'form-control'],
-                    ]) ?>
-                <?php endif ?>
-
                 <?= Html::submitButton(Yii::t('user', 'Continue'), ['class' => 'btn btn-primary btn-block']) ?><br>
 
                 <?php ActiveForm::end(); ?>

@@ -1,48 +1,62 @@
 <?php
+
+/*
+ * This file is part of the Dektrium project.
+ *
+ * (c) Dektrium project <http://github.com/dektrium>
+ *
+ * For the full copyright and license information, please view the LICENSE.md
+ * file that was distributed with this source code.
+ */
+
 use yii\helpers\Html;
 use yii\widgets\ActiveForm;
+use dektrium\user\assets\Passfield;
 
 /**
  * @var yii\web\View $this
  * @var yii\widgets\ActiveForm $form
  * @var dektrium\user\models\User $user
  */
-$this->title = Yii::t('user', 'Register');
+
+Passfield::register($this);
+$this->title = Yii::t('user', 'Sign up');
 $this->params['breadcrumbs'][] = $this->title;
-\dektrium\user\assets\Passfield::register($this);
-$this->registerJs(sprintf('$("#user-password").passField({"locale": "%s"});', Yii::$app->language));
+$this->registerJs(sprintf('$("#user-password").passField(%s);', json_encode(['locale' => Yii::$app->language])));
 ?>
-<h1><?= Html::encode($this->title) ?></h1>
+<div class="row">
+    <div class="col-md-4 col-md-offset-4">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h3 class="panel-title"><?= Html::encode($this->title) ?></h3>
+            </div>
+            <div class="panel-body">
+                <?php $form = ActiveForm::begin([
+                    'id' => 'registration-form',
+                ]); ?>
 
-<?php $form = ActiveForm::begin([
-    'id' => 'registration-form',
-    'options' => ['class' => 'form-horizontal'],
-    'fieldConfig' => [
-        'template' => "{label}\n<div class=\"col-lg-3\">{input}</div>\n<div class=\"col-lg-8\">{error}</div>",
-        'labelOptions' => ['class' => 'col-lg-1 control-label'],
-    ],
-]); ?>
+                <?= $form->field($model, 'username') ?>
 
-<?= $form->field($model, 'username') ?>
+                <?= $form->field($model, 'email') ?>
 
-<?= $form->field($model, 'email') ?>
+                <?php if (!Yii::$app->getModule('user')->generatePassword): ?>
+                    <?= $form->field($model, 'password')->passwordInput() ?>
+                <?php endif ?>
 
-<?php if (!Yii::$app->getModule('user')->generatePassword): ?>
-    <?= $form->field($model, 'password')->passwordInput() ?>
-<?php endif ?>
+                <?php if (in_array('register', Yii::$app->getModule('user')->captcha)): ?>
+                    <?= $form->field($model, 'verifyCode')->widget(\yii\captcha\Captcha::className(), [
+                        'captchaAction' => 'user/default/captcha',
+                        'options' => ['class' => 'form-control'],
+                    ]) ?>
+                <?php endif ?>
 
-<?php if (in_array('register', Yii::$app->getModule('user')->captcha)): ?>
-    <?= $form->field($model, 'verifyCode')->widget(\yii\captcha\Captcha::className(), [
-        'captchaAction' => 'user/default/captcha',
-        'options' => ['class' => 'form-control'],
-    ]) ?>
-<?php endif ?>
+                <?= Html::submitButton(Yii::t('user', 'Sign up'), ['class' => 'btn btn-success btn-block']) ?>
 
-    <div class="form-group">
-        <div class="col-lg-offset-1 col-lg-11">
-            <?= Html::submitButton(Yii::t('user', 'Register'), ['class' => 'btn btn-primary']) ?><br>
-            <?= Html::a(Yii::t('user', 'Didn\'t receive confirmation message?'), ['/user/registration/resend']) ?>
+                <?php ActiveForm::end(); ?>
+            </div>
         </div>
+        <p class="text-center">
+            <?= Html::a(Yii::t('user', 'Already registered? Sign in!'), ['/user/auth/login']) ?>
+        </p>
     </div>
-
-<?php ActiveForm::end(); ?>
+</div>

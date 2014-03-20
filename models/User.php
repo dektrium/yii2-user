@@ -75,7 +75,7 @@ class User extends ActiveRecord implements UserInterface
      */
     public function getProfile()
     {
-        return $this->hasOne($this->_module->factory->profileClass, ['user_id' => 'id']);
+        return $this->hasOne($this->module->factory->profileClass, ['user_id' => 'id']);
     }
 
     /**
@@ -221,10 +221,10 @@ class User extends ActiveRecord implements UserInterface
         if ($this->scenario == 'short_register') {
             $this->password = Password::generate(8);
         }
-        if ($this->_module->trackable) {
+        if ($this->module->trackable) {
             $this->setAttribute('registered_from', ip2long(\Yii::$app->request->userIP));
         }
-        if ($this->_module->confirmable) {
+        if ($this->module->confirmable) {
             $this->generateConfirmationData();
         }
     }
@@ -239,7 +239,7 @@ class User extends ActiveRecord implements UserInterface
                 'welcome', ['user' => $this, 'password' => $this->password]
             );
         }
-        if ($this->_module->confirmable) {
+        if ($this->module->confirmable) {
             $this->sendMessage($this->email, \Yii::t('user', 'Please confirm your email'),
                 'confirmation',	['user' => $this]
             );
@@ -265,7 +265,7 @@ class User extends ActiveRecord implements UserInterface
             $this->setAttribute('auth_key', Security::generateRandomKey());
             $this->setAttribute('role', $this->getModule()->defaultRole);
             if ($this->save(false)) {
-                $profile = $this->_module->factory->createProfile([
+                $profile = $this->module->factory->createProfile([
                     'user_id' => $this->id,
                     'gravatar_email' => $this->email
                 ]);

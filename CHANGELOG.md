@@ -1,5 +1,12 @@
 # CHANGELOG
 
+## 0.6.0 [Work in progress]
+
+- Removed default controller
+- Removed captcha from all forms
+- Updated i18n messages and translations
+- Updated view files
+
 ## v0.5.0 [20 March 2014]
 
 - Refactored User model

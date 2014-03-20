@@ -1,6 +1,6 @@
 # CHANGELOG
 
-## v0.5.0 [Work in progress]
+## v0.5.0 [20 March 2014]
 
 - Refactored User model
 - Added profile page

@@ -28,8 +28,8 @@ $I->see('Recovery token is invalid');
 
 $I->amOnPage('/?r=user/recovery/reset&id=' . $user->id . '&token=' . $user->recovery_token);
 $I->fillField('#recovery-form-password', 'newpass');
-$I->click('Reset password');
-$I->see('Your password has been reset');
+$I->click('Finish');
+$I->see('Password recovery finished');
 
 $page = LoginPage::openBy($I);
 $page->login('user@example.com', 'qwerty');

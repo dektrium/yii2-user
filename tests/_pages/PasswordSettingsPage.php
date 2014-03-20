@@ -19,6 +19,6 @@ class PasswordSettingsPage extends BasePage
     {
         $this->guy->fillField('#user-current_password', $currentPassword);
         $this->guy->fillField('#user-password', $password);
-        $this->guy->click('Update password');
+        $this->guy->click('Save');
     }
 }

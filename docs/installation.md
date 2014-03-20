@@ -53,13 +53,17 @@ To enable module you should configure your application as follows:
 ```php
 'modules' => [
 	...
-	'user' => 'dektrium\user\Module',
+	'user' => [
+	    'class' => 'dektrium\user\Module',
+	],
 	...
 ],
 ...
 'components' => [
 	...
-	'user' => 'dektrium\user\components\User'
+	'user' => [
+	    'class' => 'dektrium\user\components\User'
+	],
 	...
 ]
 ```

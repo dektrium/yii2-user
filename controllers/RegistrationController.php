@@ -71,7 +71,8 @@ class RegistrationController extends Controller
      */
     public function actionRegister()
     {
-        $model = $this->module->factory->createUser(['scenario' => 'register']);
+        $scenario = $this->module->generatePassword ? 'short_register' : 'register';
+        $model = $this->module->factory->createUser(['scenario' => $scenario]);
 
         if ($model->load(\Yii::$app->getRequest()->post()) && $model->register()) {
             return $this->render('success', [

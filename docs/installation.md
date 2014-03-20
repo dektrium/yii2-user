@@ -13,7 +13,7 @@ After you have done this go to the section `Setting up`
 Either run following command:
 
 ```bash
-$ php composer.phar require dektrium/yii2-user "~0.4@dev"
+$ php composer.phar require dektrium/yii2-user "*"
 ```
 
 or add
@@ -21,7 +21,7 @@ or add
 ```js
 {
     "require": {
-        "dektrium/yii2-user": "~0.4@dev"
+        "dektrium/yii2-user": "*"
     }
 }
 ```
@@ -53,9 +53,7 @@ To enable module you should configure your application as follows:
 ```php
 'modules' => [
 	...
-	'user' => [
-	    'class' => 'dektrium\user\Module',
-	],
+	'user' => 'dektrium\user\Module',
 	...
 ],
 ...

@@ -1,21 +1,30 @@
 <?php
 
+/*
+ * This file is part of the Dektrium project.
+ *
+ * (c) Dektrium project <http://github.com/dektrium>
+ *
+ * For the full copyright and license information, please view the LICENSE.md
+ * file that was distributed with this source code.
+ */
+
+
 use yii\helpers\Html;
 use yii\widgets\ActiveForm;
+use dektrium\user\assets\Passfield;
 
 /**
  * @var yii\web\View $this
  * @var dektrium\user\models\User $model
  */
 
-$this->title = Yii::t('user', 'Update user');
+Passfield::register($this);
+$this->title = Yii::t('user', 'Update user account');
 $this->params['breadcrumbs'][] = ['label' => Yii::t('user', 'Users'), 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
-
-\dektrium\user\assets\Passfield::register($this);
-$this->registerJs(sprintf('$("#user-password").passField({"locale": "%s"});', Yii::$app->language));
+$this->registerJs(sprintf('$("#user-password").passField(%s);', json_encode(['locale' => Yii::$app->language])));
 ?>
-
 <h1><i class="glyphicon glyphicon-user"></i> <?= Html::encode($model->username) ?>
     <?php if (!$model->getIsConfirmed()): ?>
         <?= Html::a(Yii::t('user', 'Confirm'), ['confirm', 'id' => $model->id], ['class' => 'btn btn-success btn-xs', 'data-method' => 'post']) ?>
@@ -55,7 +64,9 @@ $this->registerJs(sprintf('$("#user-password").passField({"locale": "%s"});', Yi
 </div>
 
 <div class="panel panel-default">
-    <div class="panel-heading"><?= Yii::t('user', 'Account') ?></div>
+    <div class="panel-heading">
+        <?= Html::encode($this->title) ?>
+    </div>
     <div class="panel-body">
         <?php $form = ActiveForm::begin(); ?>
 
@@ -65,15 +76,12 @@ $this->registerJs(sprintf('$("#user-password").passField({"locale": "%s"});', Yi
 
         <?= $form->field($model, 'password')->passwordInput() ?>
 
-        <hr/>
-
         <?= $form->field($model, 'role')->textInput(['maxlength' => 255]) ?>
 
-        <hr/>
-
-        <?= Html::submitButton(Yii::t('user', 'Update'), ['class' => 'btn btn-primary']) ?>
+        <div class="form-group">
+            <?= Html::submitButton(Yii::t('user', 'Save'), ['class' => 'btn btn-primary']) ?>
+        </div>
 
         <?php ActiveForm::end(); ?>
-
     </div>
 </div>

@@ -1,13 +1,13 @@
 <?php
 
 /*
-* This file is part of the Dektrium project.
-*
-* (c) Dektrium project <http://github.com/dektrium/>
-*
-* For the full copyright and license information, please view the LICENSE
-* file that was distributed with this source code.
-*/
+ * This file is part of the Dektrium project.
+ *
+ * (c) Dektrium project <http://github.com/dektrium/>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
 
 namespace dektrium\user;
 
@@ -89,9 +89,19 @@ class Module extends BaseModule
     public $admins = [];
 
     /**
-     * @var Factory
+     * @inheritdoc
      */
-    private $_factory = ['class' => '\dektrium\user\Factory'];
+    public function __construct($id, $parent = null, $config = [])
+    {
+        foreach ($this->getModuleComponents() as $name => $component) {
+            if (!isset($config['components'][$name])) {
+                $config['components'][$name] = $component;
+            } elseif (is_array($config['components'][$name]) && !isset($config['components'][$name]['class'])) {
+                $config['components'][$name]['class'] = $component['class'];
+            }
+        }
+        parent::__construct($id, $parent, $config);
+    }
 
     /**
      * @inheritdoc
@@ -111,25 +121,16 @@ class Module extends BaseModule
     }
 
     /**
-     * @return Factory
+     * Returns module components.
+     *
+     * @return array
      */
-    public function getFactory()
+    protected function getModuleComponents()
     {
-        if (is_array($this->_factory)) {
-            $this->_factory = \Yii::createObject($this->_factory);
-        }
-
-        return $this->_factory;
-    }
-
-    /**
-     * @param $config
-     */
-    public function setFactory(array $config)
-    {
-        if (!isset($config['class'])) {
-            $config['class'] = '\dektrium\user\Factory';
-        }
-        $this->_factory = $config;
+        return [
+            'factory' => [
+                'class' => '\dektrium\user\Factory'
+            ]
+        ];
     }
 }

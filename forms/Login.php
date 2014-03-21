@@ -62,6 +62,8 @@ class Login extends Model
     {
         return [
             [['email', 'password'], 'required'],
+            ['email', 'email'],
+            ['email', 'trim'],
             ['password', function ($attribute) {
                 if ($this->user === null || !Password::validate($this->password, $this->user->password_hash)) {
                     $this->addError($attribute, \Yii::t('user', 'Invalid email or password'));

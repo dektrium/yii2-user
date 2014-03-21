@@ -2,6 +2,7 @@
 
 ## 0.6.0 [Work in progress]
 
+- Removed different login types (by username and both username and email)
 - Removed default controller
 - Removed captcha from all forms
 - Updated i18n messages and translations

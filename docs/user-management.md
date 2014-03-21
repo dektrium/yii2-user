@@ -19,6 +19,4 @@ Before we start you need to add administrators in your module configuration as f
 ],
 ```
 
-OR if you are using RBAC you can add `manageUsers' role to all users that can manage users.
-
 Now you can manage users on page `http://localhost/index.php?r=user/admin`

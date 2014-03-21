@@ -33,12 +33,12 @@ Yii::$app->getUser()->logout();
 $I->amGoingTo('login with new email');
 $loginPage = LoginPage::openBy($I);
 $loginPage->login('new_email@example.com', 'qwerty');
-$I->see('Invalid login or password');
+$I->see('Invalid email or password');
 
 $user->confirm(false);
 $loginPage = LoginPage::openBy($I);
 $loginPage->login('user@example.com', 'qwerty');
-$I->see('Invalid login or password');
+$I->see('Invalid email or password');
 $loginPage->login('new_email@example.com', 'qwerty');
 $I->see('Logout');
 $I->seeRecord(User::className(), [

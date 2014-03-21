@@ -16,7 +16,7 @@ $I->see('Password cannot be blank.');
 $I->amGoingTo('try to login with wrong credentials');
 $page->login('user@example.com', 'wrong');
 $I->expectTo('see validations errors');
-$I->see('Invalid login or password');
+$I->see('Invalid email or password');
 
 $I->amGoingTo('try to login with unconfirmed account');
 $page->login('unconfirmed@example.com', 'qwerty');

@@ -1,21 +1,23 @@
 <?php
 
 /*
-* This file is part of the Dektrium project.
-*
-* (c) Dektrium project <http://github.com/dektrium/>
-*
-* For the full copyright and license information, please view the LICENSE
-* file that was distributed with this source code.
-*/
+ * This file is part of the Dektrium project.
+ *
+ * (c) Dektrium project <http://github.com/dektrium/>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
 
 namespace dektrium\user\forms;
 
 use yii\base\Model;
-use yii\helpers\Security;
+use dektrium\user\helpers\Password;
 
 /**
  * LoginForm is the model behind the login form.
+ *
+ * @property \dektrium\user\Module $module
  *
  * @author Dmitry Erofeev <dmeroff@gmail.com>
  */
@@ -24,7 +26,7 @@ class Login extends Model
     /**
      * @var string
      */
-    public $login;
+    public $email;
 
     /**
      * @var string
@@ -46,22 +48,8 @@ class Login extends Model
      */
     public function attributeLabels()
     {
-        switch ($this->getModule()->loginType) {
-            case 'email':
-                $loginLabel = \Yii::t('user', 'Email');
-                break;
-            case 'username':
-                $loginLabel = \Yii::t('user', 'Username');
-                break;
-            case 'both':
-                $loginLabel = \Yii::t('user', 'Email or username');
-                break;
-            default:
-                throw new \RuntimeException;
-        }
-
         return [
-            'login'      => $loginLabel,
+            'email'      => \Yii::t('user', 'Email'),
             'password'   => \Yii::t('user', 'Password'),
             'rememberMe' => \Yii::t('user', 'Remember me next time'),
         ];
@@ -73,43 +61,25 @@ class Login extends Model
     public function rules()
     {
         return [
-            [['login', 'password'], 'required'],
-            ['password', 'validatePassword'],
-            ['login', 'validateUserIsConfirmed'],
-            ['login', 'validateUserIsNotBlocked'],
+            [['email', 'password'], 'required'],
+            ['password', function ($attribute) {
+                if ($this->user === null || !Password::validate($this->password, $this->user->password_hash)) {
+                    $this->addError($attribute, \Yii::t('user', 'Invalid email or password'));
+                }
+            }],
+            ['email', function ($attribute) {
+                if ($this->user !== null) {
+                    $confirmationRequired = $this->module->confirmable && !$this->module->allowUnconfirmedLogin;
+                    if ($confirmationRequired && !$this->user->isConfirmed) {
+                        $this->addError($attribute, \Yii::t('user', 'You need to confirm your email address'));
+                    }
+                    if ($this->user->getIsBlocked()) {
+                        $this->addError($attribute, \Yii::t('user', 'Your account has been blocked'));
+                    }
+                }
+            }],
             ['rememberMe', 'boolean'],
         ];
-    }
-
-    /**
-     * Validates the password.
-     */
-    public function validatePassword()
-    {
-        if ($this->user === null || !Security::validatePassword($this->password, $this->user->password_hash)) {
-            $this->addError('password', \Yii::t('user', 'Invalid login or password'));
-        }
-    }
-
-    /**
-     * Validates whether user has confirmed his account.
-     */
-    public function validateUserIsConfirmed()
-    {
-        $confirmationRequired = $this->getModule()->confirmable && !$this->getModule()->allowUnconfirmedLogin;
-        if ($this->user !== null && $confirmationRequired && !$this->user->isConfirmed) {
-            $this->addError('login', \Yii::t('user', 'You need to confirm your email address'));
-        }
-    }
-
-    /**
-     * Validates whether user is not blocked
-     */
-    public function validateUserIsNotBlocked()
-    {
-        if ($this->user !== null && $this->user->getIsBlocked()) {
-            $this->addError('login', \Yii::t('user', 'Your account has been blocked'));
-        }
     }
 
     /**
@@ -141,21 +111,7 @@ class Login extends Model
     {
         if (parent::beforeValidate()) {
             $query = $this->getModule()->factory->createUserQuery();
-            switch ($this->getModule()->loginType) {
-                case 'email':
-                    $condition = ['email' => $this->login];
-                    break;
-                case 'username':
-                    $condition = ['username' => $this->login];
-                    break;
-                case 'both':
-                    $condition = ['or', ['email' => $this->login], ['username' => $this->login]];
-                    break;
-                default:
-                    throw new \RuntimeException('Unknown login type');
-            }
-            $this->user = $query->where($condition)->one();
-
+            $this->user = $query->where(['email' => $this->email])->one();
             return true;
         } else {
             return false;

@@ -10,8 +10,6 @@ All available configuration options are listed below with their default values:
 		'class' => 'dektrium\user\Module',
 		// An array of usernames who can manage users
 		'admins' => ['your-username'],
-		// Login type : email, username or both.
-		'loginType' => 'email',
 		// Whether to allow login without confirmation.
 		'allowUnconfirmedLogin' => false,
 		// The time you want the user will be remembered without asking for credentials.

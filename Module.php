@@ -26,11 +26,6 @@ class Module extends BaseModule
     const VERSION = '0.5.0';
 
     /**
-     * @var string Allowed types: 'email', 'username', 'both'
-     */
-    public $loginType = 'email';
-
-    /**
      * @var bool Whether to allow login without confirmation.
      */
     public $allowUnconfirmedLogin = false;

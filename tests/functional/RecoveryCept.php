@@ -33,6 +33,6 @@ $I->see('Password recovery finished');
 
 $page = LoginPage::openBy($I);
 $page->login('user@example.com', 'qwerty');
-$I->see('Invalid login or password');
+$I->see('Invalid email or password');
 $page->login('user@example.com', 'newpass');
-$I->dontSee('Invalid login or password');
+$I->dontSee('Invalid email or password');

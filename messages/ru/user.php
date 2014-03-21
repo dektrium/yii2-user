@@ -81,7 +81,7 @@ return array (
   'In order to change your email, we need you to confirm your email address' => 'Для того, чтобы сменить email, вы должны активировать его',
   'In order to complete this request, we need you to verify that you initiated this request' => 'Если вы не регистрировались, пожалуйста, проигнорируйте это письмо',
   'Information' => 'Информация',
-  'Invalid login or password' => 'Неправильный логин или пароль',
+  'Invalid email or password' => 'Неправильный email или пароль',
   'Last login at {0, date, MMMM dd, YYYY HH:mm} from {1}' => 'Последняя авторизация {0, date, MMMM dd, YYYY HH:mm} с {1}',
   'Location' => 'Местоположение',
   'Login' => 'Логин',

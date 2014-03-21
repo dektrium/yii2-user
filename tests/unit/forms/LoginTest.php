@@ -25,48 +25,16 @@ class LoginTest extends TestCase
     {
         $form = new Login();
         $form->setAttributes([
-            'login' => 'user',
+            'email' => 'user',
             'password' => 'qwerty'
         ]);
         $this->assertFalse($form->validate());
         $form->setAttributes([
-            'login' => 'user@example.com',
+            'email' => 'user@example.com',
             'password' => 'wrong'
         ]);
         $form->setAttributes([
-            'login' => 'user@example.com',
-            'password' => 'qwerty'
-        ]);
-        $this->assertTrue($form->validate());
-    }
-
-    public function testLoginByUsername()
-    {
-        $form = new Login();
-        \Yii::$app->getModule('user')->loginType = 'username';
-        $form->setAttributes([
-            'login' => 'user@example.com',
-            'password' => 'qwerty'
-        ]);
-        $this->assertFalse($form->validate());
-        $form->setAttributes([
-            'login' => 'user',
-            'password' => 'qwerty'
-        ]);
-        $this->assertTrue($form->validate());
-    }
-
-    public function testLoginByEmailOrUsername()
-    {
-        $form = new Login();
-        \Yii::$app->getModule('user')->loginType = 'both';
-        $form->setAttributes([
-            'login' => 'user@example.com',
-            'password' => 'qwerty'
-        ]);
-        $this->assertTrue($form->validate());
-        $form->setAttributes([
-            'login' => 'user',
+            'email' => 'user@example.com',
             'password' => 'qwerty'
         ]);
         $this->assertTrue($form->validate());
@@ -78,12 +46,12 @@ class LoginTest extends TestCase
         \Yii::$app->getModule('user')->allowUnconfirmedLogin = false;
         $form = new Login();
         $form->setAttributes([
-            'login' => 'user@example.com',
+            'email' => 'user@example.com',
             'password' => 'qwerty'
         ]);
         $this->assertTrue($form->validate());
         $form->setAttributes([
-            'login' => 'unconfirmed@example.com',
+            'email' => 'unconfirmed@example.com',
             'password' => 'unconfirmed'
         ]);
         $this->assertFalse($form->validate());

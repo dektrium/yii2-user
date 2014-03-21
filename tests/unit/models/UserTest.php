@@ -86,23 +86,6 @@ class UserTest extends TestCase
             verify(Security::validatePassword('tester', $user->password_hash))->true();
         });
 
-        $this->specify('user should be registered without password if special option is set', function () {
-            $user = new User(['scenario' => 'short_register']);
-            $user->username = 'another_tester';
-            $user->email = 'another_tester@example.com';
-            verify($user->register())->true();
-            $email = $this->getLastMessage();
-            $this->assertEmailIsSent();
-            $this->assertEmailRecipientsContain('<another_tester@example.com>', $email);
-            $this->assertEmailSubjectContains('Welcome to', $email);
-            $this->assertEmailHtmlContains($user->password, $email);
-            verify($user->username)->equals('another_tester');
-            verify($user->email)->equals('another_tester@example.com');
-            verify($user->password)->notNull();
-            verify($user->password_hash)->notNull();
-            verify(Security::validatePassword($user->password, $user->password_hash))->true();
-        });
-
         $this->specify('profile should be created after registration', function () {
             $user = new User(['scenario' => 'register']);
             $user->username = 'john_doe';

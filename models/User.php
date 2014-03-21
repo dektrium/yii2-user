@@ -119,7 +119,6 @@ class User extends ActiveRecord implements UserInterface
     {
         return [
             'register'        => ['username', 'email', 'password'],
-            'short_register'  => ['username', 'email'],
             'create'          => ['username', 'email', 'password', 'role'],
             'update'          => ['username', 'email', 'password', 'role'],
             'update_password' => ['password', 'current_password'],
@@ -134,13 +133,13 @@ class User extends ActiveRecord implements UserInterface
     {
         return [
             // username rules
-            ['username', 'required', 'on' => ['register', 'short_register', 'create', 'update']],
+            ['username', 'required', 'on' => ['register', 'create', 'update']],
             ['username', 'match', 'pattern' => '/^[a-zA-Z]\w+$/'],
             ['username', 'string', 'min' => 3, 'max' => 25],
             ['username', 'unique'],
 
             // email rules
-            ['email', 'required', 'on' => ['register', 'short_register', 'create', 'update', 'update_email']],
+            ['email', 'required', 'on' => ['register', 'create', 'update', 'update_email']],
             ['email', 'email'],
             ['email', 'string', 'max' => 255],
             ['email', 'unique'],
@@ -218,9 +217,6 @@ class User extends ActiveRecord implements UserInterface
     protected function beforeRegister()
     {
         $this->trigger(self::EVENT_BEFORE_REGISTER);
-        if ($this->scenario == 'short_register') {
-            $this->password = Password::generate(8);
-        }
         if ($this->module->trackable) {
             $this->setAttribute('registered_from', ip2long(\Yii::$app->request->userIP));
         }
@@ -234,11 +230,6 @@ class User extends ActiveRecord implements UserInterface
      */
     protected function afterRegister()
     {
-        if ($this->scenario == 'short_register') {
-            $this->sendMessage($this->email, \Yii::t('user', 'Welcome to {sitename}', ['sitename' => \Yii::$app->name]),
-                'welcome', ['user' => $this, 'password' => $this->password]
-            );
-        }
         if ($this->module->confirmable) {
             $this->sendMessage($this->email, \Yii::t('user', 'Please confirm your email'),
                 'confirmation',	['user' => $this]

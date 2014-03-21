@@ -39,9 +39,7 @@ $this->registerJs(sprintf('$("#user-password").passField(%s);', json_encode(['lo
 
                 <?= $form->field($model, 'email') ?>
 
-                <?php if (!Yii::$app->getModule('user')->generatePassword): ?>
-                    <?= $form->field($model, 'password')->passwordInput() ?>
-                <?php endif ?>
+                <?= $form->field($model, 'password')->passwordInput() ?>
 
                 <?= Html::submitButton(Yii::t('user', 'Sign up'), ['class' => 'btn btn-success btn-block']) ?>
 

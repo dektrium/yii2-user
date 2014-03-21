@@ -37,11 +37,6 @@ class Module extends BaseModule
     public $rememberFor = 1209600;
 
     /**
-     * @var bool Whether to generate user password automatically.
-     */
-    public $generatePassword = false;
-
-    /**
      * @var bool Whether to track user's registration and sign in
      */
     public $trackable = true;

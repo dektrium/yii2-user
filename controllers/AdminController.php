@@ -49,9 +49,7 @@ class AdminController extends Controller
                         'allow' => true,
                         'roles' => ['@'],
                         'matchCallback' => function ($rule, $action) {
-                            $user = \Yii::$app->getUser();
-
-                            return $user->checkAccess('manageUsers') || in_array($user->identity->username, $this->module->admins);
+                            return in_array(\Yii::$app->user->identity->username, $this->module->admins);
                         }
                     ],
                 ]

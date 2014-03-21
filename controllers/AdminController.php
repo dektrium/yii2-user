@@ -51,7 +51,7 @@ class AdminController extends Controller
                         'matchCallback' => function ($rule, $action) {
                             $user = \Yii::$app->getUser();
 
-                            return $user->checkAccess('manageUsers') || in_array($user->identity->username, $this->module->admins);
+                            return in_array($user->identity->username, $this->module->admins) || $user->checkAccess('manageUsers');
                         }
                     ],
                 ]

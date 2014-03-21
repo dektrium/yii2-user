@@ -1,5 +1,4 @@
-Installation
-============
+# Installation
 
 This page explains the ways of installing User module. There are two ways to install:
 
@@ -13,7 +12,7 @@ After you have done this go to the section `Setting up`
 Either run following command:
 
 ```bash
-$ php composer.phar require dektrium/yii2-user "*"
+$ php composer.phar require dektrium/yii2-user "~0.5.0"
 ```
 
 or add
@@ -21,7 +20,7 @@ or add
 ```js
 {
     "require": {
-        "dektrium/yii2-user": "*"
+        "dektrium/yii2-user": "~0.5.0"
     }
 }
 ```
@@ -53,7 +52,9 @@ To enable module you should configure your application as follows:
 ```php
 'modules' => [
 	...
-	'user' => 'dektrium\user\Module',
+	'user' => [
+	    'class' => 'dektrium\user\Module',
+	],
 	...
 ],
 ...
@@ -63,7 +64,7 @@ To enable module you should configure your application as follows:
 	    'class' => 'dektrium\user\components\User'
 	],
 	...
-]
+],
 ```
 
 ## Updating database schema

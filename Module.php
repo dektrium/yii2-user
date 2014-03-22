@@ -23,7 +23,7 @@ use yii\console\Application as ConsoleApplication;
  */
 class Module extends BaseModule
 {
-    const VERSION = '0.5.0';
+    const VERSION = '0.5.1';
 
     /**
      * @var array Actions on which captcha will be shown.

@@ -2,6 +2,10 @@
 
 ## 0.6.0 [Work in progress]
 
+- Updated composer.json
+- Added bootstrap class that configures module automatically
+- Removed custom User component
+- Removed registration without password
 - Removed different login types (by username and both username and email)
 - Removed default controller
 - Removed captcha from all forms

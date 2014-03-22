@@ -92,6 +92,11 @@ class Login extends Model
     public function login()
     {
         if ($this->validate()) {
+            if ($this->module->trackable) {
+                $this->user->setAttribute('logged_in_from', ip2long(\Yii::$app->getRequest()->getUserIP()));
+                $this->user->setAttribute('logged_in_at', time());
+                $this->user->save(false);
+            }
             return \Yii::$app->getUser()->login($this->user, $this->rememberMe ? $this->getModule()->rememberFor : 0);
         } else {
             return false;

@@ -1,5 +1,11 @@
 # CHANGELOG
 
+## v0.5.1 [22 March 2014]
+
+- Fixed documentation issues
+- Fixed bug when registration date was not displayed on profile page
+- Removed checking of user role in admin controller
+
 ## v0.5.0 [20 March 2014]
 
 - Refactored User model

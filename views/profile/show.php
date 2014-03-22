@@ -25,7 +25,7 @@ $this->title = empty($profile->name) ? $profile->user->username : $profile->name
                     <?php if (!empty($profile->public_email)): ?>
                         <li><i class="glyphicon glyphicon-envelope text-muted"></i> <?= \yii\helpers\Html::a($profile->public_email, 'mailto://' . $profile->public_email) ?></li>
                     <?php endif; ?>
-                    <li><i class="glyphicon glyphicon-time text-muted"></i> <?= Yii::t('user', 'Joined on ') ?></li>
+                    <li><i class="glyphicon glyphicon-time text-muted"></i> <?= Yii::t('user', 'Joined on {0, date}', $profile->user->created_at) ?></li>
                 </ul>
                 <?php if (!empty($profile->bio)): ?>
                     <p><?= $profile->bio ?></p>

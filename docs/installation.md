@@ -12,7 +12,7 @@ After you have done this go to the section `Setting up`
 Either run following command:
 
 ```bash
-$ php composer.phar require dektrium/yii2-user "~0.5.0"
+$ php composer.phar require dektrium/yii2-user "*"
 ```
 
 or add
@@ -20,7 +20,7 @@ or add
 ```js
 {
     "require": {
-        "dektrium/yii2-user": "~0.5.0"
+        "dektrium/yii2-user": "*"
     }
 }
 ```

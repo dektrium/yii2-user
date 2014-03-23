@@ -117,8 +117,7 @@ class Login extends Model
     public function beforeValidate()
     {
         if (parent::beforeValidate()) {
-            $query = $this->getModule()->factory->createUserQuery();
-            $this->user = $query->where(['email' => $this->email])->one();
+            $this->user = $this->module->manager->findUserByEmail($this->email);
             return true;
         } else {
             return false;

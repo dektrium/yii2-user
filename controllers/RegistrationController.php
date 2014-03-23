@@ -71,7 +71,7 @@ class RegistrationController extends Controller
      */
     public function actionRegister()
     {
-        $model = $this->module->factory->createUser(['scenario' => 'register']);
+        $model = $this->module->manager->createUser(['scenario' => 'register']);
 
         if ($model->load(\Yii::$app->getRequest()->post()) && $model->register()) {
             return $this->render('success', [
@@ -94,9 +94,7 @@ class RegistrationController extends Controller
      */
     public function actionConfirm($id, $token)
     {
-        $query = $this->module->factory->createUserQuery();
-        /** @var \dektrium\user\models\User $user */
-        $user = $query->where(['id' => $id, 'confirmation_token' => $token])->one();
+        $user = $this->module->manager->findUserByIdAndConfirmationToken($id, $token);
         if ($user === null || !$user->confirm()) {
             return $this->render('invalidToken');
         }
@@ -111,7 +109,7 @@ class RegistrationController extends Controller
      */
     public function actionResend()
     {
-        $model = $this->module->factory->createForm('resend');
+        $model = $this->module->manager->createResendForm();
 
         if ($model->load(\Yii::$app->getRequest()->post()) && $model->validate()) {
             $model->getUser()->resend();

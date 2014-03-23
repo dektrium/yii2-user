@@ -40,7 +40,7 @@ class CreateController extends Controller
         $this->module->trackable = false; // trackable should be disabled
         $this->module->confirmable = $this->confirmable;
         /** @var \dektrium\user\models\User $user */
-        $user = $this->module->factory->createUser();
+        $user = $this->module->manager->createUser();
         $user->scenario = is_null($password) ? 'short_register' : 'register';
         $user->setAttributes([
             'email'    => $email,

@@ -82,8 +82,7 @@ class AdminController extends Controller
     public function actionCreate()
     {
         /** @var \dektrium\user\models\User $model */
-        $model = $this->module->factory->createUser();
-        $model->scenario = 'create';
+        $model = $this->module->manager->createUser(['scenario' => 'create']);
 
         if ($model->load(\Yii::$app->getRequest()->post()) && $model->save()) {
             \Yii::$app->getSession()->setFlash('admin_user', \Yii::t('user', 'User has been created'));
@@ -191,7 +190,7 @@ class AdminController extends Controller
     protected function findModel($id)
     {
         /** @var \dektrium\user\models\User $user */
-        $user = $this->module->factory->createUserQuery()->where(['id' => $id])->one();
+        $user = $this->module->manager->findUserById($id);
         if ($id !== null && $user !== null) {
             return $user;
         } else {

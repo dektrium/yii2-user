@@ -54,8 +54,7 @@ class PasswordRecovery extends Model
             throw new \RuntimeException('Id and token should be passed to config');
         }
 
-        $query = $this->module->factory->createUserQuery();
-        $this->_user = $query->where(['id' => $this->id, 'recovery_token' => $this->token])->one();
+        $this->_user = $this->module->manager->findUserByIdAndRecoveryToken($this->id, $this->token);
         if (!$this->_user) {
             throw new InvalidParamException('Wrong password reset token');
         }

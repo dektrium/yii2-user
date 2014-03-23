@@ -43,12 +43,11 @@ class PasswordRecoveryRequest extends Model
             ['email', 'required'],
             ['email', 'email'],
             ['email', 'exist',
-                'targetClass' => $this->module->factory->userClass,
+                'targetClass' => $this->module->manager->userClass,
                 'message' => \Yii::t('user', 'There is no user with such email.')
             ],
             ['email', function ($attribute) {
-                $query = $this->getModule()->factory->createUserQuery();
-                $this->_user = $query->where(['email' => $this->email])->one();
+                $this->_user = $this->module->manager->findUserByEmail($this->email);
                 if ($this->_user !== null && $this->getModule()->confirmable && !$this->_user->getIsConfirmed()) {
                     $this->addError($attribute, \Yii::t('user', 'You need to confirm your email address'));
                 }

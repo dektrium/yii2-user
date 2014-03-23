@@ -66,8 +66,7 @@ class ProfileController extends Controller
      */
     public function actionShow($id)
     {
-        $query = $this->module->factory->createProfileQuery();
-        $profile = $query->where(['user_id' => $id])->with('user')->one();
+        $profile = $this->module->manager->findProfileById(\Yii::$app->user->identity->getId());
 
         return $this->render('show', [
             'profile' => $profile

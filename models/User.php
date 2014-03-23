@@ -75,7 +75,7 @@ class User extends ActiveRecord implements UserInterface
      */
     public function getProfile()
     {
-        return $this->hasOne($this->module->factory->profileClass, ['user_id' => 'id']);
+        return $this->hasOne($this->module->manager->profileClass, ['user_id' => 'id']);
     }
 
     /**
@@ -256,7 +256,7 @@ class User extends ActiveRecord implements UserInterface
             $this->setAttribute('auth_key', Security::generateRandomKey());
             $this->setAttribute('role', $this->getModule()->defaultRole);
             if ($this->save(false)) {
-                $profile = $this->module->factory->createProfile([
+                $profile = $this->module->manager->createProfile([
                     'user_id' => $this->id,
                     'gravatar_email' => $this->email
                 ]);

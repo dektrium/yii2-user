@@ -31,7 +31,7 @@ class DeleteController extends Controller
     public function actionIndex($email)
     {
         if ($this->confirm(\Yii::t('user', 'Are you sure? Deleted user can not be restored!'))) {
-            $query = $this->module->factory->createUserQuery();
+            $query = $this->module->manager->createUserQuery();
             /** @var \dektrium\user\models\User $user */
             $user = $query->where(['email' => $email])->one();
             if ($user === null) {

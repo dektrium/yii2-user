@@ -16,6 +16,8 @@ use yii\base\Model;
 /**
  * Model that manages resending confirmation tokens to users.
  *
+ * @property \dektrium\user\Module $module
+ *
  * @author Dmitry Erofeev <dmeroff@gmail.com>
  */
 class Resend extends Model
@@ -48,7 +50,7 @@ class Resend extends Model
         return [
             ['email', 'required'],
             ['email', 'email'],
-            ['email', 'exist', 'targetClass' => $this->getModule()->factory->userClass],
+            ['email', 'exist', 'targetClass' => $this->getModule()->manager->userClass],
             ['email', 'validateEmail'],
         ];
     }
@@ -77,8 +79,7 @@ class Resend extends Model
     public function getUser()
     {
         if ($this->_user == null) {
-            $query = $this->getModule()->factory->createUserQuery();
-            $this->_user = $query->where(['email' => $this->email])->one();
+            $this->_user = $this->module->manager->findUserByEmail($this->email);
         }
 
         return $this->_user;

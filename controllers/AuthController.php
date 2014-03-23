@@ -61,7 +61,7 @@ class AuthController extends Controller
      */
     public function actionLogin()
     {
-        $model = $this->module->factory->createForm('login');
+        $model = $this->module->manager->createLoginForm();
 
         if ($model->load(\Yii::$app->getRequest()->post()) && $model->login()) {
             return $this->goBack();

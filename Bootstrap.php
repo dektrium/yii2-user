@@ -29,7 +29,7 @@ class Bootstrap implements BootstrapInterface
     public function bootstrap(Application $app)
     {
         if ($app->hasModule('user')) {
-            $identityClass = $app->getModule('user')->factory->userClass;
+            $identityClass = $app->getModule('user')->manager->userClass;
         } else {
             $app->setModule('user', [
                 'class' => 'dektrium\user\Module'

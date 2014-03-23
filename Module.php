@@ -17,7 +17,7 @@ use yii\console\Application as ConsoleApplication;
 /**
  * This is the main module class for the Dektrium user module.
  *
- * @property Factory $factory
+ * @property ModelManager $manager
  *
  * @author Dmitry Erofeev <dmeroff@gmail.com>
  */
@@ -123,8 +123,8 @@ class Module extends BaseModule
     protected function getModuleComponents()
     {
         return [
-            'factory' => [
-                'class' => '\dektrium\user\Factory'
+            'manager' => [
+                'class' => 'dektrium\user\ModelManager'
             ]
         ];
     }

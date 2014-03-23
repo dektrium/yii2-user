@@ -31,7 +31,7 @@ class PasswordController extends Controller
      */
     public function actionIndex($email, $password)
     {
-        $query = $this->module->factory->createUserQuery();
+        $query = $this->module->manager->createUserQuery();
         /** @var \dektrium\user\models\User $user */
         $user = $query->where(['email' => $email])->one();
         if ($user === null) {

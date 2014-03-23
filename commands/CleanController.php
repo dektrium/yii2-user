@@ -30,7 +30,7 @@ class CleanController extends Controller
     {
         if ($this->confirm(\Yii::t('user', 'Are you sure?'), true)) {
             /** @var \dektrium\user\models\User[] $users */
-            $query = $this->module->factory->createUserQuery();
+            $query = $this->module->manager->createUserQuery();
             $users = $query->where('confirmation_token IS NOT NULL')
                            ->orWhere('recovery_token IS NOT NULL')
                            ->all();
@@ -60,7 +60,7 @@ class CleanController extends Controller
         if ($this->confirm(\Yii::t('user', 'Are you sure?'))) {
             $count = 0;
             /** @var \dektrium\user\models\User[] $users */
-            $query = $this->module->factory->createUserQuery();
+            $query = $this->module->manager->createUserQuery();
             $users = $query->where(['confirmation_time' => null])->all();
             foreach ($users as $user) {
                 if (!$user->getIsConfirmed() && $user->getIsConfirmationPeriodExpired() && ($user->created_at + $days * 24 * 3600) < time()) {

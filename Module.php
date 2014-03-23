@@ -23,7 +23,7 @@ use yii\console\Application as ConsoleApplication;
  */
 class Module extends BaseModule
 {
-    const VERSION = '0.5.0';
+    const VERSION = '0.6.0-dev';
 
     /**
      * @var bool Whether to allow login without confirmation.

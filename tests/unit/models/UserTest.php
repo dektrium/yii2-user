@@ -127,7 +127,7 @@ class UserTest extends TestCase
             $email = $this->getLastMessage();
             $this->assertEmailIsSent();
             $this->assertEmailRecipientsContain('<tester@example.com>', $email);
-            $this->assertEmailSubjectContains('Please confirm your email', $email);
+            $this->assertEmailSubjectContains('Confirm your account on', $email);
             $this->assertEmailHtmlContains(Html::encode($this->user->getConfirmationUrl()), $email);
         });
 
@@ -195,7 +195,7 @@ class UserTest extends TestCase
             $email = $this->getLastMessage();
             $this->assertEmailIsSent();
             $this->assertEmailRecipientsContain('<another_email@example.com>', $email);
-            $this->assertEmailSubjectContains('Please confirm your email', $email);
+            $this->assertEmailSubjectContains('Confirm your email change on', $email);
             $this->assertEmailHtmlContains(Html::encode($this->user->getConfirmationUrl()), $email);
         });
 
@@ -218,7 +218,7 @@ class UserTest extends TestCase
             $email = $this->getLastMessage();
             $this->assertEmailIsSent();
             $this->assertEmailRecipientsContain('<user@example.com>', $email);
-            $this->assertEmailSubjectContains('Please complete password reset', $email);
+            $this->assertEmailSubjectContains('Complete your password reset', $email);
             $this->assertEmailHtmlContains(Html::encode($this->user->getRecoveryUrl()), $email);
         });
 

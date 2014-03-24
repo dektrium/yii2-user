@@ -212,6 +212,31 @@ class User extends ActiveRecord implements UserInterface
     }
 
     /**
+     * Creates a user.
+     *
+     * @return bool
+     */
+    public function create()
+    {
+        if (is_null($this->password)) {
+            $this->password = Password::generate(8);
+        }
+
+        if ($this->module->confirmable) {
+            $this->generateConfirmationData();
+        } else {
+            $this->confirmed_at = time();
+        }
+
+        if ($this->save()) {
+            $this->module->mailer->sendWelcomeMessage($this);
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
      * This method is called at the beginning of user registration process.
      */
     protected function beforeRegister()
@@ -231,9 +256,7 @@ class User extends ActiveRecord implements UserInterface
     protected function afterRegister()
     {
         if ($this->module->confirmable) {
-            $this->sendMessage($this->email, \Yii::t('user', 'Please confirm your email'),
-                'confirmation',	['user' => $this]
-            );
+            $this->module->mailer->sendConfirmationMessage($this);
         }
         $this->trigger(self::EVENT_AFTER_REGISTER);
     }
@@ -252,17 +275,8 @@ class User extends ActiveRecord implements UserInterface
 
         if ($this->validate()) {
             $this->beforeRegister();
-            $this->setAttribute('password_hash', Password::hash($this->password));
-            $this->setAttribute('auth_key', Security::generateRandomKey());
-            $this->setAttribute('role', $this->getModule()->defaultRole);
             if ($this->save(false)) {
-                $profile = $this->module->manager->createProfile([
-                    'user_id' => $this->id,
-                    'gravatar_email' => $this->email
-                ]);
-                $profile->save(false);
                 $this->afterRegister();
-
                 return true;
             }
         }
@@ -282,7 +296,7 @@ class User extends ActiveRecord implements UserInterface
                 $this->confirmation_token = Security::generateRandomKey();
                 $this->confirmation_sent_at = time();
                 $this->save(false);
-                $this->sendMessage($this->unconfirmed_email, \Yii::t('user', 'Please confirm your email'), 'reconfirmation', ['user' => $this]);
+                $this->module->mailer->sendReconfirmationMessage($this);
             } else {
                 $this->email = $this->unconfirmed_email;
                 $this->unconfirmed_email = null;
@@ -362,7 +376,7 @@ class User extends ActiveRecord implements UserInterface
         $this->generateConfirmationData();
         $this->save(false);
 
-        return $this->sendMessage($this->email, \Yii::t('user', 'Please confirm your email'), 'confirmation', ['user' => $this]);
+        return $this->module->mailer->sendConfirmationMessage($this);
     }
 
     /**
@@ -454,7 +468,7 @@ class User extends ActiveRecord implements UserInterface
         $this->recovery_sent_at = time();
         $this->save(false);
 
-        return $this->sendMessage($this->email, \Yii::t('user', 'Please complete password reset'), 'recovery', ['user' => $this]);
+        return $this->module->mailer->sendRecoveryMessage($this);
     }
 
     /**
@@ -498,27 +512,31 @@ class User extends ActiveRecord implements UserInterface
     }
 
     /**
-     * Sends message.
-     *
-     * @param $to
-     * @param string $subject
-     * @param string $view
-     * @param array  $params
-     *
-     * @return bool
+     * @inheritdoc
      */
-    protected function sendMessage($to, $subject, $view, $params)
+    public function beforeSave($insert)
     {
-        $mail = \Yii::$app->getMail();
-        $mail->viewPath = $this->getModule()->emailViewPath;
-
-        if (empty(\Yii::$app->getMail()->messageConfig['from'])) {
-            $mail->messageConfig['from'] = 'no-reply@example.com';
+        if ($insert) {
+            $this->setAttribute('password_hash', Password::hash($this->password));
+            $this->setAttribute('auth_key', Security::generateRandomKey());
+            $this->setAttribute('role', $this->getModule()->defaultRole);
         }
 
-        return $mail->compose($view, $params)
-            ->setTo($to)
-            ->setSubject($subject)
-            ->send();
+        return parent::beforeSave($insert);
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function afterSave($insert)
+    {
+        if ($insert) {
+            $profile = $this->module->manager->createProfile([
+                'user_id'        => $this->id,
+                'gravatar_email' => $this->email
+            ]);
+            $profile->save(false);
+        }
+        parent::afterSave($insert);
     }
 }

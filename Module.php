@@ -18,6 +18,7 @@ use yii\console\Application as ConsoleApplication;
  * This is the main module class for the Dektrium user module.
  *
  * @property ModelManager $manager
+ * @property Mailer       $mailer
  *
  * @author Dmitry Erofeev <dmeroff@gmail.com>
  */
@@ -125,6 +126,9 @@ class Module extends BaseModule
         return [
             'manager' => [
                 'class' => 'dektrium\user\ModelManager'
+            ],
+            'mailer' => [
+                'class' => 'dektrium\user\Mailer'
             ]
         ];
     }

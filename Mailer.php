@@ -39,7 +39,7 @@ class Mailer extends Component
      */
     public function sendWelcomeMessage(User $user)
     {
-        return $this->sendMessage(\Yii::t('user', 'Welcome to {0}', \Yii::$app->name), 'welcome', $user);
+        return $this->sendMessage($user->email, \Yii::t('user', 'Welcome to {0}', \Yii::$app->name), 'welcome', $user);
     }
 
     /**
@@ -50,7 +50,7 @@ class Mailer extends Component
      */
     public function sendConfirmationMessage(User $user)
     {
-        return $this->sendMessage(\Yii::t('user', 'Confirm your account on {0}', \Yii::$app->name), 'confirmation', $user);
+        return $this->sendMessage($user->email, \Yii::t('user', 'Confirm your account on {0}', \Yii::$app->name), 'confirmation', $user);
     }
 
     /**
@@ -61,7 +61,7 @@ class Mailer extends Component
      */
     public function sendReconfirmationMessage(User $user)
     {
-        return $this->sendMessage(\Yii::t('user', 'Confirm your email change on {0}', \Yii::$app->name), 'reconfirmation', $user);
+        return $this->sendMessage($user->unconfirmed_email, \Yii::t('user', 'Confirm your email change on {0}', \Yii::$app->name), 'reconfirmation', $user);
     }
 
     /**
@@ -72,22 +72,23 @@ class Mailer extends Component
      */
     public function sendRecoveryMessage(User $user)
     {
-        return $this->sendMessage(\Yii::t('user', 'Complete your password reset on {0}', \Yii::$app->name), 'recovery', $user);
+        return $this->sendMessage($user->email, \Yii::t('user', 'Complete your password reset on {0}', \Yii::$app->name), 'recovery', $user);
     }
 
     /**
+     * @param  string $to
      * @param  string $subject
      * @param  string $view
      * @param  User   $user
      * @return bool
      */
-    protected function sendMessage($subject, $view, User $user)
+    protected function sendMessage($to, $subject, $view, User $user)
     {
         $mail = \Yii::$app->mail;
         $mail->viewPath = $this->viewPath;
 
         return $mail->compose($view, ['user' => $user])
-            ->setTo($user->email)
+            ->setTo($to)
             ->setFrom($this->sender)
             ->setSubject($subject)
             ->send();

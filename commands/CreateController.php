@@ -1,13 +1,13 @@
 <?php
 
 /*
-* This file is part of the Dektrium project.
-*
-* (c) Dektrium project <http://github.com/dektrium/>
-*
-* For the full copyright and license information, please view the LICENSE
-* file that was distributed with this source code.
-*/
+ * This file is part of the Dektrium project.
+ *
+ * (c) Dektrium project <http://github.com/dektrium/>
+ *
+ * For the full copyright and license information, please view the LICENSE.md
+ * file that was distributed with this source code.
+ */
 
 namespace dektrium\user\commands;
 
@@ -15,8 +15,6 @@ use yii\console\Controller;
 use yii\helpers\Console;
 
 /**
- * CreateController allows you to create user accounts.
- *
  * @property \dektrium\user\Module $module
  *
  * @author Dmitry Erofeev <dmeroff@gmail.com>
@@ -26,10 +24,11 @@ class CreateController extends Controller
     /**
      * @var bool Whether user should confirm account.
      */
-    public $confirmable = false;
+    public $unconfirmed = false;
 
     /**
-     * Creates new user.
+     * Creates new user account. If password is not set it will be generated automatically. After creation email
+     * message contains username and password will be sent to user.
      *
      * @param string      $email
      * @param string      $username
@@ -37,20 +36,14 @@ class CreateController extends Controller
      */
     public function actionIndex($email, $username, $password = null)
     {
-        $this->module->trackable = false; // trackable should be disabled
-        $this->module->confirmable = $this->confirmable;
-        /** @var \dektrium\user\models\User $user */
-        $user = $this->module->manager->createUser();
-        $user->scenario = is_null($password) ? 'short_register' : 'register';
+        $this->module->confirmable = $this->unconfirmed;
+        $user = $this->module->manager->createUser(['scenario' => 'create']);
         $user->setAttributes([
             'email'    => $email,
             'username' => $username,
             'password' => $password
         ]);
-        if (!$this->confirmable) {
-            $user->confirmed_at = time();
-        }
-        if ($user->register()) {
+        if ($user->create()) {
             $this->stdout(\Yii::t('user', 'User has been created') . "!\n", Console::FG_GREEN);
         } else {
             $this->stdout(\Yii::t('user', 'Please fix following errors:') . "\n", Console::FG_RED);
@@ -67,6 +60,6 @@ class CreateController extends Controller
      */
     public function options($id)
     {
-        return array_merge(parent::options($id), ['confirmable']);
+        return array_merge(parent::options($id), ['unconfirmed']);
     }
 }

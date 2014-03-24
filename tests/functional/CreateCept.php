@@ -16,7 +16,6 @@ $page->create('', '', '');
 $I->expectTo('see validations errors');
 $I->see('Username cannot be blank.');
 $I->see('Email cannot be blank.');
-$I->see('Password cannot be blank.');
 
 $page->create('toster', 'toster@example.com', 'toster');
 $I->see('User has been created');

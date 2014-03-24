@@ -2,6 +2,9 @@
 
 ## 0.6.0 [Work in progress]
 
+- Added Mailer component
+- Added ModelManager component
+- Removed factory
 - Updated composer.json
 - Added bootstrap class that configures module automatically
 - Removed custom User component

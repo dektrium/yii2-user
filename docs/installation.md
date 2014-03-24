@@ -1,22 +1,22 @@
-# Installation
+# Getting started
 
 First of all you need to install module. There are two ways of installing Yii2-user: the easiest way using composer and
 the nerdy way using git (for developers). This guide describes installing using composer because it is really easy, does
 not take much time and is suitable in most cases. If you are going to contribute to Yii2-user you'd better install it
 using [git](installation-using-git.md).
 
-## Getting started
+## Installation
 
 Either run following command:
 
 ```bash
-$ php composer.phar require --prefer-dist dektrium/yii2-user "*"
+$ php composer.phar require --prefer-dist dektrium/yii2-user "0.6.*@dev"
 ```
 
 or add
 
 ```json
-"dektrium/yii2-user": "*"
+"dektrium/yii2-user": "0.6.*@dev"
 ```
 
 to the require section of your `composer.json` file and run following command:

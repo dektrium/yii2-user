@@ -150,7 +150,7 @@ class User extends ActiveRecord implements UserInterface
             ['unconfirmed_email', 'email', 'on' => 'update_email'],
 
             // password rules
-            ['password', 'required', 'on' => ['register', 'create']],
+            ['password', 'required', 'on' => 'register'],
             ['password', 'string', 'min' => 6, 'on' => ['register', 'update_password', 'create']],
 
             // current password rules
@@ -218,7 +218,7 @@ class User extends ActiveRecord implements UserInterface
      */
     public function create()
     {
-        if (is_null($this->password)) {
+        if ($this->password == null) {
             $this->password = Password::generate(8);
         }
 

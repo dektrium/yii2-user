@@ -29,6 +29,10 @@ $this->registerJs(sprintf('$("#user-password").passField(%s);', json_encode(['lo
         <?= Html::encode($this->title) ?>
     </div>
     <div class="panel-body">
+        <div class="alert alert-info">
+            <?= Yii::t('user', 'Password and username will be sent to user by email') ?>.
+            <?= Yii::t('user', 'If you want password to be generated automatically leave its field empty') ?>.
+        </div>
         <?php $form = ActiveForm::begin(); ?>
 
         <?= $form->field($model, 'username')->textInput(['maxlength' => 25, 'autofocus' => true]) ?>

@@ -51,7 +51,7 @@ class AdminController extends Controller
                         'matchCallback' => function ($rule, $action) {
                             $user = \Yii::$app->getUser();
 
-                            return in_array($user->identity->username, $this->module->admins) || $user->checkAccess('manageUsers');
+                            return in_array($user->identity->username, $this->module->admins);
                         }
                     ],
                 ]
@@ -81,12 +81,10 @@ class AdminController extends Controller
      */
     public function actionCreate()
     {
-        /** @var \dektrium\user\models\User $model */
         $model = $this->module->manager->createUser(['scenario' => 'create']);
 
-        if ($model->load(\Yii::$app->getRequest()->post()) && $model->save()) {
+        if ($model->load(\Yii::$app->request->post()) && $model->create()) {
             \Yii::$app->getSession()->setFlash('admin_user', \Yii::t('user', 'User has been created'));
-
             return $this->redirect(['index']);
         }
 
@@ -106,9 +104,8 @@ class AdminController extends Controller
         $model = $this->findModel($id);
         $model->scenario = 'update';
 
-        if ($model->load(\Yii::$app->getRequest()->post()) && $model->save()) {
+        if ($model->load(\Yii::$app->request->post()) && $model->save()) {
             \Yii::$app->getSession()->setFlash('admin_user', \Yii::t('user', 'User has been updated'));
-
             return $this->refresh();
         }
 

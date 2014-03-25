@@ -33,9 +33,8 @@ class Module extends BaseModule
 
     /**
      * @var int The time you want the user will be remembered without asking for credentials.
-     * By default rememberFor is two weeks.
      */
-    public $rememberFor = 1209600;
+    public $rememberFor = 1209600; // two weeks
 
     /**
      * @var bool Whether to track user's registration and sign in
@@ -48,10 +47,9 @@ class Module extends BaseModule
     public $confirmable = true;
 
     /**
-     * @var int The time before a sent confirmation token becomes invalid.
-     * By default confirmWithin is 24 hours.
+     * @var int The time before a confirmation token becomes invalid.
      */
-    public $confirmWithin = 86400;
+    public $confirmWithin = 86400; // 24 hours
 
     /**
      * @var bool Whether to enable password recovery.
@@ -60,19 +58,13 @@ class Module extends BaseModule
 
     /**
      * @var int The time before a recovery token becomes invalid.
-     * By default recoverWithin is 6 hours.
      */
-    public $recoverWithin = 21600;
+    public $recoverWithin = 21600; // 6 hours
 
     /**
      * @var int Cost parameter used by the Blowfish hash algorithm.
      */
     public $cost = 10;
-
-    /**
-     * @var string
-     */
-    public $emailViewPath = '@dektrium/user/views/mail';
 
     /**
      * @var string|null Role that will be assigned to user on creation.

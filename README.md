@@ -27,7 +27,7 @@ You can see contributing instructions in [CONTRIBUTING.md](CONTRIBUTING.md)
 
 ## License
 
-Dektrium user module is released under the MIT License. See the bundled [LICENSE.md](LICENSE.md) for details.
+Yii2-user is released under the MIT License. See the bundled [LICENSE.md](LICENSE.md) for details.
 
 ## What is Dektrium?
 

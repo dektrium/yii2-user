@@ -14,7 +14,7 @@ class RecoveryPage extends BasePage
     /**
      * @param $email
      */
-    public function resend($email)
+    public function recover($email)
     {
         $this->guy->fillField('#recovery-request-form-email', $email);
         $this->guy->click('Continue');

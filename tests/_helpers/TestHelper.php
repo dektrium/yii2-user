@@ -22,7 +22,6 @@ class TestHelper extends \Codeception\Module
         globalFixtures as protected;
         unloadFixtures as protected;
         getFixtures as protected;
-        getFixture as protected;
     }
 
     public function _before(TestCase $test)

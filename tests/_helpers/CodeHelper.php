@@ -1,28 +1,10 @@
 <?php
-
 namespace Codeception\Module;
 
-use Codeception\Module;
+// here you can define custom actions
+// all public methods declared in helper class will be available in $I
 
-class CodeHelper extends Module
+class CodeHelper extends \Codeception\Module
 {
-    public function assertEmailSenderEquals($needle, $email, $description = '')
-    {
-        $this->assertContains('From: ' . $needle, $email, $description);
-    }
 
-    public function assertEmailRecipientEquals($needle, $email, $description = '')
-    {
-        $this->assertContains('To: ' . $needle, $email, $description);
-    }
-
-    public function assertEmailSubjectEquals($expected, $email, $description = '')
-    {
-        $this->assertContains('Subject: ' . $expected, $email, $description);
-    }
-
-    public function assertEmailContains($needle, $email, $description = '')
-    {
-        $this->assertContains($needle, $email, $description);
-    }
 }

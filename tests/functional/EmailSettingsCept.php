@@ -24,9 +24,8 @@ $I->seeRecord(User::className(), [
     'unconfirmed_email' => 'new_email@example.com'
 ]);
 $user = $I->grabRecord(User::className(), ['id' => 1]);
-$email = $I->getLastMessage();
-$I->seeEmailIsSent();
-$I->seeEmailHtmlContains(Html::encode($user->getConfirmationUrl()), $email);
+$I->seeInEmail(Html::encode($user->getConfirmationUrl()));
+$I->seeInEmailRecipients($user->unconfirmed_email);
 
 Yii::$app->getUser()->logout();
 

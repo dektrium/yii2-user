@@ -17,10 +17,8 @@ $I->see('You need to confirm your email address');
 $I->amGoingTo('try to request recovery token');
 $page->resend('user@example.com');
 $I->see('You have been sent an email with instructions on how to reset your password.');
-$I->seeEmailIsSent();
-$email = $I->getLastMessage();
 $user = $I->grabRecord(User::className(), ['email' => 'user@example.com']);
-$I->seeEmailHtmlContains(Html::encode($user->getRecoveryUrl()), $email);
+$I->seeInEmail(Html::encode($user->getRecoveryUrl()));
 
 $I->amGoingTo('reset password');
 $I->amOnPage('/?r=user/recovery/reset&id=5&token=dghFKJA6JvjTKLAwyE5w2XD9b2lmBXLE');

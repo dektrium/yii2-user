@@ -1,5 +1,10 @@
-<?php namespace Codeception\Module;
+<?php
+namespace Codeception\Module;
+
+// here you can define custom actions
+// all public methods declared in helper class will be available in $I
 
 class WebHelper extends \Codeception\Module
 {
+
 }

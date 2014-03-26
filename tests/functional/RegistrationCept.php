@@ -1,6 +1,8 @@
 <?php
 
 use dektrium\user\tests\_pages\RegisterPage;
+use yii\helpers\Html;
+use dektrium\user\models\User;
 
 $I = new TestGuy($scenario);
 $I->wantTo('ensure that registration works');
@@ -20,7 +22,5 @@ $I->see('Awesome, almost there! We need to confirm your email address');
 $I->haveRecord('\dektrium\user\models\User', ['email' => 'tester@example.com', 'username' => 'tester']);
 
 $I->expect('confirmation email has been sent');
-$I->seeEmailIsSent();
-$email = $I->getLastMessage();
-$I->seeEmailSubjectContains('Confirm your account on', $email);
-$I->seeEmailRecipientsContain('<tester@example.com>', $email);
+$user = $I->grabRecord(User::className(), ['email' => 'tester@example.com']);
+$I->seeInEmail(Html::encode($user->getConfirmationUrl()));

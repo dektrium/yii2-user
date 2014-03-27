@@ -13,20 +13,23 @@ $I->expectTo('see validations errors');
 $I->see('Email cannot be blank.');
 $I->see('Password cannot be blank.');
 
-$I->amGoingTo('try to login with wrong credentials');
-$page->login('user@example.com', 'wrong');
-$I->expectTo('see validations errors');
-$I->see('Invalid email or password');
-
 $I->amGoingTo('try to login with unconfirmed account');
-$page->login('unconfirmed@example.com', 'qwerty');
+$user = $I->getFixture('user')->getModel('unconfirmed');
+$page->login($user->email, 'qwerty');
 $I->see('You need to confirm your email address');
 
 $I->amGoingTo('try to login with blocked account');
-$page->login('blocked@example.com', 'qwerty');
+$user = $I->getFixture('user')->getModel('blocked');
+$page->login($user->email, 'qwerty');
 $I->see('Your account has been blocked');
 
+$I->amGoingTo('try to login with wrong credentials');
+$user = $I->getFixture('user')->getModel('user');
+$page->login($user->email, 'wrong');
+$I->expectTo('see validations errors');
+$I->see('Invalid email or password');
+
 $I->amGoingTo('try to login with correct credentials');
-$page->login('user@example.com', 'qwerty');
+$page->login($user->email, 'qwerty');
 $I->dontSee('Login');
 $I->see('Logout');

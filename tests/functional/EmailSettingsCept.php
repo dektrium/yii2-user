@@ -9,7 +9,8 @@ $I = new TestGuy($scenario);
 $I->wantTo('ensure that profile settings works');
 
 $loginPage = LoginPage::openBy($I);
-$loginPage->login('user@example.com', 'qwerty');
+$user = $I->getFixture('user')->getModel('user');
+$loginPage->login($user->email, 'qwerty');
 
 $I->amGoingTo('update email');
 $page = EmailSettingsPage::openBy($I);
@@ -19,11 +20,11 @@ $I->see('Current password is not valid');
 $page->updateEmail('qwerty', 'new_email@example.com');
 $I->see('Before your email will be changed we need you to confirm your new email address');
 $I->seeRecord(User::className(), [
-    'id' => 1,
+    'id' => $user->id,
     'email' => 'user@example.com',
     'unconfirmed_email' => 'new_email@example.com'
 ]);
-$user = $I->grabRecord(User::className(), ['id' => 1]);
+$user = $I->grabRecord(User::className(), ['id' => $user->id]);
 $I->seeInEmail(Html::encode($user->getConfirmationUrl()));
 $I->seeInEmailRecipients($user->unconfirmed_email);
 
@@ -33,7 +34,6 @@ $I->amGoingTo('login with new email');
 $loginPage = LoginPage::openBy($I);
 $loginPage->login('new_email@example.com', 'qwerty');
 $I->see('Invalid email or password');
-
 $user->confirm(false);
 $loginPage = LoginPage::openBy($I);
 $loginPage->login('user@example.com', 'qwerty');

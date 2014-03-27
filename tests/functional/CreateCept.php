@@ -7,7 +7,8 @@ $I = new TestGuy($scenario);
 $I->wantTo('ensure that user creation works');
 
 $loginPage = LoginPage::openBy($I);
-$loginPage->login('user@example.com', 'qwerty');
+$user = $I->getFixture('user')->getModel('user');
+$loginPage->login($user->email, 'qwerty');
 
 $page = CreatePage::openBy($I);
 

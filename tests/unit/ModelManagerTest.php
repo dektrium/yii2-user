@@ -5,6 +5,7 @@ namespace dektrium\user\tests\unit;
 use Codeception\Specify;
 use dektrium\user\ModelManager;
 use dektrium\user\tests\_fixtures\UserFixture;
+use yii\codeception\TestCase;
 
 class ModelManagerTest extends TestCase
 {

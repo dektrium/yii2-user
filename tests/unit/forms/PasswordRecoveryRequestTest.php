@@ -5,7 +5,7 @@ namespace dektrium\user\tests\forms;
 use Codeception\Specify;
 use dektrium\user\forms\PasswordRecoveryRequest;
 use dektrium\user\tests\_fixtures\UserFixture;
-use dektrium\user\tests\unit\TestCase;
+use yii\codeception\TestCase;
 
 class PasswordRecoveryRequestTest extends TestCase
 {

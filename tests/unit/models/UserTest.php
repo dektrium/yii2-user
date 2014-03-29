@@ -6,7 +6,7 @@ use Codeception\Specify;
 use dektrium\user\models\Profile;
 use dektrium\user\models\User;
 use dektrium\user\tests\_fixtures\UserFixture;
-use dektrium\user\tests\unit\TestCase;
+use yii\codeception\TestCase;
 use yii\helpers\Html;
 use yii\helpers\Security;
 
@@ -123,14 +123,6 @@ class UserTest extends TestCase
             verify($this->user->confirmation_sent_at)->notNull();
         });
 
-        $this->specify('confirmation message should be sent on register', function () {
-            $email = $this->getLastMessage();
-            $this->assertEmailIsSent();
-            $this->assertEmailRecipientsContain('<tester@example.com>', $email);
-            $this->assertEmailSubjectContains('Confirm your account on', $email);
-            $this->assertEmailHtmlContains(Html::encode($this->user->getConfirmationUrl()), $email);
-        });
-
         $this->specify('correct user confirmation status should be returned', function () {
             $user = User::find(1);
             verify('user is confirmed', $user->getIsConfirmed())->true();
@@ -192,11 +184,6 @@ class UserTest extends TestCase
             $this->user->updateEmail();
             verify($this->user->email)->equals('new_email@example.com');
             verify($this->user->unconfirmed_email)->equals('another_email@example.com');
-            $email = $this->getLastMessage();
-            $this->assertEmailIsSent();
-            $this->assertEmailRecipientsContain('<another_email@example.com>', $email);
-            $this->assertEmailSubjectContains('Confirm your email change on', $email);
-            $this->assertEmailHtmlContains(Html::encode($this->user->getConfirmationUrl()), $email);
         });
 
         $this->specify('email reconfirmation should be reset', function () {
@@ -213,14 +200,6 @@ class UserTest extends TestCase
         \Yii::$app->getModule('user')->recoverable = true;
         $this->user = User::find(1);
         $this->user->sendRecoveryMessage();
-
-        $this->specify('recovery message should be sent', function () {
-            $email = $this->getLastMessage();
-            $this->assertEmailIsSent();
-            $this->assertEmailRecipientsContain('<user@example.com>', $email);
-            $this->assertEmailSubjectContains('Complete your password reset', $email);
-            $this->assertEmailHtmlContains(Html::encode($this->user->getRecoveryUrl()), $email);
-        });
 
         $this->specify('correct user confirmation url should be returned', function () {
             $needle = \Yii::$app->getUrlManager()->createAbsoluteUrl(['/user/recovery/reset',

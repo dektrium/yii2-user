@@ -28,7 +28,8 @@ class PasswordRecoveryTest extends TestCase
     public function testFormCreation()
     {
         $this->specify('should accept id and token on creation', function () {
-            $form = new PasswordRecovery(['id' => 6, 'token' => 'NO2aCmBIjFQX624xmAc3VBu7Th3NJoa6']);
+            $user = $this->getFixture('user')->getModel('user_with_recovery_token');
+            $form = new PasswordRecovery(['id' => $user->id, 'token' => $user->recovery_token]);
             verify($form instanceof PasswordRecovery)->true();
         });
 
@@ -43,7 +44,8 @@ class PasswordRecoveryTest extends TestCase
 
         $this->specify('should throw exception if recovery token expired', function () {
             try {
-                $form = new PasswordRecovery(['id' => 5, 'token' => 'dghFKJA6JvjTKLAwyE5w2XD9b2lmBXLE']);
+                $user = $this->getFixture('user')->getModel('user_with_expired_recovery_token');
+                $form = new PasswordRecovery(['id' => $user->id, 'token' => $user->recovery_token]);
             } catch (\Exception $e) {
                 verify($e instanceof InvalidParamException)->true();
                 verify($e->getMessage())->equals('Token has been expired');
@@ -53,7 +55,8 @@ class PasswordRecoveryTest extends TestCase
 
     public function testFormValidation()
     {
-        $form = new PasswordRecovery(['id' => 6, 'token' => 'NO2aCmBIjFQX624xmAc3VBu7Th3NJoa6']);
+        $user = $this->getFixture('user')->getModel('user_with_recovery_token');
+        $form = new PasswordRecovery(['id' => $user->id, 'token' => $user->recovery_token]);
         $this->specify('password is required', function () use ($form) {
             verify($form->validate(['password']))->false();
         });

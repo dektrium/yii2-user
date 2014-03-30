@@ -24,14 +24,16 @@ class ResendTest extends TestCase
     public function testValidateEmail()
     {
         $form = new Resend();
+        $user = $this->getFixture('user')->getModel('user');
         $form->setAttributes([
-            'email' => 'user@example.com',
+            'email' => $user->email,
         ]);
         $this->assertFalse($form->validate());
 
         $form = new Resend();
+        $user = $this->getFixture('user')->getModel('unconfirmed');
         $form->setAttributes([
-            'email' => 'unconfirmed@example.com',
+            'email' => $user->email,
         ]);
         $this->assertTrue($form->validate());
     }

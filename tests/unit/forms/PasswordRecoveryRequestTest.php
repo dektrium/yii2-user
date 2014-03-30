@@ -46,9 +46,11 @@ class PasswordRecoveryRequestTest extends TestCase
         \Yii::$app->getModule('user')->confirmable = true;
 
         $this->specify('email should be confirmed if confirmable is enabled', function () {
-            $this->form->email = 'unconfirmed@example.com';
+            $user = $this->getFixture('user')->getModel('unconfirmed');
+            $this->form->email = $user->email;
             verify($this->form->validate(['email']))->false();
-            $this->form->email = 'user@example.com';
+            $user = $this->getFixture('user')->getModel('user');
+            $this->form->email = $user->email;
             verify($this->form->validate(['email']))->true();
         });
     }

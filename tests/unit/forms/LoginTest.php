@@ -34,8 +34,9 @@ class LoginTest extends TestCase
         $this->form = new Login();
 
         $this->specify('should not allow logging in blocked users', function () {
+            $user = $this->getFixture('user')->getModel('blocked');
             $this->form->setAttributes([
-                'email'    => 'blocked@example.com',
+                'email'    => $user->email,
                 'password' => 'qwerty'
             ]);
             verify($this->form->validate())->false();
@@ -45,13 +46,15 @@ class LoginTest extends TestCase
         $this->specify('should not allow logging in unconfirmed users', function () {
             \Yii::$app->getModule('user')->confirmable = true;
             \Yii::$app->getModule('user')->allowUnconfirmedLogin = false;
+            $user = $this->getFixture('user')->getModel('user');
             $this->form->setAttributes([
-                'email' => 'user@example.com',
+                'email'    => $user->email,
                 'password' => 'qwerty'
             ]);
             verify($this->form->validate())->true();
+            $user = $this->getFixture('user')->getModel('unconfirmed');
             $this->form->setAttributes([
-                'email' => 'unconfirmed@example.com',
+                'email'    => $user->email,
                 'password' => 'unconfirmed'
             ]);
             verify($this->form->validate())->false();
@@ -60,14 +63,14 @@ class LoginTest extends TestCase
         });
 
         $this->specify('should log the user in with correct credentials', function () {
-            verify($this->form->validate())->false();
+            $user = $this->getFixture('user')->getModel('user');
             $this->form->setAttributes([
-                'email' => 'user@example.com',
+                'email'    => $user->email,
                 'password' => 'wrong'
             ]);
             verify($this->form->validate())->false();
             $this->form->setAttributes([
-                'email' => 'user@example.com',
+                'email'    => $user->email,
                 'password' => 'qwerty'
             ]);
             verify($this->form->validate())->true();

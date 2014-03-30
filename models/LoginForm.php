@@ -9,7 +9,7 @@
  * file that was distributed with this source code.
  */
 
-namespace dektrium\user\forms;
+namespace dektrium\user\models;
 
 use yii\base\Model;
 use dektrium\user\helpers\Password;
@@ -21,7 +21,7 @@ use dektrium\user\helpers\Password;
  *
  * @author Dmitry Erofeev <dmeroff@gmail.com>
  */
-class Login extends Model
+class LoginForm extends Model
 {
     /**
      * @var string

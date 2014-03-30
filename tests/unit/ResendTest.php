@@ -1,12 +1,12 @@
 <?php
 
-namespace dektrium\user\tests\forms;
+namespace dektrium\user\tests;
 
-use dektrium\user\forms\Resend;
+use dektrium\user\models\ResendForm;
 use dektrium\user\tests\_fixtures\UserFixture;
 use yii\codeception\TestCase;
 
-class ResendTest extends TestCase
+class ResendFormTest extends TestCase
 {
     /**
      * @inheritdoc
@@ -23,14 +23,14 @@ class ResendTest extends TestCase
 
     public function testValidateEmail()
     {
-        $form = new Resend();
+        $form = new ResendForm();
         $user = $this->getFixture('user')->getModel('user');
         $form->setAttributes([
             'email' => $user->email,
         ]);
         $this->assertFalse($form->validate());
 
-        $form = new Resend();
+        $form = new ResendForm();
         $user = $this->getFixture('user')->getModel('unconfirmed');
         $form->setAttributes([
             'email' => $user->email,

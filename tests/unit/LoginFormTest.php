@@ -1,9 +1,9 @@
 <?php
 
-namespace dektrium\user\tests\forms;
+namespace dektrium\user\tests;
 
 use Codeception\Specify;
-use dektrium\user\forms\Login;
+use dektrium\user\models\LoginForm;
 use dektrium\user\tests\_fixtures\UserFixture;
 use yii\codeception\TestCase;
 
@@ -12,7 +12,7 @@ class LoginTest extends TestCase
     use Specify;
 
     /**
-     * @var Login
+     * @var LoginForm
      */
     protected $form;
 
@@ -31,7 +31,7 @@ class LoginTest extends TestCase
 
     public function testLogin()
     {
-        $this->form = new Login();
+        $this->form = new LoginForm();
 
         $this->specify('should not allow logging in blocked users', function () {
             $user = $this->getFixture('user')->getModel('blocked');

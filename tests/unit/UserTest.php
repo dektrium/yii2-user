@@ -1,13 +1,11 @@
 <?php
 
-namespace dektrium\user\tests\models;
+namespace dektrium\user\tests;
 
 use Codeception\Specify;
-use dektrium\user\models\Profile;
 use dektrium\user\models\User;
 use dektrium\user\tests\_fixtures\UserFixture;
 use yii\codeception\TestCase;
-use yii\helpers\Html;
 use yii\helpers\Security;
 
 /**

@@ -9,7 +9,7 @@
  * file that was distributed with this source code.
  */
 
-namespace dektrium\user\forms;
+namespace dektrium\user\models;
 
 use yii\base\InvalidParamException;
 use yii\base\Model;
@@ -21,7 +21,7 @@ use yii\base\Model;
  *
  * @author Dmitry Erofeev <dmeroff@gmail.com>
  */
-class PasswordRecovery extends Model
+class RecoveryForm extends Model
 {
     /**
      * @var string

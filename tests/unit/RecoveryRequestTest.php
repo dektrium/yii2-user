@@ -1,18 +1,18 @@
 <?php
 
-namespace dektrium\user\tests\forms;
+namespace dektrium\user\tests;
 
 use Codeception\Specify;
-use dektrium\user\forms\PasswordRecoveryRequest;
+use dektrium\user\models\RecoveryRequestForm;
 use dektrium\user\tests\_fixtures\UserFixture;
 use yii\codeception\TestCase;
 
-class PasswordRecoveryRequestTest extends TestCase
+class RecoveryRequestTest extends TestCase
 {
     use Specify;
 
     /**
-     * @var \dektrium\user\forms\PasswordRecoveryRequest
+     * @var \dektrium\user\models\RecoveryRequestForm
      */
     protected $form;
 
@@ -31,7 +31,7 @@ class PasswordRecoveryRequestTest extends TestCase
 
     public function testFormValidation()
     {
-        $this->form = new PasswordRecoveryRequest();
+        $this->form = new RecoveryRequestForm();
 
         $this->specify('email is required', function () {
             $this->form->email = null;

@@ -1,0 +1,13 @@
+language: php
+php:
+  - 5.5
+  - 5.4
+install:
+  - composer install --prefer-dist --dev
+  - wget http://codeception.com/releases/2.0.0-beta/codecept.phar
+before_script:
+  - mysql -e 'create database dektrium_test;'
+  - sed -i 's/\/..\/..\/..\//\/..\//g' tests/_bootstrap.php
+  - php tests/yii migrate/up
+  - php codecept.phar build
+script: php codecept.phar run

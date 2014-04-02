@@ -1,0 +1,39 @@
+<?php
+
+$db = require __DIR__ . '/db.php';
+
+return [
+    'id' => 'test',
+    'basePath' => dirname(__DIR__),
+    'bootstrap' => [
+        'dektrium\user\Bootstrap'
+    ],
+    'aliases' => [
+        '@dektrium/user' => realpath(__DIR__. '/../../../'),
+        '@vendor' => VENDOR_DIR
+    ],
+    'modules' => [
+        'user' => [
+            'class' => 'dektrium\user\Module',
+            'admins' => ['user']
+        ]
+    ],
+    'components' => [
+        'assetManager' => [
+            'basePath' => '@tests/_app/runtime/assets'
+        ],
+        'log'   => null,
+        'cache' => null,
+        'request' => [
+            'enableCsrfValidation' => false
+        ],
+        'db' => $db,
+        'mail' => [
+            'transport' => [
+                'class' => 'Swift_SmtpTransport',
+                'host' => '127.0.0.1',
+                'port' => '1025',
+            ]
+        ],
+    ],
+];

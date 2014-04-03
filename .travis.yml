@@ -11,5 +11,5 @@ before_script:
   - mysql -e 'create database dektrium_test;'
   - sed -i 's/\/..\/..\/..\//\/..\//g' tests/_bootstrap.php
   - php tests/yii migrate/up --interactive=0
-  - php codecept.phar build
-script: php codecept.phar run
+  - vendor/bin/codecept build
+script: vendor/bin/codecept run

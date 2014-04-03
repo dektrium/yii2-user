@@ -16,12 +16,12 @@ use yii\base\Component;
 /**
  * ModelManager is used in order to create models and find users.
  *
- * @method models\User                   createUser
- * @method models\Profile                createProfile
- * @method forms\Resend                  createResendForm
- * @method forms\Login                   createLoginForm
- * @method forms\PasswordRecovery        createPasswordRecoveryForm
- * @method forms\PasswordRecoveryRequest createPasswordRecoveryRequestForm
+ * @method models\User                createUser
+ * @method models\Profile             createProfile
+ * @method models\ResendForm          createResendForm
+ * @method models\LoginForm           createLoginForm
+ * @method models\RecoveryForm        createPasswordRecoveryForm
+ * @method models\RecoveryRequestForm createPasswordRecoveryRequestForm
  *
  * @author Dmitry Erofeev <dmeroff@gmail.com>
  */

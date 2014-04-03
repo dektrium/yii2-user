@@ -24,7 +24,8 @@
     "require-dev": {
         "yiisoft/yii2-codeception": "*",
         "codeception/specify": "*",
-        "codeception/verify": "*"
+        "codeception/verify": "*",
+        "guzzlehttp/guzzle": "~4.0"
     },
     "autoload": {
         "psr-4": {

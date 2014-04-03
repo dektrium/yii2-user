@@ -4,7 +4,6 @@ php:
   - 5.4
 install:
   - composer install --prefer-dist --dev
-  - "composer require 'guzzlehttp/guzzle: ~4.0' --prefer-dist"
   - wget http://codeception.com/releases/2.0.0-beta/codecept.phar
   - gem install mailcatcher
 before_script:

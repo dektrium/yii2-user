@@ -195,7 +195,6 @@ class UserTest extends TestCase
 
     public function testRecoverable()
     {
-        \Yii::$app->getModule('user')->recoverable = true;
         $this->user = User::find(1);
         $this->user->sendRecoveryMessage();
 

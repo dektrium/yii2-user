@@ -45,22 +45,6 @@ class RecoveryController extends Controller
     }
 
     /**
-     * @inheritdoc
-     */
-    public function beforeAction($action)
-    {
-        if (parent::beforeAction($action)) {
-            if (!$this->module->recoverable) {
-                throw new NotFoundHttpException('Disabled by administrator');
-            }
-
-            return true;
-        } else {
-            return false;
-        }
-    }
-
-    /**
      * Displays page where user can request new recovery message.
      *
      * @return string

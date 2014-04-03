@@ -42,7 +42,6 @@ $this->params['breadcrumbs'][] = $this->title;
                     return $model->registered_from == null ? '<span class="not-set">' . Yii::t('user', '(not set)') . '</span>' : long2ip($model->registered_from);
                 },
             'format' => 'html',
-            'visible' => Yii::$app->getModule('user')->trackable
         ],
         [
             'attribute' => 'created_at',

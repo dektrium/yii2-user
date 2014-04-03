@@ -37,11 +37,6 @@ class Module extends BaseModule
     public $rememberFor = 1209600; // two weeks
 
     /**
-     * @var bool Whether to track user's registration and sign in
-     */
-    public $trackable = true;
-
-    /**
      * @var bool Whether confirmation needed
      */
     public $confirmable = true;
@@ -50,11 +45,6 @@ class Module extends BaseModule
      * @var int The time before a confirmation token becomes invalid.
      */
     public $confirmWithin = 86400; // 24 hours
-
-    /**
-     * @var bool Whether to enable password recovery.
-     */
-    public $recoverable = true;
 
     /**
      * @var int The time before a recovery token becomes invalid.

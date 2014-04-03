@@ -3,7 +3,6 @@
     [
         'modules' => [
             'user' => [
-                'trackable' => false,
                 'confirmable' => false,
             ]
         ],

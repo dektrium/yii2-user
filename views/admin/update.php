@@ -54,7 +54,7 @@ $this->registerJs(sprintf('$("#user-password").passField(%s);', json_encode(['lo
             <?= Yii::t('user', 'Confirmed at {0, date, MMMM dd, YYYY HH:mm}', [$model->created_at]) ?>
             <br/>
         <?php endif; ?>
-        <?php if (Yii::$app->getModule('user')->trackable && !is_null($model->logged_in_at)): ?>
+        <?php if (!is_null($model->logged_in_at)): ?>
             <?= Yii::t('user', 'Last login at {0, date, MMMM dd, YYYY HH:mm} from {1}', [$model->logged_in_at, long2ip($model->logged_in_from)]) ?>
         <?php endif;?>
         <?php if ($model->getIsBlocked()): ?>

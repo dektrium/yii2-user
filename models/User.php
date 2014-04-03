@@ -242,9 +242,9 @@ class User extends ActiveRecord implements UserInterface
     protected function beforeRegister()
     {
         $this->trigger(self::EVENT_BEFORE_REGISTER);
-        if ($this->module->trackable) {
-            $this->setAttribute('registered_from', ip2long(\Yii::$app->request->userIP));
-        }
+
+        $this->setAttribute('registered_from', ip2long(\Yii::$app->request->userIP));
+
         if ($this->module->confirmable) {
             $this->generateConfirmationData();
         }

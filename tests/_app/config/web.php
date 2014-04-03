@@ -20,7 +20,7 @@ return [
     ],
     'components' => [
         'assetManager' => [
-            'basePath' => '@tests/_app/runtime/assets'
+            'basePath' => '@tests/_app/assets'
         ],
         'log'   => null,
         'cache' => null,

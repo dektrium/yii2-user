@@ -4,7 +4,7 @@ php:
   - 5.4
 install:
   - composer install --prefer-dist --dev
-  - wget http://codeception.com/releases/2.0.0-beta/codecept.phar
+  - composer require --dev "codeception/codeception:2.0.0-beta"
   - gem install mailcatcher
 before_script:
   - mailcatcher

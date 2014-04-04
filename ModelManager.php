@@ -187,7 +187,7 @@ class ModelManager extends Component
      */
     public function createUserQuery()
     {
-        return \Yii::createObject(['class' => $this->userQueryClass, 'modelClass' => $this->userClass]);
+        return \Yii::createObject($this->userQueryClass, [$this->userClass]);
     }
 
     /**
@@ -197,7 +197,7 @@ class ModelManager extends Component
      */
     public function createProfileQuery()
     {
-        return \Yii::createObject(['class' => $this->profileQueryClass, 'modelClass' => $this->profileClass]);
+        return \Yii::createObject($this->profileQueryClass, [$this->profileClass]);
     }
 
     /**

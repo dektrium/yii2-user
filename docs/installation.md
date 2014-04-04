@@ -45,6 +45,14 @@ To make autoloading work you should set following alias pointing to module direc
 Yii::setAlias('@dektrium/user', __DIR__.'/../modules/user');
 ```
 
+or add
+
+```php
+	'aliases' => [
+		'@dektrium/user' => __DIR__ . '/../modules/user',
+	]
+```
+
 ## Setting up
 
 To enable module you should configure your application as follows:

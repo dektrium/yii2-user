@@ -11,9 +11,9 @@
 
 namespace dektrium\user\controllers;
 
-use yii\web\AccessControl;
+use yii\filters\AccessControl;
 use yii\web\Controller;
-use yii\web\VerbFilter;
+use yii\filters\VerbFilter;
 
 /**
  * Controller that manages user authentication process.

@@ -13,7 +13,7 @@ namespace dektrium\user;
 
 use yii\base\Application;
 use yii\base\BootstrapInterface;
-use yii\web\PrefixUrlRule;
+use yii\web\GroupUrlRule;
 
 /**
  * Bootstrap class registers module and user application component. It also creates some url rules which will be applied
@@ -44,7 +44,7 @@ class Bootstrap implements BootstrapInterface
             'identityClass' => $identityClass
         ]);
 
-        $app->get('urlManager')->rules[] = new PrefixUrlRule([
+        $app->get('urlManager')->rules[] = new GroupUrlRule([
             'prefix' => 'user',
             'rules' => [
                 '<id:\d+>' => 'profile/show',

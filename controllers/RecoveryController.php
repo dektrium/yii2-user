@@ -11,10 +11,9 @@
 
 namespace dektrium\user\controllers;
 
-use yii\base\InvalidParamException;
-use yii\web\AccessControl;
 use yii\web\Controller;
-use yii\web\NotFoundHttpException;
+use yii\filters\AccessControl;
+use yii\base\InvalidParamException;
 
 /**
  * RecoveryController manages password recovery process.

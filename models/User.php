@@ -117,6 +117,7 @@ class User extends ActiveRecord implements UserInterface
     {
         return [
             'register'        => ['username', 'email', 'password'],
+            'connect'         => ['username', 'email'],
             'create'          => ['username', 'email', 'password', 'role'],
             'update'          => ['username', 'email', 'password', 'role'],
             'update_password' => ['password', 'current_password'],
@@ -131,13 +132,13 @@ class User extends ActiveRecord implements UserInterface
     {
         return [
             // username rules
-            ['username', 'required', 'on' => ['register', 'create', 'update']],
+            ['username', 'required', 'on' => ['register', 'connect', 'create', 'update']],
             ['username', 'match', 'pattern' => '/^[a-zA-Z]\w+$/'],
             ['username', 'string', 'min' => 3, 'max' => 25],
             ['username', 'unique'],
 
             // email rules
-            ['email', 'required', 'on' => ['register', 'create', 'update', 'update_email']],
+            ['email', 'required', 'on' => ['register', 'connect', 'create', 'update', 'update_email']],
             ['email', 'email'],
             ['email', 'string', 'max' => 255],
             ['email', 'unique'],

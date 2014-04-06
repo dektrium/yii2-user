@@ -35,7 +35,7 @@ class RegistrationController extends Controller
                 'rules' => [
                     [
                         'allow' => true,
-                        'actions' => ['register'],
+                        'actions' => ['register', 'connect'],
                         'roles' => ['?']
                     ],
                     [
@@ -81,6 +81,30 @@ class RegistrationController extends Controller
 
         return $this->render('register', [
             'model' => $model
+        ]);
+    }
+
+    public function actionConnect($account_id)
+    {
+        $account = $this->module->manager->findAccountById($account_id);
+
+        if ($account === null || $account->getIsConnected()) {
+            throw new NotFoundHttpException('Something went wrong');
+        }
+
+        $this->module->confirmable = false;
+
+        $model = $this->module->manager->createUser(['scenario' => 'connect']);
+        if ($model->load($_POST) && $model->create()) {
+            $account->user_id = $model->id;
+            $account->save(false);
+            \Yii::$app->user->login($model, $this->module->rememberFor);
+            $this->goBack();
+        }
+
+        return $this->render('connect', [
+            'model'   => $model,
+            'account' => $account
         ]);
     }
 

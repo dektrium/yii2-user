@@ -46,6 +46,10 @@ $this->params['breadcrumbs'][] = $this->title;
         <p class="text-center">
             <?= Html::a(Yii::t('user', 'Didn\'t receive confirmation message?'), ['/user/registration/resend']) ?>
         </p>
-
+        <p class="text-center">
+            <?= \yii\authclient\widgets\Choice::widget([
+                'baseAuthUrl' => ['/user/security/auth']
+            ]) ?>
+        </p>
     </div>
 </div>

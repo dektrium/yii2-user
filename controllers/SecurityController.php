@@ -14,6 +14,8 @@ namespace dektrium\user\controllers;
 use yii\web\Controller;
 use yii\filters\AccessControl;
 use yii\filters\VerbFilter;
+use yii\authclient\ClientInterface;
+use yii\web\Response;
 
 /**
  * Controller that manages user authentication process.
@@ -35,7 +37,7 @@ class SecurityController extends Controller
                 'rules' => [
                     [
                         'allow' => true,
-                        'actions' => ['login'],
+                        'actions' => ['login', 'auth'],
                         'roles' => ['?']
                     ],
                     [
@@ -50,6 +52,16 @@ class SecurityController extends Controller
                 'actions' => [
                     'logout' => ['post']
                 ]
+            ]
+        ];
+    }
+
+    public function actions()
+    {
+        return [
+            'auth' => [
+                'class' => 'yii\authclient\AuthAction',
+                'successCallback' => [$this, 'authenticate'],
             ]
         ];
     }
@@ -82,5 +94,32 @@ class SecurityController extends Controller
         \Yii::$app->getUser()->logout();
 
         return $this->goHome();
+    }
+
+    /**
+     * Logs the user in if this social account has been already used. Otherwise shows registration form.
+     *
+     * @param  ClientInterface $client
+     * @return Response
+     */
+    public function authenticate(ClientInterface $client)
+    {
+        $provider = $client->getTitle();
+        $clientId = $client->getUserAttributes()['id'];
+
+        if (null === ($account = $this->module->manager->findAccount($provider, $clientId))) {
+            $account = $this->module->manager->createAccount([
+                'provider'  => $provider,
+                'client_id' => $clientId
+            ]);
+            $account->save(false);
+        }
+
+        if (null === ($user = $account->user)) {
+            return $this->redirect(['/user/registration/connect', 'account_id' => $account->id]);
+        } else {
+            \Yii::$app->user->login($user, $this->module->rememberFor);
+            return $this->goBack();
+        }
     }
 }

@@ -18,6 +18,7 @@ use yii\base\Component;
  *
  * @method models\User                createUser
  * @method models\Profile             createProfile
+ * @method models\Account             createAccount
  * @method models\ResendForm          createResendForm
  * @method models\LoginForm           createLoginForm
  * @method models\RecoveryForm        createPasswordRecoveryForm
@@ -40,12 +41,22 @@ class ModelManager extends Component
     /**
      * @var string
      */
+    public $accountClass = 'dektrium\user\models\Account';
+
+    /**
+     * @var string
+     */
     public $userQueryClass = 'dektrium\user\models\UserQuery';
 
     /**
      * @var string
      */
     public $profileQueryClass = 'yii\db\ActiveQuery';
+
+    /**
+     * @var string
+     */
+    public $accountQueryClass = 'yii\db\ActiveQuery';
 
     /**
      * @var string
@@ -181,6 +192,34 @@ class ModelManager extends Component
     }
 
     /**
+     * Finds an account by id.
+     *
+     * @param integer $id
+     *
+     * @return models\Account|null
+     */
+    public function findAccountById($id)
+    {
+        return $this->createAccountQuery()->where(['id' => $id])->one();
+    }
+
+    /**
+     * Finds an account by client id and provider name.
+     *
+     * @param string $provider
+     * @param string $clientId
+     *
+     * @return models\Account|null
+     */
+    public function findAccount($provider, $clientId)
+    {
+        return $this->createAccountQuery()->where([
+            'provider'  => $provider,
+            'client_id' => $clientId
+        ])->one();
+    }
+
+    /**
      * Creates new query for user class.
      *
      * @return \yii\db\ActiveQuery
@@ -198,6 +237,16 @@ class ModelManager extends Component
     public function createProfileQuery()
     {
         return \Yii::createObject($this->profileQueryClass, [$this->profileClass]);
+    }
+
+    /**
+     * Creates new query for account class.
+     *
+     * @return \yii\db\ActiveQuery
+     */
+    public function createAccountQuery()
+    {
+        return \Yii::createObject($this->accountQueryClass, [$this->accountClass]);
     }
 
     /**

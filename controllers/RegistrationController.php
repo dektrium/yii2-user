@@ -11,8 +11,8 @@
 
 namespace dektrium\user\controllers;
 
-use yii\web\AccessControl;
 use yii\web\Controller;
+use yii\filters\AccessControl;
 use yii\web\NotFoundHttpException;
 
 /**

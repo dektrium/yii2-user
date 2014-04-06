@@ -11,9 +11,9 @@
 
 namespace dektrium\user\controllers;
 
-use yii\base\InvalidParamException;
-use yii\web\AccessControl;
 use yii\web\Controller;
+use yii\filters\AccessControl;
+use yii\base\InvalidParamException;
 use yii\web\NotFoundHttpException;
 
 /**

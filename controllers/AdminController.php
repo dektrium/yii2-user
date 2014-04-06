@@ -12,10 +12,10 @@
 namespace dektrium\user\controllers;
 
 use dektrium\user\models\UserSearch;
-use yii\web\AccessControl;
 use yii\web\Controller;
+use yii\filters\AccessControl;
+use yii\filters\VerbFilter;
 use yii\web\NotFoundHttpException;
-use yii\web\VerbFilter;
 
 /**
  * AdminController allows you to administrate users.

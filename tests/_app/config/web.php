@@ -8,6 +8,7 @@ return [
     'bootstrap' => [
         'dektrium\user\Bootstrap'
     ],
+    'extensions' => require(VENDOR_DIR . '/yiisoft/extensions.php'),
     'aliases' => [
         '@dektrium/user' => realpath(__DIR__. '/../../../'),
         '@vendor' => VENDOR_DIR
@@ -19,6 +20,9 @@ return [
         ]
     ],
     'components' => [
+        'authClientCollection' => [
+            'class' => 'yii\authclient\Collection',
+        ],
         'assetManager' => [
             'basePath' => '@tests/_app/assets'
         ],

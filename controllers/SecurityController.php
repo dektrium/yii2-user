@@ -104,13 +104,15 @@ class SecurityController extends Controller
      */
     public function authenticate(ClientInterface $client)
     {
-        $provider = $client->getTitle();
-        $clientId = $client->getUserAttributes()['id'];
+        $attributes = $client->getUserAttributes();
+        $provider   = $client->getTitle();
+        $clientId   = $attributes['id'];
 
         if (null === ($account = $this->module->manager->findAccount($provider, $clientId))) {
             $account = $this->module->manager->createAccount([
-                'provider'  => $provider,
-                'client_id' => $clientId
+                'provider'   => $provider,
+                'client_id'  => $clientId,
+                'attributes' => json_encode($attributes)
             ]);
             $account->save(false);
         }

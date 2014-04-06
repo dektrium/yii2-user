@@ -22,10 +22,11 @@ class m140403_174025_create_account_table extends Migration
         $tableOptions = 'CHARACTER SET utf8 COLLATE utf8_general_ci ENGINE=InnoDB';
 
         $this->createTable('{{%account}}', [
-            'id'        => Schema::TYPE_PK,
-            'user_id'   => Schema::TYPE_INTEGER,
-            'provider'  => Schema::TYPE_STRING . ' NOT NULL',
-            'client_id' => Schema::TYPE_STRING . ' NOT NULL',
+            'id'         => Schema::TYPE_PK,
+            'user_id'    => Schema::TYPE_INTEGER,
+            'provider'   => Schema::TYPE_STRING . ' NOT NULL',
+            'client_id'  => Schema::TYPE_STRING . ' NOT NULL',
+            'attributes' => Schema::TYPE_TEXT
         ], $tableOptions);
 
         $this->createIndex('account_unique', '{{%account}}', ['provider', 'client_id'], true);
@@ -34,6 +35,6 @@ class m140403_174025_create_account_table extends Migration
 
     public function down()
     {
-        $this->dropTable('{{%auth}}');
+        $this->dropTable('{{%account}}');
     }
 }

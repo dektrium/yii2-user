@@ -46,5 +46,6 @@ $this->params['breadcrumbs'][] = $this->title;
         <p class="text-center">
             <?= Html::a(Yii::t('user', 'Didn\'t receive confirmation message?'), ['/user/registration/resend']) ?>
         </p>
+
     </div>
 </div>

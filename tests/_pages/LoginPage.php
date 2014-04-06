@@ -9,7 +9,7 @@ class LoginPage extends BasePage
     /**
      * @var string
      */
-    public $route = '/user/auth/login';
+    public $route = '/user/security/login';
 
     /**
      * @param $login

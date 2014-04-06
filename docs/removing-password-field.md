@@ -136,7 +136,7 @@ $this->registerJs(sprintf('$("#user-password").passField(%s);', json_encode(['lo
             </div>
         </div>
         <p class="text-center">
-            <?= Html::a(Yii::t('user', 'Already registered? Sign in!'), ['/user/auth/login']) ?>
+            <?= Html::a(Yii::t('user', 'Already registered? Sign in!'), ['/user/security/login']) ?>
         </p>
     </div>
 </div>

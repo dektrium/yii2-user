@@ -22,7 +22,7 @@ use yii\filters\VerbFilter;
  *
  * @author Dmitry Erofeev <dmeroff@gmail.com>
  */
-class AuthController extends Controller
+class SecurityController extends Controller
 {
     /**
      * @inheritdoc

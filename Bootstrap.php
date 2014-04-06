@@ -40,7 +40,7 @@ class Bootstrap implements BootstrapInterface
         $app->set('user', [
             'class' => 'yii\web\User',
             'enableAutoLogin' => true,
-            'loginUrl' => ['/user/auth/login'],
+            'loginUrl' => ['/user/security/login'],
             'identityClass' => $identityClass
         ]);
 
@@ -48,7 +48,7 @@ class Bootstrap implements BootstrapInterface
             'prefix' => 'user',
             'rules' => [
                 '<id:\d+>' => 'profile/show',
-                '<action:(login|logout)>' => 'auth/<action>',
+                '<action:(login|logout)>' => 'security/<action>',
                 '<action:(register|resend)>' => 'registration/<action>',
                 'confirm/<id:\d+>/<token:\w+>' => 'registration/confirm',
                 'forgot' => 'recovery/request',

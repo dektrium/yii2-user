@@ -1,14 +1,17 @@
-# Codeception Test Suite Configuration
-
-# suite for functional (integration) tests.
-# emulate web requests and make application process them.
-# (tip: better to use with frameworks).
-
-# RUN `build` COMMAND AFTER ADDING/REMOVING MODULES.
-
 class_name: TestGuy
 modules:
-    enabled: [Filesystem, TestHelper, Yii2]
+    enabled: [TestHelper, Yii2, MailHelper, FixtureHelper]
     config:
         Yii2:
             configFile: 'tests/functional/_config.php'
+        MailHelper:
+            url: http://localhost
+            port: 1080
+        FixtureHelper:
+            fixtures:
+                user:
+                    class: dektrium\user\tests\_fixtures\UserFixture
+                    dataFile: @tests/_fixtures/init_user.php
+                profile:
+                    class: dektrium\user\tests\_fixtures\ProfileFixture
+                    dataFile: @tests/_fixtures/init_profile.php

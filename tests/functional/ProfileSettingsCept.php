@@ -8,7 +8,8 @@ $I = new TestGuy($scenario);
 $I->wantTo('ensure that profile settings works');
 
 $loginPage = LoginPage::openBy($I);
-$loginPage->login('user@example.com', 'qwerty');
+$user = $I->getFixture('user')->getModel('user');
+$loginPage->login($user->email, 'qwerty');
 
 $name = 'Tester';
 $public_email = 'public@email.com';
@@ -22,7 +23,7 @@ $page->update($name, $public_email, $website, $location, $gravatar_email, $bio);
 
 $I->see('Profile updated successfully');
 $I->seeRecord(Profile::className(), [
-    'user_id' => 1,
+    'user_id' => $user->id,
     'name' => $name,
     'public_email' => $public_email,
     'website' => $website,

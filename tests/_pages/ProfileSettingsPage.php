@@ -27,6 +27,6 @@ class ProfileSettingsPage extends BasePage
         $this->guy->fillField('#profile-location', $location);
         $this->guy->fillField('#profile-gravatar_email', $gravatar_email);
         $this->guy->fillField('#profile-bio', $bio);
-        $this->guy->click('Update profile');
+        $this->guy->click('Save');
     }
 }

@@ -1,5 +1,20 @@
 # CHANGELOG
 
+## 0.6.0 [Work in progress]
+
+- Added Mailer component
+- Added ModelManager component
+- Removed factory
+- Updated composer.json
+- Added bootstrap class that configures module automatically
+- Removed custom User component
+- Removed registration without password
+- Removed different login types (by username and both username and email)
+- Removed default controller
+- Removed captcha from all forms
+- Updated i18n messages and translations
+- Updated view files
+
 ## v0.5.1 [22 March 2014]
 
 - Fixed documentation issues

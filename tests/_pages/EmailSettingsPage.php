@@ -19,6 +19,6 @@ class EmailSettingsPage extends BasePage
     {
         $this->guy->fillField('#user-current_password', $currentPassword);
         $this->guy->fillField('#user-unconfirmed_email', $email);
-        $this->guy->click('Update email');
+        $this->guy->click('Save');
     }
 }

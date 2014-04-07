@@ -1,28 +1,22 @@
-# Installation
+# Getting started
 
-This page explains the ways of installing User module. There are two ways to install:
+First of all you need to install module. There are two ways of installing Yii2-user: the easiest way using composer and
+the nerdy way using git (for developers). This guide describes installing using composer because it is really easy, does
+not take much time and is suitable in most cases. If you are going to contribute to Yii2-user you'd better install it
+using [git](installation-using-git.md).
 
-- The easiest way using composer
-- The nerdy way using git
-
-After you have done this go to the section `Setting up`
-
-### Installing via composer
+## Installation
 
 Either run following command:
 
 ```bash
-$ php composer.phar require dektrium/yii2-user "*"
+$ php composer.phar require --prefer-dist dektrium/yii2-user "0.6.*@dev"
 ```
 
 or add
 
-```js
-{
-    "require": {
-        "dektrium/yii2-user": "*"
-    }
-}
+```json
+"dektrium/yii2-user": "0.6.*@dev"
 ```
 
 to the require section of your `composer.json` file and run following command:
@@ -31,100 +25,19 @@ to the require section of your `composer.json` file and run following command:
 $ php composer.phar update
 ```
 
-### Installing via git
+## Applying migrations
 
-Change directory to `@app/modules` and run following command:
-
-```bash
-$ git clone git@github.com:dektrium/yii2-user.git user
-```
-
-To make autoloading work you should set following alias pointing to module directory in your config file:
-
-```php
-Yii::setAlias('@dektrium/user', __DIR__.'/../modules/user');
-```
-
-or add
-
-```php
-	'aliases' => [
-		'@dektrium/user' => __DIR__ . '/../modules/user',
-	]
-```
-
-## Setting up
-
-To enable module you should configure your application as follows:
-
-```php
-'modules' => [
-	...
-	'user' => [
-	    'class' => 'dektrium\user\Module',
-	],
-	...
-],
-...
-'components' => [
-	...
-	'user' => [
-	    'class' => 'dektrium\user\components\User'
-	],
-	...
-],
-```
-
-## Updating database schema
-
-After you configured module, the last thing you need to do is update your database schema by running the migrations:
+After you installed Yii2-user, the last thing you need to do is update your database schema by applying the migrations:
 
 ```bash
 $ php yii migrate/up --migrationPath=@vendor/dektrium/yii2-user/migrations
 ```
 
-OR if you used git for installation:
-
-```bash
-$ php yii migrate/up --migrationPath=@app/modules/user/migrations
-```
-
 ## Post-installation
 
-### Emails
+Now that you have completed the basic installation of Yii2-user, you are ready to learn about more advanced features and
+usages of the module.
 
-If you are going to use confirmable and recoverable features you should configure your mail component as follows:
-
-```php
-'components' => [
-	...
-	'mail' => [
-		'class' => '\yii\swiftmailer\Mailer',
-		'transport' => [
-			// transport configuration
-		],
-		'messageConfig' => [
-			// this option must be set
-			'from' => 'noreply@mydomain.com',
-		]
-	]
-	...
-]
-```
-
-### URL Management
-
-If your application enables pretty urls you may need to add following rules at the beginning of your URL rule set in your application configuration:
-
-```php
-'rules' => [
-	'register' => 'user/registration/register',
-	'resend' => 'user/registration/resend',
-	'confirm/<id:\d+>/<token:\w+>' => 'user/registration/confirm',
-	'login' => 'user/auth/login',
-	'logout' => 'user/auth/logout',
-	'recovery' => 'user/recovery/request',
-	'reset/<id:\d+>/<token:\w+>' => 'user/recovery/reset',
-	...
-],
-```
+- [Configuring the module](configuration.md)
+- [List of available actions](available-actions.md)
+- [User management](user-management.md)

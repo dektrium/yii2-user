@@ -7,11 +7,14 @@ $I = new TestGuy($scenario);
 $I->wantTo('ensure that user update works');
 
 $loginPage = LoginPage::openBy($I);
-$loginPage->login('user@example.com', 'qwerty');
+$user = $I->getFixture('user')->getModel('user');
+$loginPage->login($user->email, 'qwerty');
 
-$page = UpdatePage::openBy($I, ['id' => 2]);
+$page = UpdatePage::openBy($I, ['id' => $user->id]);
 
-$page->update('new_toster', 'new_toster@example.com');
+$page->update('user', 'updated_user@example.com', 'new_pass');
 $I->see('User has been updated');
-$I->see('new_toster');
-$I->see('new_toster@example.com');
+
+Yii::$app->user->logout();
+LoginPage::openBy($I)->login('updated_user@example.com', 'new_pass');
+$I->see('Logout');

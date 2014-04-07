@@ -23,6 +23,6 @@ class CreatePage extends BasePage
         $this->guy->fillField('#user-email', $email);
         $this->guy->fillField('#user-password', $password);
         $this->guy->fillField('#user-role', $role);
-        $this->guy->click('Create');
+        $this->guy->click('Save');
     }
 }

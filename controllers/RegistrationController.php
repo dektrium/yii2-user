@@ -35,12 +35,12 @@ class RegistrationController extends Controller
                 'rules' => [
                     [
                         'allow' => true,
-                        'actions' => ['register'],
+                        'actions' => ['register', 'connect'],
                         'roles' => ['?']
                     ],
                     [
                         'allow' => true,
-                        'actions' => ['confirm', 'resend', 'captcha'],
+                        'actions' => ['confirm', 'resend'],
                         'roles' => ['?', '@']
                     ],
                 ]
@@ -71,8 +71,7 @@ class RegistrationController extends Controller
      */
     public function actionRegister()
     {
-        $scenario = $this->module->generatePassword ? 'short_register' : 'register';
-        $model = $this->module->factory->createUser(['scenario' => $scenario]);
+        $model = $this->module->manager->createUser(['scenario' => 'register']);
 
         if ($model->load(\Yii::$app->getRequest()->post()) && $model->register()) {
             return $this->render('success', [
@@ -82,6 +81,30 @@ class RegistrationController extends Controller
 
         return $this->render('register', [
             'model' => $model
+        ]);
+    }
+
+    public function actionConnect($account_id)
+    {
+        $account = $this->module->manager->findAccountById($account_id);
+
+        if ($account === null || $account->getIsConnected()) {
+            throw new NotFoundHttpException('Something went wrong');
+        }
+
+        $this->module->confirmable = false;
+
+        $model = $this->module->manager->createUser(['scenario' => 'connect']);
+        if ($model->load($_POST) && $model->create()) {
+            $account->user_id = $model->id;
+            $account->save(false);
+            \Yii::$app->user->login($model, $this->module->rememberFor);
+            $this->goBack();
+        }
+
+        return $this->render('connect', [
+            'model'   => $model,
+            'account' => $account
         ]);
     }
 
@@ -95,17 +118,12 @@ class RegistrationController extends Controller
      */
     public function actionConfirm($id, $token)
     {
-        $query = $this->module->factory->createUserQuery();
-        /** @var \dektrium\user\models\User $user */
-        $user = $query->where(['id' => $id, 'confirmation_token' => $token])->one();
-        if ($user === null) {
-            throw new NotFoundHttpException('User not found');
-        }
-        if ($user->confirm()) {
-            return $this->render('finish');
-        } else {
+        $user = $this->module->manager->findUserByIdAndConfirmationToken($id, $token);
+        if ($user === null || !$user->confirm()) {
             return $this->render('invalidToken');
         }
+
+        return $this->render('finish');
     }
 
     /**
@@ -115,7 +133,7 @@ class RegistrationController extends Controller
      */
     public function actionResend()
     {
-        $model = $this->module->factory->createForm('resend');
+        $model = $this->module->manager->createResendForm();
 
         if ($model->load(\Yii::$app->getRequest()->post()) && $model->validate()) {
             $model->getUser()->resend();

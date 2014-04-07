@@ -14,7 +14,6 @@ namespace dektrium\user\controllers;
 use yii\web\Controller;
 use yii\filters\AccessControl;
 use yii\base\InvalidParamException;
-use yii\web\NotFoundHttpException;
 
 /**
  * RecoveryController manages password recovery process.
@@ -36,28 +35,12 @@ class RecoveryController extends Controller
                 'rules' => [
                     [
                         'allow' => true,
-                        'actions' => ['request', 'reset', 'captcha'],
+                        'actions' => ['request', 'reset'],
                         'roles' => ['?']
                     ],
                 ]
             ],
         ];
-    }
-
-    /**
-     * @inheritdoc
-     */
-    public function beforeAction($action)
-    {
-        if (parent::beforeAction($action)) {
-            if (!$this->module->recoverable) {
-                throw new NotFoundHttpException('Disabled by administrator');
-            }
-
-            return true;
-        } else {
-            return false;
-        }
     }
 
     /**
@@ -68,7 +51,7 @@ class RecoveryController extends Controller
      */
     public function actionRequest()
     {
-        $model = $this->module->factory->createForm('passwordRecoveryRequest');
+        $model = $this->module->manager->createPasswordRecoveryRequestForm();
 
         if ($model->load(\Yii::$app->getRequest()->post()) && $model->sendRecoveryMessage()) {
             return $this->render('messageSent', [
@@ -92,7 +75,7 @@ class RecoveryController extends Controller
     public function actionReset($id, $token)
     {
         try {
-            $model = $this->module->factory->createForm('passwordRecovery', [
+            $model = $this->module->manager->createPasswordRecoveryForm([
                 'id' => $id,
                 'token' => $token
             ]);

@@ -1,7 +1,7 @@
 <?php
 $time = time();
 return [
-    [
+    'user' => [
         'username' => 'user',
         'email' => 'user@example.com',
         'password_hash' => '$2y$13$qY.ImaYBppt66qez6B31QO92jc5DYVRzo5NxM1ivItkW74WsSG6Ui',
@@ -10,9 +10,9 @@ return [
         'updated_at' => $time,
         'confirmed_at' => $time,
     ],
-    [
-        'username' => 'unconfirmed',
-        'email' => 'unconfirmed@example.com',
+    'unconfirmed' => [
+        'username' => 'joe',
+        'email' => 'joe@example.com',
         'password_hash' => '$2y$13$CIH1LSMPzU9xDCywt3QO8uovAu2axp8hwuXVa72oI.1G/USsGyMBS',
         'auth_key' => 'mhh1A6KfqQLmHP-MiWN0WB0M90Q2u5OE',
         'created_at' => $time,
@@ -20,7 +20,7 @@ return [
         'confirmation_token' => 'NO2aCmBIjFQX624xmAc3VBu7Th3NJoa6',
         'confirmation_sent_at' => $time
     ],
-    [
+    'unconfirmed_with_expired_token' => [
         'username' => 'john',
         'email' => 'john@example.com',
         'password_hash' => '$2y$13$qY.ImaYBppt66qez6B31QO92jc5DYVRzo5NxM1ivItkW74WsSG6Ui',
@@ -30,9 +30,9 @@ return [
         'confirmation_token' => 'qxYa315rqRgCOjYGk82GFHMEAV3T82AX',
         'confirmation_sent_at' => $time - 86401
     ],
-    [
-        'username' => 'blocked',
-        'email' => 'blocked@example.com',
+    'blocked' => [
+        'username' => 'steven',
+        'email' => 'steven@example.com',
         'password_hash' => '$2y$13$qY.ImaYBppt66qez6B31QO92jc5DYVRzo5NxM1ivItkW74WsSG6Ui',
         'auth_key' => 'TnXTrtLdj-YJBlG2A6jFHJreKgbsLYCa',
         'created_at' => $time,
@@ -40,7 +40,7 @@ return [
         'blocked_at' => $time,
         'confirmed_at' => $time
     ],
-    [
+    'user_with_expired_recovery_token' => [
         'username' => 'andrew',
         'email' => 'andrew@example.com',
         'password_hash' => '$2y$13$qY.ImaYBppt66qez6B31QO92jc5DYVRzo5NxM1ivItkW74WsSG6Ui',
@@ -51,7 +51,7 @@ return [
         'recovery_sent_at' => $time - 21601,
         'recovery_token' => 'dghFKJA6JvjTKLAwyE5w2XD9b2lmBXLE'
     ],
-    [
+    'user_with_recovery_token' => [
         'username' => 'alex',
         'email' => 'alex@example.com',
         'password_hash' => '$2y$13$qY.ImaYBppt66qez6B31QO92jc5DYVRzo5NxM1ivItkW74WsSG6Ui',

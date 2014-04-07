@@ -19,4 +19,4 @@ In order to do this you should configure view application component as follows:
 > **NOTE:** If you installed module using git as described in installation guide, you should use `@app/modules/user/views` instead of `@vendor/dektrium/yii2-user/views`
 
 In the above pathMap defines where to look for view files. For example, if pathMap contains `'@vendor/dektrium/yii2-user/views' => '@app/views/user'`,
-then the themed version for a view file /vendor/dektrium/yii2-user/views/auth/login.php will be /views/user/auth/login.php.
+then the themed version for a view file /vendor/dektrium/yii2-user/views/security/login.php will be /views/user/security/login.php.

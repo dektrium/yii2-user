@@ -1,13 +1,24 @@
 <?php
 
+/*
+ * This file is part of the Dektrium project.
+ *
+ * (c) Dektrium project <http://github.com/dektrium>
+ *
+ * For the full copyright and license information, please view the LICENSE.md
+ * file that was distributed with this source code.
+ */
+
+use yii\helpers\Html;
+
 /**
  * @var yii\web\View $this
  * @var yii\widgets\ActiveForm $form
  * @var dektrium\user\models\Profile $profile
  */
+
 $this->title = Yii::t('user', 'Profile settings');
 $this->params['breadcrumbs'][] = $this->title;
-
 ?>
 <div class="row">
     <?php if (Yii::$app->getSession()->hasFlash('settings_saved')): ?>
@@ -39,7 +50,7 @@ $this->params['breadcrumbs'][] = $this->title;
     <div class="col-md-9">
         <div class="panel panel-default">
             <div class="panel-heading">
-                <?= Yii::t('user', 'Public profile') ?>
+                <?= Html::encode($this->title) ?>
             </div>
             <div class="panel-body">
                 <?php $form = \yii\widgets\ActiveForm::begin([
@@ -65,7 +76,7 @@ $this->params['breadcrumbs'][] = $this->title;
 
                 <div class="form-group">
                     <div class="col-lg-offset-3 col-lg-9">
-                        <?= \yii\helpers\Html::submitButton(Yii::t('user', 'Update profile'), ['class' => 'btn btn-success']) ?><br>
+                        <?= \yii\helpers\Html::submitButton(Yii::t('user', 'Save'), ['class' => 'btn btn-success']) ?><br>
                     </div>
                 </div>
 

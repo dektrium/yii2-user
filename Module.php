@@ -1,13 +1,13 @@
 <?php
 
 /*
-* This file is part of the Dektrium project.
-*
-* (c) Dektrium project <http://github.com/dektrium/>
-*
-* For the full copyright and license information, please view the LICENSE
-* file that was distributed with this source code.
-*/
+ * This file is part of the Dektrium project.
+ *
+ * (c) Dektrium project <http://github.com/dektrium/>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
 
 namespace dektrium\user;
 
@@ -17,23 +17,14 @@ use yii\console\Application as ConsoleApplication;
 /**
  * This is the main module class for the Dektrium user module.
  *
- * @property Factory $factory
+ * @property ModelManager $manager
+ * @property Mailer       $mailer
  *
  * @author Dmitry Erofeev <dmeroff@gmail.com>
  */
 class Module extends BaseModule
 {
-    const VERSION = '0.5.1';
-
-    /**
-     * @var array Actions on which captcha will be shown.
-     */
-    public $captcha = [];
-
-    /**
-     * @var string Allowed types: 'email', 'username', 'both'
-     */
-    public $loginType = 'email';
+    const VERSION = '0.6.0-dev';
 
     /**
      * @var bool Whether to allow login without confirmation.
@@ -42,19 +33,8 @@ class Module extends BaseModule
 
     /**
      * @var int The time you want the user will be remembered without asking for credentials.
-     * By default rememberFor is two weeks.
      */
-    public $rememberFor = 1209600;
-
-    /**
-     * @var bool Whether to generate user password automatically.
-     */
-    public $generatePassword = false;
-
-    /**
-     * @var bool Whether to track user's registration and sign in
-     */
-    public $trackable = true;
+    public $rememberFor = 1209600; // two weeks
 
     /**
      * @var bool Whether confirmation needed
@@ -62,31 +42,19 @@ class Module extends BaseModule
     public $confirmable = true;
 
     /**
-     * @var int The time before a sent confirmation token becomes invalid.
-     * By default confirmWithin is 24 hours.
+     * @var int The time before a confirmation token becomes invalid.
      */
-    public $confirmWithin = 86400;
-
-    /**
-     * @var bool Whether to enable password recovery.
-     */
-    public $recoverable = true;
+    public $confirmWithin = 86400; // 24 hours
 
     /**
      * @var int The time before a recovery token becomes invalid.
-     * By default recoverWithin is 6 hours.
      */
-    public $recoverWithin = 21600;
+    public $recoverWithin = 21600; // 6 hours
 
     /**
      * @var int Cost parameter used by the Blowfish hash algorithm.
      */
     public $cost = 10;
-
-    /**
-     * @var string
-     */
-    public $emailViewPath = '@dektrium/user/views/mail';
 
     /**
      * @var string|null Role that will be assigned to user on creation.
@@ -99,9 +67,19 @@ class Module extends BaseModule
     public $admins = [];
 
     /**
-     * @var Factory
+     * @inheritdoc
      */
-    private $_factory = ['class' => '\dektrium\user\Factory'];
+    public function __construct($id, $parent = null, $config = [])
+    {
+        foreach ($this->getModuleComponents() as $name => $component) {
+            if (!isset($config['components'][$name])) {
+                $config['components'][$name] = $component;
+            } elseif (is_array($config['components'][$name]) && !isset($config['components'][$name]['class'])) {
+                $config['components'][$name]['class'] = $component['class'];
+            }
+        }
+        parent::__construct($id, $parent, $config);
+    }
 
     /**
      * @inheritdoc
@@ -121,25 +99,19 @@ class Module extends BaseModule
     }
 
     /**
-     * @return Factory
+     * Returns module components.
+     *
+     * @return array
      */
-    public function getFactory()
+    protected function getModuleComponents()
     {
-        if (is_array($this->_factory)) {
-            $this->_factory = \Yii::createObject($this->_factory);
-        }
-
-        return $this->_factory;
-    }
-
-    /**
-     * @param $config
-     */
-    public function setFactory(array $config)
-    {
-        if (!isset($config['class'])) {
-            $config['class'] = '\dektrium\user\Factory';
-        }
-        $this->_factory = $config;
+        return [
+            'manager' => [
+                'class' => 'dektrium\user\ModelManager'
+            ],
+            'mailer' => [
+                'class' => 'dektrium\user\Mailer'
+            ]
+        ];
     }
 }

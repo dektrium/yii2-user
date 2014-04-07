@@ -8,16 +8,18 @@ $I->wantTo('ensure that resending of confirmation tokens works');
 
 $page = ResendPage::openBy($I);
 
-$I->amGoingTo('try to resend token to nonexistent user');
+$I->amGoingTo('try to resend token to non-existent user');
 $page->resend('foo@example.com');
 $I->see('Email is invalid');
 
 $I->amGoingTo('try to resend token to already confirmed user');
-$page->resend('user@example.com');
+$user = $I->getFixture('user')->getModel('user');
+$page->resend($user->email);
 $I->see('This account has already been confirmed');
 
 $I->amGoingTo('try to resend token to unconfirmed user');
-$I->seeRecord(User::className(), ['confirmation_token' => 'NO2aCmBIjFQX624xmAc3VBu7Th3NJoa6']);
-$page->resend('unconfirmed@example.com');
+$user = $I->getFixture('user')->getModel('unconfirmed');
+$I->seeRecord(User::className(), ['confirmation_token' => $user->confirmation_token]);
+$page->resend($user->email);
 $I->see('Awesome, almost there! We need to confirm your email address');
-$I->dontSeeRecord(User::className(), ['confirmation_token' => 'NO2aCmBIjFQX624xmAc3VBu7Th3NJoa6']);
+$I->dontSeeRecord(User::className(), ['confirmation_token' => $user->confirmation_token]);

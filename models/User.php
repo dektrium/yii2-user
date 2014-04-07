@@ -66,11 +66,6 @@ class User extends ActiveRecord implements UserInterface
     public $current_password;
 
     /**
-     * @var string Verification code.
-     */
-    public $verify_code;
-
-    /**
      * @var \dektrium\user\Module
      */
     private $_module;
@@ -80,7 +75,7 @@ class User extends ActiveRecord implements UserInterface
      */
     public function getProfile()
     {
-        return $this->hasOne($this->_module->factory->profileClass, ['user_id' => 'id']);
+        return $this->hasOne($this->module->manager->profileClass, ['user_id' => 'id']);
     }
 
     /**
@@ -121,8 +116,8 @@ class User extends ActiveRecord implements UserInterface
     public function scenarios()
     {
         return [
-            'register'        => ['username', 'email', 'password', 'verify_code'],
-            'short_register'  => ['username', 'email', 'verify_code'],
+            'register'        => ['username', 'email', 'password'],
+            'connect'         => ['username', 'email'],
             'create'          => ['username', 'email', 'password', 'role'],
             'update'          => ['username', 'email', 'password', 'role'],
             'update_password' => ['password', 'current_password'],
@@ -137,13 +132,13 @@ class User extends ActiveRecord implements UserInterface
     {
         return [
             // username rules
-            ['username', 'required', 'on' => ['register', 'short_register', 'create', 'update']],
+            ['username', 'required', 'on' => ['register', 'connect', 'create', 'update']],
             ['username', 'match', 'pattern' => '/^[a-zA-Z]\w+$/'],
             ['username', 'string', 'min' => 3, 'max' => 25],
             ['username', 'unique'],
 
             // email rules
-            ['email', 'required', 'on' => ['register', 'short_register', 'create', 'update', 'update_email']],
+            ['email', 'required', 'on' => ['register', 'connect', 'create', 'update', 'update_email']],
             ['email', 'email'],
             ['email', 'string', 'max' => 255],
             ['email', 'unique'],
@@ -154,7 +149,7 @@ class User extends ActiveRecord implements UserInterface
             ['unconfirmed_email', 'email', 'on' => 'update_email'],
 
             // password rules
-            ['password', 'required', 'on' => ['register', 'create']],
+            ['password', 'required', 'on' => 'register'],
             ['password', 'string', 'min' => 6, 'on' => ['register', 'update_password', 'create']],
 
             // current password rules
@@ -164,10 +159,6 @@ class User extends ActiveRecord implements UserInterface
                     $this->addError($attr, \Yii::t('user', 'Current password is not valid'));
                 }
             }, 'on' => ['update_email', 'update_password']],
-
-            // captcha
-            ['verify_code', 'captcha', 'captchaAction' => 'user/default/captcha', 'on' => ['register'],
-                'skipOnEmpty' => !in_array('register', $this->getModule()->captcha)]
         ];
     }
 
@@ -220,18 +211,40 @@ class User extends ActiveRecord implements UserInterface
     }
 
     /**
+     * Creates a user.
+     *
+     * @return bool
+     */
+    public function create()
+    {
+        if ($this->password == null) {
+            $this->password = Password::generate(8);
+        }
+
+        if ($this->module->confirmable) {
+            $this->generateConfirmationData();
+        } else {
+            $this->confirmed_at = time();
+        }
+
+        if ($this->save()) {
+            $this->module->mailer->sendWelcomeMessage($this);
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
      * This method is called at the beginning of user registration process.
      */
     protected function beforeRegister()
     {
         $this->trigger(self::EVENT_BEFORE_REGISTER);
-        if ($this->scenario == 'short_register') {
-            $this->password = Password::generate(8);
-        }
-        if ($this->_module->trackable) {
-            $this->setAttribute('registered_from', ip2long(\Yii::$app->request->userIP));
-        }
-        if ($this->_module->confirmable) {
+
+        $this->setAttribute('registered_from', ip2long(\Yii::$app->request->userIP));
+
+        if ($this->module->confirmable) {
             $this->generateConfirmationData();
         }
     }
@@ -241,15 +254,8 @@ class User extends ActiveRecord implements UserInterface
      */
     protected function afterRegister()
     {
-        if ($this->scenario == 'short_register') {
-            $this->sendMessage($this->email, \Yii::t('user', 'Welcome to {sitename}', ['sitename' => \Yii::$app->name]),
-                'welcome', ['user' => $this, 'password' => $this->password]
-            );
-        }
-        if ($this->_module->confirmable) {
-            $this->sendMessage($this->email, \Yii::t('user', 'Please confirm your account'),
-                'confirmation',	['user' => $this]
-            );
+        if ($this->module->confirmable) {
+            $this->module->mailer->sendConfirmationMessage($this);
         }
         $this->trigger(self::EVENT_AFTER_REGISTER);
     }
@@ -268,17 +274,8 @@ class User extends ActiveRecord implements UserInterface
 
         if ($this->validate()) {
             $this->beforeRegister();
-            $this->setAttribute('password_hash', Password::hash($this->password));
-            $this->setAttribute('auth_key', Security::generateRandomKey());
-            $this->setAttribute('role', $this->getModule()->defaultRole);
             if ($this->save(false)) {
-                $profile = $this->_module->factory->createProfile([
-                    'user_id' => $this->id,
-                    'gravatar_email' => $this->email
-                ]);
-                $profile->save(false);
                 $this->afterRegister();
-
                 return true;
             }
         }
@@ -298,7 +295,7 @@ class User extends ActiveRecord implements UserInterface
                 $this->confirmation_token = Security::generateRandomKey();
                 $this->confirmation_sent_at = time();
                 $this->save(false);
-                $this->sendMessage($this->unconfirmed_email, \Yii::t('user', 'Please confirm your email'), 'reconfirmation', ['user' => $this]);
+                $this->module->mailer->sendReconfirmationMessage($this);
             } else {
                 $this->email = $this->unconfirmed_email;
                 $this->unconfirmed_email = null;
@@ -321,22 +318,6 @@ class User extends ActiveRecord implements UserInterface
             $this->confirmation_sent_at = null;
             $this->save(false);
         }
-    }
-
-    /**
-     * Updates user's password.
-     *
-     * @return bool
-     */
-    public function updatePassword()
-    {
-        if ($this->validate()) {
-            $this->password_hash = Password::hash($this->password);
-
-            return $this->save(false);
-        }
-
-        return false;
     }
 
     /**
@@ -378,7 +359,7 @@ class User extends ActiveRecord implements UserInterface
         $this->generateConfirmationData();
         $this->save(false);
 
-        return $this->sendMessage($this->email, \Yii::t('user', 'Please confirm your account'), 'confirmation', ['user' => $this]);
+        return $this->module->mailer->sendConfirmationMessage($this);
     }
 
     /**
@@ -431,8 +412,8 @@ class User extends ActiveRecord implements UserInterface
      */
     public function resetPassword($password)
     {
+        $this->password = $password;
         $this->setAttributes([
-            'password_hash'    => Password::hash($password),
             'recovery_token'   => null,
             'recovery_sent_at' => null
         ], false);
@@ -470,7 +451,7 @@ class User extends ActiveRecord implements UserInterface
         $this->recovery_sent_at = time();
         $this->save(false);
 
-        return $this->sendMessage($this->email, \Yii::t('user', 'Please complete password reset'), 'recovery', ['user' => $this]);
+        return $this->module->mailer->sendRecoveryMessage($this);
     }
 
     /**
@@ -514,27 +495,34 @@ class User extends ActiveRecord implements UserInterface
     }
 
     /**
-     * Sends message.
-     *
-     * @param $to
-     * @param string $subject
-     * @param string $view
-     * @param array  $params
-     *
-     * @return bool
+     * @inheritdoc
      */
-    protected function sendMessage($to, $subject, $view, $params)
+    public function beforeSave($insert)
     {
-        $mail = \Yii::$app->getMail();
-        $mail->viewPath = $this->getModule()->emailViewPath;
-
-        if (empty(\Yii::$app->getMail()->messageConfig['from'])) {
-            $mail->messageConfig['from'] = 'no-reply@example.com';
+        if ($insert) {
+            $this->setAttribute('auth_key', Security::generateRandomKey());
+            $this->setAttribute('role', $this->getModule()->defaultRole);
         }
 
-        return $mail->compose($view, $params)
-            ->setTo($to)
-            ->setSubject($subject)
-            ->send();
+        if (!empty($this->password)) {
+            $this->setAttribute('password_hash', Password::hash($this->password));
+        }
+
+        return parent::beforeSave($insert);
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function afterSave($insert)
+    {
+        if ($insert) {
+            $profile = $this->module->manager->createProfile([
+                'user_id'        => $this->id,
+                'gravatar_email' => $this->email
+            ]);
+            $profile->save(false);
+        }
+        parent::afterSave($insert);
     }
 }

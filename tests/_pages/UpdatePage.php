@@ -23,6 +23,6 @@ class UpdatePage extends BasePage
         $this->guy->fillField('#user-email', $email);
         $this->guy->fillField('#user-password', $password);
         $this->guy->fillField('#user-role', $role);
-        $this->guy->click('Update');
+        $this->guy->click('Save');
     }
 }

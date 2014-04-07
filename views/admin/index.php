@@ -1,5 +1,14 @@
 <?php
 
+/*
+ * This file is part of the Dektrium project.
+ *
+ * (c) Dektrium project <http://github.com/dektrium>
+ *
+ * For the full copyright and license information, please view the LICENSE.md
+ * file that was distributed with this source code.
+ */
+
 use yii\helpers\Html;
 use yii\grid\GridView;
 
@@ -12,8 +21,7 @@ use yii\grid\GridView;
 $this->title = Yii::t('user', 'Manage users');
 $this->params['breadcrumbs'][] = $this->title;
 ?>
-
-<h1><?= Html::encode($this->title) ?> <?= Html::a(Yii::t('user', 'Create user'), ['create'], ['class' => 'btn btn-success']) ?></h1>
+<h1><?= Html::encode($this->title) ?> <?= Html::a(Yii::t('user', 'Create a user account'), ['create'], ['class' => 'btn btn-success']) ?></h1>
 
 <?php if (Yii::$app->getSession()->hasFlash('admin_user')): ?>
     <div class="alert alert-success">
@@ -34,7 +42,6 @@ $this->params['breadcrumbs'][] = $this->title;
                     return $model->registered_from == null ? '<span class="not-set">' . Yii::t('user', '(not set)') . '</span>' : long2ip($model->registered_from);
                 },
             'format' => 'html',
-            'visible' => Yii::$app->getModule('user')->trackable
         ],
         [
             'attribute' => 'created_at',

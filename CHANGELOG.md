@@ -2,6 +2,9 @@
 
 ## 0.6.0 [Work in progress]
 
+- Fixed bug when user password has not been updated from admin panel
+- Added Vietnamese translation
+- Refactored test suite
 - Added Mailer component
 - Added ModelManager component
 - Removed factory

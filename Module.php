@@ -12,10 +12,9 @@
 namespace dektrium\user;
 
 use yii\base\Module as BaseModule;
-use yii\console\Application as ConsoleApplication;
 
 /**
- * This is the main module class for the Dektrium user module.
+ * This is the main module class for the Yii2-user.
  *
  * @property ModelManager $manager
  * @property Mailer       $mailer
@@ -37,7 +36,7 @@ class Module extends BaseModule
     public $rememberFor = 1209600; // two weeks
 
     /**
-     * @var bool Whether confirmation needed
+     * @var bool Whether user have to confirm his account.
      */
     public $confirmable = true;
 
@@ -83,7 +82,6 @@ class Module extends BaseModule
 
     /**
      * Returns module components.
-     *
      * @return array
      */
     protected function getModuleComponents()

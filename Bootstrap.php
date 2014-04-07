@@ -37,6 +37,10 @@ class Bootstrap implements BootstrapInterface
             $identityClass = 'dektrium\user\models\User';
         }
 
+        if ($app instanceof \yii\console\Application) {
+            $app->getModule('user')->controllerNamespace = 'dektrium\user\commands';
+        }
+
         $app->set('user', [
             'class' => 'yii\web\User',
             'enableAutoLogin' => true,
@@ -56,5 +60,10 @@ class Bootstrap implements BootstrapInterface
                 'settings/<action:\w+>' => 'settings/<action>'
             ]
         ]);
+
+        $app->get('i18n')->translations['user*'] = [
+            'class' => 'yii\i18n\PhpMessageSource',
+            'basePath' => __DIR__ . '/messages',
+        ];
     }
 }

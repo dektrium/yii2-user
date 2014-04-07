@@ -82,23 +82,6 @@ class Module extends BaseModule
     }
 
     /**
-     * @inheritdoc
-     */
-    public function init()
-    {
-        parent::init();
-
-        if (\Yii::$app instanceof ConsoleApplication) {
-            $this->controllerNamespace = 'dektrium\user\commands';
-        }
-
-        \Yii::$app->getI18n()->translations['user*'] = [
-            'class' => 'yii\i18n\PhpMessageSource',
-            'basePath' => __DIR__ . '/messages',
-        ];
-    }
-
-    /**
      * Returns module components.
      *
      * @return array

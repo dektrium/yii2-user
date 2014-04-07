@@ -22,3 +22,8 @@ $page->create('toster', 'toster@example.com', 'toster');
 $I->see('User has been created');
 $I->see('toster');
 $I->see('toster@example.com');
+
+Yii::$app->user->logout();
+$I->grabRecord('dektrium\user\models\User', ['email' => 'toster@example.com'])->confirm();
+LoginPage::openBy($I)->login('toster@example.com', 'toster');
+$I->see('Logout');

@@ -321,22 +321,6 @@ class User extends ActiveRecord implements UserInterface
     }
 
     /**
-     * Updates user's password.
-     *
-     * @return bool
-     */
-    public function updatePassword()
-    {
-        if ($this->validate()) {
-            $this->password_hash = Password::hash($this->password);
-
-            return $this->save(false);
-        }
-
-        return false;
-    }
-
-    /**
      * Confirms a user by setting it's "confirmation_time" to actual time
      *
      * @param  bool $runValidation Whether to check if user has already been confirmed or confirmation token expired.
@@ -428,8 +412,8 @@ class User extends ActiveRecord implements UserInterface
      */
     public function resetPassword($password)
     {
+        $this->password = $password;
         $this->setAttributes([
-            'password_hash'    => Password::hash($password),
             'recovery_token'   => null,
             'recovery_sent_at' => null
         ], false);
@@ -516,9 +500,12 @@ class User extends ActiveRecord implements UserInterface
     public function beforeSave($insert)
     {
         if ($insert) {
-            $this->setAttribute('password_hash', Password::hash($this->password));
             $this->setAttribute('auth_key', Security::generateRandomKey());
             $this->setAttribute('role', $this->getModule()->defaultRole);
+        }
+
+        if (!empty($this->password)) {
+            $this->setAttribute('password_hash', Password::hash($this->password));
         }
 
         return parent::beforeSave($insert);

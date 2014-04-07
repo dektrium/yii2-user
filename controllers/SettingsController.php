@@ -123,7 +123,7 @@ class SettingsController extends Controller
         $model = $this->module->manager->findUser(['id' => \Yii::$app->user->identity->getId()])->one();
         $model->scenario = 'update_password';
 
-        if ($model->load(\Yii::$app->getRequest()->post()) && $model->updatePassword()) {
+        if ($model->load(\Yii::$app->getRequest()->post()) && $model->save()) {
             \Yii::$app->getSession()->setFlash('settings_saved', \Yii::t('user', 'Password has been changed'));
             $this->refresh();
         }

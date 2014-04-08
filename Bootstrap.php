@@ -39,27 +39,33 @@ class Bootstrap implements BootstrapInterface
 
         if ($app instanceof \yii\console\Application) {
             $app->getModule('user')->controllerNamespace = 'dektrium\user\commands';
+        } else {
+            $app->set('user', [
+                'class' => 'yii\web\User',
+                'enableAutoLogin' => true,
+                'loginUrl' => ['/user/security/login'],
+                'identityClass' => $identityClass
+            ]);
+
+            $app->get('urlManager')->rules[] = new GroupUrlRule([
+                'prefix' => 'user',
+                'rules' => [
+                    '<id:\d+>' => 'profile/show',
+                    '<action:(login|logout)>' => 'security/<action>',
+                    '<action:(register|resend)>' => 'registration/<action>',
+                    'confirm/<id:\d+>/<token:\w+>' => 'registration/confirm',
+                    'forgot' => 'recovery/request',
+                    'recover/<id:\d+>/<token:\w+>' => 'recovery/reset',
+                    'settings/<action:\w+>' => 'settings/<action>'
+                ]
+            ]);
+
+            if (!$app->has('authClientCollection')) {
+                $app->set('authClientCollection', [
+                    'class' => 'yii\authclient\Collection',
+                ]);
+            }
         }
-
-        $app->set('user', [
-            'class' => 'yii\web\User',
-            'enableAutoLogin' => true,
-            'loginUrl' => ['/user/security/login'],
-            'identityClass' => $identityClass
-        ]);
-
-        $app->get('urlManager')->rules[] = new GroupUrlRule([
-            'prefix' => 'user',
-            'rules' => [
-                '<id:\d+>' => 'profile/show',
-                '<action:(login|logout)>' => 'security/<action>',
-                '<action:(register|resend)>' => 'registration/<action>',
-                'confirm/<id:\d+>/<token:\w+>' => 'registration/confirm',
-                'forgot' => 'recovery/request',
-                'recover/<id:\d+>/<token:\w+>' => 'recovery/reset',
-                'settings/<action:\w+>' => 'settings/<action>'
-            ]
-        ]);
 
         $app->get('i18n')->translations['user*'] = [
             'class' => 'yii\i18n\PhpMessageSource',

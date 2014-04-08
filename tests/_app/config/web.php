@@ -20,9 +20,6 @@ return [
         ]
     ],
     'components' => [
-        'authClientCollection' => [
-            'class' => 'yii\authclient\Collection',
-        ],
         'assetManager' => [
             'basePath' => '@tests/_app/assets'
         ],

@@ -10,7 +10,7 @@ $page = LoginPage::openBy($I);
 $I->amGoingTo('try to login with empty credentials');
 $page->login('', '');
 $I->expectTo('see validations errors');
-$I->see('Email cannot be blank.');
+$I->see('Login cannot be blank.');
 $I->see('Password cannot be blank.');
 
 $I->amGoingTo('try to login with unconfirmed account');
@@ -27,7 +27,7 @@ $I->amGoingTo('try to login with wrong credentials');
 $user = $I->getFixture('user')->getModel('user');
 $page->login($user->email, 'wrong');
 $I->expectTo('see validations errors');
-$I->see('Invalid email or password');
+$I->see('Invalid login or password');
 
 $I->amGoingTo('try to login with correct credentials');
 $page->login($user->email, 'qwerty');

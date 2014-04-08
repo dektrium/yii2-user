@@ -26,7 +26,7 @@ class LoginForm extends Model
     /**
      * @var string
      */
-    public $email;
+    public $login;
 
     /**
      * @var string
@@ -49,7 +49,7 @@ class LoginForm extends Model
     public function attributeLabels()
     {
         return [
-            'email'      => \Yii::t('user', 'Email'),
+            'login'      => \Yii::t('user', 'Login'),
             'password'   => \Yii::t('user', 'Password'),
             'rememberMe' => \Yii::t('user', 'Remember me next time'),
         ];
@@ -61,15 +61,14 @@ class LoginForm extends Model
     public function rules()
     {
         return [
-            [['email', 'password'], 'required'],
-            ['email', 'email'],
-            ['email', 'trim'],
+            [['login', 'password'], 'required'],
+            ['login', 'trim'],
             ['password', function ($attribute) {
                 if ($this->user === null || !Password::validate($this->password, $this->user->password_hash)) {
-                    $this->addError($attribute, \Yii::t('user', 'Invalid email or password'));
+                    $this->addError($attribute, \Yii::t('user', 'Invalid login or password'));
                 }
             }],
-            ['email', function ($attribute) {
+            ['login', function ($attribute) {
                 if ($this->user !== null) {
                     $confirmationRequired = $this->module->confirmable && !$this->module->allowUnconfirmedLogin;
                     if ($confirmationRequired && !$this->user->isConfirmed) {
@@ -115,7 +114,7 @@ class LoginForm extends Model
     public function beforeValidate()
     {
         if (parent::beforeValidate()) {
-            $this->user = $this->module->manager->findUserByEmail($this->email);
+            $this->user = $this->module->manager->findUserByUsernameOrEmail($this->login);
             return true;
         } else {
             return false;

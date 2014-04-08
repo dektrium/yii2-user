@@ -33,7 +33,7 @@ $this->params['breadcrumbs'][] = $this->title;
                     'id' => 'login-form',
                 ]) ?>
 
-                <?= $form->field($model, 'email')->textInput(['autofocus' => true]) ?>
+                <?= $form->field($model, 'login') ?>
 
                 <?= $form->field($model, 'password')->passwordInput()->label(Yii::t('user', 'Password') . ' (' . Html::a(Yii::t('user', 'Forgot password?'), ['/user/recovery/request']) . ')') ?>
 

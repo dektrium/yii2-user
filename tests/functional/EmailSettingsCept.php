@@ -6,7 +6,7 @@ use dektrium\user\models\User;
 use yii\helpers\Html;
 
 $I = new TestGuy($scenario);
-$I->wantTo('ensure that profile settings works');
+$I->wantTo('ensure that email settings works');
 
 $loginPage = LoginPage::openBy($I);
 $user = $I->getFixture('user')->getModel('user');
@@ -33,11 +33,11 @@ Yii::$app->getUser()->logout();
 $I->amGoingTo('login with new email');
 $loginPage = LoginPage::openBy($I);
 $loginPage->login('new_email@example.com', 'qwerty');
-$I->see('Invalid email or password');
+$I->see('Invalid login or password');
 $user->confirm(false);
 $loginPage = LoginPage::openBy($I);
 $loginPage->login('user@example.com', 'qwerty');
-$I->see('Invalid email or password');
+$I->see('Invalid login or password');
 $loginPage->login('new_email@example.com', 'qwerty');
 $I->see('Logout');
 $I->seeRecord(User::className(), [

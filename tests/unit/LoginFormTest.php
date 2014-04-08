@@ -7,7 +7,7 @@ use dektrium\user\models\LoginForm;
 use dektrium\user\tests\_fixtures\UserFixture;
 use yii\codeception\TestCase;
 
-class LoginTest extends TestCase
+class LoginFormTest extends TestCase
 {
     use Specify;
 
@@ -36,11 +36,11 @@ class LoginTest extends TestCase
         $this->specify('should not allow logging in blocked users', function () {
             $user = $this->getFixture('user')->getModel('blocked');
             $this->form->setAttributes([
-                'email'    => $user->email,
+                'login'    => $user->email,
                 'password' => 'qwerty'
             ]);
             verify($this->form->validate())->false();
-            verify($this->form->getErrors('email'))->contains('Your account has been blocked');
+            verify($this->form->getErrors('login'))->contains('Your account has been blocked');
         });
 
         $this->specify('should not allow logging in unconfirmed users', function () {
@@ -48,13 +48,13 @@ class LoginTest extends TestCase
             \Yii::$app->getModule('user')->allowUnconfirmedLogin = false;
             $user = $this->getFixture('user')->getModel('user');
             $this->form->setAttributes([
-                'email'    => $user->email,
+                'login'    => $user->email,
                 'password' => 'qwerty'
             ]);
             verify($this->form->validate())->true();
             $user = $this->getFixture('user')->getModel('unconfirmed');
             $this->form->setAttributes([
-                'email'    => $user->email,
+                'login'    => $user->email,
                 'password' => 'unconfirmed'
             ]);
             verify($this->form->validate())->false();
@@ -65,12 +65,12 @@ class LoginTest extends TestCase
         $this->specify('should log the user in with correct credentials', function () {
             $user = $this->getFixture('user')->getModel('user');
             $this->form->setAttributes([
-                'email'    => $user->email,
+                'login'    => $user->email,
                 'password' => 'wrong'
             ]);
             verify($this->form->validate())->false();
             $this->form->setAttributes([
-                'email'    => $user->email,
+                'login'    => $user->email,
                 'password' => 'qwerty'
             ]);
             verify($this->form->validate())->true();

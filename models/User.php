@@ -175,7 +175,7 @@ class User extends ActiveRecord implements UserInterface
      */
     public static function findIdentity($id)
     {
-        return static::find($id);
+        return static::findOne($id);
     }
 
     /**

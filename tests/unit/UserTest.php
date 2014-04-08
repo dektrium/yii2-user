@@ -97,7 +97,7 @@ class UserTest extends TestCase
     public function testBlocking()
     {
         $this->specify('user can be blocked and unblocked', function () {
-            $user = User::find(1);
+            $user = User::findOne(1);
             verify('user is not blocked', $user->getIsBlocked())->false();
             $user->block();
             verify('user is blocked', $user->getIsBlocked())->true();
@@ -122,16 +122,16 @@ class UserTest extends TestCase
         });
 
         $this->specify('correct user confirmation status should be returned', function () {
-            $user = User::find(1);
+            $user = User::findOne(1);
             verify('user is confirmed', $user->getIsConfirmed())->true();
-            $user = User::find(2);
+            $user = User::findOne(2);
             verify('user is not confirmed', $user->getIsConfirmed())->false();
         });
 
         $this->specify('correct user confirmation url should be returned', function () {
-            $user = User::find(1);
+            $user = User::findOne(1);
             verify('url is null for confirmed user', $user->getConfirmationUrl())->null();
-            $user = User::find(2);
+            $user = User::findOne(2);
             $needle = \Yii::$app->getUrlManager()->createAbsoluteUrl(['/user/registration/confirm',
                 'id' => $user->id,
                 'token' => $user->confirmation_token
@@ -154,7 +154,7 @@ class UserTest extends TestCase
         });
 
         $this->specify('user should be confirmed by updating confirmed_at field', function () {
-            $user = User::find(2);
+            $user = User::findOne(2);
             verify($user->confirmed_at)->null();
             $user->confirm();
             verify($user->confirmed_at)->notNull();
@@ -163,7 +163,7 @@ class UserTest extends TestCase
 
     public function testEmailSettings()
     {
-        $this->user = User::find(1);
+        $this->user = User::findOne(1);
         $this->user->scenario = 'update_email';
         $this->user->unconfirmed_email = 'new_email@example.com';
         $this->user->current_password = 'qwerty';
@@ -195,7 +195,7 @@ class UserTest extends TestCase
 
     public function testRecoverable()
     {
-        $this->user = User::find(1);
+        $this->user = User::findOne(1);
         $this->user->sendRecoveryMessage();
 
         $this->specify('correct user confirmation url should be returned', function () {

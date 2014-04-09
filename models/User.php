@@ -81,7 +81,7 @@ class User extends ActiveRecord implements UserInterface
     /**
      * @inheritdoc
      */
-    public static function createQuery()
+    public static function find()
     {
         return new UserQuery(get_called_class());
     }

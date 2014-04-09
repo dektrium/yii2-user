@@ -11,7 +11,6 @@
 
 namespace dektrium\user;
 
-use yii\base\Application;
 use yii\base\BootstrapInterface;
 use yii\web\GroupUrlRule;
 
@@ -26,7 +25,7 @@ class Bootstrap implements BootstrapInterface
     /**
      * @inheritdoc
      */
-    public function bootstrap(Application $app)
+    public function bootstrap($app)
     {
         if ($app->hasModule('user')) {
             $identityClass = $app->getModule('user')->manager->userClass;

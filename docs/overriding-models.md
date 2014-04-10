@@ -9,7 +9,7 @@ it uses component named "Factory" which creates requested models. Here is defaul
     'user' => [
         'class' => 'dektrium\user\Module',
         'components' => [
-            'factory' => [
+            'manager' => [
                 // Active record classes User and Profile
                 'userClass' => 'dektrium\user\models\User',
                 'profileClass' => 'dektrium\user\models\Profile',
@@ -57,7 +57,7 @@ In order to make Yii2-user use your class you need to configure factory componen
     'user' => [
         'class' => 'dektrium\user\Module',
         'components' => [
-            'factory' => [
+            'manager' => [
                 'userClass' => 'app\models\User',
             ],
         ],

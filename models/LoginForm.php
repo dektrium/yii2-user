@@ -11,6 +11,7 @@
 
 namespace dektrium\user\models;
 
+use dektrium\user\helpers\ModuleTrait;
 use yii\base\Model;
 use dektrium\user\helpers\Password;
 
@@ -23,6 +24,8 @@ use dektrium\user\helpers\Password;
  */
 class LoginForm extends Model
 {
+    use ModuleTrait;
+
     /**
      * @var string
      */
@@ -94,7 +97,7 @@ class LoginForm extends Model
             $this->user->setAttribute('logged_in_from', ip2long(\Yii::$app->getRequest()->getUserIP()));
             $this->user->setAttribute('logged_in_at', time());
             $this->user->save(false);
-            return \Yii::$app->getUser()->login($this->user, $this->rememberMe ? $this->getModule()->rememberFor : 0);
+            return \Yii::$app->getUser()->login($this->user, $this->rememberMe ? $this->module->rememberFor : 0);
         } else {
             return false;
         }
@@ -119,13 +122,5 @@ class LoginForm extends Model
         } else {
             return false;
         }
-    }
-
-    /**
-     * @return null|\dektrium\user\Module
-     */
-    protected function getModule()
-    {
-        return \Yii::$app->getModule('user');
     }
 }

@@ -2,6 +2,7 @@
 
 namespace dektrium\user\models;
 
+use dektrium\user\helpers\ModuleTrait;
 use yii\base\Model;
 
 /**
@@ -13,6 +14,8 @@ use yii\base\Model;
  */
 class RecoveryRequestForm extends Model
 {
+    use ModuleTrait;
+
     /**
      * @var string
      */
@@ -48,7 +51,7 @@ class RecoveryRequestForm extends Model
             ],
             ['email', function ($attribute) {
                 $this->_user = $this->module->manager->findUserByEmail($this->email);
-                if ($this->_user !== null && $this->getModule()->confirmable && !$this->_user->getIsConfirmed()) {
+                if ($this->_user !== null && $this->module->confirmable && !$this->_user->getIsConfirmed()) {
                     $this->addError($attribute, \Yii::t('user', 'You need to confirm your email address'));
                 }
             }],
@@ -77,13 +80,5 @@ class RecoveryRequestForm extends Model
     public function formName()
     {
         return 'recovery-request-form';
-    }
-
-    /**
-     * @return null|\dektrium\user\Module
-     */
-    protected function getModule()
-    {
-        return \Yii::$app->getModule('user');
     }
 }

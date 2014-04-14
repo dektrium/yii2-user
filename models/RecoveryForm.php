@@ -11,6 +11,7 @@
 
 namespace dektrium\user\models;
 
+use dektrium\user\helpers\ModuleTrait;
 use yii\base\InvalidParamException;
 use yii\base\Model;
 
@@ -23,6 +24,8 @@ use yii\base\Model;
  */
 class RecoveryForm extends Model
 {
+    use ModuleTrait;
+
     /**
      * @var string
      */
@@ -116,14 +119,5 @@ class RecoveryForm extends Model
     public function formName()
     {
         return 'recovery-form';
-    }
-
-
-    /**
-     * @return null|\dektrium\user\Module
-     */
-    protected function getModule()
-    {
-        return \Yii::$app->getModule('user');
     }
 }

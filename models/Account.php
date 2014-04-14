@@ -11,6 +11,7 @@
 
 namespace dektrium\user\models;
 
+use dektrium\user\helpers\ModuleTrait;
 use yii\db\ActiveRecord;
 
 /**
@@ -26,10 +27,7 @@ use yii\db\ActiveRecord;
  */
 class Account extends ActiveRecord
 {
-    /**
-     * @var \dektrium\user\Module
-     */
-    private $_module;
+    use ModuleTrait;
 
     /**
      * @inheritdoc
@@ -53,17 +51,5 @@ class Account extends ActiveRecord
     public function getIsConnected()
     {
         return $this->user_id != null;
-    }
-
-    /**
-     * @return null|\dektrium\user\Module
-     */
-    protected function getModule()
-    {
-        if ($this->_module == null) {
-            $this->_module = \Yii::$app->getModule('user');
-        }
-
-        return $this->_module;
     }
 }

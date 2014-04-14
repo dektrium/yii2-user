@@ -11,6 +11,7 @@
 
 namespace dektrium\user\models;
 
+use dektrium\user\helpers\ModuleTrait;
 use yii\base\Model;
 
 /**
@@ -22,6 +23,8 @@ use yii\base\Model;
  */
 class ResendForm extends Model
 {
+    use ModuleTrait;
+
     /**
      * @var string
      */
@@ -50,7 +53,7 @@ class ResendForm extends Model
         return [
             ['email', 'required'],
             ['email', 'email'],
-            ['email', 'exist', 'targetClass' => $this->getModule()->manager->userClass],
+            ['email', 'exist', 'targetClass' => $this->module->manager->userClass],
             ['email', 'validateEmail'],
         ];
     }
@@ -83,13 +86,5 @@ class ResendForm extends Model
         }
 
         return $this->_user;
-    }
-
-    /**
-     * @return null|\dektrium\user\Module
-     */
-    protected function getModule()
-    {
-        return \Yii::$app->getModule('user');
     }
 }

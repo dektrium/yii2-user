@@ -11,6 +11,7 @@
 
 namespace dektrium\user\models;
 
+use dektrium\user\helpers\ModuleTrait;
 use dektrium\user\helpers\Password;
 use yii\base\NotSupportedException;
 use yii\behaviors\TimestampBehavior;
@@ -52,6 +53,8 @@ use yii\helpers\Url;
  */
 class User extends ActiveRecord implements UserInterface
 {
+    use ModuleTrait;
+
     const EVENT_BEFORE_REGISTER = 'before_register';
     const EVENT_AFTER_REGISTER = 'after_register';
 
@@ -64,11 +67,6 @@ class User extends ActiveRecord implements UserInterface
      * @var string Current user's password.
      */
     public $current_password;
-
-    /**
-     * @var \dektrium\user\Module
-     */
-    private $_module;
 
     /**
      * @return \yii\db\ActiveQueryInterface
@@ -291,7 +289,7 @@ class User extends ActiveRecord implements UserInterface
     public function updateEmail()
     {
         if ($this->validate()) {
-            if ($this->getModule()->confirmable) {
+            if ($this->module->confirmable) {
                 $this->confirmation_token = Security::generateRandomKey();
                 $this->confirmation_sent_at = time();
                 $this->save(false);
@@ -312,7 +310,7 @@ class User extends ActiveRecord implements UserInterface
      */
     public function resetEmailUpdate()
     {
-        if ($this->getModule()->confirmable && !empty($this->unconfirmed_email)) {
+        if ($this->module->confirmable && !empty($this->unconfirmed_email)) {
             $this->unconfirmed_email = null;
             $this->confirmation_token = null;
             $this->confirmation_sent_at = null;
@@ -401,7 +399,7 @@ class User extends ActiveRecord implements UserInterface
      */
     public function getIsConfirmationPeriodExpired()
     {
-        return $this->confirmation_sent_at != null && ($this->confirmation_sent_at + $this->getModule()->confirmWithin) < time();
+        return $this->confirmation_sent_at != null && ($this->confirmation_sent_at + $this->module->confirmWithin) < time();
     }
 
     /**
@@ -428,7 +426,7 @@ class User extends ActiveRecord implements UserInterface
      */
     public function getIsRecoveryPeriodExpired()
     {
-        return ($this->recovery_sent_at + $this->getModule()->recoverWithin) < time();
+        return ($this->recovery_sent_at + $this->module->recoverWithin) < time();
     }
 
     /**
@@ -483,25 +481,13 @@ class User extends ActiveRecord implements UserInterface
     }
 
     /**
-     * @return null|\dektrium\user\Module
-     */
-    protected function getModule()
-    {
-        if ($this->_module == null) {
-            $this->_module = \Yii::$app->getModule('user');
-        }
-
-        return $this->_module;
-    }
-
-    /**
      * @inheritdoc
      */
     public function beforeSave($insert)
     {
         if ($insert) {
             $this->setAttribute('auth_key', Security::generateRandomKey());
-            $this->setAttribute('role', $this->getModule()->defaultRole);
+            $this->setAttribute('role', $this->module->defaultRole);
         }
 
         if (!empty($this->password)) {

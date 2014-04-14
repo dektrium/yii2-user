@@ -11,6 +11,7 @@
 
 namespace dektrium\user\models;
 
+use dektrium\user\helpers\ModuleTrait;
 use yii\db\ActiveRecord;
 
 /**
@@ -29,6 +30,8 @@ use yii\db\ActiveRecord;
  */
 class Profile extends ActiveRecord
 {
+    use ModuleTrait;
+
     /**
      * @inheritdoc
      */

@@ -23,6 +23,9 @@ use yii\base\Component;
  * @method models\LoginForm           createLoginForm
  * @method models\RecoveryForm        createPasswordRecoveryForm
  * @method models\RecoveryRequestForm createPasswordRecoveryRequestForm
+ * @method \yii\db\ActiveQuery        createUserQuery
+ * @method \yii\db\ActiveQuery        createProfileQuery
+ * @method \yii\db\ActiveQuery        createAccountQuery
  *
  * @author Dmitry Erofeev <dmeroff@gmail.com>
  */
@@ -42,21 +45,6 @@ class ModelManager extends Component
      * @var string
      */
     public $accountClass = 'dektrium\user\models\Account';
-
-    /**
-     * @var string
-     */
-    public $userQueryClass = 'dektrium\user\models\UserQuery';
-
-    /**
-     * @var string
-     */
-    public $profileQueryClass = 'yii\db\ActiveQuery';
-
-    /**
-     * @var string
-     */
-    public $accountQueryClass = 'yii\db\ActiveQuery';
 
     /**
      * @var string
@@ -160,7 +148,7 @@ class ModelManager extends Component
      * Finds a user
      *
      * @param  $condition
-     * @return models\UserQuery
+     * @return \yii\db\ActiveQuery
      */
     public function findUser($condition)
     {
@@ -220,50 +208,23 @@ class ModelManager extends Component
     }
 
     /**
-     * Creates new query for user class.
-     *
-     * @return \yii\db\ActiveQuery
-     */
-    public function createUserQuery()
-    {
-        return \Yii::createObject($this->userQueryClass, [$this->userClass]);
-    }
-
-    /**
-     * Creates new query for user class.
-     *
-     * @return \yii\db\ActiveQuery
-     */
-    public function createProfileQuery()
-    {
-        return \Yii::createObject($this->profileQueryClass, [$this->profileClass]);
-    }
-
-    /**
-     * Creates new query for account class.
-     *
-     * @return \yii\db\ActiveQuery
-     */
-    public function createAccountQuery()
-    {
-        return \Yii::createObject($this->accountQueryClass, [$this->accountClass]);
-    }
-
-    /**
      * @param string $name
      * @param array $params
      * @return mixed|object
      */
     public function __call($name, $params)
     {
-        $property = lcfirst(substr($name, 6)) . 'Class';
+        $property = (false !== ($query = strpos($name, 'Query'))) ? mb_substr($name, 6, -5) : mb_substr($name, 6);
+        $property = lcfirst($property) . 'Class';
+        if ($query) {
+            return forward_static_call([$this->$property, 'find']);
+        }
         if (isset($this->$property)) {
             $config = [];
             if (isset($params[0]) && is_array($params[0])) {
                 $config = $params[0];
             }
             $config['class'] = $this->$property;
-
             return \Yii::createObject($config);
         }
 

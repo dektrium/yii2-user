@@ -52,4 +52,5 @@ class Account extends ActiveRecord
     {
         return $this->user_id != null;
     }
+
 }

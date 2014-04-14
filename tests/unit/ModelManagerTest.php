@@ -64,12 +64,12 @@ class ModelManagerTest extends TestCase
     {
         $this->specify('should create user query', function () {
             $query = $this->manager->createUserQuery();
-            $this->assertInstanceOf($this->manager->userQueryClass, $query);
+            $this->assertInstanceOf('\yii\db\Query', $query);
         });
 
         $this->specify('should create profile query', function () {
             $query = $this->manager->createProfileQuery();
-            $this->assertInstanceOf($this->manager->profileQueryClass, $query);
+            $this->assertInstanceOf('\yii\db\Query', $query);
         });
     }
 

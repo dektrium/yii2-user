@@ -52,7 +52,6 @@ Now you have to add widget to registration form, just copy and paste following c
 
 use yii\helpers\Html;
 use yii\widgets\ActiveForm;
-use dektrium\user\assets\Passfield;
 use yii\captcha\Captcha;
 
 /**
@@ -60,10 +59,8 @@ use yii\captcha\Captcha;
  * @var yii\widgets\ActiveForm $form
  * @var dektrium\user\models\User $user
  */
-Passfield::register($this);
 $this->title = Yii::t('user', 'Sign up');
 $this->params['breadcrumbs'][] = $this->title;
-$this->registerJs(sprintf('$("#user-password").passField(%s);', json_encode(['locale' => Yii::$app->language])));
 ?>
 <div class="row">
     <div class="col-md-4 col-md-offset-4">

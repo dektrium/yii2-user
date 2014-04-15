@@ -12,18 +12,15 @@
 
 use yii\helpers\Html;
 use yii\widgets\ActiveForm;
-use dektrium\user\assets\Passfield;
 
 /**
  * @var yii\web\View $this
  * @var dektrium\user\models\User $model
  */
 
-Passfield::register($this);
 $this->title = Yii::t('user', 'Update user account');
 $this->params['breadcrumbs'][] = ['label' => Yii::t('user', 'Users'), 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
-$this->registerJs(sprintf('$("#user-password").passField(%s);', json_encode(['locale' => Yii::$app->language])));
 ?>
 <h1><i class="glyphicon glyphicon-user"></i> <?= Html::encode($model->username) ?>
     <?php if (!$model->getIsConfirmed()): ?>

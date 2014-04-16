@@ -10,13 +10,13 @@ using [git](installation-using-git.md).
 Either run following command:
 
 ```bash
-$ php composer.phar require --prefer-dist dektrium/yii2-user "0.6.*@dev"
+$ php composer.phar require --prefer-dist dektrium/yii2-user "dev-master"
 ```
 
 or add
 
 ```json
-"dektrium/yii2-user": "0.6.*@dev"
+"dektrium/yii2-user": "dev-master"
 ```
 
 to the require section of your `composer.json` file and run following command:

@@ -134,17 +134,19 @@ class User extends ActiveRecord implements UserInterface
             ['username', 'match', 'pattern' => '/^[a-zA-Z]\w+$/'],
             ['username', 'string', 'min' => 3, 'max' => 25],
             ['username', 'unique'],
+            ['username', 'trim'],
 
             // email rules
             ['email', 'required', 'on' => ['register', 'connect', 'create', 'update', 'update_email']],
             ['email', 'email'],
             ['email', 'string', 'max' => 255],
             ['email', 'unique'],
+            ['email', 'trim'],
 
             // unconfirmed email rules
             ['unconfirmed_email', 'required', 'on' => 'update_email'],
             ['unconfirmed_email', 'unique', 'targetAttribute' => 'email', 'on' => 'update_email'],
-            ['unconfirmed_email', 'email', 'on' => 'update_email'],
+            ['unconfirmed_email', 'email    ', 'on' => 'update_email'],
 
             // password rules
             ['password', 'required', 'on' => 'register'],

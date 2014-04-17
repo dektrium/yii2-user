@@ -19,7 +19,7 @@ All available configuration options are listed below with their default values:
 		// The time before a sent confirmation token becomes invalid.
 		'confirmWithin' => 86400, // 24 hours
 		// The time before a recovery token becomes invalid.
-		'recoverWithin' => 21600 // 6 hours
+		'recoverWithin' => 21600, // 6 hours
 		// Cost parameter used by the Blowfish hash algorithm.
 		'cost' => 10,
 	]

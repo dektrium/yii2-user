@@ -146,7 +146,7 @@ class User extends ActiveRecord implements UserInterface
             // unconfirmed email rules
             ['unconfirmed_email', 'required', 'on' => 'update_email'],
             ['unconfirmed_email', 'unique', 'targetAttribute' => 'email', 'on' => 'update_email'],
-            ['unconfirmed_email', 'email    ', 'on' => 'update_email'],
+            ['unconfirmed_email', 'email', 'on' => 'update_email'],
 
             // password rules
             ['password', 'required', 'on' => 'register'],

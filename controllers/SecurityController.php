@@ -15,7 +15,6 @@ use yii\web\Controller;
 use yii\filters\AccessControl;
 use yii\filters\VerbFilter;
 use yii\authclient\ClientInterface;
-use yii\web\Response;
 
 /**
  * Controller that manages user authentication process.
@@ -56,6 +55,9 @@ class SecurityController extends Controller
         ];
     }
 
+    /**
+     * @inheritdoc
+     */
     public function actions()
     {
         return [
@@ -100,7 +102,7 @@ class SecurityController extends Controller
      * Logs the user in if this social account has been already used. Otherwise shows registration form.
      *
      * @param  ClientInterface $client
-     * @return Response
+     * @return \yii\web\Response
      */
     public function authenticate(ClientInterface $client)
     {

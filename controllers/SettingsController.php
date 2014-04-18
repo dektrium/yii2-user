@@ -11,6 +11,7 @@
 
 namespace dektrium\user\controllers;
 
+use yii\authclient\ClientInterface;
 use yii\web\Controller;
 use yii\filters\AccessControl;
 use yii\filters\VerbFilter;
@@ -47,11 +48,24 @@ class SettingsController extends Controller
                 'rules' => [
                     [
                         'allow' => true,
-                        'actions' => ['profile', 'email', 'password', 'reset'],
+                        'actions' => ['profile', 'email', 'password', 'accounts', 'reset', 'connect'],
                         'roles' => ['@']
                     ],
                 ]
             ],
+        ];
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function actions()
+    {
+        return [
+            'connect' => [
+                'class' => 'yii\authclient\AuthAction',
+                'successCallback' => [$this, 'connect'],
+            ]
         ];
     }
 
@@ -131,5 +145,37 @@ class SettingsController extends Controller
         return $this->render('password', [
             'model' => $model
         ]);
+    }
+
+    public function actionAccounts()
+    {
+        return $this->render('accounts');
+    }
+
+    /**
+     * Connects social account to user.
+     *
+     * @param  ClientInterface $client
+     * @return \yii\web\Response
+     */
+    public function connect(ClientInterface $client)
+    {
+        $attributes = $client->getUserAttributes();
+        $provider   = $client->getTitle();
+        $clientId   = $attributes['id'];
+
+        if (null === ($account = $this->module->manager->findAccount($provider, $clientId))) {
+            $account = $this->module->manager->createAccount([
+                'provider'   => $provider,
+                'client_id'  => $clientId,
+                'attributes' => json_encode($attributes),
+                'user_id'    => \Yii::$app->user->id
+            ]);
+            $account->save(false);
+            \Yii::$app->session->setFlash('account_connected', \Yii::t('user', 'Account has successfully been connected'));
+        } else {
+            \Yii::$app->session->setFlash('account_not_connected', \Yii::t('user', 'This account has already been connected to another user'));
+        }
+        return $this->redirect(['accounts']);
     }
 }

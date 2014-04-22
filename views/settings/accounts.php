@@ -9,7 +9,7 @@
  * file that was distributed with this source code.
  */
 
-use yii\authclient\widgets\AuthChoice;
+use dektrium\user\widgets\Connect;
 use yii\helpers\Html;
 
 /**
@@ -17,7 +17,7 @@ use yii\helpers\Html;
  * @var yii\widgets\ActiveForm $form
  */
 
-$this->title = Yii::t('user', 'Connected accounts');
+$this->title = Yii::t('user', 'Networks');
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="row">
@@ -49,7 +49,7 @@ $this->params['breadcrumbs'][] = $this->title;
                         ['label' => Yii::t('user', 'Profile'), 'url' => ['/user/settings/profile']],
                         ['label' => Yii::t('user', 'Email'), 'url' => ['/user/settings/email']],
                         ['label' => Yii::t('user', 'Password'), 'url' => ['/user/settings/password']],
-                        ['label' => Yii::t('user', 'Connected accounts'), 'url' => ['/user/settings/accounts']],
+                        ['label' => Yii::t('user', 'Networks'), 'url' => ['/user/settings/networks']],
                     ]
                 ]) ?>
             </div>
@@ -61,20 +61,35 @@ $this->params['breadcrumbs'][] = $this->title;
                 <?= Html::encode($this->title) ?>
             </div>
             <div class="panel-body">
-                <?php // TODO: show connected accounts ?>
-            </div>
-        </div>
-    </div>
-    <div class="col-md-9">
-        <div class="panel panel-default">
-            <div class="panel-heading">
-                <?= Yii::t('user', 'Connect account') ?>
-            </div>
-            <div class="panel-body">
-                <?= AuthChoice::widget([
-                    // TODO: don't show connected accounts
-                    'baseAuthUrl' => ['/user/settings/connect']
+                <?php $auth = Connect::begin([
+                    'baseAuthUrl' => ['/user/settings/connect'],
+                    'accounts'    => $user->connectedAccounts,
+                    'autoRender'  => false
                 ]) ?>
+                <table class="table">
+                    <?php foreach ($auth->getClients() as $client): ?>
+                        <tr>
+                            <td style="width: 32px">
+                                <?= Html::tag('span', '', ['class' => 'auth-icon ' . $client->getName()]) ?>
+                            </td>
+                            <td>
+                                <?= $client->getTitle() ?>
+                            </td>
+                            <td style="width: 120px">
+                                <?= $auth->isConnected($client) ?
+                                    Html::a('Disconnect', $auth->createClientUrl($client), [
+                                        'class' => 'btn btn-danger btn-block',
+                                        'data-method' => 'post',
+                                    ]) :
+                                    Html::a('Connect', $auth->createClientUrl($client), [
+                                        'class' => 'btn btn-success btn-block'
+                                    ])
+                                ?>
+                            </td>
+                        </tr>
+                    <?php endforeach; ?>
+                </table>
+                <?php Connect::end() ?>
             </div>
         </div>
     </div>

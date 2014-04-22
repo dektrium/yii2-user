@@ -42,7 +42,7 @@ $this->params['breadcrumbs'][] = $this->title;
                         ['label' => Yii::t('user', 'Profile'), 'url' => ['/user/settings/profile']],
                         ['label' => Yii::t('user', 'Email'), 'url' => ['/user/settings/email']],
                         ['label' => Yii::t('user', 'Password'), 'url' => ['/user/settings/password']],
-                        ['label' => Yii::t('user', 'Connected accounts'), 'url' => ['/user/settings/accounts']],
+                        ['label' => Yii::t('user', 'Networks'), 'url' => ['/user/settings/networks']],
                     ]
                 ]) ?>
             </div>

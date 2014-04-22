@@ -69,11 +69,33 @@ class User extends ActiveRecord implements UserInterface
     public $current_password;
 
     /**
-     * @return \yii\db\ActiveQueryInterface
+     * @return \yii\db\ActiveQuery
      */
     public function getProfile()
     {
         return $this->hasOne($this->module->manager->profileClass, ['user_id' => 'id']);
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getAccounts()
+    {
+        return $this->hasMany($this->module->manager->accountClass, ['user_id' => 'id']);
+    }
+
+    /**
+     * @return array Connected accounts ($provider => $account)
+     */
+    public function getConnectedAccounts()
+    {
+        $connected = [];
+        $accounts  = $this->accounts;
+        foreach ($accounts as $account) {
+            $connected[$account->provider] = $account;
+        }
+
+        return $connected;
     }
 
     /**

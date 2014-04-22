@@ -48,7 +48,7 @@ class SettingsController extends Controller
                 'rules' => [
                     [
                         'allow' => true,
-                        'actions' => ['profile', 'email', 'password', 'accounts', 'reset', 'connect'],
+                        'actions' => ['profile', 'email', 'password', 'networks', 'reset', 'connect'],
                         'roles' => ['@']
                     ],
                 ]
@@ -147,9 +147,13 @@ class SettingsController extends Controller
         ]);
     }
 
-    public function actionAccounts()
+    public function actionNetworks()
     {
-        return $this->render('accounts');
+        $user = $this->module->manager->findUser(['id' => \Yii::$app->user->id])->with('accounts')->one();
+
+        return $this->render('accounts', [
+            'user' => $user
+        ]);
     }
 
     /**
@@ -161,7 +165,7 @@ class SettingsController extends Controller
     public function connect(ClientInterface $client)
     {
         $attributes = $client->getUserAttributes();
-        $provider   = $client->getTitle();
+        $provider   = $client->getId();
         $clientId   = $attributes['id'];
 
         if (null === ($account = $this->module->manager->findAccount($provider, $clientId))) {
@@ -176,6 +180,6 @@ class SettingsController extends Controller
         } else {
             \Yii::$app->session->setFlash('account_not_connected', \Yii::t('user', 'This account has already been connected to another user'));
         }
-        return $this->redirect(['accounts']);
+        return $this->redirect(['networks']);
     }
 }

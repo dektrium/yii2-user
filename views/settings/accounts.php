@@ -64,7 +64,8 @@ $this->params['breadcrumbs'][] = $this->title;
                 <?php $auth = Connect::begin([
                     'baseAuthUrl' => ['/user/settings/connect'],
                     'accounts'    => $user->connectedAccounts,
-                    'autoRender'  => false
+                    'autoRender'  => false,
+                    'popupMode'   => false
                 ]) ?>
                 <table class="table">
                     <?php foreach ($auth->getClients() as $client): ?>

@@ -15,6 +15,7 @@ use yii\authclient\ClientInterface;
 use yii\web\Controller;
 use yii\filters\AccessControl;
 use yii\filters\VerbFilter;
+use yii\web\ForbiddenHttpException;
 use yii\web\NotFoundHttpException;
 
 /**
@@ -41,6 +42,7 @@ class SettingsController extends Controller
                 'class' => VerbFilter::className(),
                 'actions' => [
                     'reset' => ['post'],
+                    'disconnect' => ['post']
                 ],
             ],
             'access' => [
@@ -48,7 +50,7 @@ class SettingsController extends Controller
                 'rules' => [
                     [
                         'allow' => true,
-                        'actions' => ['profile', 'email', 'password', 'networks', 'reset', 'connect'],
+                        'actions' => ['profile', 'email', 'password', 'networks', 'reset', 'connect', 'disconnect'],
                         'roles' => ['@']
                     ],
                 ]
@@ -147,6 +149,11 @@ class SettingsController extends Controller
         ]);
     }
 
+    /**
+     * Displays list of connected network accounts.
+     * 
+     * @return string
+     */
     public function actionNetworks()
     {
         $user = $this->module->manager->findUser(['id' => \Yii::$app->user->id])->with('accounts')->one();
@@ -154,6 +161,28 @@ class SettingsController extends Controller
         return $this->render('accounts', [
             'user' => $user
         ]);
+    }
+
+    /**
+     * Disconnects a network account from user.
+     *
+     * @param $id
+     * @return \yii\web\Response
+     * @throws \yii\web\NotFoundHttpException
+     * @throws \yii\web\ForbiddenHttpException
+     */
+    public function actionDisconnect($id)
+    {
+        $account = $this->module->manager->findAccountById($id);
+        if ($account === null) {
+            throw new NotFoundHttpException;
+        }
+        if ($account->user_id != \Yii::$app->user->id) {
+            throw new ForbiddenHttpException;
+        }
+        $account->delete();
+
+        return $this->redirect(['networks']);
     }
 
     /**

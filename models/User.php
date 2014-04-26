@@ -117,6 +117,7 @@ class User extends ActiveRecord implements UserInterface
             'password' => \Yii::t('user', 'Password'),
             'created_at' => \Yii::t('user', 'Registration time'),
             'registered_from' => \Yii::t('user', 'Registered from'),
+            'role' => \Yii::t('user', 'Role'),
         ];
     }
 

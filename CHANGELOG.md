@@ -2,6 +2,9 @@
 
 ## 0.6.0 [Work in progress]
 
+- Added registration via social networks
+- Moved Pass*Field to separate extension
+- Updated login process: user can log in using email or username
 - Fixed bug when user password has not been updated from admin panel
 - Added Vietnamese translation
 - Refactored test suite
@@ -12,7 +15,6 @@
 - Added bootstrap class that configures module automatically
 - Removed custom User component
 - Removed registration without password
-- Removed different login types (by username and both username and email)
 - Removed default controller
 - Removed captcha from all forms
 - Updated i18n messages and translations

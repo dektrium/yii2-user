@@ -11,7 +11,7 @@
 
 use yii\helpers\Html;
 use yii\widgets\ActiveForm;
-use yii\authclient\widgets\AuthChoice;
+use dektrium\user\widgets\Connect;
 
 /**
  * @var yii\web\View $this
@@ -47,10 +47,6 @@ $this->params['breadcrumbs'][] = $this->title;
         <p class="text-center">
             <?= Html::a(Yii::t('user', 'Didn\'t receive confirmation message?'), ['/user/registration/resend']) ?>
         </p>
-        <p class="text-center">
-            <?= AuthChoice::widget([
-                'baseAuthUrl' => ['/user/security/auth']
-            ]) ?>
-        </p>
+        <?= Connect::widget() ?>
     </div>
 </div>

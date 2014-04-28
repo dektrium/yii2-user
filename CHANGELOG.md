@@ -2,6 +2,7 @@
 
 ## 0.6.0 [Work in progress]
 
+- Added login widget
 - Added registration via social networks
 - Moved Pass*Field to separate extension
 - Updated login process: user can log in using email or username

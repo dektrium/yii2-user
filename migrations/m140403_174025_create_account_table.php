@@ -19,7 +19,16 @@ class m140403_174025_create_account_table extends Migration
 {
     public function up()
     {
-        $tableOptions = 'CHARACTER SET utf8 COLLATE utf8_general_ci ENGINE=InnoDB';
+        switch (Yii::$app->db->driverName) {
+            case 'mysql':
+                $tableOptions = 'CHARACTER SET utf8 COLLATE utf8_general_ci ENGINE=InnoDB';
+                break;
+            case 'pgsql':
+                $tableOptions = null;
+                break;
+            default:
+                throw new RuntimeException('Your database is not supported!');
+        }
 
         $this->createTable('{{%account}}', [
             'id'         => Schema::TYPE_PK,

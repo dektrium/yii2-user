@@ -18,7 +18,16 @@ class m140209_132017_init extends \yii\db\Migration
 {
     public function up()
     {
-        $tableOptions = 'CHARACTER SET utf8 COLLATE utf8_general_ci ENGINE=InnoDB';
+        switch (Yii::$app->db->driverName) {
+            case 'mysql':
+                $tableOptions = 'CHARACTER SET utf8 COLLATE utf8_general_ci ENGINE=InnoDB';
+                break;
+            case 'pgsql':
+                $tableOptions = null;
+                break;
+            default:
+                throw new RuntimeException('Your database is not supported!');
+        }
 
         $this->createTable('{{%user}}', [
             'id'            => Schema::TYPE_PK,

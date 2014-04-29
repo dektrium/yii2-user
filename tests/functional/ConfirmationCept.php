@@ -15,7 +15,7 @@ $I->amGoingTo('check that user get confirmed');
 $user = $I->getFixture('user')->getModel('unconfirmed');
 $I->amOnPage(Url::toRoute(['/user/registration/confirm', 'id' => $user->id, 'token' => $user->confirmation_token]));
 $I->see('Your account has been confirmed');
-$I->haveRecord(User::className(), [
+$I->seeRecord(User::className(), [
     'id' => $user->id,
     'confirmation_token' => null,
     'confirmation_sent_at' => null

@@ -86,16 +86,16 @@ class ModelManagerTest extends TestCase
         });
 
         $this->specify('should create new password recovery request form', function () {
-            $model = $this->manager->createPasswordRecoveryRequestForm();
-            $this->assertInstanceOf($this->manager->passwordRecoveryRequestFormClass, $model);
+            $model = $this->manager->createRecoveryRequestForm();
+            $this->assertInstanceOf($this->manager->recoveryRequestFormClass, $model);
         });
 
         $this->specify('should create new password recovery form', function () {
-            $model = $this->manager->createPasswordRecoveryForm([
+            $model = $this->manager->createRecoveryForm([
                 'id' => 6,
                 'token' => 'NO2aCmBIjFQX624xmAc3VBu7Th3NJoa6'
             ]);
-            $this->assertInstanceOf($this->manager->passwordRecoveryFormClass, $model);
+            $this->assertInstanceOf($this->manager->recoveryFormClass, $model);
         });
     }
 

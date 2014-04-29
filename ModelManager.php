@@ -59,12 +59,12 @@ class ModelManager extends Component
     /**
      * @var string
      */
-    public $passwordRecoveryFormClass = 'dektrium\user\models\RecoveryForm';
+    public $recoveryFormClass = 'dektrium\user\models\RecoveryForm';
 
     /**
      * @var string
      */
-    public $passwordRecoveryRequestFormClass = 'dektrium\user\models\RecoveryRequestForm';
+    public $recoveryRequestFormClass = 'dektrium\user\models\RecoveryRequestForm';
 
     /**
      * Finds a user by id.

@@ -51,7 +51,7 @@ class RecoveryController extends Controller
      */
     public function actionRequest()
     {
-        $model = $this->module->manager->createPasswordRecoveryRequestForm();
+        $model = $this->module->manager->createRecoveryRequestForm();
 
         if ($model->load(\Yii::$app->getRequest()->post()) && $model->sendRecoveryMessage()) {
             return $this->render('messageSent', [
@@ -75,7 +75,7 @@ class RecoveryController extends Controller
     public function actionReset($id, $token)
     {
         try {
-            $model = $this->module->manager->createPasswordRecoveryForm([
+            $model = $this->module->manager->createRecoveryForm([
                 'id' => $id,
                 'token' => $token
             ]);

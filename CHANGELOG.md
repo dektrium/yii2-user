@@ -2,6 +2,7 @@
 
 ## 0.6.0 [Work in progress]
 
+- Supported MySQL and PostgreSQL
 - Added login widget
 - Added registration via social networks
 - Moved Pass*Field to separate extension

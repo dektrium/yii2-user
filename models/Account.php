@@ -15,11 +15,13 @@ use dektrium\user\helpers\ModuleTrait;
 use yii\db\ActiveRecord;
 
 /**
- * @property integer $id        Id
- * @property integer $user_id   User id, null if account is not bind to user
- * @property string  $provider  Name of service
- * @property string  $client_id Account id
- * @property User    $user      User that this account is connected for.
+ * @property integer $id         Id
+ * @property integer $user_id    User id, null if account is not bind to user
+ * @property string  $provider   Name of service
+ * @property string  $client_id  Account id
+ * @property string  $properties Account properties returned by social network (json encoded)
+ * @property string  $data       Json-decoded properties
+ * @property User    $user       User that this account is connected for.
  *
  * @property \dektrium\user\Module $module
  *
@@ -28,6 +30,11 @@ use yii\db\ActiveRecord;
 class Account extends ActiveRecord
 {
     use ModuleTrait;
+
+    /**
+     * @var
+     */
+    private $_data;
 
     /**
      * @inheritdoc
@@ -53,4 +60,15 @@ class Account extends ActiveRecord
         return $this->user_id != null;
     }
 
+    /**
+     * @return mixed Json decoded properties.
+     */
+    public function getData()
+    {
+        if ($this->_data == null) {
+            $this->_data = json_decode($this->properties);
+        }
+
+        return $this->_data;
+    }
 }

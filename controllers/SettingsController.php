@@ -201,7 +201,7 @@ class SettingsController extends Controller
             $account = $this->module->manager->createAccount([
                 'provider'   => $provider,
                 'client_id'  => $clientId,
-                'attributes' => json_encode($attributes),
+                'properties' => json_encode($attributes),
                 'user_id'    => \Yii::$app->user->id
             ]);
             $account->save(false);

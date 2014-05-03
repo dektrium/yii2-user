@@ -35,7 +35,7 @@ class m140403_174025_create_account_table extends Migration
             'user_id'    => Schema::TYPE_INTEGER,
             'provider'   => Schema::TYPE_STRING . ' NOT NULL',
             'client_id'  => Schema::TYPE_STRING . ' NOT NULL',
-            'attributes' => Schema::TYPE_TEXT
+            'properties' => Schema::TYPE_TEXT
         ], $tableOptions);
 
         $this->createIndex('account_unique', '{{%account}}', ['provider', 'client_id'], true);

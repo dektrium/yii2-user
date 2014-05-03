@@ -1,8 +1,8 @@
 <?php
 
 return [
-	'sourcePath' => __DIR__,
-	'messagePath' => __DIR__ . '/messages',
+	'sourcePath' => __DIR__ . '/../',
+	'messagePath' => __DIR__,
 	'languages' => ['ru', 'vi'],
 	'translator' => 'Yii::t',
 	'sort' => false,

@@ -18,6 +18,7 @@ use yii\behaviors\TimestampBehavior;
 use yii\db\ActiveRecord;
 use yii\helpers\Security;
 use yii\helpers\Url;
+use yii\web\IdentityInterface;
 
 /**
  * User ActiveRecord model.
@@ -51,7 +52,7 @@ use yii\helpers\Url;
  *
  * @author Dmitry Erofeev <dmeroff@gmail.com>
  */
-class User extends ActiveRecord implements UserInterface
+class User extends ActiveRecord implements IdentityInterface
 {
     use ModuleTrait;
 

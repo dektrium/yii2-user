@@ -28,7 +28,7 @@ class ResendForm extends Model
     public $email;
 
     /**
-     * @var \dektrium\user\models\UserInterface
+     * @var \dektrium\user\models\User
      */
     private $_user;
 
@@ -74,7 +74,7 @@ class ResendForm extends Model
     }
 
     /**
-     * @return \dektrium\user\models\UserInterface
+     * @return \dektrium\user\models\User
      */
     public function getUser()
     {

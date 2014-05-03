@@ -22,7 +22,7 @@ class RecoveryRequestForm extends Model
     public $email;
 
     /**
-     * @var \dektrium\user\models\UserInterface
+     * @var \dektrium\user\models\User
      */
     private $_user;
 

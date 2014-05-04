@@ -1,6 +1,6 @@
 # CHANGELOG
 
-## 0.6.0 [Work in progress]
+## 0.6.0 [04 May 2014]
 
 - Supported MySQL and PostgreSQL
 - Added login widget

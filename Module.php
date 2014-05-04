@@ -23,7 +23,7 @@ use yii\base\Module as BaseModule;
  */
 class Module extends BaseModule
 {
-    const VERSION = '0.6.0';
+    const VERSION = '0.7.0-dev';
 
     /**
      * @var bool Whether to allow login without confirmation.

@@ -28,25 +28,15 @@ use yii\web\IdentityInterface;
  * @property string  $email
  * @property string  $password_hash
  * @property string  $auth_key
- * @property integer $registered_from
- * @property integer $logged_in_from
- * @property integer $logged_in_at
- * @property string  $confirmation_token
- * @property integer $confirmation_sent_at
+ * @property integer $registration_ip
  * @property integer $confirmed_at
- * @property string  $unconfirmed_email
- * @property string  $recovery_token
- * @property integer $recovery_sent_at
  * @property integer $blocked_at
- * @property string  $role
  * @property integer $created_at
  * @property integer $updated_at
- * @property string  $confirmationUrl
  * @property boolean $isConfirmed
- * @property boolean $isConfirmationPeriodExpired
- * @property string  $recoveryUrl
- * @property boolean $isRecoveryPeriodExpired
  * @property boolean $isBlocked
+ * @property array   $accounts
+ * @property Profile $profile
  *
  * @property \dektrium\user\Module $module
  *
@@ -65,7 +55,7 @@ class User extends ActiveRecord implements IdentityInterface
     public $password;
 
     /**
-     * @var string Current user's password.
+     * @var string Current user's password. Used for model validation.
      */
     public $current_password;
 
@@ -99,17 +89,13 @@ class User extends ActiveRecord implements IdentityInterface
         return $connected;
     }
 
-    /**
-     * @inheritdoc
-     */
+    /** @inheritdoc */
     public static function find()
     {
         return new UserQuery(get_called_class());
     }
 
-    /**
-     * @inheritdoc
-     */
+    /** @inheritdoc */
     public function attributeLabels()
     {
         return [
@@ -122,9 +108,7 @@ class User extends ActiveRecord implements IdentityInterface
         ];
     }
 
-    /**
-     * @inheritdoc
-     */
+    /** @inheritdoc */
     public function behaviors()
     {
         return [
@@ -132,9 +116,7 @@ class User extends ActiveRecord implements IdentityInterface
         ];
     }
 
-    /**
-     * @inheritdoc
-     */
+    /** @inheritdoc */
     public function scenarios()
     {
         return [
@@ -147,9 +129,7 @@ class User extends ActiveRecord implements IdentityInterface
         ];
     }
 
-    /**
-     * @inheritdoc
-     */
+    /** @inheritdoc */
     public function rules()
     {
         return [
@@ -186,49 +166,37 @@ class User extends ActiveRecord implements IdentityInterface
         ];
     }
 
-    /**
-     * @inheritdoc
-     */
+    /** @inheritdoc */
     public static function tableName()
     {
         return '{{%user}}';
     }
 
-    /**
-     * @inheritdoc
-     */
+    /** @inheritdoc */
     public static function findIdentity($id)
     {
         return static::findOne($id);
     }
 
-    /**
-     * @inheritdoc
-     */
+    /** @inheritdoc */
     public static function findIdentityByAccessToken($token)
     {
         throw new NotSupportedException('"findIdentityByAccessToken" is not implemented.');
     }
 
-    /**
-     * @inheritdoc
-     */
+    /** @inheritdoc */
     public function getId()
     {
         return $this->getAttribute('id');
     }
 
-    /**
-     * @inheritdoc
-     */
+    /** @inheritdoc */
     public function getAuthKey()
     {
         return $this->getAttribute('auth_key');
     }
 
-    /**
-     * @inheritdoc
-     */
+    /** @inheritdoc */
     public function validateAuthKey($authKey)
     {
         return $this->getAttribute('auth_key') == $authKey;
@@ -506,9 +474,7 @@ class User extends ActiveRecord implements IdentityInterface
         return !is_null($this->blocked_at);
     }
 
-    /**
-     * @inheritdoc
-     */
+    /** @inheritdoc */
     public function beforeSave($insert)
     {
         if ($insert) {
@@ -523,9 +489,7 @@ class User extends ActiveRecord implements IdentityInterface
         return parent::beforeSave($insert);
     }
 
-    /**
-     * @inheritdoc
-     */
+    /** @inheritdoc */
     public function afterSave($insert)
     {
         if ($insert) {

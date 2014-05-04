@@ -118,6 +118,8 @@ class User extends ActiveRecord implements UserInterface
             'created_at' => \Yii::t('user', 'Registration time'),
             'registered_from' => \Yii::t('user', 'Registered from'),
             'role' => \Yii::t('user', 'Role'),
+            'unconfirmed_email' => \Yii::t('user', 'Unconfirmed email'),
+            'current_password' => \Yii::t('user', 'Current password'),
         ];
     }
 

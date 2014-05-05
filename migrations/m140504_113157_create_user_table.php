@@ -20,17 +20,18 @@ class m140504_113157_create_user_table extends Migration
     public function up()
     {
         $this->createTable('{{%user}}', [
-            'id'              => Schema::TYPE_PK,
-            'username'        => Schema::TYPE_STRING . ' NOT NULL',
-            'email'           => Schema::TYPE_STRING . ' NOT NULL',
-            'password_hash'   => Schema::TYPE_STRING . '(60) NOT NULL',
-            'auth_key'        => Schema::TYPE_STRING . '(32) NOT NULL',
-            'registration_ip' => Schema::TYPE_INTEGER,
-            'created_at'      => Schema::TYPE_INTEGER . ' NOT NULL',
-            'updated_at'      => Schema::TYPE_INTEGER . ' NOT NULL',
-            'confirmed_at'    => Schema::TYPE_INTEGER,
-            'blocked_at'      => Schema::TYPE_INTEGER,
-            'flags'           => Schema::TYPE_INTEGER . ' NOT NULL DEFAULT 0',
+            'id'                => Schema::TYPE_PK,
+            'username'          => Schema::TYPE_STRING . ' NOT NULL',
+            'email'             => Schema::TYPE_STRING . ' NOT NULL',
+            'unconfirmed_email' => Schema::TYPE_STRING . ' NOT NULL',
+            'password_hash'     => Schema::TYPE_STRING . '(60) NOT NULL',
+            'auth_key'          => Schema::TYPE_STRING . '(32) NOT NULL',
+            'registration_ip'   => Schema::TYPE_INTEGER,
+            'created_at'        => Schema::TYPE_INTEGER . ' NOT NULL',
+            'updated_at'        => Schema::TYPE_INTEGER . ' NOT NULL',
+            'confirmed_at'      => Schema::TYPE_INTEGER,
+            'blocked_at'        => Schema::TYPE_INTEGER,
+            'flags'             => Schema::TYPE_INTEGER . ' NOT NULL DEFAULT 0',
         ], $this->tableOptions);
 
         $this->createIndex('user_unique_username', '{{%user}}', 'username', true);

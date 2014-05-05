@@ -82,7 +82,7 @@ return array (
   'Name' => 'Nom',
   'Networks' => 'Xarxes',
   '(not set)' => '(no establert)',
-  'Password and username will be sent to user by email' => 'El nom d'usuari i la contrasenya s'enviaran per correu electrònic',
+  'Password and username will be sent to user by email' => 'El nom d\'usuari i la contrasenya s\'enviaran per correu electrònic',
   'Password' => 'Contrasenya',
   'Password has been changed' => 'S\'ha canviat la contrasenya',
   'Password recovery finished' => 'S\'ha finalitzat la recuperació de contrasenya',

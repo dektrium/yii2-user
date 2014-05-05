@@ -144,4 +144,4 @@ return array (
   'Your password has been successfully changed. You can try logging in using your new password.' => 'Tu contraseña se ha modificado satisfactoriamente. Ahora puedes iniciar sesión con la nueva contraseña.',
   'Your username is {0} and your password is {1}' => 'Tu nombre de usuario es:{0} y tu contraseña es: {1}',
   'You will never have to use this form again' => 'Nunca volverás a tener que usar este formulario',
-););
+);

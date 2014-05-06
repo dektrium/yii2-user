@@ -13,6 +13,7 @@ namespace dektrium\user\models;
 
 use dektrium\user\helpers\ModuleTrait;
 use yii\db\ActiveRecord;
+use yii\helpers\Security;
 use yii\helpers\Url;
 
 /**
@@ -79,6 +80,17 @@ class Token extends ActiveRecord
         }
 
         return ($this->created_at + $expirationTime) < time();
+    }
+
+    /** @inheritdoc */
+    public function beforeSave($insert)
+    {
+        if ($insert) {
+            $this->setAttribute('created_at', time());
+            $this->setAttribute('code', Security::generateRandomKey());
+        }
+
+        return parent::beforeSave($insert);
     }
 
     /** @inheritdoc */

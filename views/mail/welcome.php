@@ -12,7 +12,8 @@
 use yii\helpers\Html;
 
 /**
- * @var dektrium\user\models\User $user
+ * @var dektrium\user\models\User  $user
+ * @var dektrium\user\models\Token $token
  */
 ?>
 <p style="font-family: 'Helvetica Neue', 'Helvetica', Helvetica, Arial, sans-serif; font-size: 14px; line-height: 1.6; font-weight: normal; margin: 0 0 10px; padding: 0;">
@@ -22,12 +23,12 @@ use yii\helpers\Html;
     <?= Yii::t('user', 'Your account on {0} has been successfully created', Yii::$app->name) ?>.
     <?= Yii::t('user', 'Your username is {0} and your password is {1}', [$user->username, $user->password]) ?>.
 </p>
-<?php if (Yii::$app->getModule('user')->confirmable): ?>
+<?php if ($token != null): ?>
     <p style="font-family: 'Helvetica Neue', 'Helvetica', Helvetica, Arial, sans-serif; font-size: 14px; line-height: 1.6; font-weight: normal; margin: 0 0 10px; padding: 0;">
         <?= Yii::t('user', 'In order to complete your registration, please click the link below') ?>:
     </p>
     <p style="font-family: 'Helvetica Neue', 'Helvetica', Helvetica, Arial, sans-serif; font-size: 14px; line-height: 1.6; font-weight: normal; margin: 0 0 10px; padding: 0;">
-        <?= Html::a(Html::encode($user->getConfirmationUrl()), $user->getConfirmationUrl()); ?>
+        <?= Html::a(Html::encode($token->url), $token->url); ?>
     </p>
     <p style="font-family: 'Helvetica Neue', 'Helvetica', Helvetica, Arial, sans-serif; font-size: 14px; line-height: 1.6; font-weight: normal; margin: 0 0 10px; padding: 0;">
         <?= Yii::t('user', 'If you have problems, please paste the above URL into your web browser') ?>.

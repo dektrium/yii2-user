@@ -66,17 +66,23 @@ class RegistrationController extends Controller
 
     /**
      * Displays the registration page.
+     * After successful registration if confirmable is enabled shows info message otherwise redirects to home page.
      *
      * @return string
      */
     public function actionRegister()
     {
-        $model = $this->module->manager->createUser(['scenario' => 'register']);
+        $model = $this->module->manager->createRegistrationForm();
 
-        if ($model->load(\Yii::$app->getRequest()->post()) && $model->register()) {
-            return $this->render('success', [
-                'model' => $model
-            ]);
+        if ($model->load(\Yii::$app->getRequest()->post()) && ($user = $model->register()) !== null) {
+            if ($this->module->confirmable) {
+                return $this->render('success', [
+                    'model' => $model
+                ]);
+            } else {
+                \Yii::$app->user->login($user);
+                return $this->goHome();
+            }
         }
 
         return $this->render('register', [

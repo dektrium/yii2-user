@@ -18,9 +18,9 @@ class RegisterPage extends BasePage
      */
     public function register($username, $email, $password)
     {
-        $this->guy->fillField('#user-username', $username);
-        $this->guy->fillField('#user-email', $email);
-        $this->guy->fillField('#user-password', $password);
+        $this->guy->fillField('#register-form-username', $username);
+        $this->guy->fillField('#register-form-email', $email);
+        $this->guy->fillField('#register-form-password', $password);
         $this->guy->click('Sign up');
     }
 }

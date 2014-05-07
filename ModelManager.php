@@ -17,13 +17,16 @@ use yii\base\Component;
  * ModelManager is used in order to create models and find users.
  *
  * @method models\User                createUser
+ * @method models\Token               createToken
  * @method models\Profile             createProfile
  * @method models\Account             createAccount
+ * @method models\RegistrationForm    createRegistrationForm
  * @method models\ResendForm          createResendForm
  * @method models\LoginForm           createLoginForm
  * @method models\RecoveryForm        createPasswordRecoveryForm
  * @method models\RecoveryRequestForm createPasswordRecoveryRequestForm
  * @method \yii\db\ActiveQuery        createUserQuery
+ * @method \yii\db\ActiveQuery        createTokenQuery
  * @method \yii\db\ActiveQuery        createProfileQuery
  * @method \yii\db\ActiveQuery        createAccountQuery
  *
@@ -31,39 +34,31 @@ use yii\base\Component;
  */
 class ModelManager extends Component
 {
-    /**
-     * @var string
-     */
+    /** @var string */
     public $userClass = 'dektrium\user\models\User';
 
-    /**
-     * @var string
-     */
+    /** @var string */
+    public $tokenClass = 'dektrium\user\models\Token';
+
+    /** @var string */
     public $profileClass = 'dektrium\user\models\Profile';
 
-    /**
-     * @var string
-     */
+    /** @var string */
     public $accountClass = 'dektrium\user\models\Account';
 
-    /**
-     * @var string
-     */
+    /** @var string */
+    public $registrationFormClass = 'dektrium\user\models\RegistrationForm';
+
+    /** @var string */
     public $resendFormClass = 'dektrium\user\models\ResendForm';
 
-    /**
-     * @var string
-     */
+    /** @var string */
     public $loginFormClass = 'dektrium\user\models\LoginForm';
 
-    /**
-     * @var string
-     */
+    /** @var string */
     public $recoveryFormClass = 'dektrium\user\models\RecoveryForm';
 
-    /**
-     * @var string
-     */
+    /** @var string */
     public $recoveryRequestFormClass = 'dektrium\user\models\RecoveryRequestForm';
 
     /**
@@ -117,33 +112,6 @@ class ModelManager extends Component
 
         return $this->findUserByUsername($value);
     }
-
-    /**
-     * Finds a user by id and confirmation token
-     *
-     * @param integer $id
-     * @param string  $token
-     *
-     * @return null|models\User
-     */
-    public function findUserByIdAndConfirmationToken($id, $token)
-    {
-        return $this->findUser(['id' => $id, 'confirmation_token' => $token])->one();
-    }
-
-    /**
-     * Finds a user by id and recovery token
-     *
-     * @param integer $id
-     * @param string  $token
-     *
-     * @return null|models\User
-     */
-    public function findUserByIdAndRecoveryToken($id, $token)
-    {
-        return $this->findUser(['id' => $id, 'recovery_token' => $token])->one();
-    }
-
     /**
      * Finds a user
      *
@@ -153,6 +121,18 @@ class ModelManager extends Component
     public function findUser($condition)
     {
         return $this->createUserQuery()->where($condition);
+    }
+
+    /**
+     * Finds a token by user id and code.
+     *
+     * @param  integer $userId
+     * @param  string  $code
+     * @return models\Token
+     */
+    public function findToken($userId, $code)
+    {
+        return $this->createTokenQuery()->where(['user_id' => $userId, 'code' => $code])->one();
     }
 
     /**

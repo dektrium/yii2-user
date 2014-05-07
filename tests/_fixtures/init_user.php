@@ -17,8 +17,6 @@ return [
         'auth_key' => 'mhh1A6KfqQLmHP-MiWN0WB0M90Q2u5OE',
         'created_at' => $time,
         'updated_at' => $time,
-        'confirmation_token' => 'NO2aCmBIjFQX624xmAc3VBu7Th3NJoa6',
-        'confirmation_sent_at' => $time
     ],
     'unconfirmed_with_expired_token' => [
         'username' => 'john',
@@ -27,8 +25,6 @@ return [
         'auth_key' => 'h6OS9csJbZEOW59ZILmJxU6bCiqVno9A',
         'created_at' => $time - 86401,
         'updated_at' => $time - 86401,
-        'confirmation_token' => 'qxYa315rqRgCOjYGk82GFHMEAV3T82AX',
-        'confirmation_sent_at' => $time - 86401
     ],
     'blocked' => [
         'username' => 'steven',
@@ -48,8 +44,6 @@ return [
         'created_at' => $time - 21601,
         'updated_at' => $time - 21601,
         'confirmed_at' => $time - 21601,
-        'recovery_sent_at' => $time - 21601,
-        'recovery_token' => 'dghFKJA6JvjTKLAwyE5w2XD9b2lmBXLE'
     ],
     'user_with_recovery_token' => [
         'username' => 'alex',
@@ -59,7 +53,5 @@ return [
         'created_at' => $time,
         'updated_at' => $time,
         'confirmed_at' => $time,
-        'recovery_token' => 'NO2aCmBIjFQX624xmAc3VBu7Th3NJoa6',
-        'recovery_sent_at' => $time
     ],
 ];

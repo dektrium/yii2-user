@@ -70,7 +70,9 @@ class RegistrationFormTest extends TestCase
         ]);
 
         /** @var User $user */
-        $user = $this->model->register();
+        verify($this->model->register())->true();
+
+        $user = User::findOne(['email' => 'foobar@example.com']);
 
         verify('$user is instance of User', $user instanceof User)->true();
         verify('email is valid', $user->email)->equals($this->model->email);
@@ -82,6 +84,6 @@ class RegistrationFormTest extends TestCase
 
         $mock = $this->getMock(RegistrationForm::className(), ['validate']);
         $mock->expects($this->once())->method('validate')->will($this->returnValue(false));
-        verify($mock->register())->null();
+        verify($mock->register())->false();
     }
 }

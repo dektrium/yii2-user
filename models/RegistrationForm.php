@@ -76,7 +76,7 @@ class RegistrationForm extends Model
      * Registers a new user account.
      * If confirmable is enabled, it will generate new confirmation token and send it to user.
      *
-     * @return User|null
+     * @return bool
      */
     public function register()
     {
@@ -96,11 +96,15 @@ class RegistrationForm extends Model
                     ]);
                     $token->save(false);
                     $this->module->mailer->sendConfirmationMessage($user, $token);
+                    \Yii::$app->session->setFlash('user.confirmation_sent');
+                } else {
+                    \Yii::$app->session->setFlash('user.registration_finished');
+                    \Yii::$app->user->login($user);
                 }
-                return $user;
+                return true;
             }
         }
 
-        return null;
+        return false;
     }
 }

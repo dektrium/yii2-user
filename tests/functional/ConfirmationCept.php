@@ -7,16 +7,12 @@ $I = new TestGuy($scenario);
 $I->wantTo('ensure that confirmation works');
 
 $I->amGoingTo('check that error is showed when token expired');
-$user = $I->getFixture('user')->getModel('unconfirmed_with_expired_token');
-$I->amOnPage(Url::toRoute(['/user/registration/confirm', 'id' => $user->id, 'token' => $user->confirmation_token]));
-$I->see('Confirmation token is invalid');
+$token = $I->getFixture('token')->getModel('expired_confirmation');
+$I->amOnPage(Url::toRoute(['/user/registration/confirm', 'id' => $token->user_id, 'token' => $token->code]));
+$I->see('We are sorry but your confirmation token is out of date');
 
 $I->amGoingTo('check that user get confirmed');
-$user = $I->getFixture('user')->getModel('unconfirmed');
-$I->amOnPage(Url::toRoute(['/user/registration/confirm', 'id' => $user->id, 'token' => $user->confirmation_token]));
-$I->see('Your account has been confirmed');
-$I->seeRecord(User::className(), [
-    'id' => $user->id,
-    'confirmation_token' => null,
-    'confirmation_sent_at' => null
-]);
+$token = $I->getFixture('token')->getModel('confirmation');
+$I->amOnPage(Url::toRoute(['/user/registration/confirm', 'id' => $token->user_id, 'token' => $token->code]));
+$I->see('You have successfully confirmed your email address. You may sign in using your credentials now');
+$I->see('Logout');

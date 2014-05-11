@@ -74,15 +74,8 @@ class RegistrationController extends Controller
     {
         $model = $this->module->manager->createRegistrationForm();
 
-        if ($model->load(\Yii::$app->getRequest()->post()) && ($user = $model->register()) !== null) {
-            if ($this->module->confirmable) {
-                return $this->render('success', [
-                    'model' => $model
-                ]);
-            } else {
-                \Yii::$app->user->login($user);
-                return $this->goHome();
-            }
+        if ($model->load(\Yii::$app->getRequest()->post()) && $model->register()) {
+            return $this->render('finish');
         }
 
         return $this->render('register', [
@@ -115,18 +108,27 @@ class RegistrationController extends Controller
     }
 
     /**
-     * Confirms user's account.
+     * Confirms user's account. If confirmation was successful logs the user in and redirects him to homepage. Otherwise
+     * renders error message.
      *
-     * @param $id
-     * @param $token
+     * @param  integer $id
+     * @param  string  $token
      * @return string
-     * @throws \yii\web\HttpException
+     * @throws \yii\web\HttpException When token is not found.
      */
     public function actionConfirm($id, $token)
     {
-        $user = $this->module->manager->findUserByIdAndConfirmationToken($id, $token);
-        if ($user === null || !$user->confirm()) {
-            return $this->render('invalidToken');
+        $token = $this->module->manager->findToken($id, $token);
+        if ($token == null) {
+            throw new NotFoundHttpException;
+        }
+        try {
+            $user = $token->user;
+            $user->confirm($token);
+            \Yii::$app->user->login($user);
+            \Yii::$app->session->setFlash('user.confirmation_finished');
+        } catch (\InvalidArgumentException $e) {
+            \Yii::$app->session->setFlash('user.invalid_token');
         }
 
         return $this->render('finish');

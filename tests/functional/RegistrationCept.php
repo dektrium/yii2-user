@@ -23,7 +23,7 @@ $I->see(Html::encode('This email address has already been taken'));
 
 $I->amGoingTo('try to register with enabled confirmation');
 $page->register('tester', 'tester@example.com', 'tester');
-$I->see('Awesome, almost there! We need to confirm your email address');
+$I->see('We need to confirm your email address');
 $user = $I->grabRecord(User::className(), ['email' => 'tester@example.com']);
 $token = $I->grabRecord(Token::className(), ['user_id' => $user->id, 'type' => Token::TYPE_CONFIRMATION]);
 $I->seeInEmail(Html::encode($token->url));

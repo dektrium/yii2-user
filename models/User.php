@@ -251,11 +251,19 @@ class User extends ActiveRecord implements IdentityInterface
     /**
      * Confirms the user.
      *
+     * @param  Token $token
      * @return bool
+     * @throws \InvalidArgumentException
      */
-    public function confirm()
+    public function confirm(Token $token)
     {
-        // TODO: confirm user
+        if ($token->type != Token::TYPE_CONFIRMATION || $token->isExpired || $token->user_id != $this->id) {
+            throw new \InvalidArgumentException;
+        }
+
+        $token->delete();
+
+        return (bool) $this->updateAttributes(['confirmed_at' => time()]);
     }
 
     /**
@@ -296,7 +304,7 @@ class User extends ActiveRecord implements IdentityInterface
      */
     public function block()
     {
-        return $this->updateAttributes(['blocked_at' => time()]);
+        return (bool) $this->updateAttributes(['blocked_at' => time()]);
     }
 
     /**
@@ -304,7 +312,7 @@ class User extends ActiveRecord implements IdentityInterface
      */
     public function unblock()
     {
-        return $this->updateAttributes(['blocked_at' => null]);
+        return (bool) $this->updateAttributes(['blocked_at' => null]);
     }
 
 
@@ -348,7 +356,7 @@ class User extends ActiveRecord implements IdentityInterface
     }
 
     /** @inheritdoc */
-    public static function findIdentityByAccessToken($token)
+    public static function findIdentityByAccessToken($token, $type = null)
     {
         throw new NotSupportedException('"findIdentityByAccessToken" is not implemented.');
     }

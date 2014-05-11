@@ -35,69 +35,10 @@ class UserTest extends TestCase
         ];
     }
 
-    public function testValidation()
-    {
-        \Yii::$app->getModule('user');
-        $this->user = new User(['scenario' => 'register']);
-
-        $this->specify('username is valid', function () {
-            verify('username is required', $this->user->validate(['username']))->false();
-            $this->user->username = Security::generateRandomKey();
-            verify('username is too long', $this->user->validate(['username']))->false();
-            $this->user->username = '!@# абв';
-            verify('username contains invalid characters', $this->user->validate(['username']))->false();
-            $this->user->username = 'user';
-            verify('username is already using', $this->user->validate(['username']))->false();
-            $this->user->username = 'perfect_name';
-            verify('username is ok', $this->user->validate(['username']))->true();
-        });
-
-        $this->specify('email is valid', function () {
-            verify('email is required', $this->user->validate(['email']))->false();
-            $this->user->email = 'not valid email';
-            verify('email is not email', $this->user->validate(['email']))->false();
-            $this->user->email = 'user@example.com';
-            verify('email is already using', $this->user->validate(['email']))->false();
-            $this->user->email = 'perfect@example.com';
-            verify('email is ok', $this->user->validate(['email']))->true();
-        });
-
-        $this->specify('password is valid', function () {
-            verify('password is required', $this->user->validate(['password']))->false();
-            $this->user->password = '12345';
-            verify('password is too short', $this->user->validate(['password']))->false();
-            $this->user->password = 'superSecretPa$$word';
-            verify('password is ok', $this->user->validate(['password']))->true();
-        });
-    }
-
-    public function testRegister()
-    {
-        $this->specify('user should be registered', function () {
-            $user = new User(['scenario' => 'register']);
-            $user->username = 'tester';
-            $user->email = 'tester@example.com';
-            $user->password = 'tester';
-            verify($user->register())->true();
-            verify($user->username)->equals('tester');
-            verify($user->email)->equals('tester@example.com');
-            verify(Security::validatePassword('tester', $user->password_hash))->true();
-        });
-
-        $this->specify('profile should be created after registration', function () {
-            $user = new User(['scenario' => 'register']);
-            $user->username = 'john_doe';
-            $user->email = 'john_doe@example.com';
-            $user->password = 'qwerty';
-            verify($user->register())->true();
-            verify($user->profile->gravatar_email)->equals('john_doe@example.com');
-        });
-    }
-
     public function testBlocking()
     {
         $this->specify('user can be blocked and unblocked', function () {
-            $user = User::findOne(1);
+            $user = $this->getFixture('user')->getModel('user');
             verify('user is not blocked', $user->getIsBlocked())->false();
             $user->block();
             verify('user is blocked', $user->getIsBlocked())->true();
@@ -110,25 +51,14 @@ class UserTest extends TestCase
     {
         \Yii::$app->getModule('user')->confirmable = true;
 
-        $this->user = new User(['scenario' => 'register']);
-        $this->user->username = 'tester';
-        $this->user->email = 'tester@example.com';
-        $this->user->password = 'tester';
-        $this->user->register();
-
-        $this->specify('confirmation data should be generated on register', function () {
-            verify($this->user->confirmation_token)->notNull();
-            verify($this->user->confirmation_sent_at)->notNull();
-        });
-
-        $this->specify('correct user confirmation status should be returned', function () {
-            $user = User::findOne(1);
+        $this->specify('should return correct user confirmation status', function () {
+            $user = $this->getFixture('user')->getModel('user');
             verify('user is confirmed', $user->getIsConfirmed())->true();
-            $user = User::findOne(2);
+            $user = $this->getFixture('user')->getModel('unconfirmed');
             verify('user is not confirmed', $user->getIsConfirmed())->false();
         });
 
-        $this->specify('correct user confirmation url should be returned', function () {
+        /*$this->specify('correct user confirmation url should be returned', function () {
             $user = User::findOne(1);
             verify('url is null for confirmed user', $user->getConfirmationUrl())->null();
             $user = User::findOne(2);
@@ -158,10 +88,10 @@ class UserTest extends TestCase
             verify($user->confirmed_at)->null();
             $user->confirm();
             verify($user->confirmed_at)->notNull();
-        });
+        });*/
     }
 
-    public function testEmailSettings()
+/*    public function testEmailSettings()
     {
         $this->user = User::findOne(1);
         $this->user->scenario = 'update_email';
@@ -219,5 +149,5 @@ class UserTest extends TestCase
             ]);
             verify($user->getIsRecoveryPeriodExpired())->true();
         });
-    }
+    }*/
 }

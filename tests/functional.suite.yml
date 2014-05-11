@@ -15,3 +15,6 @@ modules:
                 profile:
                     class: dektrium\user\tests\_fixtures\ProfileFixture
                     dataFile: @tests/_fixtures/init_profile.php
+                token:
+                    class: dektrium\user\tests\_fixtures\TokenFixture
+                    dataFile: @tests/_fixtures/init_token.php

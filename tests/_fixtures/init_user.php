@@ -1,5 +1,7 @@
 <?php
+
 $time = time();
+
 return [
     'user' => [
         'username' => 'user',

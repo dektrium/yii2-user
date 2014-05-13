@@ -16,7 +16,8 @@ use yii\filters\AccessControl;
 use yii\web\NotFoundHttpException;
 
 /**
- * Controller that manages user registration process.
+ * RegistrationController is responsible for all registration process, which includes registration of a new account,
+ * resending confirmation tokens, email confirmation and registration via social networks.
  *
  * @property \dektrium\user\Module $module
  *
@@ -49,22 +50,6 @@ class RegistrationController extends Controller
     }
 
     /**
-     * @inheritdoc
-     */
-    public function beforeAction($action)
-    {
-        if (parent::beforeAction($action)) {
-            if (!$this->module->confirmable && in_array($action->id, ['confirm', 'resend'])) {
-                throw new NotFoundHttpException('Disabled by administrator');
-            }
-
-            return true;
-        } else {
-            return false;
-        }
-    }
-
-    /**
      * Displays the registration page.
      * After successful registration if confirmable is enabled shows info message otherwise redirects to home page.
      *
@@ -74,7 +59,7 @@ class RegistrationController extends Controller
     {
         $model = $this->module->manager->createRegistrationForm();
 
-        if ($model->load(\Yii::$app->getRequest()->post()) && $model->register()) {
+        if ($model->load(\Yii::$app->request->post()) && $model->register()) {
             return $this->render('finish');
         }
 
@@ -94,7 +79,7 @@ class RegistrationController extends Controller
         $this->module->confirmable = false;
 
         $model = $this->module->manager->createUser(['scenario' => 'connect']);
-        if ($model->load($_POST) && $model->create()) {
+        if ($model->load(\Yii::$app->request->post()) && $model->create()) {
             $account->user_id = $model->id;
             $account->save(false);
             \Yii::$app->user->login($model, $this->module->rememberFor);
@@ -114,12 +99,11 @@ class RegistrationController extends Controller
      * @param  integer $id
      * @param  string  $token
      * @return string
-     * @throws \yii\web\HttpException When token is not found.
+     * @throws \yii\web\HttpException When token is not found or confirmable is disabled.
      */
     public function actionConfirm($id, $token)
     {
-        $token = $this->module->manager->findToken($id, $token);
-        if ($token == null) {
+        if (($token = $this->module->manager->findToken($id, $token)) == null || !$this->module->confirmable) {
             throw new NotFoundHttpException;
         }
         try {
@@ -135,20 +119,21 @@ class RegistrationController extends Controller
     }
 
     /**
-     * Displays page where user can request new confirmation token.
+     * Displays page where user can request new confirmation token. If resending was successful, displays message.
      *
      * @return string
+     * @throws \yii\web\HttpException When token is not found or confirmable is disabled.
      */
     public function actionResend()
     {
+        if (!$this->module->confirmable) {
+            throw new NotFoundHttpException;
+        }
+
         $model = $this->module->manager->createResendForm();
 
-        if ($model->load(\Yii::$app->getRequest()->post()) && $model->validate()) {
-            $model->getUser()->resend();
-
-            return $this->render('success', [
-                'model' => $model
-            ]);
+        if ($model->load(\Yii::$app->request->post()) && $model->resend()) {
+            return $this->render('finish');
         }
 
         return $this->render('resend', [

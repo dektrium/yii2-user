@@ -19,7 +19,5 @@ $I->see('This account has already been confirmed');
 
 $I->amGoingTo('try to resend token to unconfirmed user');
 $user = $I->getFixture('user')->getModel('unconfirmed');
-$I->seeRecord(User::className(), ['confirmation_token' => $user->confirmation_token]);
 $page->resend($user->email);
-$I->see('Awesome, almost there! We need to confirm your email address');
-$I->dontSeeRecord(User::className(), ['confirmation_token' => $user->confirmation_token]);
+$I->see('We need to confirm your email address');

@@ -11,6 +11,7 @@
 
 namespace dektrium\user\controllers;
 
+use yii\helpers\Url;
 use yii\web\Controller;
 use yii\filters\AccessControl;
 use yii\filters\VerbFilter;
@@ -120,10 +121,9 @@ class SecurityController extends Controller
         }
 
         if (null === ($user = $account->user)) {
-            return $this->redirect(['/user/registration/connect', 'account_id' => $account->id]);
+            $this->action->successUrl = Url::to(['/user/registration/connect', 'account_id' => $account->id]);
         } else {
             \Yii::$app->user->login($user, $this->module->rememberFor);
-            return $this->goBack();
         }
     }
 }

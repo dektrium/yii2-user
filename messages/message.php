@@ -3,7 +3,7 @@
 return [
 	'sourcePath' => __DIR__ . '/../',
 	'messagePath' => __DIR__,
-	'languages' => ['ca', 'es', 'ru', 'vi'],
+	'languages' => ['ca', 'da', 'es', 'ru', 'vi'],
 	'translator' => 'Yii::t',
 	'sort' => false,
 	'overwrite' => true,

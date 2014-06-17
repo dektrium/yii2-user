@@ -175,7 +175,7 @@ class User extends ActiveRecord implements IdentityInterface
             ['unconfirmed_email', 'email', 'on' => 'update_email'],
 
             // password rules
-            ['password', 'required', 'on' => 'register'],
+            ['password', 'required', 'on' => ['register', 'update_password']],
             ['password', 'string', 'min' => 6, 'on' => ['register', 'update_password', 'create']],
 
             // current password rules

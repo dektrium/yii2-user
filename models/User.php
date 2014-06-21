@@ -22,6 +22,7 @@ use yii\web\IdentityInterface;
 /**
  * User ActiveRecord model.
  *
+ * Database fields:
  * @property integer $id
  * @property string  $username
  * @property string  $email
@@ -33,10 +34,11 @@ use yii\web\IdentityInterface;
  * @property integer $blocked_at
  * @property integer $created_at
  * @property integer $updated_at
- * @property boolean $isConfirmed
- * @property boolean $isBlocked
- * @property array   $accounts
- * @property Profile $profile
+ * @property integer $flags
+ *
+ * Defined relations:
+ * @property Account[] $accounts
+ * @property Profile   $profile
  *
  * @property \dektrium\user\Module $module
  *
@@ -46,17 +48,10 @@ class User extends ActiveRecord implements IdentityInterface
 {
     use ModuleTrait;
 
-    const EVENT_BEFORE_REGISTER = 'before_register';
-    const EVENT_AFTER_REGISTER  = 'after_register';
-
-    /**
-     * @var string Plain password. Used for model validation.
-     */
+    /** @var string Plain password. Used for model validation. */
     public $password;
 
-    /**
-     * @var string Current user's password. Used for model validation.
-     */
+    /** @var string Current user's password. Used for model validation. */
     public $current_password;
 
     /**
@@ -199,50 +194,6 @@ class User extends ActiveRecord implements IdentityInterface
         if ($this->save()) {
             $this->module->mailer->sendWelcomeMessage($this);
             return true;
-        }
-
-        return false;
-    }
-
-    /**
-     * This method is called at the beginning of user registration process.
-     */
-    public function beforeRegister()
-    {
-        $this->trigger(self::EVENT_BEFORE_REGISTER);
-        $this->setAttribute('registration_ip', ip2long(\Yii::$app->request->userIP));
-    }
-
-    /**
-     * This method is called at the end of user registration process.
-     */
-    public function afterRegister()
-    {
-        if ($this->module->confirmable) {
-            // TODO: generate confirmation token
-            $this->module->mailer->sendConfirmationMessage($this);
-        }
-        $this->trigger(self::EVENT_AFTER_REGISTER);
-    }
-
-    /**
-     * Registers a user.
-     *
-     * @return bool
-     * @throws \RuntimeException
-     */
-    public function register()
-    {
-        if (!$this->getIsNewRecord()) {
-            throw new \RuntimeException('Calling "'.__CLASS__.'::register()" on existing user');
-        }
-
-        if ($this->validate()) {
-            $this->beforeRegister();
-            if ($this->save(false)) {
-                $this->afterRegister();
-                return true;
-            }
         }
 
         return false;

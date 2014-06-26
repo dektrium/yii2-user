@@ -528,7 +528,7 @@ class User extends ActiveRecord implements IdentityInterface
     /**
      * @inheritdoc
      */
-    public function afterSave($insert)
+    public function afterSave($insert, $changedAttributes)
     {
         if ($insert) {
             $profile = $this->module->manager->createProfile([
@@ -537,6 +537,6 @@ class User extends ActiveRecord implements IdentityInterface
             ]);
             $profile->save(false);
         }
-        parent::afterSave($insert);
+        parent::afterSave($insert, $changedAttributes);
     }
 }

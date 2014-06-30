@@ -6,7 +6,7 @@ use Codeception\Specify;
 use dektrium\user\models\User;
 use dektrium\user\tests\_fixtures\UserFixture;
 use yii\codeception\TestCase;
-use yii\helpers\Security;
+use Yii;
 
 /**
  * Test suite for User active record class.
@@ -42,7 +42,7 @@ class UserTest extends TestCase
 
         $this->specify('username is valid', function () {
             verify('username is required', $this->user->validate(['username']))->false();
-            $this->user->username = Security::generateRandomKey();
+            $this->user->username = Yii::$app->getSecurity()->generateRandomKey();
             verify('username is too long', $this->user->validate(['username']))->false();
             $this->user->username = '!@# абв';
             verify('username contains invalid characters', $this->user->validate(['username']))->false();
@@ -81,7 +81,7 @@ class UserTest extends TestCase
             verify($user->register())->true();
             verify($user->username)->equals('tester');
             verify($user->email)->equals('tester@example.com');
-            verify(Security::validatePassword('tester', $user->password_hash))->true();
+            verify(Yii::$app->getSecurity()->validatePassword('tester', $user->password_hash))->true();
         });
 
         $this->specify('profile should be created after registration', function () {

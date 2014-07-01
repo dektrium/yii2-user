@@ -16,9 +16,9 @@ use dektrium\user\helpers\Password;
 use yii\base\NotSupportedException;
 use yii\behaviors\TimestampBehavior;
 use yii\db\ActiveRecord;
-use yii\helpers\Security;
 use yii\helpers\Url;
 use yii\web\IdentityInterface;
+use Yii;
 
 /**
  * User ActiveRecord model.
@@ -318,7 +318,7 @@ class User extends ActiveRecord implements IdentityInterface
     {
         if ($this->validate()) {
             if ($this->module->confirmable) {
-                $this->confirmation_token = Security::generateRandomKey();
+                $this->confirmation_token = Yii::$app->getSecurity()->generateRandomKey();
                 $this->confirmation_sent_at = time();
                 $this->save(false);
                 $this->module->mailer->sendReconfirmationMessage($this);
@@ -393,7 +393,7 @@ class User extends ActiveRecord implements IdentityInterface
      */
     protected function generateConfirmationData()
     {
-        $this->confirmation_token = Security::generateRandomKey();
+        $this->confirmation_token = Yii::$app->getSecurity()->generateRandomKey();
         $this->confirmation_sent_at = time();
         $this->confirmed_at = null;
     }
@@ -473,7 +473,7 @@ class User extends ActiveRecord implements IdentityInterface
      */
     public function sendRecoveryMessage()
     {
-        $this->recovery_token = Security::generateRandomKey();
+        $this->recovery_token = Yii::$app->getSecurity()->generateRandomKey();
         $this->recovery_sent_at = time();
         $this->save(false);
 
@@ -514,7 +514,7 @@ class User extends ActiveRecord implements IdentityInterface
     public function beforeSave($insert)
     {
         if ($insert) {
-            $this->setAttribute('auth_key', Security::generateRandomKey());
+            $this->setAttribute('auth_key', Yii::$app->getSecurity()->generateRandomKey());
             $this->setAttribute('role', $this->module->defaultRole);
         }
 

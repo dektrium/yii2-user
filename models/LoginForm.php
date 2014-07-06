@@ -16,9 +16,8 @@ use yii\base\Model;
 use dektrium\user\helpers\Password;
 
 /**
- * LoginForm is the model behind the login form.
- *
- * @property \dektrium\user\Module $module
+ * LoginForm get user's login and password, validates them and logs the user in. If user has been blocked, it adds
+ * an error to login form.
  *
  * @author Dmitry Erofeev <dmeroff@gmail.com>
  */
@@ -26,29 +25,19 @@ class LoginForm extends Model
 {
     use ModuleTrait;
 
-    /**
-     * @var string
-     */
+    /** @var string User's email or username */
     public $login;
 
-    /**
-     * @var string
-     */
+    /** @var string User's plain password */
     public $password;
 
-    /**
-     * @var bool Whether to remember the user.
-     */
+    /** @var string Whether to remember the user */
     public $rememberMe = false;
 
-    /**
-     * @var \dektrium\user\models\User
-     */
+    /** @var \dektrium\user\models\User */
     protected $user;
 
-    /**
-     * @inheritdoc
-     */
+    /** @inheritdoc */
     public function attributeLabels()
     {
         return [
@@ -58,9 +47,7 @@ class LoginForm extends Model
         ];
     }
 
-    /**
-     * @inheritdoc
-     */
+    /** @inheritdoc */
     public function rules()
     {
         return [
@@ -87,33 +74,26 @@ class LoginForm extends Model
     }
 
     /**
-     * Logs in a user using the provided username and password.
+     * Validates form and logs the user in.
      *
      * @return boolean whether the user is logged in successfully
      */
     public function login()
     {
         if ($this->validate()) {
-            $this->user->setAttribute('logged_in_from', ip2long(\Yii::$app->getRequest()->getUserIP()));
-            $this->user->setAttribute('logged_in_at', time());
-            $this->user->save(false);
             return \Yii::$app->getUser()->login($this->user, $this->rememberMe ? $this->module->rememberFor : 0);
         } else {
             return false;
         }
     }
 
-    /**
-     * @inheritdoc
-     */
+    /** @inheritdoc */
     public function formName()
     {
         return 'login-form';
     }
 
-    /**
-     * @inheritdoc
-     */
+    /** @inheritdoc */
     public function beforeValidate()
     {
         if (parent::beforeValidate()) {

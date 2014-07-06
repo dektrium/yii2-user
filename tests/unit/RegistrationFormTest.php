@@ -9,7 +9,6 @@ use dektrium\user\models\Token;
 use dektrium\user\models\User;
 use dektrium\user\tests\_fixtures\UserFixture;
 use yii\codeception\TestCase;
-use yii\helpers\Security;
 
 class RegistrationFormTest extends TestCase
 {
@@ -36,7 +35,7 @@ class RegistrationFormTest extends TestCase
         $this->model = new RegistrationForm();
 
         verify('username is required', $this->model->validate(['username']))->false();
-        $this->model->username = Security::generateRandomKey();
+        $this->model->username = \Yii::$app->security->generateRandomKey();
         verify('username is too long', $this->model->validate(['username']))->false();
         $this->model->username = '!@# абв';
         verify('username contains invalid characters', $this->model->validate(['username']))->false();

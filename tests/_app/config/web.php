@@ -30,6 +30,7 @@ return [
         ],
         'db' => $db,
         'mail' => [
+            'class' => 'yii\swiftmailer\Mailer',
             'transport' => [
                 'class' => 'Swift_SmtpTransport',
                 'host' => '127.0.0.1',

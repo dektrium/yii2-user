@@ -13,7 +13,6 @@ namespace dektrium\user\models;
 
 use dektrium\user\helpers\ModuleTrait;
 use yii\db\ActiveRecord;
-use yii\helpers\Security;
 use yii\helpers\Url;
 
 /**
@@ -87,7 +86,7 @@ class Token extends ActiveRecord
     {
         if ($insert) {
             $this->setAttribute('created_at', time());
-            $this->setAttribute('code', Security::generateRandomKey());
+            $this->setAttribute('code', \Yii::$app->security->generateRandomKey());
         }
 
         return parent::beforeSave($insert);

@@ -16,7 +16,6 @@ use dektrium\user\helpers\Password;
 use yii\base\NotSupportedException;
 use yii\behaviors\TimestampBehavior;
 use yii\db\ActiveRecord;
-use yii\helpers\Security;
 use yii\web\IdentityInterface;
 
 /**
@@ -271,7 +270,7 @@ class User extends ActiveRecord implements IdentityInterface
     public function beforeSave($insert)
     {
         if ($insert) {
-            $this->setAttribute('auth_key', Security::generateRandomKey());
+            $this->setAttribute('auth_key', \Yii::$app->security->generateRandomKey());
         }
 
         if (!empty($this->password)) {
@@ -282,7 +281,7 @@ class User extends ActiveRecord implements IdentityInterface
     }
 
     /** @inheritdoc */
-    public function afterSave($insert)
+    public function afterSave($insert, $changedAttributes)
     {
         if ($insert) {
             $profile = $this->module->manager->createProfile([
@@ -291,7 +290,7 @@ class User extends ActiveRecord implements IdentityInterface
             ]);
             $profile->save(false);
         }
-        parent::afterSave($insert);
+        parent::afterSave($insert, $changedAttributes);
     }
 
     /** @inheritdoc */

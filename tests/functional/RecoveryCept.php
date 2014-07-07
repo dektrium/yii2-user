@@ -5,6 +5,7 @@ use dektrium\user\tests\_pages\LoginPage;
 use yii\helpers\Html;
 use yii\helpers\Url;
 use dektrium\user\models\User;
+use dektrium\user\models\Token;
 
 $I = new TestGuy($scenario);
 $I->wantTo('ensure that password recovery works');
@@ -21,20 +22,23 @@ $user = $I->getFixture('user')->getModel('user');
 $page->recover($user->email);
 $I->see('You have been sent an email with instructions on how to reset your password.');
 $user = $I->grabRecord(User::className(), ['email' => $user->email]);
-$I->seeInEmail(Html::encode($user->getRecoveryUrl()));
+$token = $I->grabRecord(Token::className(), ['user_id' => $user->id, 'type' => Token::TYPE_RECOVERY]);
+$I->seeInEmail(Html::encode($token->getUrl()));
 $I->seeInEmailRecipients($user->email);
 
 $I->amGoingTo('reset password with invalid token');
 $user = $I->getFixture('user')->getModel('user_with_expired_recovery_token');
-$I->amOnPage(Url::toRoute(['/user/recovery/reset', 'id' => $user->id, 'token' => $user->recovery_token]));
+$token = $I->grabRecord(Token::className(), ['user_id' => $user->id, 'type' => Token::TYPE_RECOVERY]);
+$I->amOnPage(Url::toRoute(['/user/recovery/reset', 'id' => $user->id, 'token' => $token->code]));
 $I->see('Recovery token is invalid');
 
 $I->amGoingTo('reset password');
 $user = $I->getFixture('user')->getModel('user_with_recovery_token');
-$I->amOnPage(Url::toRoute(['/user/recovery/reset', 'id' => $user->id, 'token' => $user->recovery_token]));
+$token = $I->grabRecord(Token::className(), ['user_id' => $user->id, 'type' => Token::TYPE_RECOVERY]);
+$I->amOnPage(Url::toRoute(['/user/recovery/reset', 'id' => $user->id, 'token' => $token->code]));
 $I->fillField('#recovery-form-password', 'newpass');
 $I->click('Finish');
-$I->see('Password recovery finished');
+$I->see('Password has been reset');
 
 $page = LoginPage::openBy($I);
 $page->login($user->email, 'qwerty');

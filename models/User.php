@@ -245,8 +245,7 @@ class User extends ActiveRecord implements IdentityInterface
      */
     public function resetPassword($password)
     {
-        $this->password = $password;
-        return $this->save(false);
+        return (bool) $this->updateAttributes(['password_hash' => Password::hash($password)]);
     }
 
     /**

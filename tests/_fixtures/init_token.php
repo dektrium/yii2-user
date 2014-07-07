@@ -14,5 +14,17 @@ return [
         'code' => 'qxYa315rqRgCOjYGk82GFHMEAV3T82AX',
         'type' => \dektrium\user\models\Token::TYPE_CONFIRMATION,
         'created_at' => $time - 86401
+    ],
+    'expired_recovery' => [
+        'user_id' => 5,
+        'code' => 'a5839d0e73b9c525942c2f59e88c1aaf',
+        'type' => \dektrium\user\models\Token::TYPE_RECOVERY,
+        'created_at' => $time - 21601
+    ],
+    'recovery' => [
+        'user_id' => 6,
+        'code' => '6f5d0dad53ef73e6ba6f01a441c0e602',
+        'type' => \dektrium\user\models\Token::TYPE_RECOVERY,
+        'created_at' => $time
     ]
 ];

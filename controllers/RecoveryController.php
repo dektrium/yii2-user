@@ -14,6 +14,7 @@ namespace dektrium\user\controllers;
 use yii\web\Controller;
 use yii\filters\AccessControl;
 use yii\base\InvalidParamException;
+use yii\web\NotFoundHttpException;
 
 /**
  * RecoveryController manages password recovery process.
@@ -34,9 +35,9 @@ class RecoveryController extends Controller
                 'class' => AccessControl::className(),
                 'rules' => [
                     [
-                        'allow' => true,
+                        'allow'   => true,
                         'actions' => ['request', 'reset'],
-                        'roles' => ['?']
+                        'roles'   => ['?']
                     ],
                 ]
             ],
@@ -54,9 +55,7 @@ class RecoveryController extends Controller
         $model = $this->module->manager->createRecoveryRequestForm();
 
         if ($model->load(\Yii::$app->getRequest()->post()) && $model->sendRecoveryMessage()) {
-            return $this->render('messageSent', [
-                'model' => $model
-            ]);
+            return $this->render('finish');
         }
 
         return $this->render('request', [
@@ -67,20 +66,23 @@ class RecoveryController extends Controller
     /**
      * Displays page where user can reset password.
      *
-     * @param $id
-     * @param $token
+     * @param  integer $id
+     * @param  string  $token
      * @return string
      * @throws \yii\web\NotFoundHttpException
      */
     public function actionReset($id, $token)
     {
+        if (($token = $this->module->manager->findToken($id, $token)) == null) {
+            throw new NotFoundHttpException;
+        }
         try {
             $model = $this->module->manager->createRecoveryForm([
-                'id' => $id,
                 'token' => $token
             ]);
         } catch (InvalidParamException $e) {
-            return $this->render('invalidToken');
+            \Yii::$app->session->setFlash('user.invalid_token');
+            return $this->render('finish');
         }
 
         if ($model->load(\Yii::$app->getRequest()->post()) && $model->resetPassword()) {

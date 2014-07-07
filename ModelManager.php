@@ -23,8 +23,8 @@ use yii\base\Component;
  * @method models\RegistrationForm    createRegistrationForm
  * @method models\ResendForm          createResendForm
  * @method models\LoginForm           createLoginForm
- * @method models\RecoveryForm        createPasswordRecoveryForm
- * @method models\RecoveryRequestForm createPasswordRecoveryRequestForm
+ * @method models\RecoveryForm        createRecoveryForm
+ * @method models\RecoveryRequestForm createRecoveryRequestForm
  * @method \yii\db\ActiveQuery        createUserQuery
  * @method \yii\db\ActiveQuery        createTokenQuery
  * @method \yii\db\ActiveQuery        createProfileQuery

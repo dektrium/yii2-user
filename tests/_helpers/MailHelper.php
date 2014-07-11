@@ -3,7 +3,7 @@
 namespace Codeception\Module;
 
 use Codeception\Module;
-use Guzzle\Http\Client;
+use GuzzleHttp\Client;
 
 class MailHelper extends Module
 {
@@ -27,7 +27,7 @@ class MailHelper extends Module
      */
     public function _initialize() {
         $url = $this->config['url'] . ':' . $this->config['port'];
-        $this->mailcatcher = new Client($url);
+        $this->mailcatcher = new Client(['base_url'=>$url]);
     }
 
     /**

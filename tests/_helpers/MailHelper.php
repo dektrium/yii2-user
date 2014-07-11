@@ -8,7 +8,7 @@ use GuzzleHttp\Client;
 class MailHelper extends Module
 {
     /**
-     * @var \Guzzle\Http\Client
+     * @var \GuzzleHttp\Client
      */
     private $mailcatcher;
 
@@ -89,7 +89,7 @@ class MailHelper extends Module
      */
     protected function getMessages()
     {
-        $jsonResponse = $this->mailcatcher->get('/messages')->send();
+        $jsonResponse = $this->mailcatcher->get('/messages');
         return json_decode($jsonResponse->getBody());
     }
 }

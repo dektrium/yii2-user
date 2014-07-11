@@ -35,7 +35,7 @@ class MailHelper extends Module
      */
     public function cleanEmails()
     {
-        $this->mailcatcher->delete('/messages')->send();
+        $this->mailcatcher->delete('/messages');
     }
 
     /**
@@ -45,7 +45,7 @@ class MailHelper extends Module
      */
     public function seeInEmail($needle)
     {
-        $response = $this->mailcatcher->get("/messages/{$this->getLastMessage()->id}.html")->send();
+        $response = $this->mailcatcher->get("/messages/{$this->getLastMessage()->id}.html");
         $this->assertContains($needle, (string) $response->getBody());
     }
 
@@ -66,7 +66,7 @@ class MailHelper extends Module
      */
     public function seeInEmailRecipients($needle)
     {
-        $response = $this->mailcatcher->get("/messages/{$this->getLastMessage()->id}.json")->send();
+        $response = $this->mailcatcher->get("/messages/{$this->getLastMessage()->id}.json");
         $email = json_decode($response->getBody());
         $this->assertContains('<' . $needle . '>', $email->recipients);
     }

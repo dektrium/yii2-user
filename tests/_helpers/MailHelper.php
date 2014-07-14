@@ -3,12 +3,12 @@
 namespace Codeception\Module;
 
 use Codeception\Module;
-use Guzzle\Http\Client;
+use GuzzleHttp\Client;
 
 class MailHelper extends Module
 {
     /**
-     * @var \Guzzle\Http\Client
+     * @var \GuzzleHttp\Client
      */
     private $mailcatcher;
 
@@ -27,7 +27,7 @@ class MailHelper extends Module
      */
     public function _initialize() {
         $url = $this->config['url'] . ':' . $this->config['port'];
-        $this->mailcatcher = new Client($url);
+        $this->mailcatcher = new Client(['base_url'=>$url]);
     }
 
     /**
@@ -35,7 +35,7 @@ class MailHelper extends Module
      */
     public function cleanEmails()
     {
-        $this->mailcatcher->delete('/messages')->send();
+        $this->mailcatcher->delete('/messages');
     }
 
     /**
@@ -45,7 +45,7 @@ class MailHelper extends Module
      */
     public function seeInEmail($needle)
     {
-        $response = $this->mailcatcher->get("/messages/{$this->getLastMessage()->id}.html")->send();
+        $response = $this->mailcatcher->get("/messages/{$this->getLastMessage()->id}.html");
         $this->assertContains($needle, (string) $response->getBody());
     }
 
@@ -66,7 +66,7 @@ class MailHelper extends Module
      */
     public function seeInEmailRecipients($needle)
     {
-        $response = $this->mailcatcher->get("/messages/{$this->getLastMessage()->id}.json")->send();
+        $response = $this->mailcatcher->get("/messages/{$this->getLastMessage()->id}.json");
         $email = json_decode($response->getBody());
         $this->assertContains('<' . $needle . '>', $email->recipients);
     }
@@ -89,7 +89,7 @@ class MailHelper extends Module
      */
     protected function getMessages()
     {
-        $jsonResponse = $this->mailcatcher->get('/messages')->send();
+        $jsonResponse = $this->mailcatcher->get('/messages');
         return json_decode($jsonResponse->getBody());
     }
 }

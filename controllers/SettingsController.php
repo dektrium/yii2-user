@@ -102,7 +102,7 @@ class SettingsController extends Controller
         $model->scenario = 'update_email';
 
         if ($model->load(\Yii::$app->getRequest()->post()) && $model->updateEmail()) {
-            $this->refresh();
+            return $this->refresh();
         }
 
         return $this->render('email', [

@@ -22,10 +22,24 @@ $this->title = Yii::t('user', 'Email settings');
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="row">
-    <?php if (Yii::$app->getSession()->hasFlash('settings_saved')): ?>
+    <?php if (Yii::$app->getSession()->hasFlash('user.reconfirmation_sent')): ?>
         <div class="col-md-12">
-            <div class="alert alert-success">
-                <?= Yii::$app->getSession()->getFlash('settings_saved') ?>
+            <div class="alert alert-info">
+                <?= Yii::t('user', 'Before your email will be changed we need you to confirm your new email address') ?>
+            </div>
+        </div>
+    <?php endif; ?>
+    <?php if (Yii::$app->getSession()->hasFlash('user.email_changed')): ?>
+        <div class="col-md-12">
+            <div class="alert alert-info">
+                <?= Yii::t('user', 'Your email has been successfully changed') ?>
+            </div>
+        </div>
+    <?php endif; ?>
+    <?php if (Yii::$app->getSession()->hasFlash('user.email_change_cancelled')): ?>
+        <div class="col-md-12">
+            <div class="alert alert-info">
+                <?= Yii::t('user', 'Email change has been cancelled') ?>
             </div>
         </div>
     <?php endif; ?>
@@ -55,11 +69,6 @@ $this->params['breadcrumbs'][] = $this->title;
                 <?= Html::encode($this->title) ?>
             </div>
             <div class="panel-body">
-                <?php if (!empty($model->unconfirmed_email)): ?>
-                    <div class="alert alert-warning"><?= Yii::t('user', 'Before your email will be changed we need you to confirm your new email address') ?>
-                        <?= \yii\helpers\Html::a(Yii::t('user', 'Cancel email change'), Url::to(['reset']), ['class' => 'btn btn-danger btn-xs', 'data-method' => 'post']) ?>
-                    </div>
-                <?php endif; ?>
                 <?php $form = \yii\widgets\ActiveForm::begin([
                     'id' => 'profile-form',
                     'options' => ['class' => 'form-horizontal'],
@@ -69,14 +78,7 @@ $this->params['breadcrumbs'][] = $this->title;
                     ],
                 ]); ?>
 
-                <div class="form-group">
-                    <label class="col-lg-3 control-label"><?= Yii::t('user', 'Current email') ?></label>
-                    <div class="col-lg-9">
-                        <p class="form-control-static"><?= $model->email ?></p>
-                    </div>
-                </div>
-
-                <?= $form->field($model, 'unconfirmed_email') ?>
+                <?= $form->field($model, 'unconfirmed_email')->hint('Enter your current email to cancel email change') ?>
 
                 <?= $form->field($model, 'current_password')->passwordInput() ?>
 

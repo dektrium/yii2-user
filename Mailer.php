@@ -51,7 +51,7 @@ class Mailer extends Component
     /**
      * Sends an email to a user with confirmation link.
      *
-     * @param  User $user
+     * @param  User  $user
      * @param  Token $token
      * @return bool
      */
@@ -65,9 +65,25 @@ class Mailer extends Component
     }
 
     /**
+     * Sends an email to a user with reconfirmation link.
+     *
+     * @param  User  $user
+     * @param  Token $token
+     * @return bool
+     */
+    public function sendReconfirmationMessage(User $user, Token $token)
+    {
+        return $this->sendMessage($user->unconfirmed_email,
+            \Yii::t('user', 'Confirm your email change on {0}', \Yii::$app->name),
+            'reconfirmation',
+            ['user' => $user, 'token' => $token]
+        );
+    }
+
+    /**
      * Sends an email to a user with recovery link.
      *
-     * @param  User $user
+     * @param  User  $user
      * @param  Token $token
      * @return bool
      */

@@ -23,7 +23,7 @@ class m140504_113157_create_user_table extends Migration
             'id'                => Schema::TYPE_PK,
             'username'          => Schema::TYPE_STRING . ' NOT NULL',
             'email'             => Schema::TYPE_STRING . ' NOT NULL',
-            'unconfirmed_email' => Schema::TYPE_STRING . ' NOT NULL',
+            'unconfirmed_email' => Schema::TYPE_STRING,
             'password_hash'     => Schema::TYPE_STRING . '(60) NOT NULL',
             'auth_key'          => Schema::TYPE_STRING . '(32) NOT NULL',
             'registration_ip'   => Schema::TYPE_INTEGER,

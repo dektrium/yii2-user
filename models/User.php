@@ -39,8 +39,6 @@ use yii\web\IdentityInterface;
  * @property Account[] $accounts
  * @property Profile   $profile
  *
- * @property \dektrium\user\Module $module
- *
  * @author Dmitry Erofeev <dmeroff@gmail.com>
  */
 class User extends ActiveRecord implements IdentityInterface
@@ -211,9 +209,16 @@ class User extends ActiveRecord implements IdentityInterface
             throw new \InvalidArgumentException;
         }
 
+        if ($this->unconfirmed_email === null) {
+            $this->confirmed_at = time();
+        } else {
+            $this->email = $this->unconfirmed_email;
+            $this->unconfirmed_email = null;
+        }
+
         $token->delete();
 
-        return (bool) $this->updateAttributes(['confirmed_at' => time()]);
+        return $this->save(false);
     }
 
     /**
@@ -225,12 +230,24 @@ class User extends ActiveRecord implements IdentityInterface
     {
         if ($this->validate()) {
             if ($this->module->confirmable) {
-                // TODO: send confirmation messages
+                if ($this->unconfirmed_email == $this->email || $this->unconfirmed_email == null) {
+                    $this->unconfirmed_email = null;
+                    \Yii::$app->session->setFlash('user.email_change_cancelled');
+                } else {
+                    $token = $this->module->manager->createToken([
+                        'user_id' => $this->id,
+                        'type'    => Token::TYPE_CONFIRMATION
+                    ]);
+                    $token->save(false);
+                    $this->module->mailer->sendReconfirmationMessage($this, $token);
+                    \Yii::$app->session->setFlash('user.reconfirmation_sent');
+                }
+                $this->save(false);
             } else {
                 $this->email = $this->unconfirmed_email;
                 $this->unconfirmed_email = null;
+                \Yii::$app->session->setFlash('user.email_changed');
             }
-
             return true;
         }
 

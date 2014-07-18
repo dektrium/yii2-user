@@ -5,6 +5,7 @@ namespace dektrium\user\tests;
 use Codeception\Specify;
 use dektrium\user\models\RecoveryForm;
 use dektrium\user\tests\_fixtures\UserFixture;
+use dektrium\user\tests\_fixtures\TokenFixture;
 use yii\codeception\TestCase;
 use yii\base\InvalidParamException;
 
@@ -22,41 +23,46 @@ class RecoveryFormTest extends TestCase
                 'class' => UserFixture::className(),
                 'dataFile' => '@tests/_fixtures/init_user.php'
             ],
+            'token' => [
+                'class' => TokenFixture::className(),
+                'dataFile' => '@tests/_fixtures/init_token.php'
+            ]
         ];
     }
 
     public function testFormCreation()
     {
         $this->specify('should accept id and token on creation', function () {
-            $user = $this->getFixture('user')->getModel('user_with_recovery_token');
-            $form = new RecoveryForm(['id' => $user->id, 'token' => $user->recovery_token]);
+            $token = $this->getFixture('token')->getModel('recovery');
+            $form = new RecoveryForm(['token' => $token]);
             verify($form instanceof RecoveryForm)->true();
         });
 
-        $this->specify('should throw exception if user not found', function () {
+        $this->specify('should throw exception if token is null', function () {
             try {
-                $form = new RecoveryForm(['id' => 42, 'token' => 'NO2aCmBIjFQX624xmAc3VBu7Th3NJoa6']);
+                $form = new RecoveryForm([
+                    'token' => null]);
             } catch (\Exception $e) {
-                verify($e instanceof InvalidParamException)->true();
-                verify($e->getMessage())->equals('Wrong password reset token');
+                verify($e instanceof \RuntimeException)->true();
+                verify($e->getMessage())->equals('Token should be passed to config');
             }
         });
 
         $this->specify('should throw exception if recovery token expired', function () {
             try {
-                $user = $this->getFixture('user')->getModel('user_with_expired_recovery_token');
-                $form = new RecoveryForm(['id' => $user->id, 'token' => $user->recovery_token]);
+                $token = $this->getFixture('token')->getModel('expired_recovery');
+                $form = new RecoveryForm(['token' => $token]);
             } catch (\Exception $e) {
                 verify($e instanceof InvalidParamException)->true();
-                verify($e->getMessage())->equals('Token has been expired');
+                verify($e->getMessage())->equals('Invalid token');
             }
         });
     }
 
     public function testFormValidation()
     {
-        $user = $this->getFixture('user')->getModel('user_with_recovery_token');
-        $form = new RecoveryForm(['id' => $user->id, 'token' => $user->recovery_token]);
+        $token = $this->getFixture('token')->getModel('recovery');
+        $form = new RecoveryForm(['token' => $token]);
         $this->specify('password is required', function () use ($form) {
             verify($form->validate(['password']))->false();
         });

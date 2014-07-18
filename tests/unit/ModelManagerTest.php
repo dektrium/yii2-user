@@ -5,6 +5,7 @@ namespace dektrium\user\tests\unit;
 use Codeception\Specify;
 use dektrium\user\ModelManager;
 use dektrium\user\tests\_fixtures\UserFixture;
+use dektrium\user\tests\_fixtures\TokenFixture;
 use yii\codeception\TestCase;
 
 class ModelManagerTest extends TestCase
@@ -26,6 +27,10 @@ class ModelManagerTest extends TestCase
                 'class' => UserFixture::className(),
                 'dataFile' => '@tests/_fixtures/init_user.php'
             ],
+            'token' => [
+                'class' => TokenFixture::className(),
+                'dataFile' => '@tests/_fixtures/init_token.php'
+            ]
         ];
     }
 
@@ -91,9 +96,9 @@ class ModelManagerTest extends TestCase
         });
 
         $this->specify('should create new password recovery form', function () {
+            $token = $this->getFixture('token')->getModel('recovery');
             $model = $this->manager->createRecoveryForm([
-                'id' => 6,
-                'token' => 'NO2aCmBIjFQX624xmAc3VBu7Th3NJoa6'
+                'token' => $token
             ]);
             $this->assertInstanceOf($this->manager->recoveryFormClass, $model);
         });
@@ -123,18 +128,6 @@ class ModelManagerTest extends TestCase
             $user = $this->manager->findUserByUsernameOrEmail($expected->email);
             verify($user->username)->equals($expected->username);
             verify($user->email)->equals($expected->email);
-        });
-
-        $this->specify('should find user by confirmation token', function () {
-            $expected = $this->getFixture('user')->getModel('unconfirmed');
-            $user = $this->manager->findUserByIdAndConfirmationToken($expected->id, $expected->confirmation_token);
-            verify($user->username)->equals($expected->username);
-        });
-
-        $this->specify('should find user by recovery token', function () {
-            $expected = $this->getFixture('user')->getModel('user_with_recovery_token');
-            $user = $this->manager->findUserByIdAndRecoveryToken($expected->id, $expected->recovery_token);
-            verify($user->username)->equals($expected->username);
         });
     }
 }

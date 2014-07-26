@@ -407,7 +407,7 @@ class User extends ActiveRecord implements IdentityInterface
             return null;
         }
 
-        return Url::to(['/user/registration/confirm', 'id' => $this->id, 'token' => $this->confirmation_token], true);
+        return Url::to([['/user/registration/confirm'], 'id' => $this->id, 'token' => $this->confirmation_token], true);
     }
 
     /**
@@ -462,7 +462,7 @@ class User extends ActiveRecord implements IdentityInterface
      */
     public function getRecoveryUrl()
     {
-        return Url::to(['/user/recovery/reset',
+        return Url::to([['/user/recovery/reset'],
             'id' => $this->id,
             'token' => $this->recovery_token
         ], true);

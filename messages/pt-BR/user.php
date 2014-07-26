@@ -13,7 +13,7 @@ return array (
   'Are you sure to confirm this user?' => 'Tem certeza que quer confirmar este usuário?',
   'Are you sure to delete this user?' => 'Tem certeza que quer apagar este usuário?',
   'Are you sure to unblock this user?' => 'Tem certeza que quer desbloquear este usuário?',
-  'Awesome, almost there! We need to confirm your email address.' => 'Perfeito, está quase! Nós temos que confirmar o seu endereço de email.',
+  'Awesome, almost there! We need to confirm your email address.' => 'Perfeito, está quase! Agora precisamos confirmar o seu endereço de email.',
   'Awesome! You have successfully confirmed your email address. You may sign in using your credentials now.' => 'Perfeito! Você confirmou com sucesso o seu endereço de email. Agora você pode fazer login com as suas credenciais.',
   'Before your email will be changed we need you to confirm your new email address' => 'Antes de modificar o seu endereço de email precisamos confirmar o seu novo email',
   'Bio' => 'Biografia',

@@ -84,7 +84,7 @@ class Mailer extends Component
      */
     protected function sendMessage($to, $subject, $view, User $user)
     {
-        $mail = \Yii::$app->mail;
+        $mail = \Yii::$app->mailer;
         $mail->viewPath = $this->viewPath;
 
         return $mail->compose($view, ['user' => $user])

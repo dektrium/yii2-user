@@ -318,7 +318,7 @@ class User extends ActiveRecord implements IdentityInterface
     {
         if ($this->validate()) {
             if ($this->module->confirmable) {
-                $this->confirmation_token = Yii::$app->getSecurity()->generateRandomKey();
+                $this->confirmation_token = Yii::$app->getSecurity()->generateRandomString();
                 $this->confirmation_sent_at = time();
                 $this->save(false);
                 $this->module->mailer->sendReconfirmationMessage($this);
@@ -393,7 +393,7 @@ class User extends ActiveRecord implements IdentityInterface
      */
     protected function generateConfirmationData()
     {
-        $this->confirmation_token = Yii::$app->getSecurity()->generateRandomKey();
+        $this->confirmation_token = Yii::$app->getSecurity()->generateRandomString();
         $this->confirmation_sent_at = time();
         $this->confirmed_at = null;
     }
@@ -473,7 +473,7 @@ class User extends ActiveRecord implements IdentityInterface
      */
     public function sendRecoveryMessage()
     {
-        $this->recovery_token = Yii::$app->getSecurity()->generateRandomKey();
+        $this->recovery_token = Yii::$app->getSecurity()->generateRandomString();
         $this->recovery_sent_at = time();
         $this->save(false);
 

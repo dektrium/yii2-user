@@ -42,7 +42,7 @@ class UserTest extends TestCase
 
         $this->specify('username is valid', function () {
             verify('username is required', $this->user->validate(['username']))->false();
-            $this->user->username = Yii::$app->getSecurity()->generateRandomKey();
+            $this->user->username = Yii::$app->getSecurity()->generateRandomString();
             verify('username is too long', $this->user->validate(['username']))->false();
             $this->user->username = '!@# абв';
             verify('username contains invalid characters', $this->user->validate(['username']))->false();

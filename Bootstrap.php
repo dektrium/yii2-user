@@ -46,18 +46,19 @@ class Bootstrap implements BootstrapInterface
                 'identityClass' => $identityClass
             ]);
 
-            $app->get('urlManager')->rules[] = new GroupUrlRule([
-                'prefix' => 'user',
-                'rules' => [
-                    '<id:\d+>' => 'profile/show',
-                    '<action:(login|logout)>' => 'security/<action>',
-                    '<action:(register|resend)>' => 'registration/<action>',
-                    'confirm/<id:\d+>/<token:\w+>' => 'registration/confirm',
-                    'forgot' => 'recovery/request',
-                    'recover/<id:\d+>/<token:\w+>' => 'recovery/reset',
-                    'settings/<action:\w+>' => 'settings/<action>'
-                ]
-            ]);
+            /** @var $module Module */
+            $module = $app->getModule('user');
+
+            $configUrlRule = [
+                'prefix' => $module->urlPrefix,
+                'rules' => $module->urlRules
+            ];
+
+            if ($module->urlPrefix != 'user') {
+                $configUrlRule['routePrefix'] = 'user';
+            }
+
+            $app->get('urlManager')->rules[] = new GroupUrlRule($configUrlRule);
 
             if (!$app->has('authClientCollection')) {
                 $app->set('authClientCollection', [

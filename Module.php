@@ -66,6 +66,12 @@ class Module extends BaseModule
     public $admins = [];
 
     /**
+     * @var string The prefix for user module URL.
+     * @See [[GroupUrlRule::prefix]]
+     */
+    public $urlPrefix = 'user';
+
+    /**
      * @inheritdoc
      */
     public function __construct($id, $parent = null, $config = [])

@@ -111,25 +111,6 @@ class SettingsController extends Controller
     }
 
     /**
-     * Resets email update.
-     *
-     * @return \yii\web\Response
-     * @throws \yii\web\NotFoundHttpException
-     */
-    public function actionReset()
-    {
-        if ($this->module->confirmable) {
-            $model = $this->module->manager->findUserById(\Yii::$app->user->identity->getId());
-            $model->resetEmailUpdate();
-            \Yii::$app->getSession()->setFlash('settings_saved', \Yii::t('user', 'Email change has been cancelled'));
-
-            return $this->redirect(['email']);
-        }
-
-        throw new NotFoundHttpException;
-    }
-
-    /**
      * Shows password settings form.
      *
      * @return string|\yii\web\Response

@@ -26,7 +26,8 @@ return [
         'log'   => null,
         'cache' => null,
         'request' => [
-            'enableCsrfValidation' => false
+            'enableCsrfValidation'   => false,
+            'enableCookieValidation' => false
         ],
         'db' => $db,
         'mail' => [

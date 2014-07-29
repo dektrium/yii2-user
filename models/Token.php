@@ -86,7 +86,7 @@ class Token extends ActiveRecord
     {
         if ($insert) {
             $this->setAttribute('created_at', time());
-            $this->setAttribute('code', \Yii::$app->security->generateRandomKey());
+            $this->setAttribute('code', \Yii::$app->security->generateRandomString());
         }
 
         return parent::beforeSave($insert);

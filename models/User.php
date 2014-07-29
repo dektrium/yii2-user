@@ -76,11 +76,19 @@ class User extends ActiveRecord implements IdentityInterface
     }
 
     /**
-     * @return \yii\db\ActiveQuery
+     * @return Account[] Connected accounts ($provider => $account)
      */
     public function getAccounts()
     {
-        return $this->hasMany($this->module->manager->accountClass, ['user_id' => 'id']);
+        $connected = [];
+        $accounts  = $this->hasMany($this->module->manager->accountClass, ['user_id' => 'id'])->all();
+
+        /** @var Account $account */
+        foreach ($accounts as $account) {
+            $connected[$account->provider] = $account;
+        }
+
+        return $connected;
     }
 
     /** @inheritdoc */

@@ -137,7 +137,7 @@ class SettingsController extends Controller
      */
     public function actionNetworks()
     {
-        $user = $this->module->manager->findUser(['id' => \Yii::$app->user->id])->with('accounts')->one();
+        $user = $this->module->manager->findUser(['id' => \Yii::$app->user->id])->one();
 
         return $this->render('accounts', [
             'user' => $user
@@ -182,7 +182,7 @@ class SettingsController extends Controller
             $account = $this->module->manager->createAccount([
                 'provider'   => $provider,
                 'client_id'  => $clientId,
-                'properties' => json_encode($attributes),
+                'data'       => json_encode($attributes),
                 'user_id'    => \Yii::$app->user->id
             ]);
             $account->save(false);

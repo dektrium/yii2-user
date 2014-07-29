@@ -63,7 +63,7 @@ $this->params['breadcrumbs'][] = $this->title;
             <div class="panel-body">
                 <?php $auth = Connect::begin([
                     'baseAuthUrl' => ['/user/settings/connect'],
-                    'accounts'    => $user->connectedAccounts,
+                    'accounts'    => $user->accounts,
                     'autoRender'  => false,
                     'popupMode'   => false
                 ]) ?>

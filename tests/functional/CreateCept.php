@@ -1,5 +1,7 @@
 <?php
 
+use dektrium\user\models\Token;
+use dektrium\user\models\User;
 use dektrium\user\tests\_pages\CreatePage;
 use dektrium\user\tests\_pages\LoginPage;
 
@@ -24,6 +26,5 @@ $I->see('toster');
 $I->see('toster@example.com');
 
 Yii::$app->user->logout();
-$I->grabRecord('dektrium\user\models\User', ['email' => 'toster@example.com'])->confirm();
 LoginPage::openBy($I)->login('toster@example.com', 'toster');
 $I->see('Logout');

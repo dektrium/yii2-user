@@ -37,9 +37,9 @@ $this->params['breadcrumbs'][] = $this->title;
         'username',
         'email:email',
         [
-            'attribute' => 'registered_from',
+            'attribute' => 'registration_ip',
             'value' => function ($model, $index, $widget) {
-                    return $model->registered_from == null ? '<span class="not-set">' . Yii::t('user', '(not set)') . '</span>' : long2ip($model->registered_from);
+                    return $model->registration_ip == null ? '<span class="not-set">' . Yii::t('user', '(not set)') . '</span>' : long2ip($model->registration_ip);
                 },
             'format' => 'html',
         ],

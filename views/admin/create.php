@@ -38,8 +38,6 @@ $this->params['breadcrumbs'][] = $this->title;
 
         <?= $form->field($model, 'password')->passwordInput() ?>
 
-        <?= $form->field($model, 'role')->textInput(['maxlength' => 255]) ?>
-
         <div class="form-group">
             <?= Html::submitButton(Yii::t('user', 'Save'), ['class' => 'btn btn-success']) ?>
         </div>

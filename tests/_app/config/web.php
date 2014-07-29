@@ -30,7 +30,7 @@ return [
             'enableCookieValidation' => false
         ],
         'db' => $db,
-        'mail' => [
+        'mailer' => [
             'class' => 'yii\swiftmailer\Mailer',
             'transport' => [
                 'class' => 'Swift_SmtpTransport',

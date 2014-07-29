@@ -26,9 +26,6 @@ $this->params['breadcrumbs'][] = $this->title;
     <?php if (!$model->getIsConfirmed()): ?>
         <?= Html::a(Yii::t('user', 'Confirm'), ['confirm', 'id' => $model->id], ['class' => 'btn btn-success btn-xs', 'data-method' => 'post']) ?>
     <?php endif; ?>
-    <?php if (!is_null($model->recovery_token)): ?>
-        <?= Html::a(Yii::t('user', 'Delete recovery tokens'), ['delete-tokens', 'id' => $model->id], ['class' => 'btn btn-warning btn-xs', 'data-method' => 'post']) ?>
-    <?php endif; ?>
     <?php if ($model->getIsBlocked()): ?>
         <?= Html::a(Yii::t('user', 'Unblock'), ['block', 'id' => $model->id], ['class' => 'btn btn-success btn-xs', 'data-method' => 'post', 'data-confirm' => Yii::t('user', 'Are you sure to block this user?')]) ?>
     <?php else: ?>
@@ -45,15 +42,12 @@ $this->params['breadcrumbs'][] = $this->title;
 <div class="panel panel-info">
     <div class="panel-heading"><?= Yii::t('user', 'Information') ?></div>
     <div class="panel-body">
-        <?= Yii::t('user', 'Registered at {0, date, MMMM dd, YYYY HH:mm} from {1}', [$model->created_at, is_null($model->registered_from) ? 'N/D' : long2ip($model->registered_from)]) ?>
+        <?= Yii::t('user', 'Registered at {0, date, MMMM dd, YYYY HH:mm} from {1}', [$model->created_at, is_null($model->registration_ip) ? 'N/D' : long2ip($model->registration_ip)]) ?>
         <br/>
         <?php if (Yii::$app->getModule('user')->confirmable && $model->getIsConfirmed()): ?>
             <?= Yii::t('user', 'Confirmed at {0, date, MMMM dd, YYYY HH:mm}', [$model->created_at]) ?>
             <br/>
         <?php endif; ?>
-        <?php if (!is_null($model->logged_in_at)): ?>
-            <?= Yii::t('user', 'Last login at {0, date, MMMM dd, YYYY HH:mm} from {1}', [$model->logged_in_at, long2ip($model->logged_in_from)]) ?>
-        <?php endif;?>
         <?php if ($model->getIsBlocked()): ?>
             <?= Yii::t('user', 'Blocked at {0, date, MMMM dd, YYYY HH:mm}', [$model->blocked_at]) ?>
         <?php endif;?>
@@ -72,8 +66,6 @@ $this->params['breadcrumbs'][] = $this->title;
         <?= $form->field($model, 'email')->textInput(['maxlength' => 255]) ?>
 
         <?= $form->field($model, 'password')->passwordInput() ?>
-
-        <?= $form->field($model, 'role')->textInput(['maxlength' => 255]) ?>
 
         <div class="form-group">
             <?= Html::submitButton(Yii::t('user', 'Save'), ['class' => 'btn btn-primary']) ?>

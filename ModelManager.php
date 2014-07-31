@@ -62,11 +62,10 @@ class ModelManager extends Component
     public $recoveryRequestFormClass = 'dektrium\user\models\RecoveryRequestForm';
 
     /**
-     * Finds a user by id.
+     * Finds a user by the given id.
      *
-     * @param integer $id
-     *
-     * @return null|models\User
+     * @param  integer     $id User id to be used on search.
+     * @return models\User
      */
     public function findUserById($id)
     {
@@ -74,11 +73,10 @@ class ModelManager extends Component
     }
 
     /**
-     * Finds a user by username.
+     * Finds a user by the given username.
      *
-     * @param string $username
-     *
-     * @return null|models\User
+     * @param  string      $username Username to be used on search.
+     * @return models\User
      */
     public function findUserByUsername($username)
     {
@@ -86,11 +84,10 @@ class ModelManager extends Component
     }
 
     /**
-     * Finds a user by email.
+     * Finds a user by the given email.
      *
-     * @param string $email
-     *
-     * @return null|models\User
+     * @param  string      $email Email to be used on search.
+     * @return models\User
      */
     public function findUserByEmail($email)
     {
@@ -98,24 +95,24 @@ class ModelManager extends Component
     }
 
     /**
-     * Finds a user either by email, or username.
+     * Finds a user by the given username or email.
      *
-     * @param string $value
-     *
-     * @return null|models\User
+     * @param  string      $usernameOrEmail Username or email to be used on search.
+     * @return models\User
      */
-    public function findUserByUsernameOrEmail($value)
+    public function findUserByUsernameOrEmail($usernameOrEmail)
     {
-        if (filter_var($value, FILTER_VALIDATE_EMAIL)) {
-            return $this->findUserByEmail($value);
+        if (filter_var($usernameOrEmail, FILTER_VALIDATE_EMAIL)) {
+            return $this->findUserByEmail($usernameOrEmail);
         }
 
-        return $this->findUserByUsername($value);
+        return $this->findUserByUsername($usernameOrEmail);
     }
+
     /**
-     * Finds a user
+     * Finds a user by the given condition.
      *
-     * @param  $condition
+     * @param  mixed               $condition Condition to be used on search.
      * @return \yii\db\ActiveQuery
      */
     public function findUser($condition)

@@ -45,7 +45,7 @@ class AdminController extends Controller
                 'class' => AccessControl::className(),
                 'rules' => [
                     [
-                        'actions' => ['index', 'create', 'update', 'delete', 'block', 'confirm', 'delete-tokens'],
+                        'actions' => ['index', 'create', 'update', 'delete', 'block', 'confirm'],
                         'allow' => true,
                         'roles' => ['@'],
                         'matchCallback' => function ($rule, $action) {
@@ -121,22 +121,6 @@ class AdminController extends Controller
     {
         $this->findModel($id)->confirm(false);
         \Yii::$app->getSession()->setFlash('admin_user', \Yii::t('user', 'User has been confirmed'));
-
-        return $this->redirect(['update', 'id' => $id]);
-    }
-
-    /**
-     * Deletes recovery tokens.
-     * @param $id
-     * @return \yii\web\Response
-     */
-    public function actionDeleteTokens($id)
-    {
-        $model = $this->findModel($id);
-        $model->recovery_token = null;
-        $model->recovery_sent_at = null;
-        $model->save(false);
-        \Yii::$app->getSession()->setFlash('admin_user', \Yii::t('user', 'All user tokens have been deleted'));
 
         return $this->redirect(['update', 'id' => $id]);
     }

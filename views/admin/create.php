@@ -21,6 +21,9 @@ $this->title = Yii::t('user', 'Create a user account');
 $this->params['breadcrumbs'][] = ['label' => Yii::t('user', 'Users'), 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 ?>
+
+<?php echo $this->render('flash') ?>
+
 <div class="panel panel-default">
     <div class="panel-heading">
         <?= Html::encode($this->title) ?>

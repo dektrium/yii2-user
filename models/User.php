@@ -16,6 +16,7 @@ use dektrium\user\helpers\Password;
 use yii\base\NotSupportedException;
 use yii\behaviors\TimestampBehavior;
 use yii\db\ActiveRecord;
+use yii\log\Logger;
 use yii\web\IdentityInterface;
 
 /**
@@ -44,6 +45,9 @@ use yii\web\IdentityInterface;
 class User extends ActiveRecord implements IdentityInterface
 {
     use ModuleTrait;
+
+    const USER_CREATE_INIT = 'user_create_init';
+    const USER_CREATE_DONE = 'user_create_done';
 
     /** @var string Plain password. Used for model validation. */
     public $password;
@@ -179,27 +183,36 @@ class User extends ActiveRecord implements IdentityInterface
         return $this->getAttribute('auth_key') == $authKey;
     }
 
+
     /**
-     * Creates a user.
+     * This method is used to create new user account. If credentials array does not include password, this method
+     * will generate new 8-char password. After saving user to database, this method uses mailer component to send
+     * credentials (username and password) to user via email.
      *
+     * @param  array $credentials The user credentials and attributes.
      * @return bool
      */
-    public function create()
+    public function create($credentials = [])
     {
-        if (!$this->getIsNewRecord()) {
-            throw new \RuntimeException('Calling "'.__CLASS__.'::create()" on existing user');
+        if ($this->getIsNewRecord() == false) {
+            throw new \RuntimeException('Calling "' . __CLASS__ . '::' . __METHOD__ . '" on existing user');
         }
+
+        $this->confirmed_at = time();
 
         if ($this->password == null) {
             $this->password = Password::generate(8);
         }
 
-        $this->confirmed_at = time();
+        $this->trigger(self::USER_CREATE_INIT);
 
         if ($this->save()) {
+            $this->trigger(self::USER_CREATE_DONE);
             $this->module->mailer->sendWelcomeMessage($this);
+            \Yii::getLogger()->log('User has been created', Logger::LEVEL_INFO);
             return true;
         }
+        \Yii::getLogger()->log('An error occurred while creating user account', Logger::LEVEL_ERROR);
 
         return false;
     }

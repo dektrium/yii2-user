@@ -23,11 +23,7 @@ $this->params['breadcrumbs'][] = $this->title;
 ?>
 <h1><?= Html::encode($this->title) ?> <?= Html::a(Yii::t('user', 'Create a user account'), ['create'], ['class' => 'btn btn-success']) ?></h1>
 
-<?php if (Yii::$app->getSession()->hasFlash('admin_user')): ?>
-    <div class="alert alert-success">
-        <p><?= Yii::$app->getSession()->getFlash('admin_user') ?></p>
-    </div>
-<?php endif; ?>
+<?php echo $this->render('flash') ?>
 
 <?php echo GridView::widget([
     'dataProvider' => $dataProvider,

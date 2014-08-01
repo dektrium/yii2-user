@@ -33,11 +33,7 @@ $this->params['breadcrumbs'][] = $this->title;
     <?php endif; ?>
 </h1>
 
-<?php if (Yii::$app->getSession()->hasFlash('admin_user')): ?>
-    <div class="alert alert-success">
-        <p><?= Yii::$app->getSession()->getFlash('admin_user') ?></p>
-    </div>
-<?php endif; ?>
+<?php echo $this->render('flash') ?>
 
 <div class="panel panel-info">
     <div class="panel-heading"><?= Yii::t('user', 'Information') ?></div>

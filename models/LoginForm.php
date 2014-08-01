@@ -60,7 +60,7 @@ class LoginForm extends Model
             }],
             ['login', function ($attribute) {
                 if ($this->user !== null) {
-                    $confirmationRequired = $this->module->confirmable && !$this->module->allowUnconfirmedLogin;
+                    $confirmationRequired = $this->module->enableConfirmation && !$this->module->allowUnconfirmedLogin;
                     if ($confirmationRequired && !$this->user->isConfirmed) {
                         $this->addError($attribute, \Yii::t('user', 'You need to confirm your email address'));
                     }

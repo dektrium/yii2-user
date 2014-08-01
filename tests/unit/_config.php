@@ -3,7 +3,7 @@
     [
         'modules' => [
             'user' => [
-                'confirmable' => true,
+                'enableConfirmation' => true,
             ]
         ],
     ]

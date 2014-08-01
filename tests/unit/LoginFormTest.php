@@ -44,7 +44,7 @@ class LoginFormTest extends TestCase
         });
 
         $this->specify('should not allow logging in unconfirmed users', function () {
-            \Yii::$app->getModule('user')->confirmable = true;
+            \Yii::$app->getModule('user')->enableConfirmation = true;
             \Yii::$app->getModule('user')->allowUnconfirmedLogin = false;
             $user = $this->getFixture('user')->getModel('user');
             $this->form->setAttributes([

@@ -26,6 +26,11 @@ class Module extends BaseModule
     const VERSION = '0.7.0-dev';
 
     /**
+     * @var bool Whether user have to confirm his account.
+     */
+    public $enableConfirmation = true;
+
+    /**
      * @var bool Whether to allow login without confirmation.
      */
     public $allowUnconfirmedLogin = false;
@@ -34,11 +39,6 @@ class Module extends BaseModule
      * @var int The time you want the user will be remembered without asking for credentials.
      */
     public $rememberFor = 1209600; // two weeks
-
-    /**
-     * @var bool Whether user have to confirm his account.
-     */
-    public $confirmable = true;
 
     /**
      * @var int The time before a confirmation token becomes invalid.

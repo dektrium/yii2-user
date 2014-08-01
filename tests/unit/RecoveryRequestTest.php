@@ -43,9 +43,9 @@ class RecoveryRequestTest extends TestCase
             verify($this->form->validate(['email']))->false();
         });
 
-        \Yii::$app->getModule('user')->confirmable = true;
+        \Yii::$app->getModule('user')->enableConfirmation = true;
 
-        $this->specify('email should be confirmed if confirmable is enabled', function () {
+        $this->specify('email should be confirmed if enableConfirmation is enabled', function () {
             $user = $this->getFixture('user')->getModel('unconfirmed');
             $this->form->email = $user->email;
             verify($this->form->validate(['email']))->false();

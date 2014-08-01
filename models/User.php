@@ -185,14 +185,13 @@ class User extends ActiveRecord implements IdentityInterface
 
 
     /**
-     * This method is used to create new user account. If credentials array does not include password, this method
-     * will generate new 8-char password. After saving user to database, this method uses mailer component to send
-     * credentials (username and password) to user via email.
+     * This method is used to create new user account. If password is not set, this method will generate new 8-char
+     * password. After saving user to database, this method uses mailer component to send credentials
+     * (username and password) to user via email.
      *
-     * @param  array $credentials The user credentials and attributes.
      * @return bool
      */
-    public function create($credentials = [])
+    public function create()
     {
         if ($this->getIsNewRecord() == false) {
             throw new \RuntimeException('Calling "' . __CLASS__ . '::' . __METHOD__ . '" on existing user');
@@ -243,14 +242,14 @@ class User extends ActiveRecord implements IdentityInterface
     }
 
     /**
-     * Updates email with new one. If confirmable option is enabled, it will send confirmation message to new email.
+     * Updates email with new one. If enableConfirmation option is enabled, it will send confirmation message to new email.
      *
      * @return bool
      */
     public function updateEmail()
     {
         if ($this->validate()) {
-            if ($this->module->confirmable) {
+            if ($this->module->enableConfirmation) {
                 if ($this->unconfirmed_email == $this->email || $this->unconfirmed_email == null) {
                     $this->unconfirmed_email = null;
                     \Yii::$app->session->setFlash('user.email_change_cancelled');

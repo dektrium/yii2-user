@@ -40,7 +40,7 @@ $this->params['breadcrumbs'][] = $this->title;
     <div class="panel-body">
         <?= Yii::t('user', 'Registered at {0, date, MMMM dd, YYYY HH:mm} from {1}', [$model->created_at, is_null($model->registration_ip) ? 'N/D' : long2ip($model->registration_ip)]) ?>
         <br/>
-        <?php if (Yii::$app->getModule('user')->confirmable && $model->getIsConfirmed()): ?>
+        <?php if (Yii::$app->getModule('user')->enableConfirmation && $model->getIsConfirmed()): ?>
             <?= Yii::t('user', 'Confirmed at {0, date, MMMM dd, YYYY HH:mm}', [$model->created_at]) ?>
             <br/>
         <?php endif; ?>

@@ -51,7 +51,7 @@ class RegistrationController extends Controller
 
     /**
      * Displays the registration page.
-     * After successful registration if confirmable is enabled shows info message otherwise redirects to home page.
+     * After successful registration if enableConfirmation is enabled shows info message otherwise redirects to home page.
      *
      * @return string
      */
@@ -76,7 +76,7 @@ class RegistrationController extends Controller
             throw new NotFoundHttpException('Something went wrong');
         }
 
-        $this->module->confirmable = false;
+        $this->module->enableConfirmation = false;
 
         $model = $this->module->manager->createUser(['scenario' => 'connect']);
         if ($model->load(\Yii::$app->request->post()) && $model->create()) {
@@ -99,11 +99,11 @@ class RegistrationController extends Controller
      * @param  integer $id
      * @param  string  $token
      * @return string
-     * @throws \yii\web\HttpException When token is not found or confirmable is disabled.
+     * @throws \yii\web\HttpException When token is not found or enableConfirmation is disabled.
      */
     public function actionConfirm($id, $token)
     {
-        if (($token = $this->module->manager->findToken($id, $token)) == null || !$this->module->confirmable) {
+        if (($token = $this->module->manager->findToken($id, $token)) == null || !$this->module->enableConfirmation) {
             throw new NotFoundHttpException;
         }
         try {
@@ -122,11 +122,11 @@ class RegistrationController extends Controller
      * Displays page where user can request new confirmation token. If resending was successful, displays message.
      *
      * @return string
-     * @throws \yii\web\HttpException When token is not found or confirmable is disabled.
+     * @throws \yii\web\HttpException When token is not found or enableConfirmation is disabled.
      */
     public function actionResend()
     {
-        if (!$this->module->confirmable) {
+        if (!$this->module->enableConfirmation) {
             throw new NotFoundHttpException;
         }
 

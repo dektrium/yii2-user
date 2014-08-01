@@ -74,7 +74,7 @@ class RegistrationForm extends Model
 
     /**
      * Registers a new user account.
-     * If confirmable is enabled, it will generate new confirmation token and send it to user.
+     * If enableConfirmation is enabled, it will generate new confirmation token and send it to user.
      *
      * @return bool
      */
@@ -89,7 +89,7 @@ class RegistrationForm extends Model
             ]);
 
             if ($user->save()) {
-                if ($this->module->confirmable) {
+                if ($this->module->enableConfirmation) {
                     $token = $this->module->manager->createToken([
                         'user_id' => $user->id,
                         'type'    => Token::TYPE_CONFIRMATION

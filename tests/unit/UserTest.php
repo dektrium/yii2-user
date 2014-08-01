@@ -47,9 +47,9 @@ class UserTest extends TestCase
         });
     }
 
-    public function testConfirmable()
+    public function testenableConfirmation()
     {
-        \Yii::$app->getModule('user')->confirmable = true;
+        \Yii::$app->getModule('user')->enableConfirmation = true;
 
         $this->specify('should return correct user confirmation status', function () {
             $user = $this->getFixture('user')->getModel('user');
@@ -104,9 +104,9 @@ class UserTest extends TestCase
             verify($this->user->unconfirmed_email)->null();
         });
 
-        \Yii::$app->getModule('user')->confirmable = true;
+        \Yii::$app->getModule('user')->enableConfirmation = true;
 
-        $this->specify('confirmation message should be sent if confirmable is enabled', function () {
+        $this->specify('confirmation message should be sent if enableConfirmation is enabled', function () {
             $this->user->unconfirmed_email = 'another_email@example.com';
             $this->user->current_password = 'qwerty';
             $this->user->updateEmail();

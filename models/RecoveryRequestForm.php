@@ -51,7 +51,7 @@ class RecoveryRequestForm extends Model
             ],
             ['email', function ($attribute) {
                 $this->_user = $this->module->manager->findUserByEmail($this->email);
-                if ($this->_user !== null && $this->getModule()->confirmable && !$this->_user->getIsConfirmed()) {
+                if ($this->_user !== null && $this->getModule()->enableConfirmation && !$this->_user->getIsConfirmed()) {
                     $this->addError($attribute, \Yii::t('user', 'You need to confirm your email address'));
                 }
             }],

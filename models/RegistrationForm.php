@@ -12,12 +12,10 @@
 namespace dektrium\user\models;
 
 use dektrium\user\helpers\ModuleTrait;
-use dektrium\user\helpers\Password;
 use yii\base\Model;
 
 /**
  * Registration form collects user input on registration process, validates it and creates new User model.
- * If needed, it will create confirmation token and send it to user.
  *
  * @author Dmitry Erofeev <dmeroff@gmail.com>
  */
@@ -51,7 +49,7 @@ class RegistrationForm extends Model
             ['email', 'unique', 'targetClass' => $this->module->manager->userClass,
                 'message' => \Yii::t('user', 'This email address has already been taken')],
 
-            ['password', 'required'],
+            ['password', 'required', 'skipOnEmpty' => $this->module->enableGeneratingPassword],
             ['password', 'string', 'min' => 6],
         ];
     }
@@ -74,8 +72,6 @@ class RegistrationForm extends Model
 
     /**
      * Registers a new user account.
-     * If enableConfirmation is enabled, it will generate new confirmation token and send it to user.
-     *
      * @return bool
      */
     public function register()
@@ -88,21 +84,7 @@ class RegistrationForm extends Model
                 'password' => $this->password
             ]);
 
-            if ($user->save()) {
-                if ($this->module->enableConfirmation) {
-                    $token = $this->module->manager->createToken([
-                        'user_id' => $user->id,
-                        'type'    => Token::TYPE_CONFIRMATION
-                    ]);
-                    $token->save(false);
-                    $this->module->mailer->sendConfirmationMessage($user, $token);
-                    \Yii::$app->session->setFlash('user.confirmation_sent');
-                } else {
-                    \Yii::$app->session->setFlash('user.registration_finished');
-                    \Yii::$app->user->login($user);
-                }
-                return true;
-            }
+            return $user->register();
         }
 
         return false;

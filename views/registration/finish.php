@@ -16,6 +16,19 @@ use yii\helpers\Html;
  */
 
 ?>
+
+<?php if (Yii::$app->session->hasFlash('user.password_generated')): ?>
+    <div class="alert alert-info">
+        <h4>
+            <?= Yii::t('user', 'Password has been generated automatically') ?>
+        </h4>
+        <p>
+            <?= Yii::t('user', 'We have generated password for you and sent to you via email') ?>.
+            <?= Yii::t('user', 'The email can take a few minutes to arrive') ?>.
+        </p>
+    </div>
+<?php endif ?>
+
 <?php if (Yii::$app->session->hasFlash('user.registration_finished')): ?>
     <?php $this->title = Yii::t('user', 'Account has been created'); ?>
     <div class="alert alert-success">

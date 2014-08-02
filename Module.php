@@ -31,6 +31,11 @@ class Module extends BaseModule
     public $enableConfirmation = true;
 
     /**
+     * @var bool Whether to remove password field from registration form.
+     */
+    public $enableGeneratingPassword = false;
+
+    /**
      * @var bool Whether to allow login without confirmation.
      */
     public $allowUnconfirmedLogin = false;

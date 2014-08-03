@@ -16,16 +16,28 @@ use yii\web\Controller;
 use yii\filters\AccessControl;
 use yii\filters\VerbFilter;
 use yii\authclient\ClientInterface;
+use dektrium\user\Module;
+use yii\base\InvalidConfigException;
 
 /**
  * Controller that manages user authentication process.
  *
- * @property \dektrium\user\Module $module
+ * @property Module $module
  *
  * @author Dmitry Erofeev <dmeroff@gmail.com>
  */
 class SecurityController extends Controller
 {
+    /**
+     * @inheritdoc
+     */
+    public function init()
+    {
+        parent::init();
+        if (!$this->module instanceof Module) {
+            throw new InvalidConfigException('Controller must be configured in dektrium/yii2-user module only.');
+        }
+    }
     /**
      * @inheritdoc
      */

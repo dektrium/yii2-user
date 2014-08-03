@@ -268,26 +268,32 @@ class User extends ActiveRecord implements IdentityInterface
     }
 
     /**
-     * Confirms the user.
+     * This method attempts user confirmation. It uses model manager to find token with given code and if it is expired
+     * or does not exist, this method will throw exception.
      *
-     * @param  Token $token
-     * @return bool
-     * @throws \InvalidArgumentException
+     * If confirmation passes it will return true, otherwise it will return false.
+     *
+     * @param  string  $code Confirmation code.
+     * @return boolean
      */
-    public function confirm(Token $token)
+    public function attemptConfirmation($code)
     {
-        if ($token->type != Token::TYPE_CONFIRMATION || $token->isExpired || $token->user_id != $this->id) {
-            throw new \InvalidArgumentException;
+        $token = $this->module->manager->findToken($this->id, $code, Token::TYPE_CONFIRMATION);
+
+        if ($token === null || $token->isExpired) {
+            return false;
         }
 
-        if ($this->unconfirmed_email === null) {
-            $this->confirmed_at = time();
-        } else {
+        $token->delete();
+
+        if (empty($this->unconfirmed_email) == false) {
             $this->email = $this->unconfirmed_email;
             $this->unconfirmed_email = null;
         }
 
-        $token->delete();
+        $this->confirmed_at = time();
+
+        \Yii::getLogger()->log('User has been confirmed', Logger::LEVEL_INFO);
 
         return $this->save(false);
     }
@@ -334,6 +340,14 @@ class User extends ActiveRecord implements IdentityInterface
     public function resetPassword($password)
     {
         return (bool) $this->updateAttributes(['password_hash' => Password::hash($password)]);
+    }
+
+    /**
+     * Confirms the user by setting 'blocked_at' field to current time.
+     */
+    public function confirm()
+    {
+        return (bool) $this->updateAttributes(['confirmed_at' => time()]);
     }
 
     /**

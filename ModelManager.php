@@ -125,11 +125,12 @@ class ModelManager extends Component
      *
      * @param  integer $userId
      * @param  string  $code
+     * @param  integer $type
      * @return models\Token
      */
-    public function findToken($userId, $code)
+    public function findToken($userId, $code, $type)
     {
-        return $this->createTokenQuery()->where(['user_id' => $userId, 'code' => $code])->one();
+        return $this->createTokenQuery()->where(['user_id' => $userId, 'code' => $code, 'type' => $type])->one();
     }
 
     /**

@@ -11,6 +11,7 @@
 
 namespace dektrium\user\controllers;
 
+use dektrium\user\models\Token;
 use yii\web\Controller;
 use yii\filters\AccessControl;
 use yii\base\InvalidParamException;
@@ -73,7 +74,7 @@ class RecoveryController extends Controller
      */
     public function actionReset($id, $token)
     {
-        if (($token = $this->module->manager->findToken($id, $token)) == null) {
+        if (($token = $this->module->manager->findToken($id, $token, Token::TYPE_RECOVERY)) == null) {
             throw new NotFoundHttpException;
         }
         try {

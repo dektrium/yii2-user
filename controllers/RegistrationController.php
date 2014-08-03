@@ -93,25 +93,26 @@ class RegistrationController extends Controller
     }
 
     /**
-     * Confirms user's account. If confirmation was successful logs the user in and redirects him to homepage. Otherwise
-     * renders error message.
+     * Confirms user's account. If confirmation was successful logs the user and shows success message. Otherwise
+     * shows error message.
      *
      * @param  integer $id
-     * @param  string  $token
+     * @param  string  $code
      * @return string
-     * @throws \yii\web\HttpException When token is not found or enableConfirmation is disabled.
+     * @throws \yii\web\HttpException
      */
-    public function actionConfirm($id, $token)
+    public function actionConfirm($id, $code)
     {
-        if (($token = $this->module->manager->findToken($id, $token)) == null || !$this->module->enableConfirmation) {
+        $user = $this->module->manager->findUserById($id);
+
+        if ($user === null || $this->module->enableConfirmation == false) {
             throw new NotFoundHttpException;
         }
-        try {
-            $user = $token->user;
-            $user->confirm($token);
+
+        if ($user->attemptConfirmation($code)) {
             \Yii::$app->user->login($user);
             \Yii::$app->session->setFlash('user.confirmation_finished');
-        } catch (\InvalidArgumentException $e) {
+        } else {
             \Yii::$app->session->setFlash('user.invalid_token');
         }
 
@@ -122,7 +123,7 @@ class RegistrationController extends Controller
      * Displays page where user can request new confirmation token. If resending was successful, displays message.
      *
      * @return string
-     * @throws \yii\web\HttpException When token is not found or enableConfirmation is disabled.
+     * @throws \yii\web\HttpException
      */
     public function actionResend()
     {

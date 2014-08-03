@@ -115,7 +115,7 @@ class AdminController extends Controller
      */
     public function actionConfirm($id)
     {
-        $this->findModel($id)->confirm(false);
+        $this->findModel($id)->confirm();
         \Yii::$app->getSession()->setFlash('user.success', \Yii::t('user', 'User has been confirmed'));
 
         return $this->redirect(['update', 'id' => $id]);

@@ -36,7 +36,7 @@ $I->amGoingTo('login with new email');
 $loginPage = LoginPage::openBy($I);
 $loginPage->login('new_email@example.com', 'qwerty');
 $I->see('Invalid login or password');
-$user->confirm($token);
+$user->attemptConfirmation($token->code);
 $loginPage = LoginPage::openBy($I);
 $loginPage->login('user@example.com', 'qwerty');
 $I->see('Invalid login or password');

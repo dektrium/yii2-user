@@ -366,12 +366,11 @@ class User extends ActiveRecord implements IdentityInterface
         return (bool) $this->updateAttributes(['blocked_at' => null]);
     }
 
-
     /** @inheritdoc */
     public function beforeSave($insert)
     {
         if ($insert) {
-            $this->setAttribute('auth_key', \Yii::$app->security->generateRandomKey());
+            $this->setAttribute('auth_key', \Yii::$app->security->generateRandomString());
         }
 
         if (!empty($this->password)) {

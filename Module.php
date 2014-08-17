@@ -36,9 +36,9 @@ class Module extends BaseModule
     public $enableGeneratingPassword = false;
 
     /**
-     * @var bool Whether to allow login without confirmation.
+     * @var bool Whether to allow logging in without confirmation.
      */
-    public $allowUnconfirmedLogin = false;
+    public $enableUnconfirmedLogin = false;
 
     /**
      * @var int The time you want the user will be remembered without asking for credentials.

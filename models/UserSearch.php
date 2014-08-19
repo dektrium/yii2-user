@@ -11,6 +11,7 @@
 
 namespace dektrium\user\models;
 
+use dektrium\user\helpers\ModuleTrait;
 use yii\base\Model;
 use yii\data\ActiveDataProvider;
 
@@ -19,6 +20,8 @@ use yii\data\ActiveDataProvider;
  */
 class UserSearch extends Model
 {
+    use ModuleTrait;
+
     /**
      * @var string
      */
@@ -69,7 +72,7 @@ class UserSearch extends Model
      */
     public function search($params)
     {
-        $query = User::find();
+        $query = $this->module->manager->createUserQuery();
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
         ]);

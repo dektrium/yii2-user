@@ -20,6 +20,7 @@ use yii\base\Component;
  * @method models\Token               createToken
  * @method models\Profile             createProfile
  * @method models\Account             createAccount
+ * @method models\UserSearch          createUserSearch
  * @method models\RegistrationForm    createRegistrationForm
  * @method models\ResendForm          createResendForm
  * @method models\LoginForm           createLoginForm
@@ -45,6 +46,8 @@ class ModelManager extends Component
 
     /** @var string */
     public $accountClass = 'dektrium\user\models\Account';
+
+    public $userSearchClass = 'dektrium\user\models\UserSearch';
 
     /** @var string */
     public $registrationFormClass = 'dektrium\user\models\RegistrationForm';

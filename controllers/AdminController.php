@@ -59,7 +59,7 @@ class AdminController extends Controller
      */
     public function actionIndex()
     {
-        $searchModel  = new UserSearch();
+        $searchModel  = $this->module->manager->createUserSearch();
         $dataProvider = $searchModel->search($_GET);
 
         return $this->render('index', [

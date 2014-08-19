@@ -306,7 +306,7 @@ class User extends ActiveRecord implements IdentityInterface
     public function updateEmail()
     {
         if ($this->validate()) {
-            if ($this->module->enableConfirmation) {
+            if ($this->module->enableEmailReconfirmation) {
                 if ($this->unconfirmed_email == $this->email || $this->unconfirmed_email == null) {
                     $this->unconfirmed_email = null;
                     \Yii::$app->session->setFlash('user.email_change_cancelled');

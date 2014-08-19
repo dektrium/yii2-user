@@ -53,6 +53,10 @@ class RecoveryController extends Controller
      */
     public function actionRequest()
     {
+        if (!$this->module->enablePasswordRecovery) {
+            throw new NotFoundHttpException;
+        }
+
         $model = $this->module->manager->createRecoveryRequestForm();
 
         if ($model->load(\Yii::$app->getRequest()->post()) && $model->sendRecoveryMessage()) {
@@ -74,6 +78,10 @@ class RecoveryController extends Controller
      */
     public function actionReset($id, $token)
     {
+        if (!$this->module->enablePasswordRecovery) {
+            throw new NotFoundHttpException;
+        }
+
         if (($token = $this->module->manager->findToken($id, $token, Token::TYPE_RECOVERY)) == null) {
             throw new NotFoundHttpException;
         }

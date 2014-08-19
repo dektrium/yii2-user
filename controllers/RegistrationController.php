@@ -54,9 +54,14 @@ class RegistrationController extends Controller
      * After successful registration if enableConfirmation is enabled shows info message otherwise redirects to home page.
      *
      * @return string
+     * @throws \yii\web\HttpException
      */
     public function actionRegister()
     {
+        if (!$this->module->enableConfirmation) {
+            throw new NotFoundHttpException;
+        }
+
         $model = $this->module->manager->createRegistrationForm();
 
         if ($model->load(\Yii::$app->request->post()) && $model->register()) {

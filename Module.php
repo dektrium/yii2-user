@@ -26,9 +26,9 @@ class Module extends BaseModule
     const VERSION = '0.7.0-dev';
 
     /**
-     * @var bool Whether user have to confirm his account.
+     * @var bool Whether to enable registration.
      */
-    public $enableConfirmation = true;
+    public $enableRegistration = true;
 
     /**
      * @var bool Whether to remove password field from registration form.
@@ -36,9 +36,24 @@ class Module extends BaseModule
     public $enableGeneratingPassword = false;
 
     /**
+     * @var bool Whether user has to confirm his account.
+     */
+    public $enableConfirmation = true;
+
+    /**
      * @var bool Whether to allow logging in without confirmation.
      */
     public $enableUnconfirmedLogin = false;
+
+    /**
+     * @var bool Whether to enable password recovery.
+     */
+    public $enablePasswordRecovery = true;
+
+    /**
+     * @var bool Whether user has to confirm his email address after changing it on settings page.
+     */
+    public $enableEmailReconfirmation = true;
 
     /**
      * @var int The time you want the user will be remembered without asking for credentials.

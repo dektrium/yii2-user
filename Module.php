@@ -26,6 +26,11 @@ class Module extends BaseModule
     const VERSION = '0.7.0-dev';
 
     /**
+     * @var string Web user class.
+     */
+    public $webUserClass = 'yii\web\User';
+
+    /**
      * @var bool Whether to enable registration.
      */
     public $enableRegistration = true;

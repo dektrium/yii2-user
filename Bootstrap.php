@@ -40,22 +40,22 @@ class Bootstrap implements BootstrapInterface
             $app->getModule('user')->controllerNamespace = 'dektrium\user\commands';
         } else {
             $app->set('user', [
-                'class' => 'yii\web\User',
+                'class'           => $app->getModule('user')->webUserClass,
                 'enableAutoLogin' => true,
-                'loginUrl' => ['/user/security/login'],
-                'identityClass' => $identityClass
+                'loginUrl'        => ['/user/security/login'],
+                'identityClass'   => $identityClass
             ]);
 
             $app->get('urlManager')->rules[] = new GroupUrlRule([
                 'prefix' => 'user',
                 'rules' => [
-                    '<id:\d+>' => 'profile/show',
-                    '<action:(login|logout)>' => 'security/<action>',
-                    '<action:(register|resend)>' => 'registration/<action>',
+                    '<id:\d+>'                     => 'profile/show',
+                    '<action:(login|logout)>'      => 'security/<action>',
+                    '<action:(register|resend)>'   => 'registration/<action>',
                     'confirm/<id:\d+>/<token:\w+>' => 'registration/confirm',
-                    'forgot' => 'recovery/request',
+                    'forgot'                       => 'recovery/request',
                     'recover/<id:\d+>/<token:\w+>' => 'recovery/reset',
-                    'settings/<action:\w+>' => 'settings/<action>'
+                    'settings/<action:\w+>'        => 'settings/<action>'
                 ]
             ]);
 

@@ -8,7 +8,7 @@ use GuzzleHttp\Client;
 class MailcatcherHelper extends Module
 {
     /**
-     * @var \Guzzle\Http\Client
+     * @var \GuzzleHttp\Client
      */
     private $mailcatcher;
 

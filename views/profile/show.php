@@ -35,7 +35,7 @@ $this->params['breadcrumbs'][] = $this->title;
                         <li><i class="glyphicon glyphicon-globe text-muted"></i> <?= Html::a(Html::encode($profile->website), Html::encode($profile->website)) ?></li>
                     <?php endif; ?>
                     <?php if (!empty($profile->public_email)): ?>
-                        <li><i class="glyphicon glyphicon-envelope text-muted"></i> <?= Html::a(Html::encode($profile->public_email), 'mailto://' . Html::encode($profile->public_email)) ?></li>
+                        <li><i class="glyphicon glyphicon-envelope text-muted"></i> <?= Html::a(Html::encode($profile->public_email), 'mailto:' . Html::encode($profile->public_email)) ?></li>
                     <?php endif; ?>
                     <li><i class="glyphicon glyphicon-time text-muted"></i> <?= Yii::t('user', 'Joined on {0, date}', $profile->user->created_at) ?></li>
                 </ul>

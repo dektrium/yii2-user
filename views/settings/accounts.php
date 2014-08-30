@@ -78,11 +78,11 @@ $this->params['breadcrumbs'][] = $this->title;
                             </td>
                             <td style="width: 120px">
                                 <?= $auth->isConnected($client) ?
-                                    Html::a('Disconnect', $auth->createClientUrl($client), [
+                                    Html::a(Yii::t('user', 'Disconnect'), $auth->createClientUrl($client), [
                                         'class' => 'btn btn-danger btn-block',
                                         'data-method' => 'post',
                                     ]) :
-                                    Html::a('Connect', $auth->createClientUrl($client), [
+                                    Html::a(Yii::t('user', 'Connect'), $auth->createClientUrl($client), [
                                         'class' => 'btn btn-success btn-block'
                                     ])
                                 ?>

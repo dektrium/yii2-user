@@ -94,7 +94,7 @@ $this->params['breadcrumbs'][] = $this->title;
                     return Html::a('<i class="glyphicon glyphicon-trash"></i>', $url, [
                         'class' => 'btn btn-xs btn-danger',
                         'data-method' => 'post',
-                        'data-confirm' => 'Are you sure to delete this user?',
+                        'data-confirm' => Yii::t('user', 'Are you sure to delete this user?'),
                         'title' => Yii::t('yii', 'Delete'),
                     ]);
                 },

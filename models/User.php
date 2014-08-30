@@ -18,6 +18,7 @@ use yii\behaviors\TimestampBehavior;
 use yii\db\ActiveRecord;
 use yii\log\Logger;
 use yii\web\IdentityInterface;
+use Yii;
 
 /**
  * User ActiveRecord model.
@@ -119,6 +120,7 @@ class User extends ActiveRecord implements IdentityInterface
             'password'          => \Yii::t('user', 'Password'),
             'created_at'        => \Yii::t('user', 'Registration time'),
             'confirmed_at'      => \Yii::t('user', 'Confirmation time'),
+            'current_password' => \Yii::t('user', 'Current password'),
         ];
     }
 
@@ -167,7 +169,7 @@ class User extends ActiveRecord implements IdentityInterface
             ['unconfirmed_email', 'email', 'on' => 'update_email'],
 
             // password rules
-            ['password', 'required', 'on' => 'register'],
+            ['password', 'required', 'on' => ['register', 'update_password']],
             ['password', 'string', 'min' => 6, 'on' => ['register', 'update_password', 'create']],
 
             // current password rules

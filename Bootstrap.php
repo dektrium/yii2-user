@@ -36,28 +36,29 @@ class Bootstrap implements BootstrapInterface
             $identityClass = 'dektrium\user\models\User';
         }
 
+        /** @var $module Module */
+        $module = $app->getModule('user');
+
         if ($app instanceof \yii\console\Application) {
-            $app->getModule('user')->controllerNamespace = 'dektrium\user\commands';
+            $module->controllerNamespace = 'dektrium\user\commands';
         } else {
             $app->set('user', [
-                'class'           => $app->getModule('user')->webUserClass,
+                'class'           => $module->webUserClass,
                 'enableAutoLogin' => true,
                 'loginUrl'        => ['/user/security/login'],
                 'identityClass'   => $identityClass
             ]);
 
-            $app->get('urlManager')->rules[] = new GroupUrlRule([
-                'prefix' => 'user',
-                'rules' => [
-                    '<id:\d+>'                     => 'profile/show',
-                    '<action:(login|logout)>'      => 'security/<action>',
-                    '<action:(register|resend)>'   => 'registration/<action>',
-                    'confirm/<id:\d+>/<token:\w+>' => 'registration/confirm',
-                    'forgot'                       => 'recovery/request',
-                    'recover/<id:\d+>/<token:\w+>' => 'recovery/reset',
-                    'settings/<action:\w+>'        => 'settings/<action>'
-                ]
-            ]);
+            $configUrlRule = [
+                'prefix' => $module->urlPrefix,
+                'rules'  => $module->urlRules
+            ];
+
+            if ($module->urlPrefix != 'user') {
+                $configUrlRule['routePrefix'] = 'user';
+            }
+
+            $app->get('urlManager')->rules[] = new GroupUrlRule($configUrlRule);
 
             if (!$app->has('authClientCollection')) {
                 $app->set('authClientCollection', [
@@ -67,7 +68,7 @@ class Bootstrap implements BootstrapInterface
         }
 
         $app->get('i18n')->translations['user*'] = [
-            'class' => 'yii\i18n\PhpMessageSource',
+            'class'    => 'yii\i18n\PhpMessageSource',
             'basePath' => __DIR__ . '/messages',
         ];
     }

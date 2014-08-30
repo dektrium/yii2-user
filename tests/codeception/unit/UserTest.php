@@ -6,7 +6,7 @@ use Codeception\Specify;
 use dektrium\user\models\User;
 use tests\codeception\fixtures\UserFixture;
 use yii\codeception\TestCase;
-use yii\helpers\Security;
+use Yii;
 
 /**
  * Test suite for User active record class.
@@ -33,6 +33,29 @@ class UserTest extends TestCase
                 'dataFile' => '@tests/codeception/fixtures/data/init_user.php'
             ],
         ];
+    }
+
+    public function testRegister()
+    {
+        $this->specify('user should be registered', function () {
+            $user = new User(['scenario' => 'register']);
+            $user->username = 'tester';
+            $user->email = 'tester@example.com';
+            $user->password = 'tester';
+            verify($user->register())->true();
+            verify($user->username)->equals('tester');
+            verify($user->email)->equals('tester@example.com');
+            verify(Yii::$app->getSecurity()->validatePassword('tester', $user->password_hash))->true();
+        });
+
+        $this->specify('profile should be created after registration', function () {
+            $user = new User(['scenario' => 'register']);
+            $user->username = 'john_doe';
+            $user->email = 'john_doe@example.com';
+            $user->password = 'qwerty';
+            verify($user->register())->true();
+            verify($user->profile->gravatar_email)->equals('john_doe@example.com');
+        });
     }
 
     public function testBlocking()

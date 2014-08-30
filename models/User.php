@@ -113,11 +113,12 @@ class User extends ActiveRecord implements IdentityInterface
     public function attributeLabels()
     {
         return [
-            'username' => \Yii::t('user', 'Username'),
-            'email' => \Yii::t('user', 'Email'),
-            'password' => \Yii::t('user', 'Password'),
-            'created_at' => \Yii::t('user', 'Registration time'),
-            // TODO: add attribute labels
+            'username'          => \Yii::t('user', 'Username'),
+            'email'             => \Yii::t('user', 'Email'),
+            'unconfirmed_email' => \Yii::t('user', 'New email'),
+            'password'          => \Yii::t('user', 'Password'),
+            'created_at'        => \Yii::t('user', 'Registration time'),
+            'confirmed_at'      => \Yii::t('user', 'Confirmation time'),
         ];
     }
 

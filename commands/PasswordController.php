@@ -15,6 +15,8 @@ use yii\console\Controller;
 use yii\helpers\Console;
 
 /**
+ * Updates user's password.
+ *
  * @property \dektrium\user\Module $module
  *
  * @author Dmitry Erofeev <dmeroff@gmail.com>
@@ -22,7 +24,7 @@ use yii\helpers\Console;
 class PasswordController extends Controller
 {
     /**
-     * Changes user's password to given.
+     * Updates user's password to given.
      *
      * @param string $search   Email or username
      * @param string $password New password

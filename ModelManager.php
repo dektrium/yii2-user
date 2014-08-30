@@ -47,6 +47,7 @@ class ModelManager extends Component
     /** @var string */
     public $accountClass = 'dektrium\user\models\Account';
 
+    /** @var string */
     public $userSearchClass = 'dektrium\user\models\UserSearch';
 
     /** @var string */

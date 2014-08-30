@@ -41,7 +41,7 @@ class Account extends ActiveRecord
      */
     public static function tableName()
     {
-        return '{{%account}}';
+        return '{{%social_account}}';
     }
 
     /**

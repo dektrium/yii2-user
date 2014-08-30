@@ -1,14 +1,14 @@
 # CHANGELOG
 
-## 0.7.0 [Work in progress]
+## 0.7.0 [31 August 2014]
 
 - Reverted removing registration without password
 - Updated test suite
 - Added new translations
 - Added options to configure url rules (#99)
-- Added new advanced configuration (#93)
+- Added new advanced configuration (#93) (BC break)
 - Refactored registration, confirmation, password recovery
-- Updated database structure
+- Updated database structure (BC break)
 
 ## 0.6.0 [04 May 2014]
 

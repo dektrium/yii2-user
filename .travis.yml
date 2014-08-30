@@ -10,7 +10,8 @@ install:
 before_script:
   - mailcatcher
   - mysql -e 'create database dektrium_test;'
-  - sed -i 's/\/..\/..\/..\//\/..\//g' tests/_bootstrap.php
-  - php tests/yii migrate/up --interactive=0
-  - vendor/bin/codecept build
-script: vendor/bin/codecept run
+  - cd tests
+  - sed -i 's/\/..\/..\/..\/..\//\/..\/..\//g' codeception/_bootstrap.php
+  - php codeception/bin/yii migrate/up --interactive=0
+  - ../vendor/bin/codecept build
+script: ../vendor/bin/codecept run

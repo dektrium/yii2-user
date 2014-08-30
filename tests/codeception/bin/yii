@@ -1,0 +1,13 @@
+#!/usr/bin/env php
+<?php
+
+require __DIR__ . '/../_bootstrap.php';
+
+// fcgi doesn't have STDIN defined by default
+defined('STDIN') or define('STDIN', fopen('php://stdin', 'r'));
+defined('STDOUT') or define('STDOUT', fopen('php://stdout', 'w'));
+
+$config = require(__DIR__ . '/../app/config/console.php');
+
+$exitCode = (new yii\console\Application($config))->run();
+exit($exitCode);

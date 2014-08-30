@@ -26,7 +26,7 @@
         "yiisoft/yii2-codeception": "*",
         "codeception/specify": "*",
         "codeception/verify": "*",
-        "guzzlehttp/guzzle": "~4.0"
+        "captbaritone/mailcatcher-codeception-module": "dev-master"
     },
     "autoload": {
         "psr-4": {

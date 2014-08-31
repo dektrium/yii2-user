@@ -23,7 +23,7 @@ use yii\base\Module as BaseModule;
  */
 class Module extends BaseModule
 {
-    const VERSION = '0.7.0-dev';
+    const VERSION = '0.7.0';
 
     /**
      * @var string Web user class.

@@ -11,70 +11,33 @@
 
 namespace dektrium\user\models;
 
+use dektrium\user\helpers\ModuleTrait;
 use yii\base\Model;
 
 /**
- * Model that manages resending confirmation tokens to users.
+ * ResendForm gets user email address and validates if user has already confirmed his account. If so, it shows error
+ * message, otherwise it generates and sends new confirmation token to user.
  *
- * @property \dektrium\user\Module $module
+ * @property User $user
  *
  * @author Dmitry Erofeev <dmeroff@gmail.com>
  */
 class ResendForm extends Model
 {
+    use ModuleTrait;
+
     /**
      * @var string
      */
     public $email;
 
     /**
-     * @var \dektrium\user\models\User
+     * @var User
      */
     private $_user;
 
     /**
-     * @inheritdoc
-     */
-    public function attributeLabels()
-    {
-        return [
-            'email' => \Yii::t('user', 'Email'),
-        ];
-    }
-
-    /**
-     * @inheritdoc
-     */
-    public function rules()
-    {
-        return [
-            ['email', 'required'],
-            ['email', 'email'],
-            ['email', 'exist', 'targetClass' => $this->getModule()->manager->userClass],
-            ['email', 'validateEmail'],
-        ];
-    }
-
-    /**
-     * Validates if user has already been confirmed or not.
-     */
-    public function validateEmail()
-    {
-        if ($this->getUser() != null && $this->getUser()->getIsConfirmed()) {
-            $this->addError('email', \Yii::t('user', 'This account has already been confirmed'));
-        }
-    }
-
-    /**
-     * @inheritdoc
-     */
-    public function formName()
-    {
-        return 'resend-form';
-    }
-
-    /**
-     * @return \dektrium\user\models\User
+     * @return User
      */
     public function getUser()
     {
@@ -85,11 +48,53 @@ class ResendForm extends Model
         return $this->_user;
     }
 
-    /**
-     * @return null|\dektrium\user\Module
-     */
-    protected function getModule()
+    /** @inheritdoc */
+    public function rules()
     {
-        return \Yii::$app->getModule('user');
+        return [
+            ['email', 'required'],
+            ['email', 'email'],
+            ['email', 'exist', 'targetClass' => $this->getModule()->manager->userClass],
+            ['email', function () {
+                if ($this->user != null && $this->user->isConfirmed) {
+                    $this->addError('email', \Yii::t('user', 'This account has already been confirmed'));
+                }
+            }],
+        ];
+    }
+
+    /** @inheritdoc */
+    public function attributeLabels()
+    {
+        return [
+            'email' => \Yii::t('user', 'Email'),
+        ];
+    }
+
+    /** @inheritdoc */
+    public function formName()
+    {
+        return 'resend-form';
+    }
+
+    /**
+     * Creates new confirmation token and sends it to the user.
+     *
+     * @return bool
+     */
+    public function resend()
+    {
+        if ($this->validate()) {
+            $token = $this->module->manager->createToken([
+                'user_id' => $this->user->id,
+                'type'    => Token::TYPE_CONFIRMATION
+            ]);
+            $token->save(false);
+            $this->module->mailer->sendConfirmationMessage($this->user, $token);
+            \Yii::$app->session->setFlash('user.confirmation_sent');
+            return true;
+        }
+
+        return false;
     }
 }

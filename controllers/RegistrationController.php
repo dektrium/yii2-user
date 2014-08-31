@@ -16,7 +16,8 @@ use yii\filters\AccessControl;
 use yii\web\NotFoundHttpException;
 
 /**
- * Controller that manages user registration process.
+ * RegistrationController is responsible for all registration process, which includes registration of a new account,
+ * resending confirmation tokens, email confirmation and registration via social networks.
  *
  * @property \dektrium\user\Module $module
  *
@@ -49,34 +50,22 @@ class RegistrationController extends Controller
     }
 
     /**
-     * @inheritdoc
-     */
-    public function beforeAction($action)
-    {
-        if (parent::beforeAction($action)) {
-            if (!$this->module->confirmable && in_array($action->id, ['confirm', 'resend'])) {
-                throw new NotFoundHttpException('Disabled by administrator');
-            }
-
-            return true;
-        } else {
-            return false;
-        }
-    }
-
-    /**
      * Displays the registration page.
+     * After successful registration if enableConfirmation is enabled shows info message otherwise redirects to home page.
      *
      * @return string
+     * @throws \yii\web\HttpException
      */
     public function actionRegister()
     {
-        $model = $this->module->manager->createUser(['scenario' => 'register']);
+        if (!$this->module->enableConfirmation) {
+            throw new NotFoundHttpException;
+        }
 
-        if ($model->load(\Yii::$app->getRequest()->post()) && $model->register()) {
-            return $this->render('success', [
-                'model' => $model
-            ]);
+        $model = $this->module->manager->createRegistrationForm();
+
+        if ($model->load(\Yii::$app->request->post()) && $model->register()) {
+            return $this->render('finish');
         }
 
         return $this->render('register', [
@@ -92,10 +81,10 @@ class RegistrationController extends Controller
             throw new NotFoundHttpException('Something went wrong');
         }
 
-        $this->module->confirmable = false;
+        $this->module->enableConfirmation = false;
 
         $model = $this->module->manager->createUser(['scenario' => 'connect']);
-        if ($model->load($_POST) && $model->create()) {
+        if ($model->load(\Yii::$app->request->post()) && $model->create()) {
             $account->user_id = $model->id;
             $account->save(false);
             \Yii::$app->user->login($model, $this->module->rememberFor);
@@ -109,38 +98,48 @@ class RegistrationController extends Controller
     }
 
     /**
-     * Confirms user's account.
+     * Confirms user's account. If confirmation was successful logs the user and shows success message. Otherwise
+     * shows error message.
      *
-     * @param $id
-     * @param $token
+     * @param  integer $id
+     * @param  string  $code
      * @return string
      * @throws \yii\web\HttpException
      */
-    public function actionConfirm($id, $token)
+    public function actionConfirm($id, $code)
     {
-        $user = $this->module->manager->findUserByIdAndConfirmationToken($id, $token);
-        if ($user === null || !$user->confirm()) {
-            return $this->render('invalidToken');
+        $user = $this->module->manager->findUserById($id);
+
+        if ($user === null || $this->module->enableConfirmation == false) {
+            throw new NotFoundHttpException;
+        }
+
+        if ($user->attemptConfirmation($code)) {
+            \Yii::$app->user->login($user);
+            \Yii::$app->session->setFlash('user.confirmation_finished');
+        } else {
+            \Yii::$app->session->setFlash('user.invalid_token');
         }
 
         return $this->render('finish');
     }
 
     /**
-     * Displays page where user can request new confirmation token.
+     * Displays page where user can request new confirmation token. If resending was successful, displays message.
      *
      * @return string
+     * @throws \yii\web\HttpException
      */
     public function actionResend()
     {
+        if (!$this->module->enableConfirmation) {
+            throw new NotFoundHttpException;
+        }
+
         $model = $this->module->manager->createResendForm();
 
-        if ($model->load(\Yii::$app->getRequest()->post()) && $model->validate()) {
-            $model->getUser()->resend();
-
-            return $this->render('success', [
-                'model' => $model
-            ]);
+        if ($model->load(\Yii::$app->request->post()) && $model->resend()) {
+            return $this->render('finish');
         }
 
         return $this->render('resend', [

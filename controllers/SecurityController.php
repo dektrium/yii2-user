@@ -115,7 +115,7 @@ class SecurityController extends Controller
             $account = $this->module->manager->createAccount([
                 'provider'   => $provider,
                 'client_id'  => $clientId,
-                'properties' => json_encode($attributes)
+                'data'       => json_encode($attributes)
             ]);
             $account->save(false);
         }

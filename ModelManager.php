@@ -17,13 +17,17 @@ use yii\base\Component;
  * ModelManager is used in order to create models and find users.
  *
  * @method models\User                createUser
+ * @method models\Token               createToken
  * @method models\Profile             createProfile
  * @method models\Account             createAccount
+ * @method models\UserSearch          createUserSearch
+ * @method models\RegistrationForm    createRegistrationForm
  * @method models\ResendForm          createResendForm
  * @method models\LoginForm           createLoginForm
- * @method models\RecoveryForm        createPasswordRecoveryForm
- * @method models\RecoveryRequestForm createPasswordRecoveryRequestForm
+ * @method models\RecoveryForm        createRecoveryForm
+ * @method models\RecoveryRequestForm createRecoveryRequestForm
  * @method \yii\db\ActiveQuery        createUserQuery
+ * @method \yii\db\ActiveQuery        createTokenQuery
  * @method \yii\db\ActiveQuery        createProfileQuery
  * @method \yii\db\ActiveQuery        createAccountQuery
  *
@@ -31,47 +35,41 @@ use yii\base\Component;
  */
 class ModelManager extends Component
 {
-    /**
-     * @var string
-     */
+    /** @var string */
     public $userClass = 'dektrium\user\models\User';
 
-    /**
-     * @var string
-     */
+    /** @var string */
+    public $tokenClass = 'dektrium\user\models\Token';
+
+    /** @var string */
     public $profileClass = 'dektrium\user\models\Profile';
 
-    /**
-     * @var string
-     */
+    /** @var string */
     public $accountClass = 'dektrium\user\models\Account';
 
-    /**
-     * @var string
-     */
+    /** @var string */
+    public $userSearchClass = 'dektrium\user\models\UserSearch';
+
+    /** @var string */
+    public $registrationFormClass = 'dektrium\user\models\RegistrationForm';
+
+    /** @var string */
     public $resendFormClass = 'dektrium\user\models\ResendForm';
 
-    /**
-     * @var string
-     */
+    /** @var string */
     public $loginFormClass = 'dektrium\user\models\LoginForm';
 
-    /**
-     * @var string
-     */
+    /** @var string */
     public $recoveryFormClass = 'dektrium\user\models\RecoveryForm';
 
-    /**
-     * @var string
-     */
+    /** @var string */
     public $recoveryRequestFormClass = 'dektrium\user\models\RecoveryRequestForm';
 
     /**
-     * Finds a user by id.
+     * Finds a user by the given id.
      *
-     * @param integer $id
-     *
-     * @return null|models\User
+     * @param  integer     $id User id to be used on search.
+     * @return models\User
      */
     public function findUserById($id)
     {
@@ -79,11 +77,10 @@ class ModelManager extends Component
     }
 
     /**
-     * Finds a user by username.
+     * Finds a user by the given username.
      *
-     * @param string $username
-     *
-     * @return null|models\User
+     * @param  string      $username Username to be used on search.
+     * @return models\User
      */
     public function findUserByUsername($username)
     {
@@ -91,11 +88,10 @@ class ModelManager extends Component
     }
 
     /**
-     * Finds a user by email.
+     * Finds a user by the given email.
      *
-     * @param string $email
-     *
-     * @return null|models\User
+     * @param  string      $email Email to be used on search.
+     * @return models\User
      */
     public function findUserByEmail($email)
     {
@@ -103,56 +99,42 @@ class ModelManager extends Component
     }
 
     /**
-     * Finds a user either by email, or username.
+     * Finds a user by the given username or email.
      *
-     * @param string $value
-     *
-     * @return null|models\User
+     * @param  string      $usernameOrEmail Username or email to be used on search.
+     * @return models\User
      */
-    public function findUserByUsernameOrEmail($value)
+    public function findUserByUsernameOrEmail($usernameOrEmail)
     {
-        if (filter_var($value, FILTER_VALIDATE_EMAIL)) {
-            return $this->findUserByEmail($value);
+        if (filter_var($usernameOrEmail, FILTER_VALIDATE_EMAIL)) {
+            return $this->findUserByEmail($usernameOrEmail);
         }
 
-        return $this->findUserByUsername($value);
+        return $this->findUserByUsername($usernameOrEmail);
     }
 
     /**
-     * Finds a user by id and confirmation token
+     * Finds a user by the given condition.
      *
-     * @param integer $id
-     * @param string  $token
-     *
-     * @return null|models\User
-     */
-    public function findUserByIdAndConfirmationToken($id, $token)
-    {
-        return $this->findUser(['id' => $id, 'confirmation_token' => $token])->one();
-    }
-
-    /**
-     * Finds a user by id and recovery token
-     *
-     * @param integer $id
-     * @param string  $token
-     *
-     * @return null|models\User
-     */
-    public function findUserByIdAndRecoveryToken($id, $token)
-    {
-        return $this->findUser(['id' => $id, 'recovery_token' => $token])->one();
-    }
-
-    /**
-     * Finds a user
-     *
-     * @param  $condition
+     * @param  mixed               $condition Condition to be used on search.
      * @return \yii\db\ActiveQuery
      */
     public function findUser($condition)
     {
         return $this->createUserQuery()->where($condition);
+    }
+
+    /**
+     * Finds a token by user id and code.
+     *
+     * @param  integer $userId
+     * @param  string  $code
+     * @param  integer $type
+     * @return models\Token
+     */
+    public function findToken($userId, $code, $type)
+    {
+        return $this->createTokenQuery()->where(['user_id' => $userId, 'code' => $code, 'type' => $type])->one();
     }
 
     /**

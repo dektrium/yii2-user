@@ -16,39 +16,30 @@ use dektrium\user\helpers\Password;
 use yii\base\NotSupportedException;
 use yii\behaviors\TimestampBehavior;
 use yii\db\ActiveRecord;
-use yii\helpers\Url;
+use yii\log\Logger;
 use yii\web\IdentityInterface;
 use Yii;
 
 /**
  * User ActiveRecord model.
  *
+ * Database fields:
  * @property integer $id
  * @property string  $username
  * @property string  $email
+ * @property string  $unconfirmed_email
  * @property string  $password_hash
  * @property string  $auth_key
- * @property integer $registered_from
- * @property integer $logged_in_from
- * @property integer $logged_in_at
- * @property string  $confirmation_token
- * @property integer $confirmation_sent_at
+ * @property integer $registration_ip
  * @property integer $confirmed_at
- * @property string  $unconfirmed_email
- * @property string  $recovery_token
- * @property integer $recovery_sent_at
  * @property integer $blocked_at
- * @property string  $role
  * @property integer $created_at
  * @property integer $updated_at
- * @property string  $confirmationUrl
- * @property boolean $isConfirmed
- * @property boolean $isConfirmationPeriodExpired
- * @property string  $recoveryUrl
- * @property boolean $isRecoveryPeriodExpired
- * @property boolean $isBlocked
+ * @property integer $flags
  *
- * @property \dektrium\user\Module $module
+ * Defined relations:
+ * @property Account[] $accounts
+ * @property Profile   $profile
  *
  * @author Dmitry Erofeev <dmeroff@gmail.com>
  */
@@ -56,18 +47,32 @@ class User extends ActiveRecord implements IdentityInterface
 {
     use ModuleTrait;
 
-    const EVENT_BEFORE_REGISTER = 'before_register';
-    const EVENT_AFTER_REGISTER = 'after_register';
+    const USER_CREATE_INIT   = 'user_create_init';
+    const USER_CREATE_DONE   = 'user_create_done';
+    const USER_REGISTER_INIT = 'user_register_init';
+    const USER_REGISTER_DONE = 'user_register_done';
 
-    /**
-     * @var string Plain password. Used for model validation.
-     */
+    /** @var string Plain password. Used for model validation. */
     public $password;
 
-    /**
-     * @var string Current user's password.
-     */
+    /** @var string Current user's password. Used for model validation. */
     public $current_password;
+
+    /**
+     * @return bool Whether the user is confirmed or not.
+     */
+    public function getIsConfirmed()
+    {
+        return $this->confirmed_at != null;
+    }
+
+    /**
+     * @return bool Whether the user is blocked or not.
+     */
+    public function getIsBlocked()
+    {
+        return $this->blocked_at != null;
+    }
 
     /**
      * @return \yii\db\ActiveQuery
@@ -78,20 +83,14 @@ class User extends ActiveRecord implements IdentityInterface
     }
 
     /**
-     * @return \yii\db\ActiveQuery
+     * @return Account[] Connected accounts ($provider => $account)
      */
     public function getAccounts()
     {
-        return $this->hasMany($this->module->manager->accountClass, ['user_id' => 'id']);
-    }
-
-    /**
-     * @return array Connected accounts ($provider => $account)
-     */
-    public function getConnectedAccounts()
-    {
         $connected = [];
-        $accounts  = $this->accounts;
+        $accounts  = $this->hasMany($this->module->manager->accountClass, ['user_id' => 'id'])->all();
+
+        /** @var Account $account */
         foreach ($accounts as $account) {
             $connected[$account->provider] = $account;
         }
@@ -99,34 +98,33 @@ class User extends ActiveRecord implements IdentityInterface
         return $connected;
     }
 
-    /**
-     * @inheritdoc
-     */
-    public static function find()
+    /** @inheritdoc */
+    public function getId()
     {
-        return new UserQuery(get_called_class());
+        return $this->getAttribute('id');
     }
 
-    /**
-     * @inheritdoc
-     */
+    /** @inheritdoc */
+    public function getAuthKey()
+    {
+        return $this->getAttribute('auth_key');
+    }
+
+    /** @inheritdoc */
     public function attributeLabels()
     {
         return [
-            'username' => \Yii::t('user', 'Username'),
-            'email' => \Yii::t('user', 'Email'),
-            'password' => \Yii::t('user', 'Password'),
-            'created_at' => \Yii::t('user', 'Registration time'),
-            'registered_from' => \Yii::t('user', 'Registered from'),
-            'role' => \Yii::t('user', 'Role'),
-            'unconfirmed_email' => \Yii::t('user', 'Unconfirmed email'),
+            'username'          => \Yii::t('user', 'Username'),
+            'email'             => \Yii::t('user', 'Email'),
+            'unconfirmed_email' => \Yii::t('user', 'New email'),
+            'password'          => \Yii::t('user', 'Password'),
+            'created_at'        => \Yii::t('user', 'Registration time'),
+            'confirmed_at'      => \Yii::t('user', 'Confirmation time'),
             'current_password' => \Yii::t('user', 'Current password'),
         ];
     }
 
-    /**
-     * @inheritdoc
-     */
+    /** @inheritdoc */
     public function behaviors()
     {
         return [
@@ -134,9 +132,7 @@ class User extends ActiveRecord implements IdentityInterface
         ];
     }
 
-    /**
-     * @inheritdoc
-     */
+    /** @inheritdoc */
     public function scenarios()
     {
         return [
@@ -149,9 +145,7 @@ class User extends ActiveRecord implements IdentityInterface
         ];
     }
 
-    /**
-     * @inheritdoc
-     */
+    /** @inheritdoc */
     public function rules()
     {
         return [
@@ -188,145 +182,152 @@ class User extends ActiveRecord implements IdentityInterface
         ];
     }
 
-    /**
-     * @inheritdoc
-     */
-    public static function tableName()
-    {
-        return '{{%user}}';
-    }
-
-    /**
-     * @inheritdoc
-     */
-    public static function findIdentity($id)
-    {
-        return static::findOne($id);
-    }
-
-    /**
-     * @inheritdoc
-     */
-    public static function findIdentityByAccessToken($token, $type = NULL)
-    {
-        throw new NotSupportedException('"findIdentityByAccessToken" is not implemented.');
-    }
-
-    /**
-     * @inheritdoc
-     */
-    public function getId()
-    {
-        return $this->getAttribute('id');
-    }
-
-    /**
-     * @inheritdoc
-     */
-    public function getAuthKey()
-    {
-        return $this->getAttribute('auth_key');
-    }
-
-    /**
-     * @inheritdoc
-     */
+    /** @inheritdoc */
     public function validateAuthKey($authKey)
     {
         return $this->getAttribute('auth_key') == $authKey;
     }
 
+
     /**
-     * Creates a user.
+     * This method is used to create new user account. If password is not set, this method will generate new 8-char
+     * password. After saving user to database, this method uses mailer component to send credentials
+     * (username and password) to user via email.
      *
      * @return bool
      */
     public function create()
     {
+        if ($this->getIsNewRecord() == false) {
+            throw new \RuntimeException('Calling "' . __CLASS__ . '::' . __METHOD__ . '" on existing user');
+        }
+
+        $this->confirmed_at = time();
+
         if ($this->password == null) {
             $this->password = Password::generate(8);
         }
 
-        if ($this->module->confirmable) {
-            $this->generateConfirmationData();
-        } else {
-            $this->confirmed_at = time();
-        }
+        $this->trigger(self::USER_CREATE_INIT);
 
         if ($this->save()) {
+            $this->trigger(self::USER_CREATE_DONE);
             $this->module->mailer->sendWelcomeMessage($this);
+            \Yii::getLogger()->log('User has been created', Logger::LEVEL_INFO);
             return true;
         }
 
+        \Yii::getLogger()->log('An error occurred while creating user account', Logger::LEVEL_ERROR);
+
         return false;
     }
 
     /**
-     * This method is called at the beginning of user registration process.
-     */
-    protected function beforeRegister()
-    {
-        $this->trigger(self::EVENT_BEFORE_REGISTER);
-
-        $this->setAttribute('registered_from', ip2long(\Yii::$app->request->userIP));
-
-        if ($this->module->confirmable) {
-            $this->generateConfirmationData();
-        }
-    }
-
-    /**
-     * This method is called at the end of user registration process.
-     */
-    protected function afterRegister()
-    {
-        if ($this->module->confirmable) {
-            $this->module->mailer->sendConfirmationMessage($this);
-        }
-        $this->trigger(self::EVENT_AFTER_REGISTER);
-    }
-
-    /**
-     * Registers a user.
+     * This method is used to register new user account. If Module::enableConfirmation is set true, this method
+     * will generate new confirmation token and use mailer to send it to the user. Otherwise it will log the user in.
+     * If Module::enableGeneratingPassword is set true, this method will generate new 8-char password. After saving user
+     * to database, this method uses mailer component to send credentials (username and password) to user via email.
      *
      * @return bool
-     * @throws \RuntimeException
      */
     public function register()
     {
-        if (!$this->getIsNewRecord()) {
-            throw new \RuntimeException('Calling "'.__CLASS__.'::register()" on existing user');
+        if ($this->getIsNewRecord() == false) {
+            throw new \RuntimeException('Calling "' . __CLASS__ . '::' . __METHOD__ . '" on existing user');
         }
 
-        if ($this->validate()) {
-            $this->beforeRegister();
-            if ($this->save(false)) {
-                $this->afterRegister();
-                return true;
-            }
+        if ($this->module->enableConfirmation == false) {
+            $this->confirmed_at = time();
         }
+
+        if ($this->module->enableGeneratingPassword) {
+            $this->password = Password::generate(8);
+        }
+
+        $this->trigger(self::USER_REGISTER_INIT);
+
+        if ($this->save()) {
+            $this->trigger(self::USER_REGISTER_DONE);
+            if ($this->module->enableConfirmation) {
+                $token = $this->module->manager->createToken(['type' => Token::TYPE_CONFIRMATION]);
+                $token->link('user', $this);
+                $this->module->mailer->sendConfirmationMessage($this, $token);
+                \Yii::$app->session->setFlash('user.confirmation_sent');
+            } else {
+                \Yii::$app->session->setFlash('user.registration_finished');
+                \Yii::$app->user->login($this);
+            }
+            if ($this->module->enableGeneratingPassword) {
+                $this->module->mailer->sendWelcomeMessage($this);
+                \Yii::$app->session->setFlash('user.password_generated');
+            }
+            \Yii::getLogger()->log('User has been registered', Logger::LEVEL_INFO);
+            return true;
+        }
+
+        \Yii::getLogger()->log('An error occurred while registering user account', Logger::LEVEL_ERROR);
 
         return false;
     }
 
     /**
-     * Updates email with new one. If confirmable option is enabled, it will send confirmation message to new email.
+     * This method attempts user confirmation. It uses model manager to find token with given code and if it is expired
+     * or does not exist, this method will throw exception.
+     *
+     * If confirmation passes it will return true, otherwise it will return false.
+     *
+     * @param  string  $code Confirmation code.
+     * @return boolean
+     */
+    public function attemptConfirmation($code)
+    {
+        $token = $this->module->manager->findToken($this->id, $code, Token::TYPE_CONFIRMATION);
+
+        if ($token === null || $token->isExpired) {
+            return false;
+        }
+
+        $token->delete();
+
+        if (empty($this->unconfirmed_email) == false) {
+            $this->email = $this->unconfirmed_email;
+            $this->unconfirmed_email = null;
+        }
+
+        $this->confirmed_at = time();
+
+        \Yii::getLogger()->log('User has been confirmed', Logger::LEVEL_INFO);
+
+        return $this->save(false);
+    }
+
+    /**
+     * Updates email with new one. If enableConfirmation option is enabled, it will send confirmation message to new email.
      *
      * @return bool
      */
     public function updateEmail()
     {
         if ($this->validate()) {
-            if ($this->module->confirmable) {
-                $this->confirmation_token = Yii::$app->getSecurity()->generateRandomString();
-                $this->confirmation_sent_at = time();
+            if ($this->module->enableEmailReconfirmation) {
+                if ($this->unconfirmed_email == $this->email || $this->unconfirmed_email == null) {
+                    $this->unconfirmed_email = null;
+                    \Yii::$app->session->setFlash('user.email_change_cancelled');
+                } else {
+                    $token = $this->module->manager->createToken([
+                        'user_id' => $this->id,
+                        'type'    => Token::TYPE_CONFIRMATION
+                    ]);
+                    $token->save(false);
+                    $this->module->mailer->sendReconfirmationMessage($this, $token);
+                    \Yii::$app->session->setFlash('user.reconfirmation_sent');
+                }
                 $this->save(false);
-                $this->module->mailer->sendReconfirmationMessage($this);
             } else {
                 $this->email = $this->unconfirmed_email;
                 $this->unconfirmed_email = null;
+                \Yii::$app->session->setFlash('user.email_changed');
             }
-
             return true;
         }
 
@@ -334,150 +335,22 @@ class User extends ActiveRecord implements IdentityInterface
     }
 
     /**
-     * Resets unconfirmed email and confirmation data.
-     */
-    public function resetEmailUpdate()
-    {
-        if ($this->module->confirmable && !empty($this->unconfirmed_email)) {
-            $this->unconfirmed_email = null;
-            $this->confirmation_token = null;
-            $this->confirmation_sent_at = null;
-            $this->save(false);
-        }
-    }
-
-    /**
-     * Confirms a user by setting it's "confirmation_time" to actual time
-     *
-     * @param  bool $runValidation Whether to check if user has already been confirmed or confirmation token expired.
-     * @return bool
-     */
-    public function confirm($runValidation = true)
-    {
-        if ($runValidation) {
-            if ($this->getIsConfirmed()) {
-                return true;
-            } elseif ($this->getIsConfirmationPeriodExpired()) {
-                return false;
-            }
-        }
-
-        if (empty($this->unconfirmed_email)) {
-            $this->confirmed_at = time();
-        } else {
-            $this->email = $this->unconfirmed_email;
-            $this->unconfirmed_email = null;
-        }
-
-        $this->confirmation_token = null;
-        $this->confirmation_sent_at = null;
-
-        return $this->save(false);
-    }
-
-    /**
-     * Generates confirmation data and re-sends confirmation instructions by email.
-     *
-     * @return bool
-     */
-    public function resend()
-    {
-        $this->generateConfirmationData();
-        $this->save(false);
-
-        return $this->module->mailer->sendConfirmationMessage($this);
-    }
-
-    /**
-     * Generates confirmation data.
-     */
-    protected function generateConfirmationData()
-    {
-        $this->confirmation_token = Yii::$app->getSecurity()->generateRandomString();
-        $this->confirmation_sent_at = time();
-        $this->confirmed_at = null;
-    }
-
-    /**
-     * @return string Confirmation url.
-     */
-    public function getConfirmationUrl()
-    {
-        if (is_null($this->confirmation_token)) {
-            return null;
-        }
-
-        return Url::to(['/user/registration/confirm', 'id' => $this->id, 'token' => $this->confirmation_token], true);
-    }
-
-    /**
-     * Verifies whether a user is confirmed or not.
-     *
-     * @return bool
-     */
-    public function getIsConfirmed()
-    {
-        return $this->confirmed_at !== null;
-    }
-
-    /**
-     * Checks if the user confirmation happens before the token becomes invalid.
-     *
-     * @return bool
-     */
-    public function getIsConfirmationPeriodExpired()
-    {
-        return $this->confirmation_sent_at != null && ($this->confirmation_sent_at + $this->module->confirmWithin) < time();
-    }
-
-    /**
-     * Resets password and sets recovery token to null
+     * Resets password.
      *
      * @param  string $password
      * @return bool
      */
     public function resetPassword($password)
     {
-        $this->password = $password;
-        $this->setAttributes([
-            'recovery_token'   => null,
-            'recovery_sent_at' => null
-        ], false);
-
-        return $this->save(false);
+        return (bool) $this->updateAttributes(['password_hash' => Password::hash($password)]);
     }
 
     /**
-     * Checks if the password recovery happens before the token becomes invalid.
-     *
-     * @return bool
+     * Confirms the user by setting 'blocked_at' field to current time.
      */
-    public function getIsRecoveryPeriodExpired()
+    public function confirm()
     {
-        return ($this->recovery_sent_at + $this->module->recoverWithin) < time();
-    }
-
-    /**
-     * @return string Recovery url
-     */
-    public function getRecoveryUrl()
-    {
-        return Url::to(['/user/recovery/reset',
-            'id' => $this->id,
-            'token' => $this->recovery_token
-        ], true);
-    }
-
-    /**
-     * Generates recovery data and sends recovery message to user.
-     */
-    public function sendRecoveryMessage()
-    {
-        $this->recovery_token = Yii::$app->getSecurity()->generateRandomString();
-        $this->recovery_sent_at = time();
-        $this->save(false);
-
-        return $this->module->mailer->sendRecoveryMessage($this);
+        return (bool) $this->updateAttributes(['confirmed_at' => time()]);
     }
 
     /**
@@ -485,9 +358,7 @@ class User extends ActiveRecord implements IdentityInterface
      */
     public function block()
     {
-        $this->blocked_at = time();
-
-        return $this->save(false);
+        return (bool) $this->updateAttributes(['blocked_at' => time()]);
     }
 
     /**
@@ -495,27 +366,14 @@ class User extends ActiveRecord implements IdentityInterface
      */
     public function unblock()
     {
-        $this->blocked_at = null;
-
-        return $this->save(false);
+        return (bool) $this->updateAttributes(['blocked_at' => null]);
     }
 
-    /**
-     * @return bool Whether user is blocked.
-     */
-    public function getIsBlocked()
-    {
-        return !is_null($this->blocked_at);
-    }
-
-    /**
-     * @inheritdoc
-     */
+    /** @inheritdoc */
     public function beforeSave($insert)
     {
         if ($insert) {
-            $this->setAttribute('auth_key', Yii::$app->getSecurity()->generateRandomString());
-            $this->setAttribute('role', $this->module->defaultRole);
+            $this->setAttribute('auth_key', \Yii::$app->security->generateRandomString());
         }
 
         if (!empty($this->password)) {
@@ -525,9 +383,7 @@ class User extends ActiveRecord implements IdentityInterface
         return parent::beforeSave($insert);
     }
 
-    /**
-     * @inheritdoc
-     */
+    /** @inheritdoc */
     public function afterSave($insert, $changedAttributes)
     {
         if ($insert) {
@@ -538,5 +394,23 @@ class User extends ActiveRecord implements IdentityInterface
             $profile->save(false);
         }
         parent::afterSave($insert, $changedAttributes);
+    }
+
+    /** @inheritdoc */
+    public static function tableName()
+    {
+        return '{{%user}}';
+    }
+
+    /** @inheritdoc */
+    public static function findIdentity($id)
+    {
+        return static::findOne($id);
+    }
+
+    /** @inheritdoc */
+    public static function findIdentityByAccessToken($token, $type = null)
+    {
+        throw new NotSupportedException('"findIdentityByAccessToken" is not implemented.');
     }
 }

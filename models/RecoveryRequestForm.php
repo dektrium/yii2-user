@@ -51,7 +51,7 @@ class RecoveryRequestForm extends Model
             ],
             ['email', function ($attribute) {
                 $this->_user = $this->module->manager->findUserByEmail($this->email);
-                if ($this->_user !== null && $this->getModule()->confirmable && !$this->_user->getIsConfirmed()) {
+                if ($this->_user !== null && $this->getModule()->enableConfirmation && !$this->_user->getIsConfirmed()) {
                     $this->addError($attribute, \Yii::t('user', 'You need to confirm your email address'));
                 }
             }],
@@ -66,8 +66,13 @@ class RecoveryRequestForm extends Model
     public function sendRecoveryMessage()
     {
         if ($this->validate()) {
-            $this->_user->sendRecoveryMessage();
-
+            $token = $this->module->manager->createToken([
+                'user_id' => $this->_user->id,
+                'type'    => Token::TYPE_RECOVERY
+            ]);
+            $token->save(false);
+            $this->module->mailer->sendRecoveryMessage($this->_user, $token);
+            \Yii::$app->session->setFlash('user.recovery_sent');
             return true;
         }
 

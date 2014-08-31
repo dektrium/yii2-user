@@ -26,19 +26,44 @@ class Module extends BaseModule
     const VERSION = '0.7.0-dev';
 
     /**
-     * @var bool Whether to allow login without confirmation.
+     * @var string Web user class.
      */
-    public $allowUnconfirmedLogin = false;
+    public $webUserClass = 'yii\web\User';
+
+    /**
+     * @var bool Whether to enable registration.
+     */
+    public $enableRegistration = true;
+
+    /**
+     * @var bool Whether to remove password field from registration form.
+     */
+    public $enableGeneratingPassword = false;
+
+    /**
+     * @var bool Whether user has to confirm his account.
+     */
+    public $enableConfirmation = true;
+
+    /**
+     * @var bool Whether to allow logging in without confirmation.
+     */
+    public $enableUnconfirmedLogin = false;
+
+    /**
+     * @var bool Whether to enable password recovery.
+     */
+    public $enablePasswordRecovery = true;
+
+    /**
+     * @var bool Whether user has to confirm his email address after changing it on settings page.
+     */
+    public $enableEmailReconfirmation = true;
 
     /**
      * @var int The time you want the user will be remembered without asking for credentials.
      */
     public $rememberFor = 1209600; // two weeks
-
-    /**
-     * @var bool Whether user have to confirm his account.
-     */
-    public $confirmable = true;
 
     /**
      * @var int The time before a confirmation token becomes invalid.
@@ -56,11 +81,6 @@ class Module extends BaseModule
     public $cost = 10;
 
     /**
-     * @var string|null Role that will be assigned to user on creation.
-     */
-    public $defaultRole = null;
-
-    /**
      * @var array An array of administrator's usernames.
      */
     public $admins = [];
@@ -75,13 +95,13 @@ class Module extends BaseModule
      * @var array The rules to be used in URL management.
      */
     public $urlRules = [
-        '<id:\d+>' => 'profile/show',
-        '<action:(login|logout)>' => 'security/<action>',
-        '<action:(register|resend)>' => 'registration/<action>',
+        '<id:\d+>'                     => 'profile/show',
+        '<action:(login|logout)>'      => 'security/<action>',
+        '<action:(register|resend)>'   => 'registration/<action>',
         'confirm/<id:\d+>/<token:\w+>' => 'registration/confirm',
-        'forgot' => 'recovery/request',
+        'forgot'                       => 'recovery/request',
         'recover/<id:\d+>/<token:\w+>' => 'recovery/reset',
-        'settings/<action:\w+>' => 'settings/<action>'
+        'settings/<action:\w+>'        => 'settings/<action>'
     ];
 
     /**

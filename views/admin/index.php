@@ -23,11 +23,7 @@ $this->params['breadcrumbs'][] = $this->title;
 ?>
 <h1><?= Html::encode($this->title) ?> <?= Html::a(Yii::t('user', 'Create a user account'), ['create'], ['class' => 'btn btn-success']) ?></h1>
 
-<?php if (Yii::$app->getSession()->hasFlash('admin_user')): ?>
-    <div class="alert alert-success">
-        <p><?= Yii::$app->getSession()->getFlash('admin_user') ?></p>
-    </div>
-<?php endif; ?>
+<?php echo $this->render('flash') ?>
 
 <?php echo GridView::widget([
     'dataProvider' => $dataProvider,
@@ -37,9 +33,9 @@ $this->params['breadcrumbs'][] = $this->title;
         'username',
         'email:email',
         [
-            'attribute' => 'registered_from',
+            'attribute' => 'registration_ip',
             'value' => function ($model, $index, $widget) {
-                    return $model->registered_from == null ? '<span class="not-set">' . Yii::t('user', '(not set)') . '</span>' : long2ip($model->registered_from);
+                    return $model->registration_ip == null ? '<span class="not-set">' . Yii::t('user', '(not set)') . '</span>' : long2ip($model->registration_ip);
                 },
             'format' => 'html',
         ],
@@ -63,7 +59,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 }
             },
             'format' => 'raw',
-            'visible' => Yii::$app->getModule('user')->confirmable
+            'visible' => Yii::$app->getModule('user')->enableConfirmation
         ],
         [
             'header' => Yii::t('user', 'Block status'),

@@ -21,31 +21,27 @@ use yii\web\NotFoundHttpException;
  * AdminController allows you to administrate users.
  *
  * @property \dektrium\user\Module $module
- *
  * @author Dmitry Erofeev <dmeroff@gmail.com
  */
 class AdminController extends Controller
 {
-    /**
-     * @inheritdoc
-     */
+    /** @inheritdoc */
     public function behaviors()
     {
         return [
             'verbs' => [
                 'class' => VerbFilter::className(),
                 'actions' => [
-                    'delete' => ['post'],
+                    'delete'  => ['post'],
                     'confirm' => ['post'],
-                    'delete-tokens' => ['post'],
-                    'block' => ['post']
+                    'block'   => ['post']
                 ],
             ],
             'access' => [
                 'class' => AccessControl::className(),
                 'rules' => [
                     [
-                        'actions' => ['index', 'create', 'update', 'delete', 'block', 'confirm', 'delete-tokens'],
+                        'actions' => ['index', 'create', 'update', 'delete', 'block', 'confirm'],
                         'allow' => true,
                         'roles' => ['@'],
                         'matchCallback' => function ($rule, $action) {
@@ -63,7 +59,7 @@ class AdminController extends Controller
      */
     public function actionIndex()
     {
-        $searchModel  = new UserSearch();
+        $searchModel  = $this->module->manager->createUserSearch();
         $dataProvider = $searchModel->search($_GET);
 
         return $this->render('index', [
@@ -82,7 +78,7 @@ class AdminController extends Controller
         $model = $this->module->manager->createUser(['scenario' => 'create']);
 
         if ($model->load(\Yii::$app->request->post()) && $model->create()) {
-            \Yii::$app->getSession()->setFlash('admin_user', \Yii::t('user', 'User has been created'));
+            \Yii::$app->getSession()->setFlash('user.success', \Yii::t('user', 'User has been created'));
             return $this->redirect(['index']);
         }
 
@@ -103,7 +99,7 @@ class AdminController extends Controller
         $model->scenario = 'update';
 
         if ($model->load(\Yii::$app->request->post()) && $model->save()) {
-            \Yii::$app->getSession()->setFlash('admin_user', \Yii::t('user', 'User has been updated'));
+            \Yii::$app->getSession()->setFlash('user.success', \Yii::t('user', 'User has been updated'));
             return $this->refresh();
         }
 
@@ -119,24 +115,8 @@ class AdminController extends Controller
      */
     public function actionConfirm($id)
     {
-        $this->findModel($id)->confirm(false);
-        \Yii::$app->getSession()->setFlash('admin_user', \Yii::t('user', 'User has been confirmed'));
-
-        return $this->redirect(['update', 'id' => $id]);
-    }
-
-    /**
-     * Deletes recovery tokens.
-     * @param $id
-     * @return \yii\web\Response
-     */
-    public function actionDeleteTokens($id)
-    {
-        $model = $this->findModel($id);
-        $model->recovery_token = null;
-        $model->recovery_sent_at = null;
-        $model->save(false);
-        \Yii::$app->getSession()->setFlash('admin_user', \Yii::t('user', 'All user tokens have been deleted'));
+        $this->findModel($id)->confirm();
+        \Yii::$app->getSession()->setFlash('user.success', \Yii::t('user', 'User has been confirmed'));
 
         return $this->redirect(['update', 'id' => $id]);
     }
@@ -150,7 +130,7 @@ class AdminController extends Controller
     public function actionDelete($id)
     {
         $this->findModel($id)->delete();
-        \Yii::$app->getSession()->setFlash('admin_user', \Yii::t('user', 'User has been deleted'));
+        \Yii::$app->getSession()->setFlash('user.success', \Yii::t('user', 'User has been deleted'));
 
         return $this->redirect(['index']);
     }
@@ -166,10 +146,10 @@ class AdminController extends Controller
         $user = $this->findModel($id);
         if ($user->getIsBlocked()) {
             $user->unblock();
-            \Yii::$app->getSession()->setFlash('admin_user', \Yii::t('user', 'User has been unblocked'));
+            \Yii::$app->getSession()->setFlash('user.success', \Yii::t('user', 'User has been unblocked'));
         } else {
             $user->block();
-            \Yii::$app->getSession()->setFlash('admin_user', \Yii::t('user', 'User has been blocked'));
+            \Yii::$app->getSession()->setFlash('user.success', \Yii::t('user', 'User has been blocked'));
         }
 
         return $this->redirect(['index']);
@@ -184,12 +164,12 @@ class AdminController extends Controller
      */
     protected function findModel($id)
     {
-        /** @var \dektrium\user\models\User $user */
         $user = $this->module->manager->findUserById($id);
-        if ($id !== null && $user !== null) {
-            return $user;
-        } else {
-            throw new NotFoundHttpException('The requested page does not exist.');
+
+        if ($user === null) {
+            throw new NotFoundHttpException('The requested page does not exist');
         }
+
+        return $user;
     }
 }

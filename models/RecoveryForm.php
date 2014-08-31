@@ -32,19 +32,9 @@ class RecoveryForm extends Model
     public $password;
 
     /**
-     * @var integer
-     */
-    public $id;
-
-    /**
-     * @var string
+     * @var Token
      */
     public $token;
-
-    /**
-     * @var \dektrium\user\models\User
-     */
-    private $_user;
 
     /**
      * @inheritdoc
@@ -53,22 +43,16 @@ class RecoveryForm extends Model
     public function init()
     {
         parent::init();
-        if ($this->id == null || $this->token == null) {
-            throw new \RuntimeException('Id and token should be passed to config');
+        if ($this->token == null) {
+            throw new \RuntimeException('Token should be passed to config');
         }
 
-        $this->_user = $this->module->manager->findUserByIdAndRecoveryToken($this->id, $this->token);
-        if (!$this->_user) {
-            throw new InvalidParamException('Wrong password reset token');
-        }
-        if ($this->_user->isRecoveryPeriodExpired) {
-            throw new InvalidParamException('Token has been expired');
+        if ($this->token->getIsExpired() || $this->token->user === null) {
+            throw new InvalidParamException('Invalid token');
         }
     }
 
-    /**
-     * @inheritdoc
-     */
+    /** @inheritdoc */
     public function attributeLabels()
     {
         return [
@@ -76,9 +60,7 @@ class RecoveryForm extends Model
         ];
     }
 
-    /**
-     * @inheritdoc
-     */
+    /** @inheritdoc */
     public function scenarios()
     {
         return [
@@ -86,9 +68,7 @@ class RecoveryForm extends Model
         ];
     }
 
-    /**
-     * @inheritdoc
-     */
+    /** @inheritdoc */
     public function rules()
     {
         return [
@@ -105,8 +85,8 @@ class RecoveryForm extends Model
     public function resetPassword()
     {
         if ($this->validate()) {
-            $this->_user->resetPassword($this->password);
-
+            $this->token->user->resetPassword($this->password);
+            \Yii::$app->session->setFlash('user.recovery_finished');
             return true;
         }
 

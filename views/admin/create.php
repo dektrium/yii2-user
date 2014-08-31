@@ -21,6 +21,9 @@ $this->title = Yii::t('user', 'Create a user account');
 $this->params['breadcrumbs'][] = ['label' => Yii::t('user', 'Users'), 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 ?>
+
+<?php echo $this->render('flash') ?>
+
 <div class="panel panel-default">
     <div class="panel-heading">
         <?= Html::encode($this->title) ?>
@@ -37,8 +40,6 @@ $this->params['breadcrumbs'][] = $this->title;
         <?= $form->field($model, 'email')->textInput(['maxlength' => 255]) ?>
 
         <?= $form->field($model, 'password')->passwordInput() ?>
-
-        <?= $form->field($model, 'role')->textInput(['maxlength' => 255]) ?>
 
         <div class="form-group">
             <?= Html::submitButton(Yii::t('user', 'Save'), ['class' => 'btn btn-success']) ?>

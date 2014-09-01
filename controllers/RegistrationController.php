@@ -58,7 +58,7 @@ class RegistrationController extends Controller
      */
     public function actionRegister()
     {
-        if (!$this->module->enableConfirmation) {
+        if (!$this->module->enableRegistration) {
             throw new NotFoundHttpException;
         }
 

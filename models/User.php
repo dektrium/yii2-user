@@ -75,6 +75,14 @@ class User extends ActiveRecord implements IdentityInterface
     }
 
     /**
+     * @return bool Whether the user is an admin or not.
+     */
+    public function getIsAdmin()
+    {
+        return in_array($this->username, $this->module->admins);
+    }
+
+    /**
      * @return \yii\db\ActiveQuery
      */
     public function getProfile()

@@ -63,7 +63,7 @@ return array (
   'Error occurred while confirming user' => 'Si è verificato un errore durante la conferma utente',
   'Error occurred while deleting user' => 'Si è verificato un errore durante la rimozione dell\'utente!',
   'Finish' => 'Finalizar',
-  'Forgot password?' => 'Password dimenticata ?',
+  'Forgot password?' => 'Password dimenticata?',
   'Gravatar email' => 'Gravatar email',
   'Hello' => 'Ciao',
   'If you already registered, sign in and connect this account on settings page' => 'Se sei già registrato, accedi e collegati alla pagina delle impostazioni',

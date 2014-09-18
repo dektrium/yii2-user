@@ -23,7 +23,22 @@ use yii\base\Module as BaseModule;
  */
 class Module extends BaseModule
 {
-    const VERSION = '0.7.0';
+    const VERSION = '0.8.0-dev';
+
+    /**
+     * Email is changed right after user enter's new email address.
+     */
+    const STRATEGY_INSECURE = 0;
+
+    /**
+     * Email is changed after user clicks confirmation link sent to his new email address.
+     */
+    const STRATEGY_DEFAULT = 1;
+
+    /**
+     * Email is changed after user clicks both confirmation links sent to his old and new email addresses.
+     */
+    const STRATEGY_SECURE = 2;
 
     /**
      * @var string Web user class.
@@ -56,9 +71,9 @@ class Module extends BaseModule
     public $enablePasswordRecovery = true;
 
     /**
-     * @var bool Whether user has to confirm his email address after changing it on settings page.
+     * @var integer Email changing strategy.
      */
-    public $enableEmailReconfirmation = true;
+    public $emailChangeStrategy = self::STRATEGY_DEFAULT;
 
     /**
      * @var int The time you want the user will be remembered without asking for credentials.

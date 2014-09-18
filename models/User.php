@@ -55,9 +55,6 @@ class User extends ActiveRecord implements IdentityInterface
     /** @var string Plain password. Used for model validation. */
     public $password;
 
-    /** @var string Current user's password. Used for model validation. */
-    public $current_password;
-
     /**
      * @return bool Whether the user is confirmed or not.
      */
@@ -128,7 +125,6 @@ class User extends ActiveRecord implements IdentityInterface
             'password'          => \Yii::t('user', 'Password'),
             'created_at'        => \Yii::t('user', 'Registration time'),
             'confirmed_at'      => \Yii::t('user', 'Confirmation time'),
-            'current_password' => \Yii::t('user', 'Current password'),
         ];
     }
 
@@ -144,12 +140,11 @@ class User extends ActiveRecord implements IdentityInterface
     public function scenarios()
     {
         return [
-            'register'        => ['username', 'email', 'password'],
-            'connect'         => ['username', 'email'],
-            'create'          => ['username', 'email', 'password', 'role'],
-            'update'          => ['username', 'email', 'password', 'role'],
-            'update_password' => ['password', 'current_password'],
-            'update_email'    => ['unconfirmed_email', 'current_password']
+            'register' => ['username', 'email', 'password'],
+            'connect'  => ['username', 'email'],
+            'create'   => ['username', 'email', 'password', 'role'],
+            'update'   => ['username', 'email', 'password', 'role'],
+            'settings' => ['username', 'email', 'password']
         ];
     }
 
@@ -307,39 +302,6 @@ class User extends ActiveRecord implements IdentityInterface
         \Yii::getLogger()->log('User has been confirmed', Logger::LEVEL_INFO);
 
         return $this->save(false);
-    }
-
-    /**
-     * Updates email with new one. If enableConfirmation option is enabled, it will send confirmation message to new email.
-     *
-     * @return bool
-     */
-    public function updateEmail()
-    {
-        if ($this->validate()) {
-            if ($this->module->enableEmailReconfirmation) {
-                if ($this->unconfirmed_email == $this->email || $this->unconfirmed_email == null) {
-                    $this->unconfirmed_email = null;
-                    \Yii::$app->session->setFlash('user.email_change_cancelled');
-                } else {
-                    $token = $this->module->manager->createToken([
-                        'user_id' => $this->id,
-                        'type'    => Token::TYPE_CONFIRMATION
-                    ]);
-                    $token->save(false);
-                    $this->module->mailer->sendReconfirmationMessage($this, $token);
-                    \Yii::$app->session->setFlash('user.reconfirmation_sent');
-                }
-                $this->save(false);
-            } else {
-                $this->email = $this->unconfirmed_email;
-                $this->unconfirmed_email = null;
-                \Yii::$app->session->setFlash('user.email_changed');
-            }
-            return true;
-        }
-
-        return false;
     }
 
     /**

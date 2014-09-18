@@ -20,40 +20,12 @@ use yii\helpers\Html;
 $this->title = Yii::t('user', 'Networks');
 $this->params['breadcrumbs'][] = $this->title;
 ?>
+
+<?= $this->render('/_alert') ?>
+
 <div class="row">
-    <?php if (Yii::$app->getSession()->hasFlash('account_connected')): ?>
-        <div class="col-md-12">
-            <div class="alert alert-success">
-                <?= Yii::$app->getSession()->getFlash('account_connected') ?>
-            </div>
-        </div>
-    <?php endif; ?>
-    <?php if (Yii::$app->getSession()->hasFlash('account_not_connected')): ?>
-        <div class="col-md-12">
-            <div class="alert alert-danger">
-                <?= Yii::$app->getSession()->getFlash('account_not_connected') ?>
-            </div>
-        </div>
-    <?php endif; ?>
     <div class="col-md-3">
-        <div class="panel panel-default">
-            <div class="panel-heading">
-                <h3 class="panel-title"><?= Yii::$app->getUser()->getIdentity()->username ?></h3>
-            </div>
-            <div class="panel-body">
-                <?= \yii\widgets\Menu::widget([
-                    'options' => [
-                        'class' => 'nav nav-pills nav-stacked'
-                    ],
-                    'items' => [
-                        ['label' => Yii::t('user', 'Profile'), 'url' => ['/user/settings/profile']],
-                        ['label' => Yii::t('user', 'Email'), 'url' => ['/user/settings/email']],
-                        ['label' => Yii::t('user', 'Password'), 'url' => ['/user/settings/password']],
-                        ['label' => Yii::t('user', 'Networks'), 'url' => ['/user/settings/networks']],
-                    ]
-                ]) ?>
-            </div>
-        </div>
+        <?= $this->render('_menu') ?>
     </div>
     <div class="col-md-9">
         <div class="panel panel-default">

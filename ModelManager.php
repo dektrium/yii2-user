@@ -26,6 +26,7 @@ use yii\base\Component;
  * @method models\LoginForm           createLoginForm
  * @method models\RecoveryForm        createRecoveryForm
  * @method models\RecoveryRequestForm createRecoveryRequestForm
+ * @method models\SettingsForm        createSettingsForm
  * @method \yii\db\ActiveQuery        createUserQuery
  * @method \yii\db\ActiveQuery        createTokenQuery
  * @method \yii\db\ActiveQuery        createProfileQuery
@@ -64,6 +65,9 @@ class ModelManager extends Component
 
     /** @var string */
     public $recoveryRequestFormClass = 'dektrium\user\models\RecoveryRequestForm';
+
+    /** @var string */
+    public $settingsFormClass = 'dektrium\user\models\SettingsForm';
 
     /**
      * Finds a user by the given id.

@@ -12,11 +12,14 @@
 namespace dektrium\user\controllers;
 
 use yii\authclient\ClientInterface;
+use yii\helpers\Url;
 use yii\web\Controller;
 use yii\filters\AccessControl;
 use yii\filters\VerbFilter;
 use yii\web\ForbiddenHttpException;
 use yii\web\NotFoundHttpException;
+use yii\web\Response;
+use yii\widgets\ActiveForm;
 
 /**
  * SettingsController manages updating user settings (e.g. profile, email and password).
@@ -41,7 +44,6 @@ class SettingsController extends Controller
             'verbs' => [
                 'class' => VerbFilter::className(),
                 'actions' => [
-                    'reset' => ['post'],
                     'disconnect' => ['post']
                 ],
             ],
@@ -49,9 +51,9 @@ class SettingsController extends Controller
                 'class' => AccessControl::className(),
                 'rules' => [
                     [
-                        'allow' => true,
-                        'actions' => ['profile', 'email', 'password', 'networks', 'reset', 'connect', 'disconnect'],
-                        'roles' => ['@']
+                        'allow'   => true,
+                        'actions' => ['profile', 'account', 'networks', 'connect', 'disconnect'],
+                        'roles'   => ['@']
                     ],
                 ]
             ],
@@ -65,7 +67,7 @@ class SettingsController extends Controller
     {
         return [
             'connect' => [
-                'class' => 'yii\authclient\AuthAction',
+                'class'           => 'yii\authclient\AuthAction',
                 'successCallback' => [$this, 'connect'],
             ]
         ];
@@ -80,9 +82,13 @@ class SettingsController extends Controller
     {
         $model = $this->module->manager->findProfileById(\Yii::$app->user->identity->getId());
 
-        if ($model->load(\Yii::$app->getRequest()->post()) && $model->save()) {
-            \Yii::$app->getSession()->setFlash('settings_saved', \Yii::t('user', 'Profile updated successfully'));
+        if (\Yii::$app->request->isAjax && $model->load(\Yii::$app->request->post())) {
+            \Yii::$app->response->format = Response::FORMAT_JSON;
+            return ActiveForm::validate($model);
+        }
 
+        if ($model->load(\Yii::$app->getRequest()->post()) && $model->save()) {
+            \Yii::$app->getSession()->setFlash('success', \Yii::t('user', 'Profile settings have been successfully saved'));
             return $this->refresh();
         }
 
@@ -92,40 +98,25 @@ class SettingsController extends Controller
     }
 
     /**
-     * Shows email settings form.
+     * Displays page where user can update account settings (username, email or password).
      *
      * @return string|\yii\web\Response
      */
-    public function actionEmail()
+    public function actionAccount()
     {
-        $model = $this->module->manager->findUserById(\Yii::$app->user->identity->getId());
-        $model->scenario = 'update_email';
+        $model = $this->module->manager->createSettingsForm();
 
-        if ($model->load(\Yii::$app->getRequest()->post()) && $model->updateEmail()) {
+        if (\Yii::$app->request->isAjax && $model->load(\Yii::$app->request->post())) {
+            \Yii::$app->response->format = Response::FORMAT_JSON;
+            return ActiveForm::validate($model);
+        }
+
+        if ($model->load(\Yii::$app->getRequest()->post()) && $model->save()) {
+            \Yii::$app->session->setFlash('success', \Yii::t('user', 'Account settings have been successfully saved'));
             return $this->refresh();
         }
 
-        return $this->render('email', [
-            'model' => $model
-        ]);
-    }
-
-    /**
-     * Shows password settings form.
-     *
-     * @return string|\yii\web\Response
-     */
-    public function actionPassword()
-    {
-        $model = $this->module->manager->findUser(['id' => \Yii::$app->user->identity->getId()])->one();
-        $model->scenario = 'update_password';
-
-        if ($model->load(\Yii::$app->getRequest()->post()) && $model->save()) {
-            \Yii::$app->getSession()->setFlash('settings_saved', \Yii::t('user', 'Password has been changed'));
-            $this->refresh();
-        }
-
-        return $this->render('password', [
+        return $this->render('account', [
             'model' => $model
         ]);
     }
@@ -137,17 +128,15 @@ class SettingsController extends Controller
      */
     public function actionNetworks()
     {
-        $user = $this->module->manager->findUser(['id' => \Yii::$app->user->id])->one();
-
-        return $this->render('accounts', [
-            'user' => $user
+        return $this->render('networks', [
+            'user' => \Yii::$app->user->identity
         ]);
     }
 
     /**
      * Disconnects a network account from user.
      *
-     * @param $id
+     * @param  integer $id
      * @return \yii\web\Response
      * @throws \yii\web\NotFoundHttpException
      * @throws \yii\web\ForbiddenHttpException
@@ -180,16 +169,17 @@ class SettingsController extends Controller
 
         if (null === ($account = $this->module->manager->findAccount($provider, $clientId))) {
             $account = $this->module->manager->createAccount([
-                'provider'   => $provider,
-                'client_id'  => $clientId,
-                'data'       => json_encode($attributes),
-                'user_id'    => \Yii::$app->user->id
+                'provider'  => $provider,
+                'client_id' => $clientId,
+                'data'      => json_encode($attributes),
+                'user_id'   => \Yii::$app->user->id
             ]);
             $account->save(false);
-            \Yii::$app->session->setFlash('account_connected', \Yii::t('user', 'Account has successfully been connected'));
+            \Yii::$app->session->setFlash('success', \Yii::t('user', 'Account has been successfully connected'));
         } else {
-            \Yii::$app->session->setFlash('account_not_connected', \Yii::t('user', 'This account has already been connected to another user'));
+            \Yii::$app->session->setFlash('error', \Yii::t('user', 'This account has already been connected to another user'));
         }
-        return $this->redirect(['networks']);
+
+        $this->action->successUrl = Url::to(['/user/settings/networks']);
     }
 }

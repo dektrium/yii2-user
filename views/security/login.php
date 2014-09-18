@@ -37,7 +37,7 @@ $this->params['breadcrumbs'][] = $this->title;
 
                 <?= $form->field($model, 'password', ['inputOptions' => ['class' => 'form-control', 'tabindex' => '2']])->passwordInput()->label(Yii::t('user', 'Password') . ' (' . Html::a(Yii::t('user', 'Forgot password?'), ['/user/recovery/request'], ['tabindex' => '5']) . ')') ?>
 
-                <?= $form->field($model, 'rememberMe')->checkbox(['class' => 'form-control','tabindex' => '4']) ?>
+                <?= $form->field($model, 'rememberMe')->checkbox(['tabindex' => '4']) ?>
 
                 <?= Html::submitButton(Yii::t('user', 'Sign in'), ['class' => 'btn btn-primary btn-block', 'tabindex' => '3']) ?>
 

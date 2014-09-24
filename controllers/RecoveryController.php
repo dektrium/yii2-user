@@ -72,17 +72,17 @@ class RecoveryController extends Controller
      * Displays page where user can reset password.
      *
      * @param  integer $id
-     * @param  string  $token
+     * @param  string  $code
      * @return string
      * @throws \yii\web\NotFoundHttpException
      */
-    public function actionReset($id, $token)
+    public function actionReset($id, $code)
     {
         if (!$this->module->enablePasswordRecovery) {
             throw new NotFoundHttpException;
         }
 
-        if (($token = $this->module->manager->findToken($id, $token, Token::TYPE_RECOVERY)) == null) {
+        if (($token = $this->module->manager->findToken($id, $code, Token::TYPE_RECOVERY)) == null) {
             throw new NotFoundHttpException;
         }
         try {

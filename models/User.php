@@ -344,7 +344,7 @@ class User extends ActiveRecord implements IdentityInterface
     {
         if ($insert) {
             $this->setAttribute('auth_key', \Yii::$app->security->generateRandomString());
-            if ($app instanceof \yii\web\Application) {
+            if (Yii::$app() instanceof \yii\web\Application) {
                 $this->setAttribute('registration_ip', ip2long(Yii::$app->request->userIP));
             }
         }

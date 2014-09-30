@@ -95,7 +95,6 @@ class RecoveryController extends Controller
         }
 
         if ($model->load(\Yii::$app->getRequest()->post()) && $model->resetPassword()) {
-            $token->delete();
             return $this->render('finish');
         }
 

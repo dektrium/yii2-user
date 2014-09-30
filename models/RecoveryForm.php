@@ -86,6 +86,7 @@ class RecoveryForm extends Model
     {
         if ($this->validate()) {
             $this->token->user->resetPassword($this->password);
+            $this->token->delete();
             \Yii::$app->session->setFlash('user.recovery_finished');
             return true;
         }

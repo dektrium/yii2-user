@@ -11,6 +11,7 @@
 
 namespace dektrium\user\controllers;
 
+use dektrium\user\Module;
 use yii\authclient\ClientInterface;
 use yii\helpers\Url;
 use yii\web\Controller;
@@ -52,7 +53,7 @@ class SettingsController extends Controller
                 'rules' => [
                     [
                         'allow'   => true,
-                        'actions' => ['profile', 'account', 'networks', 'connect', 'disconnect'],
+                        'actions' => ['profile', 'account', 'confirm', 'networks', 'connect', 'disconnect'],
                         'roles'   => ['@']
                     ],
                 ]
@@ -119,6 +120,31 @@ class SettingsController extends Controller
         return $this->render('account', [
             'model' => $model
         ]);
+    }
+
+    /**
+     * Attempts changing user's password.
+     *
+     * @param  integer $id
+     * @param  string  $code
+     * @return string
+     * @throws \yii\web\HttpException
+     */
+    public function actionConfirm($id, $code)
+    {
+        $user = $this->module->manager->findUserById($id);
+
+        if ($user === null || $this->module->emailChangeStrategy == Module::STRATEGY_INSECURE) {
+            throw new NotFoundHttpException;
+        }
+
+        if ($user->attemptEmailChange($code)) {
+            \Yii::$app->session->setFlash('success', \Yii::t('user', 'Your email has been successfully changed'));
+        } else {
+            \Yii::$app->session->setFlash('danger', \Yii::t('user', 'Your confirmation token is invalid'));
+        }
+
+        return $this->redirect('account');
     }
 
     /**

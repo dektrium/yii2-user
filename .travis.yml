@@ -12,7 +12,7 @@ before_script:
   - mailcatcher
   - mysql -e 'create database dektrium_test;'
   - cd tests
-  - sed -i 's/\/..\/..\/..\/..\/..\//\/..\/..\/..\//g' codeception/_bootstrap.php
+  - sed -i 's/\/..\/..\/..\/..\/..\//\/..\/..\//g' codeception/_bootstrap.php
   - php codeception/bin/yii migrate/up --interactive=0
   - ../vendor/bin/codecept build
 script: ../vendor/bin/codecept run

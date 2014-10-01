@@ -29,13 +29,13 @@ $I->seeInEmailRecipients($user->email);
 $I->amGoingTo('reset password with invalid token');
 $user = $I->getFixture('user')->getModel('user_with_expired_recovery_token');
 $token = $I->grabRecord(Token::className(), ['user_id' => $user->id, 'type' => Token::TYPE_RECOVERY]);
-$I->amOnPage(Url::toRoute(['/user/recovery/reset', 'id' => $user->id, 'token' => $token->code]));
+$I->amOnPage(Url::toRoute(['/user/recovery/reset', 'id' => $user->id, 'code' => $token->code]));
 $I->see('Recovery token is invalid');
 
 $I->amGoingTo('reset password');
 $user = $I->getFixture('user')->getModel('user_with_recovery_token');
 $token = $I->grabRecord(Token::className(), ['user_id' => $user->id, 'type' => Token::TYPE_RECOVERY]);
-$I->amOnPage(Url::toRoute(['/user/recovery/reset', 'id' => $user->id, 'token' => $token->code]));
+$I->amOnPage(Url::toRoute(['/user/recovery/reset', 'id' => $user->id, 'code' => $token->code]));
 $I->fillField('#recovery-form-password', 'newpass');
 $I->click('Finish');
 $I->see('Password has been reset');

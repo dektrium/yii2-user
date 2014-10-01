@@ -1,5 +1,10 @@
 # CHANGELOG
 
+## 0.8.0 [Work in progress]
+
+- Added account settings page and removed email and password settings pages (dmeroff)
+- Added tab index on login page (maxxer)
+
 ## 0.7.0 [31 August 2014]
 
 - Reverted removing registration without password

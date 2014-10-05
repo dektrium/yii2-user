@@ -1,10 +1,15 @@
 # CHANGELOG
 
-## 0.8.0 [Work in progress]
+## 0.8.0 [5 October 2014] Yii 2.0.0-rc compatible
 
-- Refactored email change process (dmeroff)
-- Added account settings page and removed email and password settings pages (dmeroff)
-- Added tab index on login page (maxxer)
+- `fix` Updated admin grid view (hoksilato)
+- `fix` Recovery token is now deleted after recovery process (mrarthur)
+- `fix` Registration_ip is now filled with user ip address on registration (mrarthur)
+- `chg` Refactored email change process (dmeroff)
+- `enh` Added account settings page and removed email and password settings pages (dmeroff)
+- `enh` Added tab index on login page (maxxer)
+- `enh` Added `getIsAdmin` method on user model (maxxer)
+- `fix` Fixed bug when registration page was not available with `enableConfirmation` option disabled (marsuboss)
 
 ## 0.7.0 [31 August 2014]
 

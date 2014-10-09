@@ -44,9 +44,11 @@ $this->params['breadcrumbs'][] = $this->title;
                 <?php ActiveForm::end(); ?>
             </div>
         </div>
+        <?php if (Yii::$app->getModule('user')->enableConfirmation): ?>
         <p class="text-center">
             <?= Html::a(Yii::t('user', 'Didn\'t receive confirmation message?'), ['/user/registration/resend']) ?>
         </p>
+        <?php endif; ?>
         <?= Connect::widget([
             'baseAuthUrl' => ['/user/security/auth']
         ]) ?>

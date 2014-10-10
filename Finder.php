@@ -16,7 +16,13 @@ class Finder extends Object
     protected $userQuery;
 
     /** @var ActiveQuery */
+    protected $tokenQuery;
+
+    /** @var ActiveQuery */
     protected $accountQuery;
+
+    /** @var ActiveQuery */
+    protected $profileQuery;
 
     /** @param ActiveQuery $accountQuery */
     public function setAccountQuery(ActiveQuery $accountQuery)
@@ -28,6 +34,18 @@ class Finder extends Object
     public function setUserQuery(ActiveQuery $userQuery)
     {
         $this->userQuery = $userQuery;
+    }
+
+    /** @param ActiveQuery $tokenQuery */
+    public function setTokenQuery(ActiveQuery $tokenQuery)
+    {
+        $this->tokenQuery = $tokenQuery;
+    }
+
+    /** @param ActiveQuery $profileQuery */
+    public function setProfileQuery(ActiveQuery$profileQuery)
+    {
+        $this->profileQuery = $profileQuery;
     }
 
     /**
@@ -113,5 +131,37 @@ class Finder extends Object
             'provider'  => $provider,
             'client_id' => $clientId
         ])->one();
+    }
+    /**
+     * Finds a token by user id and code.
+     *
+     * @param  mixed  $condition
+     * @return ActiveQuery
+     */
+    public function findToken($condition)
+    {
+        return $this->tokenQuery->where($condition);
+    }
+
+    /**
+     * Finds a profile by user id.
+     *
+     * @param integer $id
+     * @return null|models\Profile
+     */
+    public function findProfileById($id)
+    {
+        return $this->findProfile(['user_id' => $id])->one();
+    }
+
+    /**
+     * Finds a profile
+     *
+     * @param  mixed $condition
+     * @return \yii\db\ActiveQuery
+     */
+    public function findProfile($condition)
+    {
+        return $this->profileQuery->where($condition);
     }
 }

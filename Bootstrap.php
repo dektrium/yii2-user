@@ -46,7 +46,10 @@ class Bootstrap implements BootstrapInterface
             });
         }
         \Yii::$container->set('dektrium\user\Finder', [
-            'userQuery' => \Yii::$container->get('UserQuery'),
+            'userQuery'    => \Yii::$container->get('UserQuery'),
+            'profileQuery' => \Yii::$container->get('ProfileQuery'),
+            'tokenQuery'   => \Yii::$container->get('TokenQuery'),
+            'accountQuery' => \Yii::$container->get('AccountQuery'),
         ]);
 
         if ($app instanceof \yii\console\Application) {

@@ -38,6 +38,16 @@ class Bootstrap implements BootstrapInterface
 
         /** @var $module Module */
         $module = $app->getModule('user');
+        foreach ($module->modelMap as $name => $definition) {
+            $class = "dektrium\\user\\models\\" . $name;
+            \Yii::$container->set($class, $definition);
+            \Yii::$container->set($name . 'Query', function () use ($class) {
+                return forward_static_call([$class, 'find']);
+            });
+        }
+        \Yii::$container->set('dektrium\user\Finder', [
+            'userQuery' => \Yii::$container->get('UserQuery'),
+        ]);
 
         if ($app instanceof \yii\console\Application) {
             $module->controllerNamespace = 'dektrium\user\commands';

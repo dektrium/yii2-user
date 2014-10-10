@@ -119,6 +119,20 @@ class Module extends BaseModule
         'settings/<action:\w+>'        => 'settings/<action>'
     ];
 
+    public $modelMap = [
+        'User'    => 'dektrium\user\models\User',
+        'Account' => 'dektrium\user\models\Account',
+        'Profile' => 'dektrium\user\models\Profile',
+        'Token'   => 'dektrium\user\models\Token',
+        'RegistrationForm'   => 'dektrium\user\models\RegistrationForm',
+        'ResendForm'   => 'dektrium\user\models\ResendForm',
+        'LoginForm'   => 'dektrium\user\models\LoginForm',
+        'SettingsForm'   => 'dektrium\user\models\SettingsForm',
+        'RecoveryForm'   => 'dektrium\user\models\RecoveryForm',
+        'RecoveryRequestForm'   => 'dektrium\user\models\RecoveryRequestForm',
+        'UserSearch'   => 'dektrium\user\models\UserSearch',
+    ];
+
     /**
      * @inheritdoc
      */

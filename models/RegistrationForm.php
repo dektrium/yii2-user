@@ -12,6 +12,7 @@
 namespace dektrium\user\models;
 
 use dektrium\user\helpers\ModuleTrait;
+use dektrium\user\Module;
 use yii\base\Model;
 
 /**
@@ -32,6 +33,23 @@ class RegistrationForm extends Model
     /** @var string */
     public $password;
 
+    /** @var User */
+    protected $user;
+
+    /** @var Module */
+    protected $module;
+
+    /**
+     * @param User   $user
+     * @param array  $config
+     */
+    public function __construct(User $user, $config = [])
+    {
+        $this->user = $user;
+        $this->module = \Yii::$app->getModule('user');
+        parent::__construct($config);
+    }
+
     /** @inheritdoc */
     public function rules()
     {
@@ -39,14 +57,14 @@ class RegistrationForm extends Model
             ['username', 'filter', 'filter' => 'trim'],
             ['username', 'match', 'pattern' => '/^[a-zA-Z]\w+$/'],
             ['username', 'required'],
-            ['username', 'unique', 'targetClass' => $this->module->manager->userClass,
+            ['username', 'unique', 'targetClass' => get_class($this->user),
                 'message' => \Yii::t('user', 'This username has already been taken')],
             ['username', 'string', 'min' => 3, 'max' => 20],
 
             ['email', 'filter', 'filter' => 'trim'],
             ['email', 'required'],
             ['email', 'email'],
-            ['email', 'unique', 'targetClass' => $this->module->manager->userClass,
+            ['email', 'unique', 'targetClass' => get_class($this->user),
                 'message' => \Yii::t('user', 'This email address has already been taken')],
 
             ['password', 'required', 'skipOnEmpty' => $this->module->enableGeneratingPassword],
@@ -77,14 +95,14 @@ class RegistrationForm extends Model
     public function register()
     {
         if ($this->validate()) {
-            $user = $this->module->manager->createUser([
-                'scenario' => 'register',
+            $this->user->scenario = 'register';
+            $this->user->setAttributes([
                 'email'    => $this->email,
                 'username' => $this->username,
                 'password' => $this->password
             ]);
 
-            return $user->register();
+            return $this->user->register();
         }
 
         return false;

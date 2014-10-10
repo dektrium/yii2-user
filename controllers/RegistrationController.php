@@ -11,6 +11,10 @@
 
 namespace dektrium\user\controllers;
 
+use dektrium\user\Finder;
+use dektrium\user\models\RegistrationForm;
+use dektrium\user\models\ResendForm;
+use dektrium\user\models\User;
 use yii\web\Controller;
 use yii\filters\AccessControl;
 use yii\web\NotFoundHttpException;
@@ -25,6 +29,36 @@ use yii\web\NotFoundHttpException;
  */
 class RegistrationController extends Controller
 {
+    /** @var User */
+    protected $user;
+
+    /** @var RegistrationForm */
+    protected $registrationForm;
+
+    /** @var ResendForm */
+    protected $resendForm;
+
+    /** @var Finder */
+    protected $finder;
+
+    /**
+     * @param string           $id
+     * @param \yii\base\Module $module
+     * @param RegistrationForm $regForm
+     * @param ResendForm       $resendForm
+     * @param User             $user
+     * @param Finder           $finder
+     * @param array            $config
+     */
+    public function __construct($id, $module, RegistrationForm $regForm, User $user, ResendForm $resendForm, Finder $finder, $config = [])
+    {
+        $this->user             = $user;
+        $this->registrationForm = $regForm;
+        $this->resendForm       = $resendForm;
+        $this->finder           = $finder;
+        parent::__construct($id, $module, $config);
+    }
+
     /**
      * @inheritdoc
      */
@@ -62,20 +96,18 @@ class RegistrationController extends Controller
             throw new NotFoundHttpException;
         }
 
-        $model = $this->module->manager->createRegistrationForm();
-
-        if ($model->load(\Yii::$app->request->post()) && $model->register()) {
+        if ($this->registrationForm->load(\Yii::$app->request->post()) && $this->registrationForm->register()) {
             return $this->render('finish');
         }
 
         return $this->render('register', [
-            'model' => $model
+            'model' => $this->registrationForm
         ]);
     }
 
     public function actionConnect($account_id)
     {
-        $account = $this->module->manager->findAccountById($account_id);
+        $account = $this->finder->findAccountById($account_id);
 
         if ($account === null || $account->getIsConnected()) {
             throw new NotFoundHttpException('Something went wrong');
@@ -83,16 +115,16 @@ class RegistrationController extends Controller
 
         $this->module->enableConfirmation = false;
 
-        $model = $this->module->manager->createUser(['scenario' => 'connect']);
-        if ($model->load(\Yii::$app->request->post()) && $model->create()) {
-            $account->user_id = $model->id;
+        $this->user->scenario = 'connect';
+        if ($this->user->load(\Yii::$app->request->post()) && $this->user->create()) {
+            $account->user_id = $this->user->id;
             $account->save(false);
-            \Yii::$app->user->login($model, $this->module->rememberFor);
+            \Yii::$app->user->login($this->user, $this->module->rememberFor);
             $this->goBack();
         }
 
         return $this->render('connect', [
-            'model'   => $model,
+            'model'   => $this->user,
             'account' => $account
         ]);
     }
@@ -108,7 +140,7 @@ class RegistrationController extends Controller
      */
     public function actionConfirm($id, $code)
     {
-        $user = $this->module->manager->findUserById($id);
+        $user = $this->finder->findUserById($id);
 
         if ($user === null || $this->module->enableConfirmation == false) {
             throw new NotFoundHttpException;
@@ -132,18 +164,16 @@ class RegistrationController extends Controller
      */
     public function actionResend()
     {
-        if (!$this->module->enableConfirmation) {
+        if ($this->module->enableConfirmation == false) {
             throw new NotFoundHttpException;
         }
 
-        $model = $this->module->manager->createResendForm();
-
-        if ($model->load(\Yii::$app->request->post()) && $model->resend()) {
+        if ($this->resendForm->load(\Yii::$app->request->post()) && $this->resendForm->resend()) {
             return $this->render('finish');
         }
 
         return $this->render('resend', [
-            'model' => $model
+            'model' => $this->resendForm
         ]);
     }
 }

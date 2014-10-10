@@ -59,25 +59,15 @@ class RegistrationController extends Controller
         parent::__construct($id, $module, $config);
     }
 
-    /**
-     * @inheritdoc
-     */
+    /** @inheritdoc */
     public function behaviors()
     {
         return [
             'access' => [
                 'class' => AccessControl::className(),
                 'rules' => [
-                    [
-                        'allow' => true,
-                        'actions' => ['register', 'connect'],
-                        'roles' => ['?']
-                    ],
-                    [
-                        'allow' => true,
-                        'actions' => ['confirm', 'resend'],
-                        'roles' => ['?', '@']
-                    ],
+                    ['allow' => true, 'actions' => ['register', 'connect'], 'roles' => ['?']],
+                    ['allow' => true, 'actions' => ['confirm', 'resend'], 'roles' => ['?', '@']],
                 ]
             ],
         ];
@@ -105,22 +95,27 @@ class RegistrationController extends Controller
         ]);
     }
 
+    /**
+     * Displays page where user can create new account that will be connected to social account.
+     *
+     * @param  integer $account_id
+     * @return string
+     * @throws NotFoundHttpException
+     */
     public function actionConnect($account_id)
     {
         $account = $this->finder->findAccountById($account_id);
 
         if ($account === null || $account->getIsConnected()) {
-            throw new NotFoundHttpException('Something went wrong');
+            throw new NotFoundHttpException;
         }
-
-        $this->module->enableConfirmation = false;
 
         $this->user->scenario = 'connect';
         if ($this->user->load(\Yii::$app->request->post()) && $this->user->create()) {
             $account->user_id = $this->user->id;
             $account->save(false);
             \Yii::$app->user->login($this->user, $this->module->rememberFor);
-            $this->goBack();
+            return $this->goBack();
         }
 
         return $this->render('connect', [

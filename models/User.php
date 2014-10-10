@@ -294,6 +294,8 @@ class User extends ActiveRecord implements IdentityInterface
 
         $this->confirmed_at = time();
 
+        \Yii::$app->user->login($this);
+
         \Yii::getLogger()->log('User has been confirmed', Logger::LEVEL_INFO);
 
         return $this->save(false);

@@ -13,9 +13,9 @@ use yii\helpers\Html;
 use yii\widgets\ActiveForm;
 
 /**
- * @var yii\web\View $this
- * @var yii\widgets\ActiveForm $form
+ * @var yii\web\View              $this
  * @var dektrium\user\models\User $user
+ * @var dektrium\user\Module      $module
  */
 
 $this->title = Yii::t('user', 'Sign up');
@@ -36,7 +36,7 @@ $this->params['breadcrumbs'][] = $this->title;
 
                 <?= $form->field($model, 'email') ?>
 
-                <?php if (Yii::$app->getModule('user')->enableGeneratingPassword == false): ?>
+                <?php if ($module->enableGeneratingPassword == false): ?>
                     <?= $form->field($model, 'password')->passwordInput() ?>
                 <?php endif ?>
 

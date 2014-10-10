@@ -56,29 +56,3 @@ use yii\helpers\Html;
         </p>
     </div>
 <?php endif ?>
-
-<?php if (Yii::$app->session->hasFlash('user.invalid_token')): ?>
-    <?php $this->title = Yii::t('user', 'Invalid token'); ?>
-    <div class="alert alert-danger">
-        <h4>
-            <?= Html::encode($this->title) ?>
-        </h4>
-        <p>
-            <?= Yii::t('user', 'We are sorry but your confirmation token is out of date') ?>.
-            <?= Yii::t('user', 'You can try requesting a new one by clicking the link below') ?>:
-        </p>
-        <p>
-            <?= Html::a(Yii::t('user', 'Request new confirmation message'), ['/user/registration/resend']) ?>
-        </p>
-    </div>
-<?php endif ?>
-
-<?php if (Yii::$app->session->hasFlash('user.confirmation_finished')): ?>
-    <?php $this->title = Yii::t('user', 'Account has been confirmed'); ?>
-    <div class="alert alert-success">
-        <h4>
-            <?= Html::encode($this->title) ?>
-        </h4>
-        <?= Yii::t('user', 'Awesome! You have successfully confirmed your email address. You may sign in using your credentials now') ?>
-    </div>
-<?php endif ?>

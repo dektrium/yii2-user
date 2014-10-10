@@ -11,6 +11,9 @@
 
 namespace dektrium\user\controllers;
 
+use dektrium\user\Finder;
+use dektrium\user\models\Account;
+use dektrium\user\models\LoginForm;
 use yii\helpers\Url;
 use yii\web\Controller;
 use yii\filters\AccessControl;
@@ -26,25 +29,32 @@ use yii\authclient\ClientInterface;
  */
 class SecurityController extends Controller
 {
-    /**
-     * @inheritdoc
-     */
+    /** @var LoginForm */
+    protected $loginForm;
+
+    /** @var Finder */
+    protected $finder;
+
+    /** @var Account */
+    protected $account;
+
+    public function __construct($id, $module, LoginForm $loginForm, Finder $finder, Account $account, $config = [])
+    {
+        $this->loginForm = $loginForm;
+        $this->finder    = $finder;
+        $this->account   = $account;
+        parent::__construct($id, $module, $config);
+    }
+
+    /** @inheritdoc */
     public function behaviors()
     {
         return [
             'access' => [
                 'class' => AccessControl::className(),
                 'rules' => [
-                    [
-                        'allow' => true,
-                        'actions' => ['login', 'auth'],
-                        'roles' => ['?']
-                    ],
-                    [
-                        'allow' => true,
-                        'actions' => ['logout'],
-                        'roles' => ['@']
-                    ],
+                    ['allow' => true, 'actions' => ['login', 'auth'], 'roles' => ['?']],
+                    ['allow' => true, 'actions' => ['logout'], 'roles' => ['@']],
                 ]
             ],
             'verbs' => [
@@ -56,9 +66,7 @@ class SecurityController extends Controller
         ];
     }
 
-    /**
-     * @inheritdoc
-     */
+    /** @inheritdoc */
     public function actions()
     {
         return [
@@ -76,14 +84,12 @@ class SecurityController extends Controller
      */
     public function actionLogin()
     {
-        $model = $this->module->manager->createLoginForm();
-
-        if ($model->load(\Yii::$app->getRequest()->post()) && $model->login()) {
+        if ($this->loginForm->load(\Yii::$app->getRequest()->post()) && $this->loginForm->login()) {
             return $this->goBack();
         }
 
         return $this->render('login', [
-            'model' => $model
+            'model' => $this->loginForm
         ]);
     }
 
@@ -111,8 +117,11 @@ class SecurityController extends Controller
         $provider   = $client->getId();
         $clientId   = $attributes['id'];
 
-        if (null === ($account = $this->module->manager->findAccount($provider, $clientId))) {
-            $account = $this->module->manager->createAccount([
+        $account = $this->finder->findAccountByProviderAndClientId($provider, $clientId);
+
+        if ($account === null) {
+            $account = $this->account;
+            $account->setAttributes([
                 'provider'   => $provider,
                 'client_id'  => $clientId,
                 'data'       => json_encode($attributes)

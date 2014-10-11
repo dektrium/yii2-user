@@ -53,14 +53,14 @@ class RegistrationForm extends Model
             ['username', 'filter', 'filter' => 'trim'],
             ['username', 'match', 'pattern' => '/^[a-zA-Z]\w+$/'],
             ['username', 'required'],
-            ['username', 'unique', 'targetClass' => get_class($this->user),
+            ['username', 'unique', 'targetClass' => $this->module->modelMap['User'],
                 'message' => \Yii::t('user', 'This username has already been taken')],
             ['username', 'string', 'min' => 3, 'max' => 20],
 
             ['email', 'filter', 'filter' => 'trim'],
             ['email', 'required'],
             ['email', 'email'],
-            ['email', 'unique', 'targetClass' => get_class($this->user),
+            ['email', 'unique', 'targetClass' => $this->module->modelMap['User'],
                 'message' => \Yii::t('user', 'This email address has already been taken')],
 
             ['password', 'required', 'skipOnEmpty' => $this->module->enableGeneratingPassword],

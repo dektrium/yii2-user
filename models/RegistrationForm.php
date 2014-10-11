@@ -22,8 +22,6 @@ use yii\base\Model;
  */
 class RegistrationForm extends Model
 {
-    use ModuleTrait;
-
     /** @var string */
     public $email;
 
@@ -39,15 +37,14 @@ class RegistrationForm extends Model
     /** @var Module */
     protected $module;
 
-    /**
-     * @param User   $user
-     * @param array  $config
-     */
-    public function __construct(User $user, $config = [])
+    /** @inheritdoc */
+    public function init()
     {
-        $this->user = $user;
+        $this->user = \Yii::createObject([
+            'class'    => User::className(),
+            'scenario' => 'register'
+        ]);
         $this->module = \Yii::$app->getModule('user');
-        parent::__construct($config);
     }
 
     /** @inheritdoc */
@@ -94,17 +91,16 @@ class RegistrationForm extends Model
      */
     public function register()
     {
-        if ($this->validate()) {
-            $this->user->scenario = 'register';
-            $this->user->setAttributes([
-                'email'    => $this->email,
-                'username' => $this->username,
-                'password' => $this->password
-            ]);
-
-            return $this->user->register();
+        if (!$this->validate()) {
+            return false;
         }
 
-        return false;
+        $this->user->setAttributes([
+            'email'    => $this->email,
+            'username' => $this->username,
+            'password' => $this->password
+        ]);
+
+        return $this->user->register();
     }
 }

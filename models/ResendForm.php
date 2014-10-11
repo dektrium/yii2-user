@@ -11,7 +11,8 @@
 
 namespace dektrium\user\models;
 
-use dektrium\user\helpers\ModuleTrait;
+use dektrium\user\Finder;
+use dektrium\user\Mailer;
 use yii\base\Model;
 
 /**
@@ -24,25 +25,41 @@ use yii\base\Model;
  */
 class ResendForm extends Model
 {
-    use ModuleTrait;
-
-    /**
-     * @var string
-     */
+    /** @var string */
     public $email;
 
-    /**
-     * @var User
-     */
+    /** @var User */
     private $_user;
+
+    /** @var \dektrium\user\Module */
+    protected $module;
+
+    /** @var Mailer */
+    protected $mailer;
+
+    /** @var Finder */
+    protected $finder;
+
+    /**
+     * @param Mailer $mailer
+     * @param Finder $finder
+     * @param array  $config
+     */
+    public function __construct(Mailer $mailer, Finder $finder, $config = [])
+    {
+        $this->module = \Yii::$app->getModule('user');
+        $this->mailer = $mailer;
+        $this->finder = $finder;
+        parent::__construct($config);
+    }
 
     /**
      * @return User
      */
     public function getUser()
     {
-        if ($this->_user == null) {
-            $this->_user = $this->module->manager->findUserByEmail($this->email);
+        if ($this->_user === null) {
+            $this->_user = $this->finder->findUserByEmail($this->email);
         }
 
         return $this->_user;
@@ -54,9 +71,9 @@ class ResendForm extends Model
         return [
             ['email', 'required'],
             ['email', 'email'],
-            ['email', 'exist', 'targetClass' => $this->getModule()->manager->userClass],
+            ['email', 'exist', 'targetClass' => $this->module->modelMap['User']],
             ['email', function () {
-                if ($this->user != null && $this->user->isConfirmed) {
+                if ($this->user != null && $this->user->getIsConfirmed()) {
                     $this->addError('email', \Yii::t('user', 'This account has already been confirmed'));
                 }
             }],
@@ -84,17 +101,19 @@ class ResendForm extends Model
      */
     public function resend()
     {
-        if ($this->validate()) {
-            $token = $this->module->manager->createToken([
-                'user_id' => $this->user->id,
-                'type'    => Token::TYPE_CONFIRMATION
-            ]);
-            $token->save(false);
-            $this->module->mailer->sendConfirmationMessage($this->user, $token);
-            \Yii::$app->session->setFlash('user.confirmation_sent');
-            return true;
+        if (!$this->validate()) {
+            return false;
         }
+        /** @var Token $token */
+        $token = \Yii::createObject([
+            'class'   => Token::className(),
+            'user_id' => $this->user->id,
+            'type'    => Token::TYPE_CONFIRMATION,
+        ]);
+        $token->save(false);
+        $this->mailer->sendConfirmationMessage($this->user, $token);
+        \Yii::$app->session->setFlash('user.confirmation_sent');
 
-        return false;
+        return true;
     }
 }

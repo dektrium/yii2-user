@@ -11,7 +11,6 @@
 
 namespace dektrium\user\models;
 
-use dektrium\user\helpers\ModuleTrait;
 use yii\base\Model;
 use dektrium\user\helpers\Password;
 

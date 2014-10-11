@@ -11,7 +11,6 @@
 
 namespace dektrium\user\models;
 
-use dektrium\user\helpers\ModuleTrait;
 use dektrium\user\Module;
 use yii\base\Model;
 

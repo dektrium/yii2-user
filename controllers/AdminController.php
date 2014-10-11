@@ -11,6 +11,8 @@
 
 namespace dektrium\user\controllers;
 
+use dektrium\user\Finder;
+use dektrium\user\models\User;
 use dektrium\user\models\UserSearch;
 use yii\web\Controller;
 use yii\filters\AccessControl;
@@ -25,6 +27,21 @@ use yii\web\NotFoundHttpException;
  */
 class AdminController extends Controller
 {
+    /** @var Finder */
+    protected $finder;
+
+    /**
+     * @param string $id
+     * @param \yii\base\Module $module
+     * @param Finder $finder
+     * @param array $config
+     */
+    public function __construct($id, $module, Finder $finder, $config = [])
+    {
+        $this->finder = $finder;
+        parent::__construct($id, $module, $config);
+    }
+
     /** @inheritdoc */
     public function behaviors()
     {
@@ -59,7 +76,7 @@ class AdminController extends Controller
      */
     public function actionIndex()
     {
-        $searchModel  = $this->module->manager->createUserSearch();
+        $searchModel  = \Yii::createObject(UserSearch::className());
         $dataProvider = $searchModel->search($_GET);
 
         return $this->render('index', [
@@ -75,7 +92,10 @@ class AdminController extends Controller
      */
     public function actionCreate()
     {
-        $model = $this->module->manager->createUser(['scenario' => 'create']);
+        $model = \Yii::createObject([
+            'class'    => User::className(),
+            'scenario' => 'create',
+        ]);
 
         if ($model->load(\Yii::$app->request->post()) && $model->create()) {
             \Yii::$app->getSession()->setFlash('user.success', \Yii::t('user', 'User has been created'));
@@ -164,7 +184,7 @@ class AdminController extends Controller
      */
     protected function findModel($id)
     {
-        $user = $this->module->manager->findUserById($id);
+        $user = $this->finder->findUserById($id);
 
         if ($user === null) {
             throw new NotFoundHttpException('The requested page does not exist');

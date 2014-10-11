@@ -11,6 +11,7 @@
 
 namespace dektrium\user\models;
 
+use dektrium\user\Finder;
 use dektrium\user\Mailer;
 use yii\base\Model;
 
@@ -38,14 +39,19 @@ class RecoveryForm extends Model
     /** @var Mailer */
     protected $mailer;
 
+    /** @var Finder */
+    protected $finder;
+
     /**
      * @param Mailer $mailer
+     * @param Finder $finder
      * @param array  $config
      */
-    public function __construct(Mailer $mailer, $config = [])
+    public function __construct(Mailer $mailer, Finder $finder, $config = [])
     {
         $this->module = \Yii::$app->getModule('user');
         $this->mailer = $mailer;
+        $this->finder = $finder;
         parent::__construct($config);
     }
 
@@ -75,11 +81,11 @@ class RecoveryForm extends Model
             ['email', 'required'],
             ['email', 'email'],
             ['email', 'exist',
-                'targetClass' => $this->module->manager->userClass,
+                'targetClass' => $this->module->modelMap['User'],
                 'message' => \Yii::t('user', 'There is no user with such email.')
             ],
             ['email', function ($attribute) {
-                $this->user = $this->module->manager->findUserByEmail($this->email);
+                $this->user = $this->finder->findUserByEmail($this->email);
                 if ($this->user !== null && $this->module->enableConfirmation && !$this->user->getIsConfirmed()) {
                     $this->addError($attribute, \Yii::t('user', 'You need to confirm your email address'));
                 }

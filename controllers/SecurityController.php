@@ -29,20 +29,18 @@ use yii\authclient\ClientInterface;
  */
 class SecurityController extends Controller
 {
-    /** @var LoginForm */
-    protected $loginForm;
-
     /** @var Finder */
     protected $finder;
 
-    /** @var Account */
-    protected $account;
-
-    public function __construct($id, $module, LoginForm $loginForm, Finder $finder, Account $account, $config = [])
+    /**
+     * @param string $id
+     * @param \yii\base\Module $module
+     * @param Finder $finder
+     * @param array $config
+     */
+    public function __construct($id, $module, Finder $finder, $config = [])
     {
-        $this->loginForm = $loginForm;
-        $this->finder    = $finder;
-        $this->account   = $account;
+        $this->finder = $finder;
         parent::__construct($id, $module, $config);
     }
 
@@ -79,35 +77,34 @@ class SecurityController extends Controller
 
     /**
      * Displays the login page.
-     *
      * @return string|\yii\web\Response
      */
     public function actionLogin()
     {
-        if ($this->loginForm->load(\Yii::$app->getRequest()->post()) && $this->loginForm->login()) {
+        $model = \Yii::createObject(LoginForm::className());
+
+        if ($model->load(\Yii::$app->getRequest()->post()) && $model->login()) {
             return $this->goBack();
         }
 
         return $this->render('login', [
-            'model' => $this->loginForm
+            'model'  => $model,
+            'module' => $this->module,
         ]);
     }
 
     /**
      * Logs the user out and then redirects to the homepage.
-     *
      * @return \yii\web\Response
      */
     public function actionLogout()
     {
         \Yii::$app->getUser()->logout();
-
         return $this->goHome();
     }
 
     /**
      * Logs the user in if this social account has been already used. Otherwise shows registration form.
-     *
      * @param  ClientInterface $client
      * @return \yii\web\Response
      */
@@ -120,11 +117,11 @@ class SecurityController extends Controller
         $account = $this->finder->findAccountByProviderAndClientId($provider, $clientId);
 
         if ($account === null) {
-            $account = $this->account;
-            $account->setAttributes([
+            $account = \Yii::createObject([
+                'class'      => Account::className(),
                 'provider'   => $provider,
                 'client_id'  => $clientId,
-                'data'       => json_encode($attributes)
+                'data'       => json_encode($attributes),
             ]);
             $account->save(false);
         }

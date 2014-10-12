@@ -11,6 +11,7 @@
 
 namespace dektrium\user\models;
 
+use dektrium\user\Finder;
 use yii\base\Model;
 use dektrium\user\helpers\Password;
 
@@ -37,10 +38,18 @@ class LoginForm extends Model
     /** @var \dektrium\user\Module */
     protected $module;
 
-    /** @inheritdoc */
-    public function init()
+    /** @var Finder */
+    protected $finder;
+
+    /**
+     * @param Finder $finder
+     * @param array $config
+     */
+    public function __construct(Finder $finder, $config = [])
     {
+        $this->finder = $finder;
         $this->module = \Yii::$app->getModule('user');
+        parent::__construct($config);
     }
 
     /** @inheritdoc */
@@ -102,7 +111,7 @@ class LoginForm extends Model
     public function beforeValidate()
     {
         if (parent::beforeValidate()) {
-            $this->user = $this->module->manager->findUserByUsernameOrEmail($this->login);
+            $this->user = $this->finder->findUserByUsernameOrEmail($this->login);
             return true;
         } else {
             return false;

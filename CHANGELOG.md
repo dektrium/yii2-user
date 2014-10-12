@@ -1,5 +1,10 @@
 # CHANGELOG
 
+## 0.9.0 [Work in progress]
+
+- `chg` Refactored all models (dmeroff)
+- `enh` Refactored model overriding system (dmeroff)
+
 ## 0.8.0 [5 October 2014] Yii 2.0.0-rc compatible
 
 - `fix` Updated admin grid view (hoksilato)

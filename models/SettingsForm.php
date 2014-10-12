@@ -12,6 +12,7 @@
 namespace dektrium\user\models;
 
 use dektrium\user\helpers\Password;
+use dektrium\user\Mailer;
 use dektrium\user\Module;
 use yii\base\Model;
 use yii\base\NotSupportedException;
@@ -40,6 +41,9 @@ class SettingsForm extends Model
     /** @var Module */
     protected $module;
 
+    /** @var Mailer */
+    protected $mailer;
+
     /** @var User */
     private $_user;
 
@@ -54,14 +58,15 @@ class SettingsForm extends Model
     }
 
     /** @inheritdoc */
-    public function init()
+    public function __construct(Mailer $mailer, $config)
     {
+        $this->mailer = $mailer;
         $this->module = \Yii::$app->getModule('user');
         $this->setAttributes([
             'username' => $this->user->username,
             'email'    => $this->user->unconfirmed_email ?: $this->user->email
         ], false);
-        parent::init();
+        parent::__construct($config);
     }
 
     /** @inheritdoc */
@@ -156,7 +161,7 @@ class SettingsForm extends Model
             'type'    => Token::TYPE_CONFIRM_NEW_EMAIL
         ]);
         $token->save(false);
-        $this->module->mailer->sendReconfirmationMessage($this->user, $token);
+        $this->mailer->sendReconfirmationMessage($this->user, $token);
         \Yii::$app->session->setFlash('info', \Yii::t('user', 'Confirmation message has been sent to your new email address'));
     }
 

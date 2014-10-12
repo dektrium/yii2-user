@@ -27,41 +27,38 @@ class Bootstrap implements BootstrapInterface
      */
     public function bootstrap($app)
     {
-        if ($app->hasModule('user')) {
-            $identityClass = $app->getModule('user')->manager->userClass;
-        } else {
+        if (!$app->hasModule('user')) {
             $app->setModule('user', [
                 'class' => 'dektrium\user\Module'
             ]);
-            $identityClass = 'dektrium\user\models\User';
         }
-
         /** @var $module Module */
         $module = $app->getModule('user');
         foreach ($module->modelMap as $name => $definition) {
             $class = "dektrium\\user\\models\\" . $name;
             \Yii::$container->set($class, $definition);
-            \Yii::$container->set($name . 'Query', function () use ($class) {
-                return forward_static_call([$class, 'find']);
+            if (is_array($definition)) {
+                $module->modelMap = [$name => $class];
+            }
+            \Yii::$container->set($name . 'Query', function () use ($module, $name) {
+                return forward_static_call([$module->modelMap[$name], 'find']);
             });
         }
-        \Yii::$container->set('dektrium\user\Finder', [
+        \Yii::$container->setSingleton(Finder::className(), [
             'userQuery'    => \Yii::$container->get('UserQuery'),
             'profileQuery' => \Yii::$container->get('ProfileQuery'),
             'tokenQuery'   => \Yii::$container->get('TokenQuery'),
             'accountQuery' => \Yii::$container->get('AccountQuery'),
         ]);
+        \Yii::$container->set('yii\web\User', [
+            'enableAutoLogin' => true,
+            'loginUrl'        => ['/user/security/login'],
+            'identityClass'   => $module->modelMap['User'],
+        ]);
 
         if ($app instanceof \yii\console\Application) {
             $module->controllerNamespace = 'dektrium\user\commands';
         } else {
-            $app->set('user', [
-                'class'           => $module->webUserClass,
-                'enableAutoLogin' => true,
-                'loginUrl'        => ['/user/security/login'],
-                'identityClass'   => $identityClass
-            ]);
-
             $configUrlRule = [
                 'prefix' => $module->urlPrefix,
                 'rules'  => $module->urlRules

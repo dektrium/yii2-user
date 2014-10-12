@@ -11,7 +11,7 @@
 
 namespace dektrium\user\models;
 
-use dektrium\user\helpers\ModuleTrait;
+use dektrium\user\Finder;
 use yii\base\Model;
 use yii\data\ActiveDataProvider;
 
@@ -20,31 +20,32 @@ use yii\data\ActiveDataProvider;
  */
 class UserSearch extends Model
 {
-    use ModuleTrait;
-
-    /**
-     * @var string
-     */
+    /** @var string */
     public $username;
 
-    /**
-     * @var string
-     */
+    /** @var string */
     public $email;
 
-    /**
-     * @var integer
-     */
+    /** @var integer */
     public $created_at;
 
-    /**
-     * @var string
-     */
+    /** @var string */
     public $registered_from;
 
+    /** @var Finder */
+    protected $finder;
+
     /**
-     * @inheritdoc
+     * @param Finder $finder
+     * @param array $config
      */
+    public function __construct(Finder $finder, $config = [])
+    {
+        $this->finder = $finder;
+        parent::__construct($config);
+    }
+
+    /** @inheritdoc */
     public function rules()
     {
         return [
@@ -53,9 +54,7 @@ class UserSearch extends Model
         ];
     }
 
-    /**
-     * @inheritdoc
-     */
+    /** @inheritdoc */
     public function attributeLabels()
     {
         return [
@@ -72,7 +71,7 @@ class UserSearch extends Model
      */
     public function search($params)
     {
-        $query = $this->module->manager->createUserQuery();
+        $query = $this->finder->getUserQuery();
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
         ]);

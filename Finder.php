@@ -24,6 +24,38 @@ class Finder extends Object
     /** @var ActiveQuery */
     protected $profileQuery;
 
+    /**
+     * @return ActiveQuery
+     */
+    public function getUserQuery()
+    {
+        return $this->userQuery;
+    }
+
+    /**
+     * @return ActiveQuery
+     */
+    public function getTokenQuery()
+    {
+        return $this->tokenQuery;
+    }
+
+    /**
+     * @return ActiveQuery
+     */
+    public function getAccountQuery()
+    {
+        return $this->accountQuery;
+    }
+
+    /**
+     * @return ActiveQuery
+     */
+    public function getProfileQuery()
+    {
+        return $this->profileQuery;
+    }
+
     /** @param ActiveQuery $accountQuery */
     public function setAccountQuery(ActiveQuery $accountQuery)
     {

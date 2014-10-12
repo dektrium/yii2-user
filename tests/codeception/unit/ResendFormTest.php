@@ -23,14 +23,14 @@ class ResendFormTest extends TestCase
 
     public function testValidateEmail()
     {
-        $form = new ResendForm();
+        $form = \Yii::createObject(ResendForm::className());
         $user = $this->getFixture('user')->getModel('user');
         $form->setAttributes([
             'email' => $user->email,
         ]);
         $this->assertFalse($form->validate());
 
-        $form = new ResendForm();
+        $form = \Yii::createObject(ResendForm::className());
         $user = $this->getFixture('user')->getModel('unconfirmed');
         $form->setAttributes([
             'email' => $user->email,

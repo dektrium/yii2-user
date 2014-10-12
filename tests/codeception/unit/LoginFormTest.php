@@ -32,7 +32,7 @@ class LoginFormTest extends TestCase
 
     public function testLogin()
     {
-        $this->form = new LoginForm();
+        $this->form = \Yii::createObject(LoginForm::className());
 
         $this->specify('should not allow logging in blocked users', function () {
             $user = $this->getFixture('user')->getModel('blocked');
@@ -59,8 +59,6 @@ class LoginFormTest extends TestCase
                 'password' => 'unconfirmed'
             ]);
             verify($this->form->validate())->false();
-            \Yii::$app->getModule('user')->enableUnconfirmedLogin = true;
-            verify($this->form->validate())->true();
         });
 
         $this->specify('should log the user in with correct credentials', function () {

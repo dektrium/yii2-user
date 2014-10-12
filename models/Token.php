@@ -11,7 +11,6 @@
 
 namespace dektrium\user\models;
 
-use dektrium\user\helpers\ModuleTrait;
 use yii\db\ActiveRecord;
 use yii\helpers\Url;
 
@@ -30,18 +29,25 @@ use yii\helpers\Url;
  */
 class Token extends ActiveRecord
 {
-    use ModuleTrait;
-
     const TYPE_CONFIRMATION      = 0;
     const TYPE_RECOVERY          = 1;
     const TYPE_CONFIRM_NEW_EMAIL = 2;
+
+    /** @var \dektrium\user\Module */
+    protected $module;
+
+    /** @inheritdoc */
+    public function init()
+    {
+        $this->module = \Yii::$app->getModule('user');
+    }
 
     /**
      * @return \yii\db\ActiveQuery
      */
     public function getUser()
     {
-        return $this->hasOne($this->module->manager->userClass, ['id' => 'user_id']);
+        return $this->hasOne($this->module->modelMap['User'], ['id' => 'user_id']);
     }
 
     /**

@@ -11,7 +11,7 @@
 
 namespace dektrium\user\models;
 
-use dektrium\user\helpers\ModuleTrait;
+use dektrium\user\Finder;
 use yii\base\Model;
 use dektrium\user\helpers\Password;
 
@@ -23,8 +23,6 @@ use dektrium\user\helpers\Password;
  */
 class LoginForm extends Model
 {
-    use ModuleTrait;
-
     /** @var string User's email or username */
     public $login;
 
@@ -36,6 +34,23 @@ class LoginForm extends Model
 
     /** @var \dektrium\user\models\User */
     protected $user;
+
+    /** @var \dektrium\user\Module */
+    protected $module;
+
+    /** @var Finder */
+    protected $finder;
+
+    /**
+     * @param Finder $finder
+     * @param array $config
+     */
+    public function __construct(Finder $finder, $config = [])
+    {
+        $this->finder = $finder;
+        $this->module = \Yii::$app->getModule('user');
+        parent::__construct($config);
+    }
 
     /** @inheritdoc */
     public function attributeLabels()
@@ -61,7 +76,7 @@ class LoginForm extends Model
             ['login', function ($attribute) {
                 if ($this->user !== null) {
                     $confirmationRequired = $this->module->enableConfirmation && !$this->module->enableUnconfirmedLogin;
-                    if ($confirmationRequired && !$this->user->isConfirmed) {
+                    if ($confirmationRequired && !$this->user->getIsConfirmed()) {
                         $this->addError($attribute, \Yii::t('user', 'You need to confirm your email address'));
                     }
                     if ($this->user->getIsBlocked()) {
@@ -75,7 +90,6 @@ class LoginForm extends Model
 
     /**
      * Validates form and logs the user in.
-     *
      * @return boolean whether the user is logged in successfully
      */
     public function login()
@@ -97,7 +111,7 @@ class LoginForm extends Model
     public function beforeValidate()
     {
         if (parent::beforeValidate()) {
-            $this->user = $this->module->manager->findUserByUsernameOrEmail($this->login);
+            $this->user = $this->finder->findUserByUsernameOrEmail($this->login);
             return true;
         } else {
             return false;

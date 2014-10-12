@@ -19,7 +19,7 @@ class RecoveryPage extends BasePage
      */
     public function recover($email)
     {
-        $this->actor->fillField('#recovery-request-form-email', $email);
+        $this->actor->fillField('#recovery-form-email', $email);
         $this->actor->click('Continue');
     }
 }

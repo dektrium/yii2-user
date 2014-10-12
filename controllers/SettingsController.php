@@ -11,6 +11,9 @@
 
 namespace dektrium\user\controllers;
 
+use dektrium\user\Finder;
+use dektrium\user\models\Account;
+use dektrium\user\models\SettingsForm;
 use dektrium\user\Module;
 use yii\authclient\ClientInterface;
 use yii\helpers\Url;
@@ -31,14 +34,25 @@ use yii\widgets\ActiveForm;
  */
 class SettingsController extends Controller
 {
-    /**
-     * @inheritdoc
-     */
+    /** @inheritdoc */
     public $defaultAction = 'profile';
 
+    /** @var Finder */
+    protected $finder;
+
     /**
-     * @inheritdoc
+     * @param string $id
+     * @param \yii\base\Module $module
+     * @param Finder $finder
+     * @param array $config
      */
+    public function __construct($id, $module, Finder $finder, $config = [])
+    {
+        $this->finder = $finder;
+        parent::__construct($id, $module, $config);
+    }
+
+    /** @inheritdoc */
     public function behaviors()
     {
         return [
@@ -61,9 +75,7 @@ class SettingsController extends Controller
         ];
     }
 
-    /**
-     * @inheritdoc
-     */
+    /** @inheritdoc */
     public function actions()
     {
         return [
@@ -76,55 +88,53 @@ class SettingsController extends Controller
 
     /**
      * Shows profile settings form.
-     *
      * @return string|\yii\web\Response
      */
     public function actionProfile()
     {
-        $model = $this->module->manager->findProfileById(\Yii::$app->user->identity->getId());
+        $model = $this->finder->findProfileById(\Yii::$app->user->identity->getId());
 
         if (\Yii::$app->request->isAjax && $model->load(\Yii::$app->request->post())) {
             \Yii::$app->response->format = Response::FORMAT_JSON;
             return ActiveForm::validate($model);
         }
 
-        if ($model->load(\Yii::$app->getRequest()->post()) && $model->save()) {
+        if ($model->load(\Yii::$app->request->post()) && $model->save()) {
             \Yii::$app->getSession()->setFlash('success', \Yii::t('user', 'Profile settings have been successfully saved'));
             return $this->refresh();
         }
 
         return $this->render('profile', [
-            'model' => $model
+            'model' => $model,
         ]);
     }
 
     /**
      * Displays page where user can update account settings (username, email or password).
-     *
      * @return string|\yii\web\Response
      */
     public function actionAccount()
     {
-        $model = $this->module->manager->createSettingsForm();
+        /** @var SettingsForm $model */
+        $model = \Yii::createObject(SettingsForm::className());
 
         if (\Yii::$app->request->isAjax && $model->load(\Yii::$app->request->post())) {
             \Yii::$app->response->format = Response::FORMAT_JSON;
             return ActiveForm::validate($model);
         }
 
-        if ($model->load(\Yii::$app->getRequest()->post()) && $model->save()) {
+        if ($model->load(\Yii::$app->request->post()) && $model->save()) {
             \Yii::$app->session->setFlash('success', \Yii::t('user', 'Account settings have been successfully saved'));
             return $this->refresh();
         }
 
         return $this->render('account', [
-            'model' => $model
+            'model' => $model,
         ]);
     }
 
     /**
      * Attempts changing user's password.
-     *
      * @param  integer $id
      * @param  string  $code
      * @return string
@@ -132,7 +142,7 @@ class SettingsController extends Controller
      */
     public function actionConfirm($id, $code)
     {
-        $user = $this->module->manager->findUserById($id);
+        $user = $this->finder->findUserById($id);
 
         if ($user === null || $this->module->emailChangeStrategy == Module::STRATEGY_INSECURE) {
             throw new NotFoundHttpException;
@@ -149,7 +159,6 @@ class SettingsController extends Controller
 
     /**
      * Displays list of connected network accounts.
-     * 
      * @return string
      */
     public function actionNetworks()
@@ -161,7 +170,6 @@ class SettingsController extends Controller
 
     /**
      * Disconnects a network account from user.
-     *
      * @param  integer $id
      * @return \yii\web\Response
      * @throws \yii\web\NotFoundHttpException
@@ -169,7 +177,7 @@ class SettingsController extends Controller
      */
     public function actionDisconnect($id)
     {
-        $account = $this->module->manager->findAccountById($id);
+        $account = $this->finder->findAccountById($id);
         if ($account === null) {
             throw new NotFoundHttpException;
         }
@@ -183,7 +191,6 @@ class SettingsController extends Controller
 
     /**
      * Connects social account to user.
-     *
      * @param  ClientInterface $client
      * @return \yii\web\Response
      */
@@ -193,12 +200,15 @@ class SettingsController extends Controller
         $provider   = $client->getId();
         $clientId   = $attributes['id'];
 
-        if (null === ($account = $this->module->manager->findAccount($provider, $clientId))) {
-            $account = $this->module->manager->createAccount([
+        $account = $this->finder->findAccountByProviderAndClientId($provider, $clientId);
+
+        if ($account === null) {
+            $account = \Yii::createObject([
+                'class'     => Account::className(),
                 'provider'  => $provider,
                 'client_id' => $clientId,
                 'data'      => json_encode($attributes),
-                'user_id'   => \Yii::$app->user->id
+                'user_id'   => \Yii::$app->user->id,
             ]);
             $account->save(false);
             \Yii::$app->session->setFlash('success', \Yii::t('user', 'Account has been successfully connected'));

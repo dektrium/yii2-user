@@ -11,6 +11,7 @@
 
 namespace dektrium\user\commands;
 
+use dektrium\user\models\User;
 use yii\console\Controller;
 use yii\helpers\Console;
 
@@ -34,8 +35,9 @@ class CreateController extends Controller
      */
     public function actionIndex($email, $username, $password = null)
     {
-        $user = $this->module->manager->createUser(['scenario' => 'create']);
-        $user->setAttributes([
+        $user = \Yii::createObject([
+            'class'    => User::className(),
+            'scenario' => 'create',
             'email'    => $email,
             'username' => $username,
             'password' => $password

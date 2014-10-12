@@ -11,8 +11,8 @@
 
 namespace dektrium\user\models;
 
-use dektrium\user\helpers\ModuleTrait;
 use dektrium\user\helpers\Password;
+use dektrium\user\Mailer;
 use dektrium\user\Module;
 use yii\base\Model;
 use yii\base\NotSupportedException;
@@ -26,8 +26,6 @@ use yii\base\NotSupportedException;
  */
 class SettingsForm extends Model
 {
-    use ModuleTrait;
-
     /** @var string */
     public $email;
 
@@ -39,6 +37,12 @@ class SettingsForm extends Model
 
     /** @var string */
     public $current_password;
+
+    /** @var Module */
+    protected $module;
+
+    /** @var Mailer */
+    protected $mailer;
 
     /** @var User */
     private $_user;
@@ -54,13 +58,15 @@ class SettingsForm extends Model
     }
 
     /** @inheritdoc */
-    public function init()
+    public function __construct(Mailer $mailer, $config)
     {
+        $this->mailer = $mailer;
+        $this->module = \Yii::$app->getModule('user');
         $this->setAttributes([
             'username' => $this->user->username,
             'email'    => $this->user->unconfirmed_email ?: $this->user->email
-        ]);
-        parent::init();
+        ], false);
+        parent::__construct($config);
     }
 
     /** @inheritdoc */
@@ -74,7 +80,7 @@ class SettingsForm extends Model
             ['email', 'email'],
             [['email', 'username'], 'unique', 'when' => function ($model, $attribute) {
                 return $this->user->$attribute != $model->$attribute;
-            }, 'targetClass' => $this->module->manager->userClass],
+            }, 'targetClass' => $this->module->modelMap['User']],
             ['new_password', 'string', 'min' => 6],
             ['current_password', function ($attr) {
                 if (!Password::validate($this->$attr, $this->user->password_hash)) {
@@ -110,11 +116,8 @@ class SettingsForm extends Model
     {
         if ($this->validate()) {
             $this->user->scenario = 'settings';
-            // change username
             $this->user->username = $this->username;
-            // change password
             $this->user->password = $this->new_password;
-            // change email
             if ($this->email == $this->user->email && $this->user->unconfirmed_email != null) {
                 $this->user->unconfirmed_email = null;
                 \Yii::$app->session->setFlash('info', \Yii::t('user', 'You have successfully cancelled email changing process'));
@@ -151,12 +154,14 @@ class SettingsForm extends Model
     protected function defaultEmailChange()
     {
         $this->user->unconfirmed_email = $this->email;
-        $token = $this->module->manager->createToken([
+        /** @var Token $token */
+        $token = \Yii::createObject([
+            'class'   => Token::className(),
             'user_id' => $this->user->id,
             'type'    => Token::TYPE_CONFIRM_NEW_EMAIL
         ]);
         $token->save(false);
-        $this->module->mailer->sendReconfirmationMessage($this->user, $token);
+        $this->mailer->sendReconfirmationMessage($this->user, $token);
         \Yii::$app->session->setFlash('info', \Yii::t('user', 'Confirmation message has been sent to your new email address'));
     }
 

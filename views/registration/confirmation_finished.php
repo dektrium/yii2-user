@@ -15,14 +15,12 @@ use yii\helpers\Html;
  * @var yii\web\View $this
  */
 
-$this->title = Yii::t('user', 'Password has been reset');
+$this->title = Yii::t('user', 'Account has been confirmed');
 
 ?>
 <div class="alert alert-success">
     <h4>
         <?= Html::encode($this->title) ?>
     </h4>
-    <p>
-        <?= Yii::t('user', 'Your password has been successfully changed. You can try logging in using your new password') ?>
-    </p>
+    <?= Yii::t('user', 'Awesome! You have successfully confirmed your email address. You may sign in using your credentials now') ?>
 </div>

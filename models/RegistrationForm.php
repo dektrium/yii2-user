@@ -11,7 +11,7 @@
 
 namespace dektrium\user\models;
 
-use dektrium\user\helpers\ModuleTrait;
+use dektrium\user\Module;
 use yii\base\Model;
 
 /**
@@ -21,8 +21,6 @@ use yii\base\Model;
  */
 class RegistrationForm extends Model
 {
-    use ModuleTrait;
-
     /** @var string */
     public $email;
 
@@ -32,6 +30,22 @@ class RegistrationForm extends Model
     /** @var string */
     public $password;
 
+    /** @var User */
+    protected $user;
+
+    /** @var Module */
+    protected $module;
+
+    /** @inheritdoc */
+    public function init()
+    {
+        $this->user = \Yii::createObject([
+            'class'    => User::className(),
+            'scenario' => 'register'
+        ]);
+        $this->module = \Yii::$app->getModule('user');
+    }
+
     /** @inheritdoc */
     public function rules()
     {
@@ -39,14 +53,14 @@ class RegistrationForm extends Model
             ['username', 'filter', 'filter' => 'trim'],
             ['username', 'match', 'pattern' => '/^[a-zA-Z]\w+$/'],
             ['username', 'required'],
-            ['username', 'unique', 'targetClass' => $this->module->manager->userClass,
+            ['username', 'unique', 'targetClass' => $this->module->modelMap['User'],
                 'message' => \Yii::t('user', 'This username has already been taken')],
             ['username', 'string', 'min' => 3, 'max' => 20],
 
             ['email', 'filter', 'filter' => 'trim'],
             ['email', 'required'],
             ['email', 'email'],
-            ['email', 'unique', 'targetClass' => $this->module->manager->userClass,
+            ['email', 'unique', 'targetClass' => $this->module->modelMap['User'],
                 'message' => \Yii::t('user', 'This email address has already been taken')],
 
             ['password', 'required', 'skipOnEmpty' => $this->module->enableGeneratingPassword],
@@ -76,17 +90,16 @@ class RegistrationForm extends Model
      */
     public function register()
     {
-        if ($this->validate()) {
-            $user = $this->module->manager->createUser([
-                'scenario' => 'register',
-                'email'    => $this->email,
-                'username' => $this->username,
-                'password' => $this->password
-            ]);
-
-            return $user->register();
+        if (!$this->validate()) {
+            return false;
         }
 
-        return false;
+        $this->user->setAttributes([
+            'email'    => $this->email,
+            'username' => $this->username,
+            'password' => $this->password
+        ]);
+
+        return $this->user->register();
     }
 }

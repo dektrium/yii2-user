@@ -11,7 +11,6 @@
 
 namespace dektrium\user\models;
 
-use dektrium\user\helpers\ModuleTrait;
 use yii\db\ActiveRecord;
 
 /**
@@ -29,16 +28,19 @@ use yii\db\ActiveRecord;
  */
 class Account extends ActiveRecord
 {
-    use ModuleTrait;
+    /** @var \dektrium\user\Module */
+    protected $module;
 
-    /**
-     * @var
-     */
+    /** @var */
     private $_data;
 
-    /**
-     * @inheritdoc
-     */
+    /** @inheritdoc */
+    public function init()
+    {
+        $this->module = \Yii::$app->getModule('user');
+    }
+
+    /** @inheritdoc */
     public static function tableName()
     {
         return '{{%social_account}}';
@@ -49,7 +51,7 @@ class Account extends ActiveRecord
      */
     public function getUser()
     {
-        return $this->hasOne($this->module->manager->userClass, ['id' => 'user_id']);
+        return $this->hasOne($this->module->modelMap['User'], ['id' => 'user_id']);
     }
 
     /**

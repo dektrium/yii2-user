@@ -15,14 +15,18 @@ use yii\helpers\Html;
  * @var yii\web\View $this
  */
 
-$this->title = Yii::t('user', 'Password has been reset');
+$this->title = Yii::t('user', 'Recovery token is invalid');
 
 ?>
-<div class="alert alert-success">
+<div class="alert alert-danger">
     <h4>
         <?= Html::encode($this->title) ?>
     </h4>
     <p>
-        <?= Yii::t('user', 'Your password has been successfully changed. You can try logging in using your new password') ?>
+        <?= Yii::t('user', 'We are sorry but your recovery token is out of date') ?>.
+        <?= Yii::t('user', 'You can try requesting a new one by clicking the link below') ?>:
+    </p>
+    <p>
+        <?= Html::a(Yii::t('user', 'Request new recovery message'), ['/user/recovery/request']) ?>
     </p>
 </div>

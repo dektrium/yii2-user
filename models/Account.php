@@ -51,7 +51,7 @@ class Account extends ActiveRecord
      */
     public function getUser()
     {
-        return $this->hasOne($this->module->manager->userClass, ['id' => 'user_id']);
+        return $this->hasOne($this->module->modelMap['User'], ['id' => 'user_id']);
     }
 
     /**

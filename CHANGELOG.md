@@ -1,5 +1,12 @@
 # CHANGELOG
 
+## 0.8.1 [13 October 2014] Yii 2.0.0 compatible
+
+- `fix` Fixed test suite
+- `chg` Updated `composer.json` (dmeroff)
+- `chg` Added check for `enableConfirmation` for resending link (makroxyz)
+- `fix` Fixed compatibility with PostgreSQL (makroxyz)
+
 ## 0.8.0 [5 October 2014] Yii 2.0.0-rc compatible
 
 - `fix` Updated admin grid view (hoksilato)

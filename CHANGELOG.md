@@ -2,6 +2,7 @@
 
 ## 0.9.0 [Work in progress]
 
+- `chg` Removed Mailcatcher dependency from test suite (dmeroff)
 - `chg` Refactored all models (dmeroff)
 - `enh` Refactored model overriding system (dmeroff)
 

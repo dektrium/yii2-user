@@ -2,7 +2,7 @@ Installation
 ============
 
 This document will guide you through the process of installing Yii2-user using **composer**. Installation is a quick and
-easy two-step process.
+easy three-step process.
 
 > **NOTE:** Before we start make sure that you have properly configured **db** and **mail** application components.
 

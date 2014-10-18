@@ -13,6 +13,7 @@ namespace dektrium\user;
 
 use yii\base\BootstrapInterface;
 use yii\web\GroupUrlRule;
+use yii\console\Application as ConsoleApplication;
 
 /**
  * Bootstrap class registers module and user application component. It also creates some url rules which will be applied
@@ -27,12 +28,8 @@ class Bootstrap implements BootstrapInterface
      */
     public function bootstrap($app)
     {
-        //
-        // only inject configuration if:
-        // - 'user' module is already registered, and
-        // - 'user' module is of \dektrium\user\Module class
         /** @var $module Module */
-        if ($app->hasModule('user') && ($module = $app->getModule('user')) && $module instanceof \dektrium\user\Module){
+        if ($app->hasModule('user') && ($module = $app->getModule('user')) instanceof Module){
             foreach ($module->modelMap as $name => $definition) {
                 $class = "dektrium\\user\\models\\" . $name;
                 \Yii::$container->set($class, $definition);
@@ -55,7 +52,7 @@ class Bootstrap implements BootstrapInterface
                 'identityClass'   => $module->modelMap['User'],
             ]);
 
-            if ($app instanceof \yii\console\Application) {
+            if ($app instanceof ConsoleApplication) {
                 $module->controllerNamespace = 'dektrium\user\commands';
             } else {
                 $configUrlRule = [

@@ -32,6 +32,7 @@ $this->params['breadcrumbs'][] = $this->title;
     'columns' => [
         'username',
         'email:email',
+        'role',
         [
             'attribute' => 'registration_ip',
             'value' => function ($model, $key, $index, $widget) {

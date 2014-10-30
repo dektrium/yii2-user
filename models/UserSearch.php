@@ -33,6 +33,11 @@ class UserSearch extends Model
     public $email;
 
     /**
+     * @var string
+     */
+    public $role;
+
+    /**
      * @var integer
      */
     public $created_at;
@@ -49,7 +54,7 @@ class UserSearch extends Model
     {
         return [
             [['created_at'], 'integer'],
-            [['username', 'email', 'registered_from'], 'safe'],
+            [['username', 'email', 'role', 'registered_from'], 'safe'],
         ];
     }
 
@@ -61,6 +66,7 @@ class UserSearch extends Model
         return [
             'username' => \Yii::t('user', 'Username'),
             'email' => \Yii::t('user', 'Email'),
+            'role' => \Yii::t('user', 'Role'),
             'created_at' => \Yii::t('user', 'Registration time'),
             'registered_from' => \Yii::t('user', 'Registration ip'),
         ];
@@ -83,6 +89,7 @@ class UserSearch extends Model
 
         $this->addCondition($query, 'username', true);
         $this->addCondition($query, 'email', true);
+        $this->addCondition($query, 'role', true);
         $this->addCondition($query, 'created_at');
         $this->addCondition($query, 'registered_from');
 

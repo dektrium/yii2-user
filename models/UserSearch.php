@@ -1,48 +1,28 @@
 <?php
 
 /*
-* This file is part of the Dektrium project.
-*
-* (c) Dektrium project <http://github.com/dektrium/>
-*
-* For the full copyright and license information, please view the LICENSE
-* file that was distributed with this source code.
-*/
+ * This file is part of the Dektrium project.
+ *
+ * (c) Dektrium project <http://github.com/dektrium/>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
 
 namespace dektrium\user\models;
 
-use dektrium\user\Finder;
 use yii\base\Model;
 use yii\data\ActiveDataProvider;
 
 /**
  * UserSearch represents the model behind the search form about User.
  */
-class UserSearch extends Model
+class UserSearch extends User
 {
-    /** @var string */
-    public $username;
-
-    /** @var string */
-    public $email;
-
-    /** @var integer */
-    public $created_at;
-
-    /** @var string */
-    public $registered_from;
-
-    /** @var Finder */
-    protected $finder;
-
-    /**
-     * @param Finder $finder
-     * @param array $config
-     */
-    public function __construct(Finder $finder, $config = [])
+    /** @inheritdoc */
+    public function scenarios()
     {
-        $this->finder = $finder;
-        parent::__construct($config);
+        return Model::scenarios();
     }
 
     /** @inheritdoc */
@@ -50,7 +30,7 @@ class UserSearch extends Model
     {
         return [
             [['created_at'], 'integer'],
-            [['username', 'email', 'registered_from'], 'safe'],
+            [['username', 'email', 'registration_ip'], 'safe'],
         ];
     }
 
@@ -58,10 +38,10 @@ class UserSearch extends Model
     public function attributeLabels()
     {
         return [
-            'username' => \Yii::t('user', 'Username'),
-            'email' => \Yii::t('user', 'Email'),
-            'created_at' => \Yii::t('user', 'Registration time'),
-            'registered_from' => \Yii::t('user', 'Registration ip'),
+            'username'        => \Yii::t('user', 'Username'),
+            'email'           => \Yii::t('user', 'Email'),
+            'created_at'      => \Yii::t('user', 'Registration time'),
+            'registration_ip' => \Yii::t('user', 'Registration ip'),
         ];
     }
 
@@ -71,7 +51,8 @@ class UserSearch extends Model
      */
     public function search($params)
     {
-        $query = $this->finder->getUserQuery();
+        $query = static::find();
+
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
         ]);
@@ -80,32 +61,14 @@ class UserSearch extends Model
             return $dataProvider;
         }
 
-        $this->addCondition($query, 'username', true);
-        $this->addCondition($query, 'email', true);
-        $this->addCondition($query, 'created_at');
-        $this->addCondition($query, 'registered_from');
+        if (!empty($this->registration_ip)) {
+            $query->andFilterWhere(['registration_ip' => ip2long($this->registration_ip)]);
+        }
+
+        $query->andFilterWhere(['created_at'=> $this->created_at])
+            ->andFilterWhere(['like', 'username', $this->username])
+            ->andFilterWhere(['like', 'email', $this->email]);
 
         return $dataProvider;
-    }
-
-    /**
-     * @param $query
-     * @param $attribute
-     * @param bool $partialMatch
-     */
-    protected function addCondition($query, $attribute, $partialMatch = false)
-    {
-        $value = $this->$attribute;
-        if (trim($value) === '') {
-            return;
-        }
-        if ($attribute == 'registered_from') {
-            $value = ip2long($value);
-        }
-        if ($partialMatch) {
-            $query->andWhere(['like', $attribute, $value]);
-        } else {
-            $query->andWhere([$attribute => $value]);
-        }
     }
 }

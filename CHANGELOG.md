@@ -2,6 +2,10 @@
 
 ## 0.9.0 [Work in progress]
 
+- `chg` Removed ability to delete or block your own account from admin pages (dmeroff)
+- `chg` Updated create and update admin pages (dmeroff)
+- `chg` Updated admin index page (dmeroff)
+- `chg` Removed auto-injecting module in application (belerophon)
 - `chg` Removed Mailcatcher dependency from test suite (dmeroff)
 - `chg` Refactored all models (dmeroff)
 - `enh` Refactored model overriding system (dmeroff)

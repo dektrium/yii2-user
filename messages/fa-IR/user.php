@@ -97,7 +97,7 @@ return array (
   'Profile settings' => 'تنظیمات پروفایل',
   'Profile updated successfully' => 'پروفایل با موفقیت بروز شد',
   'P.S. If you did not request to reset your password, please disregard this message. Your account is safe.' => 'اگر شما این فراموشی گذرواژه را درخواست نداده اید لطفا این پیام را نادیده بگیرید، اکانت شما امن است.',
-  'P.S. If you received this email by mistake, simply delete it' => 'اگر شما این ایمیل را اشتباحا دریافت کرده این لطفا آن را حذف کنید',
+  'P.S. If you received this email by mistake, simply delete it' => 'اگر شما این ایمیل را اشتباها دریافت کرده این لطفا آن را حذف کنید',
   'Recovery message sent' => 'ایمیل بازیابی گذرواژه ارسال شد',
   'Recover your password' => 'گذرواژه خود را بازیابی کنید',
   'Recovery token is invalid' => 'نشانه بازیابی معتبر نیست',

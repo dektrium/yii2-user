@@ -23,7 +23,7 @@ $page->update('new_user@example.com', $user->username, 'qwerty');
 $I->seeRecord(User::className(), ['email' => $user->email, 'unconfirmed_email' => 'new_user@example.com']);
 $I->see('Confirmation message has been sent to your new email address');
 $user  = $I->grabRecord(User::className(), ['id' => $user->id]);
-$token = $I->grabRecord(Token::className(), ['user_id' => $user->id, 'type' => Token::TYPE_CONFIRMATION]);
+$token = $I->grabRecord(Token::className(), ['user_id' => $user->id, 'type' => Token::TYPE_CONFIRM_NEW_EMAIL]);
 $I->seeInEmail(Html::encode($token->getUrl()));
 $I->seeInEmailRecipients($user->unconfirmed_email);
 
@@ -35,7 +35,7 @@ $page->login('new_user@example.com', 'qwerty');
 $I->see('Invalid login or password');
 
 $I->amGoingTo('log in using new email address after clicking the confirmation link');
-$user->attemptConfirmation($token->code);
+$user->attemptEmailChange($token->code);
 $page->login('new_user@example.com', 'qwerty');
 $I->see('Logout');
 $I->seeRecord(User::className(), [

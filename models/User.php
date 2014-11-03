@@ -121,6 +121,7 @@ class User extends ActiveRecord implements IdentityInterface
         return [
             'username'          => \Yii::t('user', 'Username'),
             'email'             => \Yii::t('user', 'Email'),
+            'registration_ip'   => \Yii::t('user', 'Registration ip'),
             'unconfirmed_email' => \Yii::t('user', 'New email'),
             'password'          => \Yii::t('user', 'Password'),
             'created_at'        => \Yii::t('user', 'Registration time'),
@@ -292,16 +293,45 @@ class User extends ActiveRecord implements IdentityInterface
 
         $token->delete();
 
-        if (empty($this->unconfirmed_email) == false) {
-            $this->email = $this->unconfirmed_email;
-            $this->unconfirmed_email = null;
-        }
-
         $this->confirmed_at = time();
 
         \Yii::getLogger()->log('User has been confirmed', Logger::LEVEL_INFO);
 
         return $this->save(false);
+    }
+
+    /**
+     * This method attempts changing user email. If user's "unconfirmed_email" field is empty is returns false, else if
+     * somebody already has email that equals user's "unconfirmed_email" it returns false, otherwise returns true and
+     * updates user's password.
+     *
+     * @param  string $code
+     * @return bool
+     * @throws \Exception
+     */
+    public function attemptEmailChange($code)
+    {
+        $token = $this->module->manager->findToken($this->id, $code, Token::TYPE_CONFIRM_NEW_EMAIL);
+
+        if (empty($this->unconfirmed_email) || $token === null || $token->isExpired) {
+            return false;
+        }
+
+        $token->delete();
+
+        if (empty($this->unconfirmed_email)) {
+            return false;
+        } else if (static::find()->where(['email' => $this->unconfirmed_email])->exists() == false) {
+            $status = true;
+            $this->email = $this->unconfirmed_email;
+        } else {
+            $status = false;
+        }
+
+        $this->unconfirmed_email = null;
+        $this->save(false);
+
+        return $status;
     }
 
     /**

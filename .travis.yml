@@ -4,7 +4,7 @@ php:
   - 5.4
 install:
   - composer self-update
-  - composer global require "fxp/composer-asset-plugin:1.0.*@dev"
+  - composer global require "fxp/composer-asset-plugin:1.0.*@beta"
   - composer install --prefer-dist --dev
   - composer require --dev "codeception/codeception:*"
   - gem install mailcatcher
@@ -12,7 +12,7 @@ before_script:
   - mailcatcher
   - mysql -e 'create database dektrium_test;'
   - cd tests
-  - sed -i 's/\/..\/..\/..\/..\//\/..\/..\//g' codeception/_bootstrap.php
+  - sed -i 's/\/..\/..\/..\/..\/..\//\/..\/..\//g' codeception/_bootstrap.php
   - php codeception/bin/yii migrate/up --interactive=0
   - ../vendor/bin/codecept build
 script: ../vendor/bin/codecept run

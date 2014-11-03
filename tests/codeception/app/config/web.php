@@ -9,7 +9,8 @@ return [
     'extensions' => require(VENDOR_DIR . '/yiisoft/extensions.php'),
     'aliases' => [
         '@dektrium/user' => realpath(__DIR__. '/../../../../'),
-        '@vendor'        => VENDOR_DIR
+        '@vendor'        => VENDOR_DIR,
+        '@bower'         => VENDOR_DIR . '/bower-asset',
     ],
     'modules' => [
         'user' => [

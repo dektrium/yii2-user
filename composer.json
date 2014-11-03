@@ -18,12 +18,12 @@
     ],
     "minimum-stability": "dev",
     "require": {
-        "yiisoft/yii2": "*",
-        "yiisoft/yii2-swiftmailer": "*",
-        "yiisoft/yii2-authclient": "*"
+        "yiisoft/yii2": "~2.0",
+        "yiisoft/yii2-swiftmailer": "~2.0",
+        "yiisoft/yii2-authclient": "~2.0"
     },
     "require-dev": {
-        "yiisoft/yii2-codeception": "*",
+        "yiisoft/yii2-codeception": "~2.0",
         "codeception/specify": "*",
         "codeception/verify": "*"
     },
@@ -33,6 +33,10 @@
         }
     },
     "extra": {
-        "bootstrap": "dektrium\\user\\Bootstrap"
+        "bootstrap": "dektrium\\user\\Bootstrap",
+        "branch-alias": {
+            "dev-master": "0.8.x-dev",
+            "dev-develop": "0.9.x-dev"
+        }
     }
 }

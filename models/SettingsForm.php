@@ -153,7 +153,7 @@ class SettingsForm extends Model
         $this->user->unconfirmed_email = $this->email;
         $token = $this->module->manager->createToken([
             'user_id' => $this->user->id,
-            'type'    => Token::TYPE_CONFIRMATION
+            'type'    => Token::TYPE_CONFIRM_NEW_EMAIL
         ]);
         $token->save(false);
         $this->module->mailer->sendReconfirmationMessage($this->user, $token);

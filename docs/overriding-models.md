@@ -24,16 +24,14 @@ class User extends BaseUser
 In order to make Yii2-user use your class you need to configure module as follows:
 
 ```php
-[
-    ...
-    'user' => [
-        'class' => 'dektrium\user\Module',
-        'modelMap' => [
-            'User' => 'app\models\User',
-        ],
+...
+'user' => [
+    'class' => 'dektrium\user\Module',
+    'modelMap' => [
+        'User' => 'app\models\User',
     ],
-    ...
-]
+],
+...
 ```
 
 Attaching behaviors and event handlers

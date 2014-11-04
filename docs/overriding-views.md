@@ -74,7 +74,7 @@ $this->params['breadcrumbs'][] = $this->title;
         </p>
     </div>
 </div>
-
+```
 
 Then open registration page and make sure that you see **'This view file has been overrided!'**. If you don't see it
 make sure you have properly configured your view component and created view file in right location.

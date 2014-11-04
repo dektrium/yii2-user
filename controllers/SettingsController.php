@@ -16,6 +16,7 @@ use dektrium\user\models\Account;
 use dektrium\user\models\SettingsForm;
 use dektrium\user\Module;
 use yii\authclient\ClientInterface;
+use yii\base\Model;
 use yii\helpers\Url;
 use yii\web\Controller;
 use yii\filters\AccessControl;
@@ -94,10 +95,7 @@ class SettingsController extends Controller
     {
         $model = $this->finder->findProfileById(\Yii::$app->user->identity->getId());
 
-        if (\Yii::$app->request->isAjax && $model->load(\Yii::$app->request->post())) {
-            \Yii::$app->response->format = Response::FORMAT_JSON;
-            return ActiveForm::validate($model);
-        }
+        $this->performAjaxValidation($model);
 
         if ($model->load(\Yii::$app->request->post()) && $model->save()) {
             \Yii::$app->getSession()->setFlash('success', \Yii::t('user', 'Profile settings have been successfully saved'));
@@ -118,10 +116,7 @@ class SettingsController extends Controller
         /** @var SettingsForm $model */
         $model = \Yii::createObject(SettingsForm::className());
 
-        if (\Yii::$app->request->isAjax && $model->load(\Yii::$app->request->post())) {
-            \Yii::$app->response->format = Response::FORMAT_JSON;
-            return ActiveForm::validate($model);
-        }
+        $this->performAjaxValidation($model);
 
         if ($model->load(\Yii::$app->request->post()) && $model->save()) {
             \Yii::$app->session->setFlash('success', \Yii::t('user', 'Account settings have been successfully saved'));
@@ -217,5 +212,19 @@ class SettingsController extends Controller
         }
 
         $this->action->successUrl = Url::to(['/user/settings/networks']);
+    }
+
+    /**
+     * Performs ajax validation.
+     * @param Model $model
+     * @throws \yii\base\ExitException
+     */
+    protected function performAjaxValidation(Model $model)
+    {
+        if (\Yii::$app->request->isAjax && $model->load(\Yii::$app->request->post())) {
+            \Yii::$app->response->format = Response::FORMAT_JSON;
+            echo json_encode(ActiveForm::validate($model));
+            \Yii::$app->end();
+        }
     }
 }

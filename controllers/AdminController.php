@@ -14,6 +14,7 @@ namespace dektrium\user\controllers;
 use dektrium\user\Finder;
 use dektrium\user\models\User;
 use dektrium\user\models\UserSearch;
+use yii\base\Model;
 use yii\web\Controller;
 use yii\filters\AccessControl;
 use yii\filters\VerbFilter;
@@ -100,10 +101,7 @@ class AdminController extends Controller
             'scenario' => 'create',
         ]);
 
-        if (\Yii::$app->request->isAjax && $user->load(\Yii::$app->request->post())) {
-            \Yii::$app->response->format = Response::FORMAT_JSON;
-            return ActiveForm::validate($user);
-        }
+        $this->performAjaxValidation($user);
 
         if ($user->load(\Yii::$app->request->post()) && $user->create()) {
             \Yii::$app->getSession()->setFlash('user.success', \Yii::t('user', 'User has been created'));
@@ -128,15 +126,7 @@ class AdminController extends Controller
         $profile = $this->finder->findProfileById($id);
         $r = \Yii::$app->request;
 
-        if (\Yii::$app->request->isAjax && $user->load($r->post())) {
-            \Yii::$app->response->format = Response::FORMAT_JSON;
-            return ActiveForm::validate($user);
-        }
-
-        if (\Yii::$app->request->isAjax && $profile->load($r->post())) {
-            \Yii::$app->response->format = Response::FORMAT_JSON;
-            return ActiveForm::validate($profile);
-        }
+        $this->performAjaxValidation([$user, $profile]);
 
         if ($user->load($r->post()) && $profile->load($r->post()) && $user->save() && $profile->save()) {
             \Yii::$app->getSession()->setFlash('user.success', \Yii::t('user', 'User has been updated'));
@@ -219,5 +209,33 @@ class AdminController extends Controller
             throw new NotFoundHttpException('The requested page does not exist');
         }
         return $user;
+    }
+
+    /**
+     * Performs AJAX validation.
+     * @param array|Model $models
+     * @throws \yii\base\ExitException
+     */
+    protected function performAjaxValidation($models)
+    {
+        if (\Yii::$app->request->isAjax) {
+            if (is_array($models)) {
+                $result = [];
+                foreach ($models as $model) {
+                    if ($model->load(\Yii::$app->request->post())) {
+                        \Yii::$app->response->format = Response::FORMAT_JSON;
+                        $result = array_merge($result, ActiveForm::validate($model));
+                    }
+                }
+                echo json_encode($result);
+                \Yii::$app->end();
+            } else {
+                if ($models->load(\Yii::$app->request->post())) {
+                    \Yii::$app->response->format = Response::FORMAT_JSON;
+                    echo json_encode(ActiveForm::validate($models));
+                    \Yii::$app->end();
+                }
+            }
+        }
     }
 }

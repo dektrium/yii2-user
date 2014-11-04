@@ -32,7 +32,6 @@ class m140209_132017_init extends Migration
             'recovery_token'       => Schema::TYPE_STRING . '(32)',
             'recovery_sent_at'     => Schema::TYPE_INTEGER,
             'blocked_at'           => Schema::TYPE_INTEGER,
-            'role'                 => Schema::TYPE_STRING . '(255)',
             'registered_from'      => Schema::TYPE_INTEGER,
             'logged_in_from'       => Schema::TYPE_INTEGER,
             'logged_in_at'         => Schema::TYPE_INTEGER,

@@ -17,6 +17,14 @@
  * NOTE: this file must be saved in UTF-8 encoding.
  */
 return array (
+  'We need to confirm your email address'=>'ایمیل فعال سازی برای شما ارسال شد',
+  'Please check your email and click the confirmation link to complete your registration' => 'لطفا ایمیل خود را برسی کنید و بر روی لینک تایید کلیک کنید تا نام نویسی شما پایان یابد',
+  'The email can take a few minutes to arrive' => 'دریافت ایمیل فعال سازی ممکن است تا چند دقیقه بطول بینجامد',
+  'But if you are having troubles, you can request a new one by clicking the link below' => 'اما اگر آن را دریافت نکردید می توانید با کلیک بر روی لینک زیر درخواست ایمیل فعال سازی جدیدی را بکنید',
+  'We need to confirm your email address'=>'ایمیل فعال سازی برای شما ارسال شد',
+  'Please check your email and click the confirmation link to complete your registration' => 'لطفا ایمیل خود را برسی کنید و بر روی لینک تایید کلیک کنید تا نام نویسی شما پایان یابد.',
+  'The email can take a few minutes to arrive' => 'دریافت ایمیل فعال سازی ممکن است تا چند دقیقه بطول بینجامد',
+  'But if you are having troubles, you can request a new one by clicking the link below' => 'اما اگر آن را دریافت نکردید می توانید با کلیک بر روی لینک زیر درخواست ایمیل فعال سازی جدیدی را بکنید.',
   '{0, date, MMMM dd, YYYY HH:mm}' => '{0, date, dd MMMM, YYYY HH:mm}',
   'Account has successfully been connected' => 'حساب کاربری با موفقیت وصل شد',
   'All user tokens have been deleted' => 'همه ی نشانه های کاربران پاک شد',

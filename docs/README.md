@@ -5,6 +5,8 @@ Getting Started
 ---------------
 
 - [Installation](installation.md)
+- [Configuration](configuration.md)
+- [List of available actions](available-actions.md)
 
 Overriding
 ----------
@@ -17,3 +19,9 @@ Basics
 ------
 
 - [User management](user-management.md)
+- [Authentication via social networks](social-auth.md)
+
+Guides
+------
+
+- [How to add captcha](adding-captcha.md)

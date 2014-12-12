@@ -20,11 +20,29 @@ class m140830_171933_fix_ip_field extends Migration
 {
     public function up()
     {
-        $this->alterColumn('{{%user}}', 'registration_ip', Schema::TYPE_INTEGER . ' UNSIGNED');
+        switch (\Yii::$app->db->driverName) {
+            case 'mysql':
+                $this->alterColumn('{{%user}}', 'registration_ip', Schema::TYPE_INTEGER . ' UNSIGNED');
+                break;
+            case 'pgsql':
+                $this->db->createCommand('ALTER TABLE {{%user}} ADD CONSTRAINT registrationIpCheck CHECK ([[registration_ip]] >= 0);')->execute();
+                break;
+            default:
+                throw new \RuntimeException('Your database is not supported!');
+        }
     }
 
     public function down()
     {
-        $this->alterColumn('{{%user}}', 'registration_ip', Schema::TYPE_INTEGER);
+        switch (\Yii::$app->db->driverName) {
+            case 'mysql':
+                $this->alterColumn('{{%user}}', 'registration_ip', Schema::TYPE_INTEGER);
+                break;
+            case 'pgsql':
+                $this->db->createCommand('ALTER TABLE {{%user}} DROP CONSTRAINT registrationIpCheck;')->execute();
+                break;
+            default:
+                throw new \RuntimeException('Your database is not supported!');
+        }
     }
 }

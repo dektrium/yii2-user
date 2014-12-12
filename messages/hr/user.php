@@ -19,10 +19,13 @@
  */
 return array (
 
+	'Connect'=>'Spoji',
+	'Disconnect'=>'Odspoji',
 	'Email'=>'Email',
 	'Username'=>'Korisničko ime',
 	'New password'=>'Nova lozinka',
 	'Current password'=>'Trenutna lozinka',
+	
 	'{0, date, MMMM dd, YYYY HH:mm}' => '{0, date, dd MMMM, YYYY HH:mm}',
 	'Account has successfully been connected' =>'Račun je uspješno povezan',
 	'Already registered? Sign in!' =>'Već ste registrirani? Prijavite se!',

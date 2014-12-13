@@ -4,7 +4,7 @@ php:
   - 5.4
 install:
   - composer self-update
-  - composer global require "fxp/composer-asset-plugin"
+  - composer global require "fxp/composer-asset-plugin:~1.0"
   - composer install --prefer-dist --dev
   - composer require --dev "codeception/codeception"
   - gem install mailcatcher

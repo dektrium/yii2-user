@@ -6,7 +6,7 @@ install:
   - composer self-update "1.0.0-alpha9"
   - composer global require "fxp/composer-asset-plugin:1.0.0-beta4"
   - composer install --prefer-dist --dev
-  - composer require --dev "codeception/codeception"
+  - composer require --dev "codeception/codeception:dev-2.0"
   - gem install mailcatcher
 before_script:
   - mailcatcher

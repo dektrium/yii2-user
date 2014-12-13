@@ -73,7 +73,12 @@ class Mailer extends Component
      */
     public function sendReconfirmationMessage(User $user, Token $token)
     {
-        return $this->sendMessage($user->unconfirmed_email,
+        if ($token->type == Token::TYPE_CONFIRM_NEW_EMAIL) {
+            $email = $user->unconfirmed_email;
+        } else {
+            $email = $user->email;
+        }
+        return $this->sendMessage($email,
             \Yii::t('user', 'Confirm your email change on {0}', \Yii::$app->name),
             'reconfirmation',
             ['user' => $user, 'token' => $token]

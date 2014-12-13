@@ -165,8 +165,27 @@ class SettingsForm extends Model
         \Yii::$app->session->setFlash('info', \Yii::t('user', 'Confirmation message has been sent to your new email address'));
     }
 
+    /**
+     * Sends a confirmation message to both old and new email addresses with link to confirm changing of email.
+     * @throws \yii\base\InvalidConfigException
+     */
     protected function secureEmailChange()
     {
-        throw new NotSupportedException('Secure email changing strategy is not yet implemented');
+        $this->defaultEmailChange();
+        /** @var Token $token */
+        $token = \Yii::createObject([
+            'class'   => Token::className(),
+            'user_id' => $this->user->id,
+            'type'    => Token::TYPE_CONFIRM_OLD_EMAIL
+        ]);
+        $token->save(false);
+        $this->mailer->sendReconfirmationMessage($this->user, $token);
+
+        // unset flags if they exist
+        $this->user->flags &= ~User::NEW_EMAIL_CONFIRMED;
+        $this->user->flags &= ~User::OLD_EMAIL_CONFIRMED;
+        $this->user->save(false);
+
+        \Yii::$app->session->setFlash('info', \Yii::t('user', 'We have sent confirmation links to both old and new email addresses. You should click both links in order to complete your request'));
     }
 }

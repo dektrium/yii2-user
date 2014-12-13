@@ -14,6 +14,7 @@ namespace dektrium\user\models;
 use dektrium\user\Finder;
 use dektrium\user\helpers\Password;
 use dektrium\user\Mailer;
+use dektrium\user\Module;
 use yii\base\NotSupportedException;
 use yii\behaviors\TimestampBehavior;
 use yii\db\ActiveRecord;
@@ -49,6 +50,10 @@ class User extends ActiveRecord implements IdentityInterface
     const USER_CREATE_DONE   = 'user_create_done';
     const USER_REGISTER_INIT = 'user_register_init';
     const USER_REGISTER_DONE = 'user_register_done';
+
+    // following constants are used on secured email changing process
+    const OLD_EMAIL_CONFIRMED = 0b1;
+    const NEW_EMAIL_CONFIRMED = 0b10;
 
     /** @var string Plain password. Used for model validation. */
     public $password;
@@ -327,28 +332,36 @@ class User extends ActiveRecord implements IdentityInterface
         $token = $this->finder->findToken([
             'user_id' => $this->id,
             'code'    => $code,
-            'type'    => Token::TYPE_CONFIRM_NEW_EMAIL,
-        ])->one();
+        ])->andWhere(['in', 'type', [Token::TYPE_CONFIRM_NEW_EMAIL, Token::TYPE_CONFIRM_OLD_EMAIL]])->one();
 
         if (empty($this->unconfirmed_email) || $token === null || $token->isExpired) {
-            return false;
+            \Yii::$app->session->setFlash('danger', \Yii::t('user', 'Your confirmation token is invalid'));
         }
 
         $token->delete();
 
         if (empty($this->unconfirmed_email)) {
-            return false;
+            \Yii::$app->session->setFlash('danger', \Yii::t('user', 'An error occurred during your request'));
         } else if (static::find()->where(['email' => $this->unconfirmed_email])->exists() == false) {
-            $status = true;
-            $this->email = $this->unconfirmed_email;
-        } else {
-            $status = false;
+            if ($this->module->emailChangeStrategy == Module::STRATEGY_SECURE) {
+                switch ($token->type) {
+                    case Token::TYPE_CONFIRM_NEW_EMAIL:
+                        $this->flags |= self::NEW_EMAIL_CONFIRMED;
+                        \Yii::$app->session->setFlash('success', \Yii::t('user', 'Awesome, almost there. Now you need to click confirmation link sent to your old email address'));
+                        break;
+                    case Token::TYPE_CONFIRM_OLD_EMAIL:
+                        $this->flags |= self::OLD_EMAIL_CONFIRMED;
+                        \Yii::$app->session->setFlash('success', \Yii::t('user', 'Awesome, almost there. Now you need to click confirmation link sent to your new email address'));
+                        break;
+                }
+            }
+            if ($this->module->emailChangeStrategy == Module::STRATEGY_DEFAULT || ($this->flags & self::NEW_EMAIL_CONFIRMED && $this->flags & self::OLD_EMAIL_CONFIRMED)) {
+                $this->email = $this->unconfirmed_email;
+                $this->unconfirmed_email = null;
+                \Yii::$app->session->setFlash('success', \Yii::t('user', 'Your email has been successfully changed'));
+            }
+            $this->save(false);
         }
-
-        $this->unconfirmed_email = null;
-        $this->save(false);
-
-        return $status;
     }
 
     /**

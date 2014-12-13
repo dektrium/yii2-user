@@ -143,11 +143,7 @@ class SettingsController extends Controller
             throw new NotFoundHttpException;
         }
 
-        if ($user->attemptEmailChange($code)) {
-            \Yii::$app->session->setFlash('success', \Yii::t('user', 'Your email has been successfully changed'));
-        } else {
-            \Yii::$app->session->setFlash('danger', \Yii::t('user', 'Your confirmation token is invalid'));
-        }
+        $user->attemptEmailChange($code);
 
         return $this->redirect('account');
     }

@@ -32,6 +32,7 @@ class Token extends ActiveRecord
     const TYPE_CONFIRMATION      = 0;
     const TYPE_RECOVERY          = 1;
     const TYPE_CONFIRM_NEW_EMAIL = 2;
+    const TYPE_CONFIRM_OLD_EMAIL = 3;
 
     /** @var \dektrium\user\Module */
     protected $module;
@@ -63,6 +64,7 @@ class Token extends ActiveRecord
                 $route = '/user/recovery/reset';
                 break;
             case self::TYPE_CONFIRM_NEW_EMAIL:
+            case self::TYPE_CONFIRM_OLD_EMAIL:
                 $route = '/user/settings/confirm';
                 break;
             default:
@@ -80,6 +82,7 @@ class Token extends ActiveRecord
         switch ($this->type) {
             case self::TYPE_CONFIRMATION:
             case self::TYPE_CONFIRM_NEW_EMAIL:
+            case self::TYPE_CONFIRM_OLD_EMAIL:
                 $expirationTime = $this->module->confirmWithin;
                 break;
             case self::TYPE_RECOVERY:

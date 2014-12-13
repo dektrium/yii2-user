@@ -10,7 +10,7 @@ return [
     'aliases' => [
         '@dektrium/user' => realpath(__DIR__. '/../../../../'),
         '@vendor'        => VENDOR_DIR,
-        '@bower'         => VENDOR_DIR . '/bower-asset',
+        '@bower'         => VENDOR_DIR . '/bower',
     ],
     'modules' => [
         'user' => [

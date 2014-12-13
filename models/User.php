@@ -142,6 +142,7 @@ class User extends ActiveRecord implements IdentityInterface
         return [
             'username'          => \Yii::t('user', 'Username'),
             'email'             => \Yii::t('user', 'Email'),
+            'registration_ip'   => \Yii::t('user', 'Registration ip'),
             'unconfirmed_email' => \Yii::t('user', 'New email'),
             'password'          => \Yii::t('user', 'Password'),
             'created_at'        => \Yii::t('user', 'Registration time'),

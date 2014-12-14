@@ -11,6 +11,18 @@
 - `enh` Refactored model overriding system (dmeroff)
 - `enh` Added secured email changing strategy (dmeroff)
 
+## 0.8.2 [14 December 2014]
+
+- `fix` Fixed croatian translation (trbsi)
+- `fix` Fixed spanish translation (abolivar)
+- `chg` Added persian farsi translation (bepehr)
+- `chg` Added hungarian translation (akosk)
+- `chg` Added dutch translation (infoweb-internet-solutions)
+- `fix` Fixed pt_BR translate (thiagotalma)
+- `fix` Fixed relation between User and Profile (anders-akero)
+- `fix` Fixed translations (sosojni)
+- `fix` Added registration_ip label (sosojni)
+
 ## 0.8.1 [13 October 2014] Yii 2.0.0 compatible
 
 - `fix` Fixed test suite

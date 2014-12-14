@@ -37,6 +37,10 @@
         "branch-alias": {
             "dev-master": "0.8.x-dev",
             "dev-develop": "0.9.x-dev"
+        },
+        "asset-installer-paths": {
+            "npm-asset-library": "vendor/npm",
+            "bower-asset-library": "vendor/bower"
         }
     }
 }

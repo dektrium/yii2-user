@@ -74,11 +74,11 @@ use yii\helpers\Html;
 <?php endif ?>
 
 <?php if (Yii::$app->session->hasFlash('user.confirmation_finished')): ?>
-    <?php $this->title = Yii::t('user', 'Account has been confirmed'); ?>
+    <?php $this->title = Yii::t('user', 'Your account has been confirmed'); ?>
     <div class="alert alert-success">
         <h4>
             <?= Html::encode($this->title) ?>
         </h4>
-        <?= Yii::t('user', 'Awesome! You have successfully confirmed your email address. You may sign in using your credentials now') ?>
+        <?= Yii::t('user', 'Awesome! You have successfully confirmed your email address. You may sign in using your credentials now.') ?>
     </div>
 <?php endif ?>

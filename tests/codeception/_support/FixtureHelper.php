@@ -3,7 +3,7 @@
 namespace tests\codeception\_support;
 
 use Codeception\Module;
-use Codeception\TestCase\Cept;
+use Codeception\TestCase;
 use tests\codeception\fixtures\ProfileFixture;
 use tests\codeception\fixtures\TokenFixture;
 use tests\codeception\fixtures\UserFixture;
@@ -19,22 +19,22 @@ class FixtureHelper extends Module
     public static $excludeActions = ['loadFixtures', 'unloadFixtures', 'getFixtures', 'globalFixtures', 'fixtures'];
 
     /**
-     * @param Cept $cept
+     * @param TestCase $testcase
      */
-    public function _before(Cept $cept)
+    public function _before(TestCase $testcase)
     {
         $this->unloadFixtures();
         $this->loadFixtures();
-        parent::_before($cept);
+        parent::_before($testcase);
     }
 
     /**
-     * @param Cept $cept
+     * @param TestCase $testcase
      */
-    public function _after(Cept $cept)
+    public function _after(TestCase $testcase)
     {
         $this->unloadFixtures();
-        parent::_after($cept);
+        parent::_after($testcase);
     }
 
     /**

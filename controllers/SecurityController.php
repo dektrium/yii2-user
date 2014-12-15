@@ -14,11 +14,14 @@ namespace dektrium\user\controllers;
 use dektrium\user\Finder;
 use dektrium\user\models\Account;
 use dektrium\user\models\LoginForm;
+use yii\base\Model;
 use yii\helpers\Url;
 use yii\web\Controller;
 use yii\filters\AccessControl;
 use yii\filters\VerbFilter;
 use yii\authclient\ClientInterface;
+use yii\web\Response;
+use yii\widgets\ActiveForm;
 
 /**
  * Controller that manages user authentication process.
@@ -83,6 +86,8 @@ class SecurityController extends Controller
     {
         $model = \Yii::createObject(LoginForm::className());
 
+        $this->performAjaxValidation($model);
+
         if ($model->load(\Yii::$app->getRequest()->post()) && $model->login()) {
             return $this->goBack();
         }
@@ -130,6 +135,20 @@ class SecurityController extends Controller
             $this->action->successUrl = Url::to(['/user/registration/connect', 'account_id' => $account->id]);
         } else {
             \Yii::$app->user->login($user, $this->module->rememberFor);
+        }
+    }
+
+    /**
+     * Performs ajax validation.
+     * @param Model $model
+     * @throws \yii\base\ExitException
+     */
+    protected function performAjaxValidation(Model $model)
+    {
+        if (\Yii::$app->request->isAjax && $model->load(\Yii::$app->request->post())) {
+            \Yii::$app->response->format = Response::FORMAT_JSON;
+            echo json_encode(ActiveForm::validate($model));
+            \Yii::$app->end();
         }
     }
 }

@@ -29,7 +29,9 @@ $this->params['breadcrumbs'][] = $this->title;
             </div>
             <div class="panel-body">
                 <?php $form = ActiveForm::begin([
-                    'id' => 'registration-form',
+                    'id'                     => 'registration-form',
+                    'enableAjaxValidation'   => true,
+                    'enableClientValidation' => false
                 ]); ?>
 
                 <?= $form->field($model, 'username') ?>

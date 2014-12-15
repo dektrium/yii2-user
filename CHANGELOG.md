@@ -2,6 +2,8 @@
 
 ## 0.9.0 [Work in progress]
 
+- `enh` Added ajax-validation (dmeroff)
+- `enh` Added secured email changing strategy (dmeroff)
 - `chg` Removed ability to delete or block your own account from admin pages (dmeroff)
 - `chg` Updated create and update admin pages (dmeroff)
 - `chg` Updated admin index page (dmeroff)
@@ -9,7 +11,6 @@
 - `chg` Removed Mailcatcher dependency from test suite (dmeroff)
 - `chg` Refactored all models (dmeroff)
 - `enh` Refactored model overriding system (dmeroff)
-- `enh` Added secured email changing strategy (dmeroff)
 
 ## 0.8.2 [14 December 2014]
 

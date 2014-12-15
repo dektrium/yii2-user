@@ -15,9 +15,12 @@ use dektrium\user\Finder;
 use dektrium\user\models\RegistrationForm;
 use dektrium\user\models\ResendForm;
 use dektrium\user\models\User;
+use yii\base\Model;
 use yii\web\Controller;
 use yii\filters\AccessControl;
 use yii\web\NotFoundHttpException;
+use yii\web\Response;
+use yii\widgets\ActiveForm;
 
 /**
  * RegistrationController is responsible for all registration process, which includes registration of a new account,
@@ -71,6 +74,8 @@ class RegistrationController extends Controller
         }
 
         $model = \Yii::createObject(RegistrationForm::className());
+
+        $this->performAjaxValidation($model);
 
         if ($model->load(\Yii::$app->request->post()) && $model->register()) {
             return $this->render('finish');
@@ -151,6 +156,8 @@ class RegistrationController extends Controller
 
         $model = \Yii::createObject(ResendForm::className());
 
+        $this->performAjaxValidation($model);
+
         if ($model->load(\Yii::$app->request->post()) && $model->resend()) {
             return $this->render('finish');
         }
@@ -158,5 +165,19 @@ class RegistrationController extends Controller
         return $this->render('resend', [
             'model' => $model
         ]);
+    }
+
+    /**
+     * Performs ajax validation.
+     * @param Model $model
+     * @throws \yii\base\ExitException
+     */
+    protected function performAjaxValidation(Model $model)
+    {
+        if (\Yii::$app->request->isAjax && $model->load(\Yii::$app->request->post())) {
+            \Yii::$app->response->format = Response::FORMAT_JSON;
+            echo json_encode(ActiveForm::validate($model));
+            \Yii::$app->end();
+        }
     }
 }

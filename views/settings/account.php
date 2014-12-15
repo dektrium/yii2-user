@@ -42,7 +42,7 @@ $this->params['breadcrumbs'][] = $this->title;
                         'labelOptions' => ['class' => 'col-lg-3 control-label'],
                     ],
                     'enableAjaxValidation'   => true,
-                    'enableClientValidation' => false
+                    'enableClientValidation' => false,
                 ]); ?>
 
                 <?= $form->field($model, 'email') ?>

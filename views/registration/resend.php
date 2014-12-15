@@ -28,7 +28,9 @@ $this->params['breadcrumbs'][] = $this->title;
             </div>
             <div class="panel-body">
                 <?php $form = ActiveForm::begin([
-                    'id' => 'resend-form',
+                    'id'                     => 'resend-form',
+                    'enableAjaxValidation'   => true,
+                    'enableClientValidation' => false
                 ]); ?>
 
                 <?= $form->field($model, 'email')->textInput(['autofocus' => true]) ?>

@@ -30,7 +30,10 @@ $this->params['breadcrumbs'][] = $this->title;
             </div>
             <div class="panel-body">
                 <?php $form = ActiveForm::begin([
-                    'id' => 'login-form',
+                    'id'                     => 'login-form',
+                    'enableAjaxValidation'   => true,
+                    'enableClientValidation' => false,
+                    'validateOnBlur'         => false,
                 ]) ?>
 
                 <?= $form->field($model, 'login', ['inputOptions' => ['autofocus' => 'autofocus', 'class' => 'form-control', 'tabindex' => '1']]) ?>

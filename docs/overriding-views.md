@@ -25,10 +25,11 @@ if a view exists in the theme directory it will be used instead of the original 
 Example
 -------
 
-An example of overriding registration page view demonstrated below. Make sure you have configured view application component.
+An example of overriding the registration page view is demonstrated below. First make sure you have configured view
+application component.
 
-In order to override registration view file you have to create `@app/views/user/registration/register.php`. Open it and
-paste there following code:
+In order to override the registration view file you should create `@app/views/user/registration/register.php`. Open it
+and paste in the following code:
 
 ```
 <?php
@@ -45,7 +46,7 @@ $this->title = Yii::t('user', 'Sign up');
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="alert alert-success">
-    <p>This view file has been overrided!</p>
+    <p>This view file has been overriden!</p>
 </div>
 <div class="row">
     <div class="col-md-4 col-md-offset-4">

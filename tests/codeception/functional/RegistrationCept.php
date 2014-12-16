@@ -24,7 +24,7 @@ $I->see(Html::encode('This email address has already been taken'));
 
 $I->amGoingTo('try to register');
 $page->register('tester', 'tester@example.com', 'tester');
-$I->see('We need to confirm your email address');
+$I->see('A message sent to your email address. It contains a confirmation link that you must click to complete registration.');
 $user = $I->grabRecord(User::className(), ['email' => 'tester@example.com']);
 $token = $I->grabRecord(Token::className(), ['user_id' => $user->id, 'type' => Token::TYPE_CONFIRMATION]);
 $I->seeInEmail(Html::encode($token->url));

@@ -267,15 +267,13 @@ class User extends ActiveRecord implements IdentityInterface
                 ]);
                 $token->link('user', $this);
                 $this->mailer->sendConfirmationMessage($this, $token);
-                \Yii::$app->session->setFlash('user.confirmation_sent');
             } else {
-                \Yii::$app->session->setFlash('user.registration_finished');
                 \Yii::$app->user->login($this);
             }
             if ($this->module->enableGeneratingPassword) {
                 $this->mailer->sendWelcomeMessage($this);
-                \Yii::$app->session->setFlash('user.password_generated');
             }
+            \Yii::$app->session->setFlash('info', $this->getFlashMessage());
             \Yii::getLogger()->log('User has been registered', Logger::LEVEL_INFO);
             return true;
         }
@@ -292,7 +290,6 @@ class User extends ActiveRecord implements IdentityInterface
      * If confirmation passes it will return true, otherwise it will return false.
      *
      * @param  string  $code Confirmation code.
-     * @return boolean
      */
     public function attemptConfirmation($code)
     {
@@ -304,7 +301,7 @@ class User extends ActiveRecord implements IdentityInterface
         ])->one();
 
         if ($token === null || $token->isExpired) {
-            return false;
+            \Yii::$app->session->setFlash('danger', \Yii::t('user', 'Confirmation link is invalid or out-of-date. You can try requesting a new one.'));
         }
 
         $token->delete();
@@ -315,7 +312,11 @@ class User extends ActiveRecord implements IdentityInterface
 
         \Yii::getLogger()->log('User has been confirmed', Logger::LEVEL_INFO);
 
-        return $this->save(false);
+        if ($this->save(false)) {
+            \Yii::$app->session->setFlash('success', \Yii::t('user', 'Your account has been successfully confirmed.'));
+        } else {
+            \Yii::$app->session->setFlash('danger', \Yii::t('user', 'Something went wrong and your account has not been confirmed.'));
+        }
     }
 
     /**
@@ -429,6 +430,22 @@ class User extends ActiveRecord implements IdentityInterface
             $profile->save(false);
         }
         parent::afterSave($insert, $changedAttributes);
+    }
+
+    /**
+     * @return string
+     */
+    protected function getFlashMessage()
+    {
+        if ($this->module->enableGeneratingPassword && $this->module->enableConfirmation) {
+            return \Yii::t('user', 'A message sent to your email address. It contains your password and a confirmation link that you must click to complete registration.');
+        } else if ($this->module->enableGeneratingPassword) {
+            return \Yii::t('user', 'A message sent to your email address. It contains a password that we generated for you.');
+        } else if ($this->module->enableConfirmation) {
+            return \Yii::t('user', 'A message sent to your email address. It contains a confirmation link that you must click to complete registration.');
+        } else {
+            return \Yii::t('user', 'Welcome! You have been successfully registered and logged in.');
+        }
     }
 
     /** @inheritdoc */

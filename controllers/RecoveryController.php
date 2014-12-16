@@ -34,10 +34,10 @@ class RecoveryController extends Controller
     protected $finder;
 
     /**
-     * @param string $id
+     * @param string           $id
      * @param \yii\base\Module $module
-     * @param Finder $finder
-     * @param array $config
+     * @param Finder           $finder
+     * @param array            $config
      */
     public function __construct($id, $module, Finder $finder, $config = [])
     {
@@ -77,7 +77,10 @@ class RecoveryController extends Controller
         $this->performAjaxValidation($model);
 
         if ($model->load(\Yii::$app->request->post()) && $model->sendRecoveryMessage()) {
-            return $this->render('recovery_message_sent');
+            return $this->render('/message', [
+                'title'  => \Yii::t('user', 'Recovery message sent'),
+                'module' => $this->module,
+            ]);
         }
 
         return $this->render('request', [
@@ -102,7 +105,11 @@ class RecoveryController extends Controller
         $token = $this->finder->findToken(['user_id' => $id, 'code' => $code, 'type' => Token::TYPE_RECOVERY])->one();
 
         if ($token === null || $token->isExpired || $token->user === null) {
-            return $this->render('invalid_token');
+            \Yii::$app->session->setFlash('danger', \Yii::t('user', 'Recovery link is invalid or out-of-date. Please try requesting a new one.'));
+            return $this->render('/message', [
+                'title'  => \Yii::t('user', 'Invalid or out-of-date link'),
+                'module' => $this->module,
+            ]);
         }
 
         $model = \Yii::createObject([
@@ -113,7 +120,10 @@ class RecoveryController extends Controller
         $this->performAjaxValidation($model);
 
         if ($model->load(\Yii::$app->getRequest()->post()) && $model->resetPassword($token)) {
-            return $this->render('finish');
+            return $this->render('/message', [
+                'title'  => \Yii::t('user', 'Password has been changed'),
+                'module' => $this->module,
+            ]);
         }
 
         return $this->render('reset', [

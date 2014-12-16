@@ -4,6 +4,8 @@ Configuration
 Available configuration options
 -------------------------------
 
+- **enableFlashMessages* Whether to show flash messages. Defaults to **True**.
+
 - **enableRegistration** Whether registration is enabled. Defaults to **True**.
 
 - **enableGeneratingPassword** Whether password field is not shown on registration page and password is generated

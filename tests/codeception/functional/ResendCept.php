@@ -19,4 +19,4 @@ $I->see('This account has already been confirmed');
 $I->amGoingTo('try to resend token to unconfirmed user');
 $user = $I->getFixture('user')->getModel('unconfirmed');
 $page->resend($user->email);
-$I->see('We need to confirm your email address');
+$I->see('A message sent to your email address. It contains a confirmation link that you must click to complete registration.');

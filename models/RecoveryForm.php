@@ -111,6 +111,7 @@ class RecoveryForm extends Model
             ]);
             $token->save(false);
             $this->mailer->sendRecoveryMessage($this->user, $token);
+            \Yii::$app->session->setFlash('info', \Yii::t('user', 'You will receive an email with instructions on how to reset your password in a few minutes.'));
             return true;
         }
 
@@ -129,8 +130,13 @@ class RecoveryForm extends Model
             return false;
         }
 
-        $token->user->resetPassword($this->password);
-        $token->delete();
+        if ($token->user->resetPassword($this->password)) {
+            \Yii::$app->session->setFlash('success', \Yii::t('user', 'Your password has been changed successfully.'));
+            $token->delete();
+        } else {
+            \Yii::$app->session->setFlash('danger', \Yii::t('user', 'An error occurred and your password has not been changed. Please try again later.'));
+        }
+
         return true;
     }
 

@@ -69,6 +69,9 @@ class Module extends BaseModule
     /** @var array An array of administrator's usernames. */
     public $admins = [];
 
+    /** @var array Mailer configuration */
+    public $mailer = [];
+
     /**
      * @var string The prefix for user module URL.
      * @See [[GroupUrlRule::prefix]]

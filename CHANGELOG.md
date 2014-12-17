@@ -2,6 +2,8 @@
 
 ## 0.9.0 [Work in progress]
 
+- `enh` Improved mailer component (dmeroff)
+- `enh` Updated flash messages and added new module option to disable them (dmeroff)
 - `enh` Added ajax-validation (dmeroff)
 - `enh` Added secured email changing strategy (dmeroff)
 - `chg` Removed ability to delete or block your own account from admin pages (dmeroff)
@@ -26,7 +28,7 @@
 
 ## 0.8.1 [13 October 2014] Yii 2.0.0 compatible
 
-- `fix` Fixed test suite
+- `fix` Fixed test suite (dmeroff)
 - `chg` Updated `composer.json` (dmeroff)
 - `chg` Added check for `enableConfirmation` for resending link (makroxyz)
 - `fix` Fixed compatibility with PostgreSQL (makroxyz)

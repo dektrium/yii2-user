@@ -33,3 +33,17 @@ property:
     ],
 ],
 ```
+
+- Mailer component has been refactored. If you are using custom mailer or changing its configuration, you should set it
+via `mailer` module's property:
+
+```php
+'modules' => [
+    'user' => [
+        'class' => 'dektrium\user\Module',
+        'mailer' => [
+            'sender' => 'noreply@myhost.com',
+        ],
+    ],
+],
+```

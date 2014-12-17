@@ -22,15 +22,23 @@ use yii\base\Component;
  */
 class Mailer extends Component
 {
-    /**
-     * @var string
-     */
+    /** @var string */
     public $viewPath = '@dektrium/user/views/mail';
 
-    /**
-     * @var string|array
-     */
+    /** @var string|array */
     public $sender = 'no-reply@example.com';
+
+    /** @var string */
+    public $welcomeSubject;
+
+    /** @var string */
+    public $confirmationSubject;
+
+    /** @var string */
+    public $reconfirmationSubject;
+
+    /** @var string */
+    public $recoverySubject;
 
     /**
      * Sends an email to a user with credentials and confirmation link.
@@ -42,7 +50,7 @@ class Mailer extends Component
     public function sendWelcomeMessage(User $user, Token $token = null)
     {
         return $this->sendMessage($user->email,
-            \Yii::t('user', 'Welcome to {0}', \Yii::$app->name),
+            $this->welcomeSubject,
             'welcome',
             ['user' => $user, 'token' => $token]
         );
@@ -58,7 +66,7 @@ class Mailer extends Component
     public function sendConfirmationMessage(User $user, Token $token)
     {
         return $this->sendMessage($user->email,
-            \Yii::t('user', 'Confirm your account on {0}', \Yii::$app->name),
+            $this->confirmationSubject,
             'confirmation',
             ['user' => $user, 'token' => $token]
         );
@@ -79,7 +87,7 @@ class Mailer extends Component
             $email = $user->email;
         }
         return $this->sendMessage($email,
-            \Yii::t('user', 'Confirm your email change on {0}', \Yii::$app->name),
+            $this->reconfirmationSubject,
             'reconfirmation',
             ['user' => $user, 'token' => $token]
         );
@@ -95,7 +103,7 @@ class Mailer extends Component
     public function sendRecoveryMessage(User $user, Token $token)
     {
         return $this->sendMessage($user->email,
-            \Yii::t('user', 'Complete your password reset on {0}', \Yii::$app->name),
+            $this->recoverySubject,
             'recovery',
             ['user' => $user, 'token' => $token]
         );

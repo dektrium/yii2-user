@@ -20,6 +20,7 @@ Basics
 
 - [User management](user-management.md)
 - [Authentication via social networks](social-auth.md)
+- [Mailer](mailer.md)
 
 Guides
 ------

@@ -77,6 +77,15 @@ class Bootstrap implements BootstrapInterface
                 'class'    => 'yii\i18n\PhpMessageSource',
                 'basePath' => __DIR__ . '/messages',
             ];
+
+            $defaults = [
+                'welcomeSubject'        => \Yii::t('user', 'Welcome to {0}', \Yii::$app->name),
+                'confirmationSubject'   => \Yii::t('user', 'Confirm account on {0}', \Yii::$app->name),
+                'reconfirmationSubject' => \Yii::t('user', 'Confirm email change on {0}', \Yii::$app->name),
+                'recoverySubject'       => \Yii::t('user', 'Complete password reset on {0}', \Yii::$app->name)
+            ];
+
+            \Yii::$container->set('dektrium\user\Mailer', array_merge($defaults, $module->mailer));
         }
         
     }

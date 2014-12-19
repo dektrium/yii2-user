@@ -23,9 +23,7 @@ use yii\console\Application as ConsoleApplication;
  */
 class Bootstrap implements BootstrapInterface
 {
-    /**
-     * @inheritdoc
-     */
+    /** @inheritdoc */
     public function bootstrap($app)
     {
         /** @var $module Module */
@@ -34,11 +32,13 @@ class Bootstrap implements BootstrapInterface
                 $class = "dektrium\\user\\models\\" . $name;
                 \Yii::$container->set($class, $definition);
                 if (is_array($definition)) {
-                    $module->modelMap = [$name => $class];
+                    $module->modelMap[$name] = $class;
                 }
-                \Yii::$container->set($name . 'Query', function () use ($module, $name) {
-                    return forward_static_call([$module->modelMap[$name], 'find']);
-                });
+                if (in_array($name, ['User', 'Profile', 'Token', 'Account'])) {
+                    \Yii::$container->set($name . 'Query', function () use ($class) {
+                        return $class::find();
+                    });
+                }
             }
             \Yii::$container->setSingleton(Finder::className(), [
                 'userQuery'    => \Yii::$container->get('UserQuery'),

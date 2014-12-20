@@ -84,7 +84,7 @@ return array (
   'Email settings' => 'Налаштування Email',
   'Error occurred while changing password' => 'При зміні пароля виникла помилка',
   'Finish' => 'Завершити',
-  'Forgot password?' => 'Забули пароль пароль?',
+  'Forgot password?' => 'Забули пароль?',
   'Gravatar email' => 'Gravatar email',
   'If you have problems, please paste the above URL into your web browser' => 'Якщо по яким-небудь причинам посилання не працює, вставте наступну адресу в стрічку браузера',
   'Information' => 'Інформація',
@@ -144,4 +144,8 @@ return array (
   'Your account has been created' => 'Ваш аккаунт було створено',
   'Your password has been successfully changed. You can try logging in using your new password.' => 'Ваш пароль було успішно змінено. Теперь ви можете авторизуватися використовуючи новий пароль.',
   '{0, date, MMMM dd, YYYY HH:mm}' => '{0, date, MMMM dd, YYYY HH:mm}',
+  'Account settings' => 'Налаштування аккаунта',
+  'New password' => 'Новий пароль',
+  'Connect' => 'Під\'єднати',
+  'Account' => 'Аккаунт',
 );

@@ -61,13 +61,10 @@ class UserSearch extends User
             return $dataProvider;
         }
 
-        if (!empty($this->registration_ip)) {
-            $query->andFilterWhere(['registration_ip' => ip2long($this->registration_ip)]);
-        }
-
         $query->andFilterWhere(['created_at'=> $this->created_at])
             ->andFilterWhere(['like', 'username', $this->username])
-            ->andFilterWhere(['like', 'email', $this->email]);
+            ->andFilterWhere(['like', 'email', $this->email])
+            ->andFilterWhere(['registration_ip' => $this->registration_ip]);
 
         return $dataProvider;
     }

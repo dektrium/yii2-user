@@ -40,7 +40,7 @@ $this->params['breadcrumbs'][] = $this->title;
             'value' => function ($model) {
                     return $model->registration_ip == null
                         ? '<span class="not-set">' . Yii::t('user', '(not set)') . '</span>'
-                        : long2ip($model->registration_ip);
+                        : $model->registration_ip;
                 },
             'format' => 'html',
         ],

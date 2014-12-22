@@ -2,6 +2,7 @@
 
 ## 0.9.0 [Work in progress]
 
+- `fix` Changed ip field type to VARCHAR(45) to be able handle IPv6
 - `enh` Improved mailer component (dmeroff)
 - `enh` Updated flash messages and added new module option to disable them (dmeroff)
 - `enh` Added ajax-validation (dmeroff)

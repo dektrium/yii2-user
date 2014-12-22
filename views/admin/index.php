@@ -24,7 +24,9 @@ $this->params['breadcrumbs'][] = $this->title;
 ?>
 <h1><?= Html::encode($this->title) ?> <?= Html::a(Yii::t('user', 'Create a user account'), ['create'], ['class' => 'btn btn-success']) ?></h1>
 
-<?php echo $this->render('flash') ?>
+<?= $this->render('/_alert', [
+    'module' => Yii::$app->getModule('user'),
+]) ?>
 
 <?php Pjax::begin() ?>
 

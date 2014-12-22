@@ -24,7 +24,10 @@ $this->params['breadcrumbs'][] = ['label' => Yii::t('user', 'Users'), 'url' => [
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 
-<?php echo $this->render('flash') ?>
+<?= $this->render('/_alert', [
+    'module' => Yii::$app->getModule('user'),
+]) ?>
+
 <div class="alert alert-info">
     <?= Yii::t('user', 'Registered at {0, date, MMMM dd, YYYY HH:mm} from {1}', [$user->created_at, is_null($user->registration_ip) ? 'N/D' : $user->registration_ip]) ?>
 </div>

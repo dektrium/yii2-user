@@ -104,7 +104,7 @@ class AdminController extends Controller
         $this->performAjaxValidation($user);
 
         if ($user->load(\Yii::$app->request->post()) && $user->create()) {
-            \Yii::$app->getSession()->setFlash('user.success', \Yii::t('user', 'User has been created'));
+            \Yii::$app->getSession()->setFlash('success', \Yii::t('user', 'User has been created'));
             return $this->redirect(['index']);
         }
 
@@ -129,7 +129,7 @@ class AdminController extends Controller
         $this->performAjaxValidation([$user, $profile]);
 
         if ($user->load($r->post()) && $profile->load($r->post()) && $user->save() && $profile->save()) {
-            \Yii::$app->getSession()->setFlash('user.success', \Yii::t('user', 'User has been updated'));
+            \Yii::$app->getSession()->setFlash('success', \Yii::t('user', 'User has been updated'));
             return $this->refresh();
         }
 
@@ -149,7 +149,7 @@ class AdminController extends Controller
     public function actionConfirm($id, $back = 'index')
     {
         $this->findModel($id)->confirm();
-        \Yii::$app->getSession()->setFlash('user.success', \Yii::t('user', 'User has been confirmed'));
+        \Yii::$app->getSession()->setFlash('success', \Yii::t('user', 'User has been confirmed'));
         $url = $back == 'index' ? ['index'] : ['update', 'id' => $id];
         return $this->redirect($url);
     }
@@ -163,10 +163,10 @@ class AdminController extends Controller
     public function actionDelete($id)
     {
         if ($id == \Yii::$app->user->getId()) {
-            \Yii::$app->getSession()->setFlash('user.error', \Yii::t('user', 'You can not remove your own account'));
+            \Yii::$app->getSession()->setFlash('danger', \Yii::t('user', 'You can not remove your own account'));
         } else {
             $this->findModel($id)->delete();
-            \Yii::$app->getSession()->setFlash('user.success', \Yii::t('user', 'User has been deleted'));
+            \Yii::$app->getSession()->setFlash('success', \Yii::t('user', 'User has been deleted'));
         }
         return $this->redirect(['index']);
     }
@@ -180,15 +180,15 @@ class AdminController extends Controller
     public function actionBlock($id, $back = 'index')
     {
         if ($id == \Yii::$app->user->getId()) {
-            \Yii::$app->getSession()->setFlash('user.error', \Yii::t('user', 'You can not block your own account'));
+            \Yii::$app->getSession()->setFlash('danger', \Yii::t('user', 'You can not block your own account'));
         } else {
             $user = $this->findModel($id);
             if ($user->getIsBlocked()) {
                 $user->unblock();
-                \Yii::$app->getSession()->setFlash('user.success', \Yii::t('user', 'User has been unblocked'));
+                \Yii::$app->getSession()->setFlash('success', \Yii::t('user', 'User has been unblocked'));
             } else {
                 $user->block();
-                \Yii::$app->getSession()->setFlash('user.success', \Yii::t('user', 'User has been blocked'));
+                \Yii::$app->getSession()->setFlash('success', \Yii::t('user', 'User has been blocked'));
             }
         }
         $url = $back == 'index' ? ['index'] : ['update', 'id' => $id];

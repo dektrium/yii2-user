@@ -22,7 +22,9 @@ $this->params['breadcrumbs'][] = ['label' => Yii::t('user', 'Users'), 'url' => [
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 
-<?php echo $this->render('flash') ?>
+<?= $this->render('/_alert', [
+    'module' => Yii::$app->getModule('user'),
+]) ?>
 
 <div class="panel panel-default">
     <div class="panel-heading">

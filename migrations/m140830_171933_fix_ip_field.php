@@ -9,7 +9,6 @@
  * file that was distributed with this source code.
  */
 
-
 use yii\db\Schema;
 use yii\db\Migration;
 

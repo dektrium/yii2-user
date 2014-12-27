@@ -38,10 +38,14 @@ $this->params['breadcrumbs'][] = $this->title;
 <div class="panel panel-info">
     <div class="panel-heading"><?= Yii::t('user', 'Information') ?></div>
     <div class="panel-body">
-        <?= Yii::t('user', 'Registered at {0, date, MMMM dd, YYYY HH:mm} from {1}', [$model->created_at, is_null($model->registration_ip) ? 'N/D' : long2ip($model->registration_ip)]) ?>
+        <?= Yii::$app->getModule('user')->enableIntlExtension ?
+                (Yii::t('user', 'Registered at {0, date, MMMM dd, YYYY HH:mm} from {1}', [$model->created_at, is_null($model->registration_ip) ? 'N/D' : long2ip($model->registration_ip)])) :
+                (Yii::t('user', 'Registered at {0} from {1}', [date('H:i d.m.Y', $model->created_at), is_null($model->registration_ip) ? 'N/D' : long2ip($model->registration_ip)])) ?>
         <br/>
         <?php if (Yii::$app->getModule('user')->enableConfirmation && $model->getIsConfirmed()): ?>
-            <?= Yii::t('user', 'Confirmed at {0, date, MMMM dd, YYYY HH:mm}', [$model->created_at]) ?>
+            <?= Yii::$app->getModule('user')->enableIntlExtension ? 
+                    Yii::t('user', 'Confirmed at {0, date, MMMM dd, YYYY HH:mm}', [$model->created_at]) :
+                    Yii::t('user', 'Confirmed at {0}', [date('H:i d.m.Y', $model->created_at)]) ?>
             <br/>
         <?php endif; ?>
         <?php if ($model->getIsBlocked()): ?>

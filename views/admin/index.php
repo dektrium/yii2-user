@@ -42,7 +42,7 @@ $this->params['breadcrumbs'][] = $this->title;
         [
             'attribute' => 'created_at',
             'value' => function ($model, $key, $index, $widget) {
-                return Yii::t('user', '{0, date, MMMM dd, YYYY HH:mm}', [$model->created_at]);
+                return Yii::$app->getModule('user')->enableIntlExtension ? Yii::t('user', '{0, date, MMMM dd, YYYY HH:mm}', [$model->created_at]) : date('H:i d.m.Y', $model->created_at);
             }
         ],
         [

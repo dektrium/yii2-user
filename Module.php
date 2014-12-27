@@ -61,6 +61,11 @@ class Module extends BaseModule
     public $enableConfirmation = true;
 
     /**
+     * @var bool When Intl extension doesn't installed on server.
+     */
+    public $enableIntlExtension = true;
+
+    /**
      * @var bool Whether to allow logging in without confirmation.
      */
     public $enableUnconfirmedLogin = false;

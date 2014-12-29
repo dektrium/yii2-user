@@ -67,7 +67,7 @@ return array (
     'Gravatar email' => '全球头像 EMail',
     'Hello' => '您好',
     'If you already registered, sign in and connect this account on settings page' => '如果您已经注册，登录并在设置页连接此帐户',
-    'If you have problems, please paste the above URL into your web browser' => '如果你有问题，请将以上网址粘贴到到浏览器',
+    'If you have problems, please paste the above URL into your web browser' => '如果不能直接打开，请将以上网址粘贴到到浏览器打开',
     'If you want password to be generated automatically leave its field empty' => '如果你想要自动生成的密码，请将此域留空',
     'Information' => '信息',
     'In order to complete your registration, please click the link below' => '为了完成您的注册，请点击下面的链接',
@@ -138,7 +138,7 @@ return array (
     'Welcome to {0}' => '欢迎来到 {0}',
     'You have been sent an email with instructions on how to reset your password.' => '您收到的电子邮件将告诉您如何重置您的密码。',
     'You have recently requested email change on {0}' => '您最近请求修改电子邮件 {0}',
-    'You have recently requested to reset your password on {0}' => '您最近请求重设密码 {0}',
+    'You have recently requested to reset your password on {0}' => '您最近在 {0} 请求重设密码',
     'You need to confirm your email address' => '您需要确认您的电子邮件地址',
     'Your account has been blocked' => '您的帐户已被锁定',
     'Your account has been confirmed' => '您的帐户已被确认',
@@ -152,5 +152,14 @@ return array (
     'Profile settings have been successfully saved'=>'属性信息设置已被成功保存',
     'Account'=>'帐户',
     'New password'=>'新密码',
-    'Account settings'=>'帐户设置'
+    'Account settings'=>'帐户设置',
+    'Account has been confirmed' => '帐户已被确认',
+    'Awesome! You have successfully confirmed your email address. You may sign in using your credentials now'=>'恭喜您，帐户已被确认，您现在可以登录您的帐户',
+    'Invalid token' =>'无效的令牌',
+    'We are sorry but your confirmation token is out of date'=>'抱歉为，您的令牌已过期',
+    'You can try requesting a new one by clicking the link below'=>'您可以点击以下链接获取新的令牌',
+    'The email can take a few minutes to arrive. But if you are having troubles, you can request a new one.'=>'电子邮件可能需要几分钟才能到达。',
+    'Password has been reset'=>'密码已被重置',
+    'Your password has been successfully changed. You can try logging in using your new password'=>'您的密码已被成功修改，您可以尝试用新密码登录帐户。',
+
 );

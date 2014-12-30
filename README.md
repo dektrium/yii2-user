@@ -1,4 +1,4 @@
-# Yii2-user [![Build Status](https://travis-ci.org/dektrium/yii2-user.svg?branch=master)](https://travis-ci.org/dektrium/yii2-user) [![Latest Stable Version](https://poser.pugx.org/dektrium/yii2-user/v/stable.png)](https://packagist.org/packages/dektrium/yii2-user) [![Total Downloads](https://poser.pugx.org/dektrium/yii2-user/downloads.png)](https://packagist.org/packages/dektrium/yii2-user)
+# Yii2-user [![Build Status](https://travis-ci.org/dektrium/yii2-user.svg?branch=develop)](https://travis-ci.org/dektrium/yii2-user) [![Latest Stable Version](https://poser.pugx.org/dektrium/yii2-user/v/stable.png)](https://packagist.org/packages/dektrium/yii2-user) [![Total Downloads](https://poser.pugx.org/dektrium/yii2-user/downloads.png)](https://packagist.org/packages/dektrium/yii2-user)
 
 Most of web applications provide a way for users to register, log in or reset their forgotten passwords. Rather than
 re-implementing this on each application, you can use Yii2-user which is a flexible user management module for Yii2 that

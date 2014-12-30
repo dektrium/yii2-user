@@ -15,8 +15,7 @@ handles common tasks such as registration, authentication and password retrieval
 
 ## Documentation
 
-Yii2-user documentation is available online: [Read the documentation](http://yii2-user.readthedocs.org/en/latest/).
-Installation instructions are located in [installation guide](http://yii2-user.readthedocs.org/en/latest/getting-started/installation.html).
+[Installation instructions](docs/installation.md) | [Definite guide to Yii2-user](docs/README.md)
 
 ## Contributing
 

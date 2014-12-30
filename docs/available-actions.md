@@ -15,8 +15,7 @@ helper `\yii\helpers\Url::to()`.
 |**/user/recovery/request**     | Displays recovery request form                                        |
 |**/user/recovery/reset**       | Displays password reset form (requires *id* and *token* query params) |
 |**/user/settings/profile**     | Displays profile settings form                                        |
-|**/user/settings/email**       | Displays email settings form                                          |
-|**/user/settings/password**    | Displays password settings form                                       |
+|**/user/settings/account**     | Displays account settings form (email, username, password)            |
+|**/user/settings/accounts**    | Displays social accounts settings page                                |
 |**/user/profile/show**         | Displays user's profile (requires *id* query param)                   |
 |**/user/admin/index**          | Displays user management interface                                    |
-|-------------------------------|-----------------------------------------------------------------------|

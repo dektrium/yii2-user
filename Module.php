@@ -22,7 +22,7 @@ use yii\base\Module as BaseModule;
  */
 class Module extends BaseModule
 {
-    const VERSION = '0.9.0-dev';
+    const VERSION = '0.9.0';
 
     /** Email is changed right after user enter's new email address. */
     const STRATEGY_INSECURE = 0;
@@ -34,7 +34,7 @@ class Module extends BaseModule
     const STRATEGY_SECURE = 2;
 
     /** @var bool Whether to show flash messages. */
-    public $showFlashMessages = true;
+    public $enableFlashMessages = true;
 
     /** @var bool Whether to enable registration. */
     public $enableRegistration = true;

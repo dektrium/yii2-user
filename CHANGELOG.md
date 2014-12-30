@@ -1,6 +1,6 @@
 # CHANGELOG
 
-## 0.9.0 [Work in progress]
+## 0.9.0 [30 December 2014]
 
 - `fix` Changed ip field type to VARCHAR(45) to handle IPv6
 - `enh` Improved mailer component (dmeroff)

@@ -58,7 +58,7 @@ class SettingsForm extends Model
     }
 
     /** @inheritdoc */
-    public function __construct(Mailer $mailer, $config)
+    public function __construct(Mailer $mailer, $config = [])
     {
         $this->mailer = $mailer;
         $this->module = \Yii::$app->getModule('user');

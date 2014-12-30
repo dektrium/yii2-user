@@ -111,4 +111,10 @@ class Token extends ActiveRecord
     {
         return '{{%token}}';
     }
+
+    /** @inheritdoc */
+    public static function primaryKey()
+    {
+        return ['user_id', 'code', 'type'];
+    }
 }

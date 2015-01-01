@@ -15,7 +15,7 @@ handles common tasks such as registration, authentication and password retrieval
 
 ## Documentation
 
-[Installation instructions](docs/installation.md) | [Definite guide to Yii2-user](docs/README.md)
+[Installation instructions](docs/installation.md) | [Definitive guide to Yii2-user](docs/README.md)
 
 ## Contributing
 

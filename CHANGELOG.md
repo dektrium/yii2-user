@@ -1,8 +1,13 @@
 # CHANGELOG
 
+## 0.9.1 [1 January 2014]
+
+- `fix` Fixed overriding of active record models (dmeroff)
+- `fix` Fixed pt-BR translation (thiagotalma)
+
 ## 0.9.0 [30 December 2014]
 
-- `fix` Changed ip field type to VARCHAR(45) to handle IPv6
+- `fix` Changed ip field type to VARCHAR(45) to handle IPv6 (dmeroff)
 - `enh` Improved mailer component (dmeroff)
 - `enh` Updated flash messages and added new module option to disable them (dmeroff)
 - `enh` Added ajax-validation (dmeroff)

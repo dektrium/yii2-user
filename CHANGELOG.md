@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 0.9.1 [1 January 2014]
+
+- `fix` Fixed overriding of active record models
+
 ## 0.9.0 [30 December 2014]
 
 - `fix` Changed ip field type to VARCHAR(45) to handle IPv6

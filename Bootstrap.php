@@ -35,7 +35,8 @@ class Bootstrap implements BootstrapInterface
                     $module->modelMap[$name] = $class;
                 }
                 if (in_array($name, ['User', 'Profile', 'Token', 'Account'])) {
-                    \Yii::$container->set($name . 'Query', function () use ($class) {
+                    \Yii::$container->set($name . 'Query', function () use ($definition) {
+                        $class = is_array($definition) ? $definition['class'] : $definition;
                         return $class::find();
                     });
                 }

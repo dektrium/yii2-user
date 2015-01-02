@@ -37,6 +37,8 @@ $this->params['breadcrumbs'][] = $this->title;
                     'enableAjaxValidation'   => true,
                     'enableClientValidation' => false,
                     'validateOnBlur'         => false,
+                    'validateOnType'         => false,
+                    'validateOnChange'       => false,
                 ]) ?>
 
                 <?= $form->field($model, 'login', ['inputOptions' => ['autofocus' => 'autofocus', 'class' => 'form-control', 'tabindex' => '1']]) ?>

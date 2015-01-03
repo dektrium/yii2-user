@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 0.9.2 [Work in progress]
+
+- `fix` Fixed bug with when model was defined as array in modelMap (dmeroff)
+
 ## 0.9.1 [1 January 2014]
 
 - `fix` Fixed overriding of active record models (dmeroff)

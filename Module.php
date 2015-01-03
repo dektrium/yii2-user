@@ -22,7 +22,7 @@ use yii\base\Module as BaseModule;
  */
 class Module extends BaseModule
 {
-    const VERSION = '0.9.1';
+    const VERSION = '0.9.2-dev';
 
     /** Email is changed right after user enter's new email address. */
     const STRATEGY_INSECURE = 0;
@@ -72,6 +72,9 @@ class Module extends BaseModule
     /** @var array Mailer configuration */
     public $mailer = [];
 
+    /** @var array Model map */
+    public $modelMap = [];
+
     /**
      * @var string The prefix for user module URL.
      * @See [[GroupUrlRule::prefix]]
@@ -88,34 +91,4 @@ class Module extends BaseModule
         'recover/<id:\d+>/<code:\w+>' => 'recovery/reset',
         'settings/<action:\w+>'       => 'settings/<action>'
     ];
-
-    /** @var array Model's map */
-    private $_modelMap = [
-        'User'             => 'dektrium\user\models\User',
-        'Account'          => 'dektrium\user\models\Account',
-        'Profile'          => 'dektrium\user\models\Profile',
-        'Token'            => 'dektrium\user\models\Token',
-        'RegistrationForm' => 'dektrium\user\models\RegistrationForm',
-        'ResendForm'       => 'dektrium\user\models\ResendForm',
-        'LoginForm'        => 'dektrium\user\models\LoginForm',
-        'SettingsForm'     => 'dektrium\user\models\SettingsForm',
-        'RecoveryForm'     => 'dektrium\user\models\RecoveryForm',
-        'UserSearch'       => 'dektrium\user\models\UserSearch',
-    ];
-
-    /**
-     * @return array
-     */
-    public function getModelMap()
-    {
-        return $this->_modelMap;
-    }
-
-    /**
-     * @param array $modelMap
-     */
-    public function setModelMap($modelMap)
-    {
-        $this->_modelMap = array_merge($this->_modelMap, $modelMap);
-    }
 }

@@ -3,6 +3,8 @@
 ## 0.9.2 [Work in progress]
 
 - `fix` Fixed bug with when model was defined as array in modelMap (dmeroff)
+- `fix` Removed ajax-request flood on login form (thiagotalma)
+- `enh` Added `th` translation (kongoon)
 
 ## 0.9.1 [1 January 2014]
 

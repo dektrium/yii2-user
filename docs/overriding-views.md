@@ -31,7 +31,7 @@ application component.
 In order to override the registration view file you should create `@app/views/user/registration/register.php`. Open it
 and paste in the following code:
 
-```
+```php
 <?php
 use yii\helpers\Html;
 use yii\widgets\ActiveForm;

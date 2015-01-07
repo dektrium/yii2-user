@@ -84,7 +84,9 @@ form, just copy and paste following code into newly created view file.
 
                     <?= $form->field($model, 'password')->passwordInput() ?>
 
-                    <?= $form->field($model, 'captcha')->widget(Captcha::className()) ?>
+                    <?= $form->field($model, 'captcha')->widget(Captcha::className(), [
+                        'captchaAction' => ['/site/captcha']
+                    ]) ?>
 
                     <?= Html::submitButton(Yii::t('user', 'Sign up'), ['class' => 'btn btn-success btn-block']) ?>
 

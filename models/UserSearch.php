@@ -11,18 +11,38 @@
 
 namespace dektrium\user\models;
 
+use dektrium\user\Finder;
 use yii\base\Model;
 use yii\data\ActiveDataProvider;
 
 /**
  * UserSearch represents the model behind the search form about User.
  */
-class UserSearch extends User
+class UserSearch extends Model
 {
-    /** @inheritdoc */
-    public function scenarios()
+    /** @var string */
+    public $username;
+
+    /** @var string */
+    public $email;
+
+    /** @var integer */
+    public $created_at;
+
+    /** @var string */
+    public $registration_ip;
+
+    /** @var Finder */
+    protected $finder;
+
+    /**
+     * @param Finder $finder
+     * @param array $config
+     */
+    public function __construct(Finder $finder, $config = [])
     {
-        return Model::scenarios();
+        $this->finder = $finder;
+        parent::__construct($config);
     }
 
     /** @inheritdoc */
@@ -51,7 +71,7 @@ class UserSearch extends User
      */
     public function search($params)
     {
-        $query = static::find();
+        $query = $this->finder->getUserQuery();
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query,

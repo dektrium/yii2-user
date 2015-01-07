@@ -145,9 +145,9 @@ class SecurityController extends Controller
      */
     protected function performAjaxValidation(Model $model)
     {
-        if (\Yii::$app->request->isAjax && $model->load(\Yii::$app->request->post())) {
+        if (\Yii::$app->request->isAjax && $model->load(\Yii::$app->request->post()) && $error = ActiveForm::validate($model)) {
             \Yii::$app->response->format = Response::FORMAT_JSON;
-            echo json_encode(ActiveForm::validate($model));
+            echo json_encode($error);
             \Yii::$app->end();
         }
     }

@@ -2,6 +2,7 @@
 
 ## 0.9.2 [Work in progress]
 
+- `fix` Fixed migration (dmeroff)
 - `fix` Fixed overriding of mailer view files (dmeroff)
 - `fix` Fixed troubles with overriding user search model (dmeroff)
 - `fix` Fixed bug with when model was defined as array in modelMap (dmeroff)

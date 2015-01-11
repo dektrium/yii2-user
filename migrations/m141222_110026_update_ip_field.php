@@ -21,7 +21,7 @@ class m141222_110026_update_ip_field extends Migration
 
         $transaction = Yii::$app->db->beginTransaction();
         try {
-            $this->alterColumn('{{%user}}', 'registration_ip', Schema::TYPE_STRING . '(45) DEFAULT NULL');
+            $this->alterColumn('{{%user}}', 'registration_ip', Schema::TYPE_STRING . '(45)');
             foreach ($users as $user) {
                 if ($user['ip'] == null) continue;
                 Yii::$app->db->createCommand()->update('{{%user}}', [

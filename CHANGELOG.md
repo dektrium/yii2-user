@@ -6,7 +6,7 @@
 - `fix` Fixed migration (dmeroff)
 - `fix` Fixed overriding of mailer view files (dmeroff)
 - `fix` Fixed troubles with overriding user search model (dmeroff)
-- `fix` Fixed bug with when model was defined as array in modelMap (dmeroff)
+- `fix` Fixed bug when model was defined as array in modelMap (dmeroff)
 - `fix` Removed ajax-request flood on login form (thiagotalma)
 - `enh` Added `th` translation (kongoon)
 

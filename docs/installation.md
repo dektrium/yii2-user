@@ -15,7 +15,7 @@ Add Yii2-user to the require section of your **composer.json** file:
 ```js
 {
     "require": {
-        "dektrium/yii2-user": "~0.9.*@dev"
+        "dektrium/yii2-user": "0.9.*@dev"
     }
 }
 ```

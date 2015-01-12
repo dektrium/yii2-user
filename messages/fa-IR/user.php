@@ -17,9 +17,9 @@
  * NOTE: this file must be saved in UTF-8 encoding.
  */
 return [
-    'A message sent to your email address. It contains a confirmation link that you must click to complete registration.' => '',
-    'A message sent to your email address. It contains a password that we generated for you.' => '',
-    'A message sent to your email address. It contains your password and a confirmation link that you must click to complete registration.' => '',
+    'A message has been sent to your email address. It contains a confirmation link that you must click to complete registration.' => '',
+    'A message has been sent to your email address. It contains a password that we generated for you.' => '',
+    'A message has been sent to your email address. It contains your password and a confirmation link that you must click to complete registration.' => '',
     'Account' => '',
     'Account confirmation' => '',
     'Account has been created' => '',
@@ -168,7 +168,7 @@ return [
     'Profile' => 'پروفایل',
     'Profile settings' => 'تنظیمات پروفایل',
     'Recover your password' => 'گذرواژه خود را بازیابی کنید',
-    'Recovery message sent' => 'ایمیل بازیابی گذرواژه ارسال شد',
+    'Recovery message has been sent' => 'ایمیل بازیابی گذرواژه ارسال شد',
     'Registered at {0, date, MMMM dd, YYYY HH:mm} from {1}' => 'نام نویسی شده در   {0, date, MMMM dd, YYYY HH:mm}  از  {1}',
     'Registration ip' => 'ای پی ثبت نام',
     'Registration time' => 'تاریخ ثبت نام',

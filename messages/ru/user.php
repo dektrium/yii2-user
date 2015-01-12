@@ -17,9 +17,9 @@
  * NOTE: this file must be saved in UTF-8 encoding.
  */
 return [
-    'A message sent to your email address. It contains a confirmation link that you must click to complete registration.' => 'Вам было отправлено письмо. Оно содержит ссылку, по которой вы должны перейти, чтобы завершить регистрацию.',
-    'A message sent to your email address. It contains a password that we generated for you.' => 'Вам было отправлено письмо. Оно содержит сгенерированный нами пароль.',
-    'A message sent to your email address. It contains your password and a confirmation link that you must click to complete registration.' => 'Вам было отправлено письмо. Оно содержит ваш пароль и ссылку, по которой вы должны перейти, чтобы завершить регистрацию.',
+    'A message has been sent to your email address. It contains a confirmation link that you must click to complete registration.' => 'Вам было отправлено письмо. Оно содержит ссылку, по которой вы должны перейти, чтобы завершить регистрацию.',
+    'A message has been sent to your email address. It contains a password that we generated for you.' => 'Вам было отправлено письмо. Оно содержит сгенерированный нами пароль.',
+    'A message has been sent to your email address. It contains your password and a confirmation link that you must click to complete registration.' => 'Вам было отправлено письмо. Оно содержит ваш пароль и ссылку, по которой вы должны перейти, чтобы завершить регистрацию.',
     'Account confirmation' => 'Активация аккаунта',
     'An error occurred and your password has not been changed. Please try again later.' => 'Произошла ошибка и ваш пароль не был изменен. Пожалуйста, попробуйте позже.',
     'An error occurred during your request' => 'Во время выполнения запроса произошла ошибка',
@@ -106,7 +106,7 @@ return [
     'Profile settings' => 'Настройки профиля',
     'Profile settings have been successfully saved' => 'Настройки профиля были успешно сохранены',
     'Recover your password' => 'Восстановить пароль',
-    'Recovery message sent' => 'Письмо со ссылкой для смены пароля было отправлено',
+    'Recovery message has been sent' => 'Письмо со ссылкой для смены пароля было отправлено',
     'Registered at {0, date, MMMM dd, YYYY HH:mm} from {1}' => 'Зарегистрирован {0, date, MMMM dd, YYYY HH:mm} с {1}',
     'Registration ip' => 'Регистрационный IP',
     'Registration time' => 'Время регистрации',

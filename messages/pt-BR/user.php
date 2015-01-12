@@ -20,9 +20,9 @@
  *
  */
 return [
-    'A message sent to your email address. It contains a confirmation link that you must click to complete registration.' => 'Uma mensagem foi enviada para o seu endereço de e-mail. Ela contém um link de confirmação que você deve clicar para concluir o registro.',
-    'A message sent to your email address. It contains a password that we generated for you.' => 'Uma mensagem foi enviada para o seu endereço de e-mail. Ela contém uma senha que foi gerada para você.',
-    'A message sent to your email address. It contains your password and a confirmation link that you must click to complete registration.' => 'Uma mensagem foi enviada para o seu endereço de e-mail. Ela contém a sua senha e um link de confirmação que você deve clicar para concluir o registro.',
+    'A message has been sent to your email address. It contains a confirmation link that you must click to complete registration.' => 'Uma mensagem foi enviada para o seu endereço de e-mail. Ela contém um link de confirmação que você deve clicar para concluir o registro.',
+    'A message has been sent to your email address. It contains a password that we generated for you.' => 'Uma mensagem foi enviada para o seu endereço de e-mail. Ela contém uma senha que foi gerada para você.',
+    'A message has been sent to your email address. It contains your password and a confirmation link that you must click to complete registration.' => 'Uma mensagem foi enviada para o seu endereço de e-mail. Ela contém a sua senha e um link de confirmação que você deve clicar para concluir o registro.',
     'Account confirmation' => 'Confirmação de Conta',
     'Account has been created' => 'A conta foi criada',
     'Account has been successfully connected' => 'A conta foi conectada com sucesso',
@@ -161,7 +161,7 @@ return [
     'Profile' => 'Perfil',
     'Profile settings' => 'Configuração do perfil',
     'Recover your password' => 'Redefinir sua senha',
-    'Recovery message sent' => 'Mensagem de redefinição enviada',
+    'Recovery message has been sent' => 'Mensagem de redefinição enviada',
     'Registered at {0, date, MMMM dd, YYYY HH:mm} from {1}' => 'Cadastrado em {0, date, dd/MM/YYYY - HH:mm}h por {1}',
     'Registration ip' => 'IP de cadastro',
     'Registration time' => 'Data de cadastro',

@@ -98,7 +98,7 @@ return array (
     'Profile updated successfully' => 'Profil blev opdateret korrekt',
     'P.S. If you did not request to reset your password, please disregard this message. Your account is safe' => 'P.S. Hvis du ikke har anmodet om nulstilling af kodeord, så se venligst bort fra denne besked. Din konto er sikker',
     'P.S. If you received this email by mistake, simply delete it' => 'P.S. Hvis du har modtaget denne email ved en fejl, kan du bare slette den',
-    'Recovery message sent' => 'Wiederherstellungsnachricht versendet',
+    'Recovery message has been sent' => 'Wiederherstellungsnachricht versendet',
     'Recover your password' => 'Passwort wiederherstellen',
     'Recovery token is invalid' => 'Wiederherstellungsschlüssel ist ungültig',
     'Registered at {0, date, MMMM dd, YYYY HH:mm} from {1}' => 'Registriert am {0, date, dd MMMM, YYYY HH:mm} von {1}',

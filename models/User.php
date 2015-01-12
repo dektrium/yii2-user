@@ -438,11 +438,11 @@ class User extends ActiveRecord implements IdentityInterface
     protected function getFlashMessage()
     {
         if ($this->module->enableGeneratingPassword && $this->module->enableConfirmation) {
-            return \Yii::t('user', 'A message sent to your email address. It contains your password and a confirmation link that you must click to complete registration.');
+            return \Yii::t('user', 'A message has been sent to your email address. It contains your password and a confirmation link that you must click to complete registration.');
         } else if ($this->module->enableGeneratingPassword) {
-            return \Yii::t('user', 'A message sent to your email address. It contains a password that we generated for you.');
+            return \Yii::t('user', 'A message has been sent to your email address. It contains a password that we generated for you.');
         } else if ($this->module->enableConfirmation) {
-            return \Yii::t('user', 'A message sent to your email address. It contains a confirmation link that you must click to complete registration.');
+            return \Yii::t('user', 'A message has been sent to your email address. It contains a confirmation link that you must click to complete registration.');
         } else {
             return \Yii::t('user', 'Welcome! You have been successfully registered and logged in.');
         }

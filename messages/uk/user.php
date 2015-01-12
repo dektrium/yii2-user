@@ -106,7 +106,7 @@ return array (
   'Profile settings' => 'Налаштування профіля',
   'Profile updated successfully' => 'Профіль було змінено',
   'Recover your password' => 'Відновити пароль',
-  'Recovery message sent' => 'Листа з посиланням ндля зміни паролю було відправлено',
+  'Recovery message has been sent' => 'Листа з посиланням ндля зміни паролю було відправлено',
   'Recovery token is invalid' => 'Посилання ндля зміни паролю застаріло',
   'Registered at {0, date, MMMM dd, YYYY HH:mm} from {1}' => 'Зареєстровано {0, date, MMMM dd, YYYY HH:mm} з {1}',
   'Registered from' => 'Зареєстровано з',

@@ -17,9 +17,9 @@
  * NOTE: this file must be saved in UTF-8 encoding.
  */
 return [
-    'A message sent to your email address. It contains a confirmation link that you must click to complete registration.' => '',
-    'A message sent to your email address. It contains a password that we generated for you.' => '',
-    'A message sent to your email address. It contains your password and a confirmation link that you must click to complete registration.' => '',
+    'A message has been sent to your email address. It contains a confirmation link that you must click to complete registration.' => '',
+    'A message has been sent to your email address. It contains a password that we generated for you.' => '',
+    'A message has been sent to your email address. It contains your password and a confirmation link that you must click to complete registration.' => '',
     'Account' => '',
     'Account confirmation' => '',
     'Account has been created' => '',
@@ -165,7 +165,7 @@ return [
     'Profile' => 'Perfil',
     'Profile settings' => 'Configuració del perfil',
     'Recover your password' => 'Recuperar la contrasenya',
-    'Recovery message sent' => 'S\'ha enviado el missatge de recuperació',
+    'Recovery message has been sent' => 'S\'ha enviado el missatge de recuperació',
     'Registered at {0, date, MMMM dd, YYYY HH:mm} from {1}' => 'Registrat el {0, date, dd MMMM, YYYY HH:mm} des de {1}',
     'Registration ip' => 'IP de registre',
     'Registration time' => 'Data de registre',

@@ -98,7 +98,7 @@ return array (
     'Profile updated successfully' => '更新属性成功',
     'P.S. If you did not request to reset your password, please disregard this message. Your account is safe' => '温馨提示： 如果你不要求重置您的密码，请无视我，您的帐户是安全的',
     'P.S. If you received this email by mistake, simply delete it' => '温馨提示：如果您错误地收到这封电子邮件，只需要删除它',
-    'Recovery message sent' => '重置密码的信息已发送',
+    'Recovery message has been sent' => '重置密码的信息已发送',
     'Recover your password' => '重置你的密码',
     'Recovery token is invalid' => '重置令牌无效',
     'Registered at {0, date, MMMM dd, YYYY HH:mm} from {1}' => '注册于 {0, date, dd MMMM, YYYY HH:mm} 从 {1}',

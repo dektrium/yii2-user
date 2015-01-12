@@ -17,9 +17,9 @@
  * NOTE: this file must be saved in UTF-8 encoding.
  */
 return [
-    'A message sent to your email address. It contains a confirmation link that you must click to complete registration.' => '',
-    'A message sent to your email address. It contains a password that we generated for you.' => '',
-    'A message sent to your email address. It contains your password and a confirmation link that you must click to complete registration.' => '',
+    'A message has been sent to your email address. It contains a confirmation link that you must click to complete registration.' => '',
+    'A message has been sent to your email address. It contains a password that we generated for you.' => '',
+    'A message has been sent to your email address. It contains your password and a confirmation link that you must click to complete registration.' => '',
     'Account' => '',
     'Account confirmation' => '',
     'Account has been created' => '',
@@ -169,7 +169,7 @@ return [
     'Please fix following errors:' => 'Vui lòng sửa các lỗi sau:',
     'Profile' => 'Hồ sơ',
     'Profile settings' => 'Thiết lập hồ sơ',
-    'Recovery message sent' => 'Đã gửi mail khôi phục',
+    'Recovery message has been sent' => 'Đã gửi mail khôi phục',
     'Registered at {0, date, MMMM dd, YYYY HH:mm} from {1}' => 'Đăng ký vào {0, date, dd MMMM YYYY HH:mm} từ {1}',
     'Registration ip' => 'IP Đăng ký',
     'Registration time' => 'Thời gian đăng ký',

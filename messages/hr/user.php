@@ -105,7 +105,7 @@ return array (
 	'Profile settings' => 'Postavke profila',
 	'Profile updated successfully' => 'Profil je uspješno ažuriran',
 	'Recover your password' => 'Obnova lozinke',
-	'Recovery message sent' => 'Povratna poruka poslana',
+	'Recovery message has been sent' => 'Povratna poruka poslana',
 	'Recovery token is invalid' => 'Token za povrat(lozinke ili usluge što ste zatražili) ne valja',
 	'Registered at {0, date, MMMM dd, YYYY HH:mm} from {1}' => 'Registriran {0 datum, MMMM dd, YYYY HH:MM}  ',
 	'Registered from' => 'Registrirani od',

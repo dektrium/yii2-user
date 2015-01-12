@@ -17,9 +17,9 @@
  * NOTE: this file must be saved in UTF-8 encoding.
  */
 return [
-    'A message sent to your email address. It contains a confirmation link that you must click to complete registration.' => 'ข้อความถูกส่งไปยังอีเมลล์ของคุณ ซึ่งจะรวมลิ้งค์สำหรับการยืนยันโดยคุณต้องคลิกเพื่อให้การลงทะเบียนเสร็จสมบูรณ์',
-    'A message sent to your email address. It contains a password that we generated for you.' => 'ข้อความถูกส่งไปยังอีเมลล์ของคุณ ซึ่งจะรวมรหัสผ่านที่สร้างให้คุณ',
-    'A message sent to your email address. It contains your password and a confirmation link that you must click to complete registration.' => 'ข้อความถูกส่งไปยังอีเมลล์ของคุณ ซึ่งจะรวมรหัสผ่านของคุณและลิ้งค์สำหรับยืนยันโดยคุณต้องคลิกเพื่อให้การลงทะเบียนเสร็จสมบูรณ์',
+    'A message has been sent to your email address. It contains a confirmation link that you must click to complete registration.' => 'ข้อความถูกส่งไปยังอีเมลล์ของคุณ ซึ่งจะรวมลิ้งค์สำหรับการยืนยันโดยคุณต้องคลิกเพื่อให้การลงทะเบียนเสร็จสมบูรณ์',
+    'A message has been sent to your email address. It contains a password that we generated for you.' => 'ข้อความถูกส่งไปยังอีเมลล์ของคุณ ซึ่งจะรวมรหัสผ่านที่สร้างให้คุณ',
+    'A message has been sent to your email address. It contains your password and a confirmation link that you must click to complete registration.' => 'ข้อความถูกส่งไปยังอีเมลล์ของคุณ ซึ่งจะรวมรหัสผ่านของคุณและลิ้งค์สำหรับยืนยันโดยคุณต้องคลิกเพื่อให้การลงทะเบียนเสร็จสมบูรณ์',
     'Account' => 'บัญชี',
     'Account confirmation' => 'การยืนยันบัญชี',
     'Account has been created' => 'บัญชีถูกสร้างแล้ว',
@@ -159,7 +159,7 @@ return [
     'Profile' => 'โพรไฟล์',
     'Profile settings' => 'การตั้งค่าโพรไฟล์',
     'Recover your password' => 'กู้รหัสผ่านของคุณ',
-    'Recovery message sent' => 'ข้อความกู้คืนถูกส่ง',
+    'Recovery message has been sent' => 'ข้อความกู้คืนถูกส่ง',
     'Registered at {0, date, MMMM dd, YYYY HH:mm} from {1}' => 'ลงทะเบียนเมื่อ {0, date, dd MMMM, YYYY HH:mm} จาก {1}',
     'Registration ip' => 'IP ที่ลงทะเบียน',
     'Registration time' => 'เวลาการลงทะเบียน',

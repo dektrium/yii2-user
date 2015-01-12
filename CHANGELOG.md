@@ -2,6 +2,7 @@
 
 ## 0.9.2 [Work in progress]
 
+- `fix` Fixed encoding problem with plain text email messages (dmeroff)
 - `fix` Fixed migration (dmeroff)
 - `fix` Fixed overriding of mailer view files (dmeroff)
 - `fix` Fixed troubles with overriding user search model (dmeroff)

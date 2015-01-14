@@ -186,6 +186,6 @@ class SettingsForm extends Model
         $this->user->flags &= ~User::OLD_EMAIL_CONFIRMED;
         $this->user->save(false);
 
-        \Yii::$app->session->setFlash('info', \Yii::t('user', 'We have sent confirmation links to both old and new email addresses. You should click both links in order to complete your request'));
+        \Yii::$app->session->setFlash('info', \Yii::t('user', 'We have sent confirmation links to both old and new email addresses. You must click both links to complete your request'));
     }
 }

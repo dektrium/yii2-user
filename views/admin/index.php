@@ -61,7 +61,7 @@ $this->params['breadcrumbs'][] = $this->title;
                     return Html::a(Yii::t('user', 'Confirm'), ['confirm', 'id' => $model->id], [
                         'class' => 'btn btn-xs btn-success btn-block',
                         'data-method' => 'post',
-                        'data-confirm' => Yii::t('user', 'Are you sure to confirm this user?'),
+                        'data-confirm' => Yii::t('user', 'Are you sure you want to confirm this user?'),
                     ]);
                 }
             },
@@ -75,13 +75,13 @@ $this->params['breadcrumbs'][] = $this->title;
                     return Html::a(Yii::t('user', 'Unblock'), ['block', 'id' => $model->id], [
                         'class' => 'btn btn-xs btn-success btn-block',
                         'data-method' => 'post',
-                        'data-confirm' => Yii::t('user', 'Are you sure to unblock this user?')
+                        'data-confirm' => Yii::t('user', 'Are you sure you want to unblock this user?')
                     ]);
                 } else {
                     return Html::a(Yii::t('user', 'Block'), ['block', 'id' => $model->id], [
                         'class' => 'btn btn-xs btn-danger btn-block',
                         'data-method' => 'post',
-                        'data-confirm' => Yii::t('user', 'Are you sure to block this user?')
+                        'data-confirm' => Yii::t('user', 'Are you sure you want to block this user?')
                     ]);
                 }
             },

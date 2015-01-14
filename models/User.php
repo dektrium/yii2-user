@@ -301,7 +301,7 @@ class User extends ActiveRecord implements IdentityInterface
         ])->one();
 
         if ($token === null || $token->isExpired) {
-            \Yii::$app->session->setFlash('danger', \Yii::t('user', 'Confirmation link is invalid or out-of-date. You can try requesting a new one.'));
+            \Yii::$app->session->setFlash('danger', \Yii::t('user', 'Confirmation link is invalid or expired. Please try requesting a new one.'));
         }
 
         $token->delete();
@@ -313,7 +313,7 @@ class User extends ActiveRecord implements IdentityInterface
         \Yii::getLogger()->log('User has been confirmed', Logger::LEVEL_INFO);
 
         if ($this->save(false)) {
-            \Yii::$app->session->setFlash('success', \Yii::t('user', 'Your account has been successfully confirmed.'));
+            \Yii::$app->session->setFlash('success', \Yii::t('user', 'Thank you, registration is now complete.'));
         } else {
             \Yii::$app->session->setFlash('danger', \Yii::t('user', 'Something went wrong and your account has not been confirmed.'));
         }
@@ -337,30 +337,30 @@ class User extends ActiveRecord implements IdentityInterface
         ])->andWhere(['in', 'type', [Token::TYPE_CONFIRM_NEW_EMAIL, Token::TYPE_CONFIRM_OLD_EMAIL]])->one();
 
         if (empty($this->unconfirmed_email) || $token === null || $token->isExpired) {
-            \Yii::$app->session->setFlash('danger', \Yii::t('user', 'Your confirmation token is invalid'));
+            \Yii::$app->session->setFlash('danger', \Yii::t('user', 'Your confirmation token is invalid or expired'));
         }
 
         $token->delete();
 
         if (empty($this->unconfirmed_email)) {
-            \Yii::$app->session->setFlash('danger', \Yii::t('user', 'An error occurred during your request'));
+            \Yii::$app->session->setFlash('danger', \Yii::t('user', 'An error occurred processing your request'));
         } else if (static::find()->where(['email' => $this->unconfirmed_email])->exists() == false) {
             if ($this->module->emailChangeStrategy == Module::STRATEGY_SECURE) {
                 switch ($token->type) {
                     case Token::TYPE_CONFIRM_NEW_EMAIL:
                         $this->flags |= self::NEW_EMAIL_CONFIRMED;
-                        \Yii::$app->session->setFlash('success', \Yii::t('user', 'Awesome, almost there. Now you need to click confirmation link sent to your old email address'));
+                        \Yii::$app->session->setFlash('success', \Yii::t('user', 'Awesome, almost there. Now you need to click the confirmation link sent to your old email address'));
                         break;
                     case Token::TYPE_CONFIRM_OLD_EMAIL:
                         $this->flags |= self::OLD_EMAIL_CONFIRMED;
-                        \Yii::$app->session->setFlash('success', \Yii::t('user', 'Awesome, almost there. Now you need to click confirmation link sent to your new email address'));
+                        \Yii::$app->session->setFlash('success', \Yii::t('user', 'Awesome, almost there. Now you need to click the confirmation link sent to your new email address'));
                         break;
                 }
             }
             if ($this->module->emailChangeStrategy == Module::STRATEGY_DEFAULT || ($this->flags & self::NEW_EMAIL_CONFIRMED && $this->flags & self::OLD_EMAIL_CONFIRMED)) {
                 $this->email = $this->unconfirmed_email;
                 $this->unconfirmed_email = null;
-                \Yii::$app->session->setFlash('success', \Yii::t('user', 'Your email has been successfully changed'));
+                \Yii::$app->session->setFlash('success', \Yii::t('user', 'Your email address has been successfully changed'));
             }
             $this->save(false);
         }
@@ -444,7 +444,7 @@ class User extends ActiveRecord implements IdentityInterface
         } else if ($this->module->enableConfirmation) {
             return \Yii::t('user', 'A message has been sent to your email address. It contains a confirmation link that you must click to complete registration.');
         } else {
-            return \Yii::t('user', 'Welcome! You have been successfully registered and logged in.');
+            return \Yii::t('user', 'Welcome! Registration is complete.');
         }
     }
 

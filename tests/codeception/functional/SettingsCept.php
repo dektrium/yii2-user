@@ -62,7 +62,7 @@ $I->seeRecord(User::className(), [
 ]);
 $I->amGoingTo('change username and password');
 $page->update('new_user@example.com', 'nickname', 'qwerty', '123654');
-$I->see('Account settings have been successfully saved');
+$I->see('Your account details have been updated');
 $I->seeRecord(User::className(), [
     'username' => 'nickname',
     'email'    => 'new_user@example.com'

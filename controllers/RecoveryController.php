@@ -105,9 +105,9 @@ class RecoveryController extends Controller
         $token = $this->finder->findToken(['user_id' => $id, 'code' => $code, 'type' => Token::TYPE_RECOVERY])->one();
 
         if ($token === null || $token->isExpired || $token->user === null) {
-            \Yii::$app->session->setFlash('danger', \Yii::t('user', 'Recovery link is invalid or out-of-date. Please try requesting a new one.'));
+            \Yii::$app->session->setFlash('danger', \Yii::t('user', 'Recovery link is invalid or expired. Please try requesting a new one.'));
             return $this->render('/message', [
-                'title'  => \Yii::t('user', 'Invalid or out-of-date link'),
+                'title'  => \Yii::t('user', 'Invalid or expired link'),
                 'module' => $this->module,
             ]);
         }

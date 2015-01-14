@@ -1,6 +1,6 @@
 # CHANGELOG
 
-## 0.9.2 [Work in progress]
+## 0.9.2 [14 January 2015]
 
 - `enh` Improved initialization of `user` application component (dmeroff)
 - `fix` Fixed encoding problem with plain text email messages (dmeroff)
@@ -11,7 +11,7 @@
 - `fix` Removed ajax-request flood on login form (thiagotalma)
 - `enh` Added `th` translation (kongoon)
 
-## 0.9.1 [1 January 2014]
+## 0.9.1 [1 January 2015]
 
 - `fix` Fixed overriding of active record models (dmeroff)
 - `fix` Fixed pt-BR translation (thiagotalma)

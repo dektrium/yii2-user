@@ -2,6 +2,7 @@
 
 ## 0.9.2 [Work in progress]
 
+- `enh` Improved initialization of `user` application component (dmeroff)
 - `fix` Fixed encoding problem with plain text email messages (dmeroff)
 - `fix` Fixed migration (dmeroff)
 - `fix` Fixed overriding of mailer view files (dmeroff)

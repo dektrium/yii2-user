@@ -15,12 +15,11 @@
 ?>
 <?= Yii::t('user', 'Hello') ?>,
 
-<?= Yii::t('user', 'You have recently requested email change on {0}', Yii::$app->name) ?>.
+<?= Yii::t('user', 'We have received a request to change the email address for your account on {0}', Yii::$app->name) ?>.
 <?= Yii::t('user', 'In order to complete your request, please click the link below') ?>.
 
 <?= $token->url ?>
 
-<?= Yii::t('user', 'If you have problems, please paste the above URL into your web browser') ?>.
-<?= Yii::t('user', 'This URL will only be valid for a limited time and will expire') ?>.
+<?= Yii::t('user', 'If you cannot click the link, please try pasting the text into your browser') ?>.
 
-<?= Yii::t('user', 'P.S. If you received this email by mistake, simply delete it') ?>.
+<?= Yii::t('user', 'If you did not make this request you can ignore this email') ?>.

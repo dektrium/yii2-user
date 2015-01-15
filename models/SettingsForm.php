@@ -145,7 +145,7 @@ class SettingsForm extends Model
     protected function insecureEmailChange()
     {
         $this->user->email = $this->email;
-        \Yii::$app->session->setFlash('success', \Yii::t('user', 'Your email address has been successfully changed'));
+        \Yii::$app->session->setFlash('success', \Yii::t('user', 'Your email address has been changed'));
     }
 
     /**
@@ -162,7 +162,7 @@ class SettingsForm extends Model
         ]);
         $token->save(false);
         $this->mailer->sendReconfirmationMessage($this->user, $token);
-        \Yii::$app->session->setFlash('info', \Yii::t('user', 'Confirmation message has been sent to your new email address'));
+        \Yii::$app->session->setFlash('info', \Yii::t('user', 'A confirmation message has been sent to your new email address'));
     }
 
     /**

@@ -8,7 +8,7 @@ $I->wantTo('ensure that confirmation works');
 $I->amGoingTo('check that error is showed when token expired');
 $token = $I->getFixture('token')->getModel('expired_confirmation');
 $I->amOnPage(Url::toRoute(['/user/registration/confirm', 'id' => $token->user_id, 'code' => $token->code]));
-$I->see('Confirmation link is invalid or expired. Please try requesting a new one.');
+$I->see('The confirmation link is invalid or expired. Please try requesting a new one.');
 
 $I->amGoingTo('check that user get confirmed');
 $token = $I->getFixture('token')->getModel('confirmation');

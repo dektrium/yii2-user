@@ -301,7 +301,7 @@ class User extends ActiveRecord implements IdentityInterface
         ])->one();
 
         if ($token === null || $token->isExpired) {
-            \Yii::$app->session->setFlash('danger', \Yii::t('user', 'Confirmation link is invalid or expired. Please try requesting a new one.'));
+            \Yii::$app->session->setFlash('danger', \Yii::t('user', 'The confirmation link is invalid or expired. Please try requesting a new one.'));
         }
 
         $token->delete();
@@ -360,7 +360,7 @@ class User extends ActiveRecord implements IdentityInterface
             if ($this->module->emailChangeStrategy == Module::STRATEGY_DEFAULT || ($this->flags & self::NEW_EMAIL_CONFIRMED && $this->flags & self::OLD_EMAIL_CONFIRMED)) {
                 $this->email = $this->unconfirmed_email;
                 $this->unconfirmed_email = null;
-                \Yii::$app->session->setFlash('success', \Yii::t('user', 'Your email address has been successfully changed'));
+                \Yii::$app->session->setFlash('success', \Yii::t('user', 'Your email address has been changed'));
             }
             $this->save(false);
         }

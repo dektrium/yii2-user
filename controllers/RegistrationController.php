@@ -164,7 +164,7 @@ class RegistrationController extends Controller
 
         if ($model->load(\Yii::$app->request->post()) && $model->resend()) {
             return $this->render('/message', [
-                'title'  => \Yii::t('user', 'Confirmation link has been resent'),
+                'title'  => \Yii::t('user', 'A new confirmation link has been sent'),
                 'module' => $this->module,
             ]);
         }

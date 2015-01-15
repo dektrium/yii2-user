@@ -120,7 +120,6 @@ class SettingsForm extends Model
             $this->user->password = $this->new_password;
             if ($this->email == $this->user->email && $this->user->unconfirmed_email != null) {
                 $this->user->unconfirmed_email = null;
-                \Yii::$app->session->setFlash('info', \Yii::t('user', 'You have successfully cancelled email changing process'));
             } else if ($this->email != $this->user->email) {
                 switch ($this->module->emailChangeStrategy) {
                     case Module::STRATEGY_INSECURE:

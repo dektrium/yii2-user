@@ -302,20 +302,21 @@ class User extends ActiveRecord implements IdentityInterface
 
         if ($token === null || $token->isExpired) {
             \Yii::$app->session->setFlash('danger', \Yii::t('user', 'Confirmation link is invalid or out-of-date. You can try requesting a new one.'));
-        }
-
-        $token->delete();
-
-        $this->confirmed_at = time();
-
-        \Yii::$app->user->login($this);
-
-        \Yii::getLogger()->log('User has been confirmed', Logger::LEVEL_INFO);
-
-        if ($this->save(false)) {
-            \Yii::$app->session->setFlash('success', \Yii::t('user', 'Your account has been successfully confirmed.'));
         } else {
-            \Yii::$app->session->setFlash('danger', \Yii::t('user', 'Something went wrong and your account has not been confirmed.'));
+    
+            $token->delete();
+    
+            $this->confirmed_at = time();
+    
+            \Yii::$app->user->login($this);
+    
+            \Yii::getLogger()->log('User has been confirmed', Logger::LEVEL_INFO);
+    
+            if ($this->save(false)) {
+                \Yii::$app->session->setFlash('success', \Yii::t('user', 'Your account has been successfully confirmed.'));
+            } else {
+                \Yii::$app->session->setFlash('danger', \Yii::t('user', 'Something went wrong and your account has not been confirmed.'));
+            }
         }
     }
 

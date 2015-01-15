@@ -121,7 +121,7 @@ return array (
 	'Thank you for registration on our website. You may sign in using your credentials.' => 'Hvala vam za registraciju na našoj web stranici. Možete se prijaviti pomocu korisnićkog imena i lozinke.',
 	'Thank you for signing up on {0}' => 'Hvala vam što ste se registrirali na {0}',
 	'The email can take a few minutes to arrive. But if you are having troubles, you can request a new one.' => 'Mailu je možda potrebno par minuta da pristigne. Ukoliko imate problema, možete zatražiti novi mail.',
-	'There is no user with such email.' => 'Nema korisnika s takvim e-mailom.',
+	'There is no user with this email address' => 'Nema korisnika s takvim e-mailom.',
 	'This account has already been confirmed' => 'Ovaj račun je već potvrđen',
 	'This account has already been connected to another user' => 'Ovaj račun je već bio povezan na drugog korisnika',
 	'This URL will only be valid for a limited time and will expire' => 'Ovaj URL biti će važeći samo ograničeno virijeme i isteći će',

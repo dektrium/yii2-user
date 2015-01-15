@@ -54,7 +54,7 @@ $I->seeRecord(User::className(), [
     'unconfirmed_email' => 'user@example.com'
 ]);
 $page->update('new_user@example.com', $user->username, 'qwerty');
-$I->see('You have successfully cancelled email changing process');
+$I->see('Your account details have been updated');
 $I->seeRecord(User::className(), [
     'id'    => 1,
     'email' => 'new_user@example.com',

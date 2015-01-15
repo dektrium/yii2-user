@@ -121,7 +121,7 @@ return array (
   'Thank you for registration on our website. You may sign in using your credentials.' => 'Щиро вдячні за реєстрацію на нашому сайті. Теперь ви можете авторизуватися, використовуючи ваш логін та пароль.',
   'The email can take a few minutes to arrive' => 'Відправка листа може зайняти кілька хвилин',
   'But if you are having troubles, you can request a new one by clicking the link below' => 'Якщо лист так і не надійшов, ви можете запросити нового',
-  'There is no user with such email.' => 'Немає користувача з таким email',
+  'There is no user with this email address' => 'Немає користувача з таким email',
   'This account has already been confirmed' => 'Цей аккаунт вже було активовано',
   'Unblock' => 'Розблокувати',
   'Unconfirmed Email' => 'Новий Email',

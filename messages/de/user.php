@@ -116,7 +116,7 @@ return array (
     'Thank you for signing up on {0}' => 'Tak fordi du tilmeldte dig på {0}',
     'The email can take a few minutes to arrive' => 'Det kan tage nogen minutter før emailen ankommer',
     'But if you are having troubles, you can request a new one by clicking the link below' => 'Men hvis du har problemer, kan du anmode om en ny',
-    'There is no user with such email.' => 'Der er ikke nogen bruger med denne email.',
+    'There is no user with this email address' => 'Der er ikke nogen bruger med denne email.',
     'This account has already been confirmed' => 'Denne konto er allerede bekræftet',
     'This account has already been connected to another user' => 'Denne konto er allerede forbundet til en anden bruger',
     'This URL will only be valid for a limited time and will expire' => 'Denne URL vil kun være gyldig for en begrænset periode og vil udløbe',

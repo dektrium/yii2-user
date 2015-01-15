@@ -22,6 +22,5 @@
 <?= $token->url ?>
 
 <?= Yii::t('user', 'If you cannot click the link, please try pasting the text into your browser') ?>.
-<?= Yii::t('user', 'This URL will only be valid for a limited time and will expire') ?>.
 
 <?= Yii::t('user', 'If you did not make this request you can ignore this email') ?>.

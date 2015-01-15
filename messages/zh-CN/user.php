@@ -116,7 +116,7 @@ return array (
     'Thank you for signing up on {0}' => '谢谢你在 {0} 的注册',
     'The email can take a few minutes to arrive' => '电子邮件可能需要几分钟才能到达',
     'But if you are having troubles, you can request a new one by clicking the link below' => '如果未收到邮件，您可以通过点击以下链接来获取新的邮件',
-    'There is no user with such email.' => '该邮箱没有注册用户。',
+    'There is no user with this email address' => '该邮箱没有注册用户。',
     'This account has already been confirmed' => '这个帐号已经被确认',
     'This account has already been connected to another user' => '这个帐号已经连接到了另一个用户',
     'This URL will only be valid for a limited time and will expire' => '这个URL将只适用于有限的时间，会过期',

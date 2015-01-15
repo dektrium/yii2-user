@@ -20,7 +20,7 @@ $I->see('You need to confirm your email address');
 $I->amGoingTo('try to request recovery token');
 $user = $I->getFixture('user')->getModel('user');
 $page->recover($user->email);
-$I->see('You will receive an email with instructions on how to reset your password in a few minutes.');
+$I->see('An email has been sent with instructions for resetting your password');
 $user = $I->grabRecord(User::className(), ['email' => $user->email]);
 $token = $I->grabRecord(Token::className(), ['user_id' => $user->id, 'type' => Token::TYPE_RECOVERY]);
 $I->seeInEmail(Html::encode($token->getUrl()));

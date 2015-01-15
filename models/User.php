@@ -303,7 +303,6 @@ class User extends ActiveRecord implements IdentityInterface
         if ($token === null || $token->isExpired) {
             \Yii::$app->session->setFlash('danger', \Yii::t('user', 'Confirmation link is invalid or out-of-date. You can try requesting a new one.'));
         } else {
-    
             $token->delete();
     
             $this->confirmed_at = time();

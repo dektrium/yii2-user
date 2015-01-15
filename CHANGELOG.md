@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 0.9.3 [Work in progress]
+
+- `fix` Fixed bug on confirmation when there was a try to delete non existing token (anders-akero)
+
 ## 0.9.2 [14 January 2015]
 
 - `enh` Improved initialization of `user` application component (dmeroff)

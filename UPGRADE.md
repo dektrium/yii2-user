@@ -9,7 +9,7 @@ Upgrade from Yii2-user 0.8.*
 
 - **APPLY NEW MIGRATIONS!**
 
-- `webUserClass` module option has been dropped. If you are using custom user component you should set in `user`
+- `webUserClass` module option has been removed. If you use your own user component class you should set in `user`
 application component configuration:
 
 ```php
@@ -20,8 +20,27 @@ application component configuration:
 ],
 ```
 
-- ModelManager component has been dropped. If you are using custom models you should set them via `modelMap` module's
-property:
+- ModelManager component has been removed. If you override models, now you should set them via `modelMap` module's
+property.
+
+**Before:**
+
+```php
+'modules' => [
+    'user' => [
+        'class' => 'dektrium\user\Module',
+        'components' => [
+            'manager' => [
+                'User' => 'your\model\User',
+                'Profile' => 'your\model\Profile',
+                ...
+            ],
+        ],
+    ],
+],
+```
+
+**After:**
 
 ```php
 'modules' => [
@@ -36,8 +55,25 @@ property:
 ],
 ```
 
-- Mailer component has been refactored. If you used custom mailer or changed its' configuration, you should set it
-via `mailer` module's property:
+- Mailer component has been changed. Now it should be configured via `mailer` module property. You can read more about
+mailer configuration [here](docs/mailer.md).
+
+**Before:**
+
+```php
+'modules' => [
+    'user' => [
+        'class' => 'dektrium\user\Module',
+        'components' => [
+            'mailer' => [
+                'sender' => 'noreply@myhost.com',
+            ],
+        ],
+    ],
+],
+```
+
+**After:**
 
 ```php
 'modules' => [

@@ -145,7 +145,7 @@ class SettingsController extends Controller
 
         $user->attemptEmailChange($code);
 
-        return $this->redirect('account');
+        return $this->redirect(['account']);
     }
 
     /**

@@ -2,6 +2,9 @@
 
 ## 0.9.3 [Work in progress]
 
+- `fix` Fixed invalid redirection after changing account settings (WeeSee)
+- `fix` Updated messages to be more readable (jspaine)
+- `fix` Reverted initialization of `user` component (dmeroff)
 - `fix` Fixed bug on confirmation and recovery when invalid token was used (anders-akero)
 
 ## 0.9.2 [14 January 2015]

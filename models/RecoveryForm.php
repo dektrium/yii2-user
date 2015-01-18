@@ -82,7 +82,7 @@ class RecoveryForm extends Model
             ['email', 'email'],
             ['email', 'exist',
                 'targetClass' => $this->module->modelMap['User'],
-                'message' => \Yii::t('user', 'There is no user with such email.')
+                'message' => \Yii::t('user', 'There is no user with this email address')
             ],
             ['email', function ($attribute) {
                 $this->user = $this->finder->findUserByEmail($this->email);
@@ -111,7 +111,7 @@ class RecoveryForm extends Model
             ]);
             $token->save(false);
             $this->mailer->sendRecoveryMessage($this->user, $token);
-            \Yii::$app->session->setFlash('info', \Yii::t('user', 'You will receive an email with instructions on how to reset your password in a few minutes.'));
+            \Yii::$app->session->setFlash('info', \Yii::t('user', 'An email has been sent with instructions for resetting your password'));
             return true;
         }
 

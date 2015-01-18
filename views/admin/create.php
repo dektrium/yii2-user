@@ -32,8 +32,8 @@ $this->params['breadcrumbs'][] = $this->title;
     </div>
     <div class="panel-body">
         <div class="alert alert-info">
-            <?= Yii::t('user', 'Credentials will be sent to user by email') ?>.
-            <?= Yii::t('user', 'If you want to be generate password automatically leave password field empty') ?>.
+            <?= Yii::t('user', 'Credentials will be sent to the user by email') ?>.
+            <?= Yii::t('user', 'A password will be generated automatically if not provided') ?>.
         </div>
         <?php $form = ActiveForm::begin([
             'enableAjaxValidation'   => true,

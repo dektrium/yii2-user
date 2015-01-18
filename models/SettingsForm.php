@@ -120,7 +120,6 @@ class SettingsForm extends Model
             $this->user->password = $this->new_password;
             if ($this->email == $this->user->email && $this->user->unconfirmed_email != null) {
                 $this->user->unconfirmed_email = null;
-                \Yii::$app->session->setFlash('info', \Yii::t('user', 'You have successfully cancelled email changing process'));
             } else if ($this->email != $this->user->email) {
                 switch ($this->module->emailChangeStrategy) {
                     case Module::STRATEGY_INSECURE:
@@ -145,7 +144,7 @@ class SettingsForm extends Model
     protected function insecureEmailChange()
     {
         $this->user->email = $this->email;
-        \Yii::$app->session->setFlash('success', \Yii::t('user', 'Your email address has been successfully changed'));
+        \Yii::$app->session->setFlash('success', \Yii::t('user', 'Your email address has been changed'));
     }
 
     /**
@@ -162,7 +161,7 @@ class SettingsForm extends Model
         ]);
         $token->save(false);
         $this->mailer->sendReconfirmationMessage($this->user, $token);
-        \Yii::$app->session->setFlash('info', \Yii::t('user', 'Confirmation message has been sent to your new email address'));
+        \Yii::$app->session->setFlash('info', \Yii::t('user', 'A confirmation message has been sent to your new email address'));
     }
 
     /**
@@ -186,6 +185,6 @@ class SettingsForm extends Model
         $this->user->flags &= ~User::OLD_EMAIL_CONFIRMED;
         $this->user->save(false);
 
-        \Yii::$app->session->setFlash('info', \Yii::t('user', 'We have sent confirmation links to both old and new email addresses. You should click both links in order to complete your request'));
+        \Yii::$app->session->setFlash('info', \Yii::t('user', 'We have sent confirmation links to both old and new email addresses. You must click both links to complete your request'));
     }
 }

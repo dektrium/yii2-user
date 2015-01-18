@@ -98,7 +98,7 @@ class SettingsController extends Controller
         $this->performAjaxValidation($model);
 
         if ($model->load(\Yii::$app->request->post()) && $model->save()) {
-            \Yii::$app->getSession()->setFlash('success', \Yii::t('user', 'Profile settings have been successfully saved'));
+            \Yii::$app->getSession()->setFlash('success', \Yii::t('user', 'Your profile has been updated'));
             return $this->refresh();
         }
 
@@ -119,7 +119,7 @@ class SettingsController extends Controller
         $this->performAjaxValidation($model);
 
         if ($model->load(\Yii::$app->request->post()) && $model->save()) {
-            \Yii::$app->session->setFlash('success', \Yii::t('user', 'Account settings have been successfully saved'));
+            \Yii::$app->session->setFlash('success', \Yii::t('user', 'Your account details have been updated'));
             return $this->refresh();
         }
 
@@ -202,7 +202,7 @@ class SettingsController extends Controller
                 'user_id'   => \Yii::$app->user->id,
             ]);
             $account->save(false);
-            \Yii::$app->session->setFlash('success', \Yii::t('user', 'Account has been successfully connected'));
+            \Yii::$app->session->setFlash('success', \Yii::t('user', 'Your account has been connected'));
         } else {
             \Yii::$app->session->setFlash('error', \Yii::t('user', 'This account has already been connected to another user'));
         }

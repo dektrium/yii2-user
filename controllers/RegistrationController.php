@@ -79,7 +79,7 @@ class RegistrationController extends Controller
 
         if ($model->load(\Yii::$app->request->post()) && $model->register()) {
             return $this->render('/message', [
-                'title'  => \Yii::t('user', 'Account has been created'),
+                'title'  => \Yii::t('user', 'Your account has been created'),
                 'module' => $this->module,
             ]);
         }
@@ -164,7 +164,7 @@ class RegistrationController extends Controller
 
         if ($model->load(\Yii::$app->request->post()) && $model->resend()) {
             return $this->render('/message', [
-                'title'  => \Yii::t('user', 'Confirmation link has been resent'),
+                'title'  => \Yii::t('user', 'A new confirmation link has been sent'),
                 'module' => $this->module,
             ]);
         }

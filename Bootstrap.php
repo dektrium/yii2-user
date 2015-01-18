@@ -68,18 +68,11 @@ class Bootstrap implements BootstrapInterface
             if ($app instanceof ConsoleApplication) {
                 $module->controllerNamespace = 'dektrium\user\commands';
             } else {
-                try {
-                    $app->user->enableAutoLogin = true;
-                    $app->user->loginUrl        = ['/user/security/login'];
-                    $app->user->identityClass   = $module->modelMap['User'];
-                } catch (InvalidConfigException $e) {
-                    $app->set('user', [
-                        'class'           => User::className(),
-                        'enableAutoLogin' => true,
-                        'loginUrl'        => ['/user/security/login'],
-                        'identityClass'   => $module->modelMap['User'],
-                    ]);
-                }
+                \Yii::$container->set('yii\web\User', [
+                    'enableAutoLogin' => true,
+                    'loginUrl'        => ['/user/security/login'],
+                    'identityClass'   => $module->modelMap['User'],
+                ]);
 
                 $configUrlRule = [
                     'prefix' => $module->urlPrefix,

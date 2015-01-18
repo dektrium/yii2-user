@@ -41,8 +41,10 @@ FAQ
 ---
 
 **Installation failed. There are no files in `vendor/dektrium/yii2-user`**
+
 *Try removing Yii2-user version constraint from composer.json, then run `composer update`. After composer finish
  removing of Yii2-user, re-add version constraint and `composer update` again.*
 
 **I can't log in. After clicking login button it just redirects without logging me in.**
+
 *You should remove `user` *component* configuration from your config files.*

@@ -47,4 +47,4 @@ FAQ
 
 **I can't log in. After clicking login button it just redirects without logging me in.**
 
-*You should remove `user` *component* configuration from your config files.*
+*You should remove `user` component configuration from your config files.*

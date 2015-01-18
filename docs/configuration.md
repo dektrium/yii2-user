@@ -1,15 +1,34 @@
 Configuration
 =============
 
+> Note: This section is under development.
+
 Available configuration options
 -------------------------------
 
-- **enableFlashMessages* Whether to show flash messages. Defaults to **True**.
+#### enableFlashMessages (Type: `boolean`, Default value: `true`)
 
-- **enableRegistration** Whether registration is enabled. Defaults to **True**.
+If this option is set to `true`, module will show flash messages using integrated widget. Otherwise you will need to
+handle it using your own widget, like provided in
+[yii advanced template](https://github.com/yiisoft/yii2-app-advanced/blob/master/frontend/widgets/Alert.php). The keys
+for those messages are `success`, `info`, `danger`, `warning`.
 
-- **enableGeneratingPassword** Whether password field is not shown on registration page and password is generated
- automatically and sent to user via email. Defaults to **False**.
+---
+
+#### enableRegistration (Type: `boolean`, Default value: `true`)
+
+If this option is set to `false` users will not be able to register an account. Registration page will throw
+`HttpNotFoundException`. However confirmation will continue working and you as an administrator will be able to
+create an account for user from admin interface.
+
+---
+
+#### enableGeneratingPassword (Type: `boolean`, Default value: `false`)
+
+If this option is set to `true`, password field on registration page will be hidden and password for user will be
+generated automatically. Generated password will be 8 characters long and will be sent to user via email.
+
+---
 
 - **enableConfirmation** Whether users have to confirm their accounts by clicking confirmation link sent them by email.
  In order to enable this option you have to configure **mail** application component. Defaults to **True**.

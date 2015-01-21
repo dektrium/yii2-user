@@ -26,3 +26,4 @@ Guides
 ------
 
 - [How to add captcha](adding-captcha.md)
+- [Testing with Codeception](testing-with-codeception.md)

@@ -7,8 +7,19 @@ easy three-step process.
 Step 1: Download Yii2-user using composer
 -----------------------------------------
 
-Add `"dektrium/yii2-user": "0.9.*@dev"` to the require section of your **composer.json** file. And run `composer update`
-to download and install Yii2-user.
+Either run
+
+```
+$ php composer.phar require dektrium/yii2-user "dev-master"
+```
+
+or add
+
+```
+"dektrium/yii2-user": "0.9.*@dev"
+```
+
+to the ```require``` section of your `composer.json` file.
 
 Step 2: Configure your application
 ------------------------------------

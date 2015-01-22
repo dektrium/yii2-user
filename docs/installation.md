@@ -1,14 +1,14 @@
 Installation
 ============
 
-This document will guide you through the process of installing Yii2-user using **composer**. Installation is a quick and
-easy three-step process.
+This document will guide you through the process of installing Yii2-user using **composer**. Installation is a quick
+and easy three-step process.
 
 Step 1: Download Yii2-user using composer
 -----------------------------------------
 
-Add `"dektrium/yii2-user": "0.9.*@dev"` to the require section of your **composer.json** file. And run `composer update`
-to download and install Yii2-user.
+Add `"dektrium/yii2-user": "0.9.*@dev"` to the require section of your **composer.json** file and run
+`composer update` to download and install Yii2-user.
 
 Step 2: Configure your application
 ------------------------------------
@@ -30,7 +30,8 @@ Step 3: Update database schema
 
 > **NOTE:** Make sure that you have properly configured **db** application component.
 
-After you downloaded and configured Yii2-user, the last thing you need to do is updating your database schema by applying
+After you downloaded and configured Yii2-user, the last thing you need to do is updating your database schema by
+applying
 the migrations:
 
 ```bash

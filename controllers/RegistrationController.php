@@ -78,10 +78,17 @@ class RegistrationController extends Controller
         $this->performAjaxValidation($model);
 
         if ($model->load(\Yii::$app->request->post()) && $model->register()) {
-            return $this->render('/message', [
-                'title'  => \Yii::t('user', 'Your account has been created'),
-                'module' => $this->module,
-            ]);
+            if ($this->module->enableConfirmation)
+            {
+                return $this->render('/message', [
+                    'title'  => \Yii::t('user', 'Your account has been created'),
+                    'module' => $this->module,
+                ]);
+            }
+            else
+            {
+                return $this->goHome();
+            }
         }
 
         return $this->render('register', [
@@ -138,13 +145,18 @@ class RegistrationController extends Controller
         if ($user === null || $this->module->enableConfirmation == false) {
             throw new NotFoundHttpException;
         }
-
-        $user->attemptConfirmation($code);
-
-        return $this->render('/message', [
-            'title'  => \Yii::t('user', 'Account confirmation'),
-            'module' => $this->module,
-        ]);
+        
+        if ($user->attemptConfirmation($code))
+        {
+            return $this->goHome();
+        }
+        else
+        {
+            return $this->render('/message', [
+                'title'  => \Yii::t('user', 'Account confirmation'),
+                'module' => $this->module,
+            ]);
+        }
     }
 
     /**

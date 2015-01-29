@@ -302,6 +302,7 @@ class User extends ActiveRecord implements IdentityInterface
 
         if ($token === null || $token->isExpired) {
             \Yii::$app->session->setFlash('danger', \Yii::t('user', 'The confirmation link is invalid or expired. Please try requesting a new one.'));
+            return false;            
         } else {
             $token->delete();
     
@@ -313,8 +314,10 @@ class User extends ActiveRecord implements IdentityInterface
     
             if ($this->save(false)) {
                 \Yii::$app->session->setFlash('success', \Yii::t('user', 'Thank you, registration is now complete.'));
+                return true;
             } else {
                 \Yii::$app->session->setFlash('danger', \Yii::t('user', 'Something went wrong and your account has not been confirmed.'));
+                return true;
             }
         }
     }

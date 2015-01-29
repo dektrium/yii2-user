@@ -13,5 +13,5 @@ $I->see('The confirmation link is invalid or expired. Please try requesting a ne
 $I->amGoingTo('check that user get confirmed');
 $token = $I->getFixture('token')->getModel('confirmation');
 $I->amOnPage(Url::toRoute(['/user/registration/confirm', 'id' => $token->user_id, 'code' => $token->code]));
-$I->see('Thank you, registration is now complete.');
+$I->amOnPage(Url::home());
 $I->see('Logout');

@@ -75,7 +75,7 @@ class Profile extends ActiveRecord
     {
         if (parent::beforeSave($insert)) {
             if ($this->isAttributeChanged('gravatar_email')) {
-                $this->setAttribute('gravatar_id', md5($this->getAttribute('gravatar_email')));
+                $this->setAttribute('gravatar_id', md5(strtolower($this->getAttribute('gravatar_email'))));
             }
             return true;
         }

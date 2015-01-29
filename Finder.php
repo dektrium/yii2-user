@@ -84,7 +84,7 @@ class Finder extends Object
     }
 
     /** @param ActiveQuery $profileQuery */
-    public function setProfileQuery(ActiveQuery$profileQuery)
+    public function setProfileQuery(ActiveQuery $profileQuery)
     {
         $this->profileQuery = $profileQuery;
     }

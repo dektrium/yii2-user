@@ -379,7 +379,7 @@ class User extends ActiveRecord implements IdentityInterface
     }
 
     /**
-     * Confirms the user by setting 'blocked_at' field to current time.
+     * Confirms the user by setting 'confirmed_at' field to current time.
      */
     public function confirm()
     {
@@ -395,7 +395,7 @@ class User extends ActiveRecord implements IdentityInterface
     }
 
     /**
-     * Blocks the user by setting 'blocked_at' field to null.
+     * UnBlocks the user by setting 'blocked_at' field to null.
      */
     public function unblock()
     {

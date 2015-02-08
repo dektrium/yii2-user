@@ -16,6 +16,6 @@ helper `\yii\helpers\Url::to()`.
 |**/user/recovery/reset**       | Displays password reset form (requires *id* and *token* query params) |
 |**/user/settings/profile**     | Displays profile settings form                                        |
 |**/user/settings/account**     | Displays account settings form (email, username, password)            |
-|**/user/settings/networks**    | Displays social networks settings page                                |
+|**/user/settings/networks**    | Displays social network accounts settings page                        |
 |**/user/profile/show**         | Displays user's profile (requires *id* query param)                   |
 |**/user/admin/index**          | Displays user management interface                                    |

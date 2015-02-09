@@ -203,6 +203,9 @@ class SettingsController extends Controller
             ]);
             $account->save(false);
             \Yii::$app->session->setFlash('success', \Yii::t('user', 'Your account has been connected'));
+        } else if (null == $account->user) {
+            $account->user_id = \Yii::$app->user->id;
+            $account->save(false);
         } else {
             \Yii::$app->session->setFlash('error', \Yii::t('user', 'This account has already been connected to another user'));
         }

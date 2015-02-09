@@ -2,6 +2,7 @@
 
 ## 0.9.3 [Work in progress]
 
+- `fix` Fixed bug with inability to connect network account #275 (dmeroff)
 - `fix` Fixed invalid redirection after changing account settings (WeeSee)
 - `fix` Updated messages to be more readable (jspaine)
 - `fix` Reverted initialization of `user` component (dmeroff)

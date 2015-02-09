@@ -4,8 +4,8 @@ php:
   - 5.5
   - 5.4
 install:
-  - composer self-update "1.0.0-alpha9"
-  - composer global require "fxp/composer-asset-plugin:1.0.0-beta4"
+  - composer self-update
+  - composer global require "fxp/composer-asset-plugin:~1.0"
   - composer install --prefer-dist --dev
   - composer require --dev "codeception/codeception:2.0.*@dev"
 before_script:

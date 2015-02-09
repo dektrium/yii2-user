@@ -3,6 +3,11 @@
 ## 0.9.3 [Work in progress]
 
 - `fix` Fixed bug with inability to connect network account #275 (dmeroff)
+- `enh` Added turkish translation (veyselsahin)
+- `enh` Added lithuanian translation (vilkazz)
+- `fix` Fixed button css on profile settings page (sosojni)
+- `enh` Hidden recovery link when `enablePasswordRecovery` is false (marsuboss)
+- `fix` Fixed gravatar hash creation (nigelterry)
 - `fix` Fixed invalid redirection after changing account settings (WeeSee)
 - `fix` Updated messages to be more readable (jspaine)
 - `fix` Reverted initialization of `user` component (dmeroff)

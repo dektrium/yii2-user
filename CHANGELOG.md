@@ -1,6 +1,6 @@
 # CHANGELOG
 
-## 0.9.3 [Work in progress]
+## 0.9.3 [9 February 2015]
 
 - `fix` Fixed bug with inability to connect network account #275 (dmeroff)
 - `enh` Added turkish translation (veyselsahin)

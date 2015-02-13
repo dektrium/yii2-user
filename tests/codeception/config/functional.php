@@ -8,5 +8,13 @@ $_SERVER['SCRIPT_NAME']     = YII_TEST_ENTRY_URL;
  */
 return yii\helpers\ArrayHelper::merge(
     require(__DIR__ . '/../app/config/web.php'),
-    []
+    [
+        'modules' => [
+            'user' => [
+                'mailer' => [
+                    'class' => 'app\components\MailerMock',
+                ],
+            ]
+        ],
+    ]
 );

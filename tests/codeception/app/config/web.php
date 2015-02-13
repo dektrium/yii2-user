@@ -16,9 +16,6 @@ return [
         'user' => [
             'class' => 'dektrium\user\Module',
             'admins' => ['user'],
-            'mailer' => [
-                'class' => 'app\components\MailerMock',
-            ],
         ]
     ],
     'components' => [

@@ -9,14 +9,18 @@
  * file that was distributed with this source code.
  */
 
-use yii\helpers\Html;
+use dektrium\user\models\UserSearch;
+use yii\data\ActiveDataProvider;
 use yii\grid\GridView;
+use yii\helpers\Html;
+use yii\jui\DatePicker;
+use yii\web\View;
 use yii\widgets\Pjax;
 
 /**
- * @var yii\web\View $this
- * @var yii\data\ActiveDataProvider $dataProvider
- * @var dektrium\user\models\UserSearch $searchModel
+ * @var View $this
+ * @var ActiveDataProvider $dataProvider
+ * @var UserSearch $searchModel
  */
 
 $this->title = Yii::t('user', 'Manage users');
@@ -50,7 +54,15 @@ $this->params['breadcrumbs'][] = $this->title;
             'attribute' => 'created_at',
             'value' => function ($model) {
                 return Yii::t('user', '{0, date, MMMM dd, YYYY HH:mm}', [$model->created_at]);
-            }
+            },
+            'filter' => DatePicker::widget([
+                'model'      => $searchModel,
+                'attribute'  => 'created_at',
+                'dateFormat' => 'php:Y-m-d',
+                'options' => [
+                    'class' => 'form-control'
+                ]
+            ]),
         ],
         [
             'header' => Yii::t('user', 'Confirmation'),

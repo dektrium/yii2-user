@@ -30,6 +30,8 @@ $this->params['breadcrumbs'][] = $this->title;
     'module' => Yii::$app->getModule('user'),
 ]) ?>
 
+<?= $this->render('_menu') ?>
+
 <div class="row">
     <div class="col-md-3">
         <div class="panel panel-default">

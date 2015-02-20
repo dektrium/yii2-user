@@ -14,10 +14,15 @@ namespace dektrium\user\controllers;
 use dektrium\user\Finder;
 use dektrium\user\models\User;
 use dektrium\user\models\UserSearch;
+use dektrium\user\Module;
+use Yii;
+use yii\base\ExitException;
 use yii\base\Model;
-use yii\web\Controller;
+use yii\base\Module as Module2;
 use yii\filters\AccessControl;
 use yii\filters\VerbFilter;
+use yii\helpers\Url;
+use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\web\Response;
 use yii\widgets\ActiveForm;
@@ -25,7 +30,7 @@ use yii\widgets\ActiveForm;
 /**
  * AdminController allows you to administrate users.
  *
- * @property \dektrium\user\Module $module
+ * @property Module $module
  * @author Dmitry Erofeev <dmeroff@gmail.com
  */
 class AdminController extends Controller
@@ -35,7 +40,7 @@ class AdminController extends Controller
 
     /**
      * @param string $id
-     * @param \yii\base\Module $module
+     * @param Module2 $module
      * @param Finder $finder
      * @param array $config
      */
@@ -61,11 +66,20 @@ class AdminController extends Controller
                 'class' => AccessControl::className(),
                 'rules' => [
                     [
-                        'actions' => ['index', 'create', 'update', 'delete', 'block', 'confirm'],
+                        'actions' => [
+                            'index',
+                            'create',
+                            'update',
+                            'update-profile',
+                            'delete',
+                            'block',
+                            'confirm',
+                            'info',
+                        ],
                         'allow' => true,
                         'roles' => ['@'],
-                        'matchCallback' => function ($rule, $action) {
-                            return \Yii::$app->user->identity->getIsAdmin();
+                        'matchCallback' => function () {
+                            return Yii::$app->user->identity->getIsAdmin();
                         }
                     ],
                 ]
@@ -79,8 +93,9 @@ class AdminController extends Controller
      */
     public function actionIndex()
     {
-        $searchModel  = \Yii::createObject(UserSearch::className());
-        $dataProvider = $searchModel->search($_GET);
+        Url::remember(Url::current(), 'actions-redirect');
+        $searchModel  = Yii::createObject(UserSearch::className());
+        $dataProvider = $searchModel->search(Yii::$app->request->get());
 
         return $this->render('index', [
             'dataProvider' => $dataProvider,
@@ -96,16 +111,16 @@ class AdminController extends Controller
     public function actionCreate()
     {
         /** @var User $user */
-        $user = \Yii::createObject([
+        $user = Yii::createObject([
             'class'    => User::className(),
             'scenario' => 'create',
         ]);
 
         $this->performAjaxValidation($user);
 
-        if ($user->load(\Yii::$app->request->post()) && $user->create()) {
-            \Yii::$app->getSession()->setFlash('success', \Yii::t('user', 'User has been created'));
-            return $this->redirect(['index']);
+        if ($user->load(Yii::$app->request->post()) && $user->create()) {
+            Yii::$app->getSession()->setFlash('success', Yii::t('user', 'User has been created'));
+            return $this->redirect(['update', 'id' => $user->id]);
         }
 
         return $this->render('create', [
@@ -115,43 +130,77 @@ class AdminController extends Controller
 
     /**
      * Updates an existing User model.
-     * If update is successful, the browser will be redirected to the 'index' page.
      * @param  integer $id
      * @return mixed
      */
     public function actionUpdate($id)
     {
+        Url::remember(Url::current(), 'actions-redirect');
         $user = $this->findModel($id);
         $user->scenario = 'update';
-        $profile = $this->finder->findProfileById($id);
-        $r = \Yii::$app->request;
 
-        $this->performAjaxValidation([$user, $profile]);
+        $this->performAjaxValidation($user);
 
-        if ($user->load($r->post()) && $profile->load($r->post()) && $user->save() && $profile->save()) {
-            \Yii::$app->getSession()->setFlash('success', \Yii::t('user', 'User has been updated'));
+        if ($user->load(Yii::$app->request->post()) && $user->save()) {
+            Yii::$app->getSession()->setFlash('success', Yii::t('user', 'Account details have been updated'));
             return $this->refresh();
         }
 
-        return $this->render('update', [
+        return $this->render('_account', [
+            'user'    => $user,
+        ]);
+    }
+    
+    /**
+     * Updates an existing profile.
+     * @param  integer $id
+     * @return mixed
+     */
+    public function actionUpdateProfile($id)
+    {
+        Url::remember(Url::current(), 'actions-redirect');
+        $user    = $this->findModel($id);
+        $profile = $user->profile;
+        
+        $this->performAjaxValidation($profile);
+        
+        if ($profile->load(Yii::$app->request->post()) && $profile->save()) {
+            Yii::$app->getSession()->setFlash('success', Yii::t('user', 'Profile details have been updated'));
+            return $this->refresh();
+        }
+        
+        return $this->render('_profile', [
             'user'    => $user,
             'profile' => $profile,
-            'module'  => $this->module,
+        ]);
+    }
+    
+    /**
+     * Shows information about user.
+     * @param  integer $id
+     * @return string
+     */
+    public function actionInfo($id)
+    {
+        Url::remember(Url::current(), 'actions-redirect');
+        $user = $this->findModel($id);
+        
+        return $this->render('_info', [
+            'user'   => $user,
         ]);
     }
 
     /**
      * Confirms the User.
      * @param integer $id
-     * @param string  $back
-     * @return \yii\web\Response
+     * @return Response
      */
-    public function actionConfirm($id, $back = 'index')
+    public function actionConfirm($id)
     {
         $this->findModel($id)->confirm();
-        \Yii::$app->getSession()->setFlash('success', \Yii::t('user', 'User has been confirmed'));
-        $url = $back == 'index' ? ['index'] : ['update', 'id' => $id];
-        return $this->redirect($url);
+        Yii::$app->getSession()->setFlash('success', Yii::t('user', 'User has been confirmed'));
+        
+        return $this->redirect(Url::previous('actions-redirect'));
     }
 
     /**
@@ -162,37 +211,37 @@ class AdminController extends Controller
      */
     public function actionDelete($id)
     {
-        if ($id == \Yii::$app->user->getId()) {
-            \Yii::$app->getSession()->setFlash('danger', \Yii::t('user', 'You can not remove your own account'));
+        if ($id == Yii::$app->user->getId()) {
+            Yii::$app->getSession()->setFlash('danger', Yii::t('user', 'You can not remove your own account'));
         } else {
             $this->findModel($id)->delete();
-            \Yii::$app->getSession()->setFlash('success', \Yii::t('user', 'User has been deleted'));
+            Yii::$app->getSession()->setFlash('success', Yii::t('user', 'User has been deleted'));
         }
+        
         return $this->redirect(['index']);
     }
 
     /**
      * Blocks the user.
      * @param  integer $id
-     * @param  string  $back
-     * @return \yii\web\Response
+     * @return Response
      */
-    public function actionBlock($id, $back = 'index')
+    public function actionBlock($id)
     {
-        if ($id == \Yii::$app->user->getId()) {
-            \Yii::$app->getSession()->setFlash('danger', \Yii::t('user', 'You can not block your own account'));
+        if ($id == Yii::$app->user->getId()) {
+            Yii::$app->getSession()->setFlash('danger', Yii::t('user', 'You can not block your own account'));
         } else {
             $user = $this->findModel($id);
             if ($user->getIsBlocked()) {
                 $user->unblock();
-                \Yii::$app->getSession()->setFlash('success', \Yii::t('user', 'User has been unblocked'));
+                Yii::$app->getSession()->setFlash('success', Yii::t('user', 'User has been unblocked'));
             } else {
                 $user->block();
-                \Yii::$app->getSession()->setFlash('success', \Yii::t('user', 'User has been blocked'));
+                Yii::$app->getSession()->setFlash('success', Yii::t('user', 'User has been blocked'));
             }
         }
-        $url = $back == 'index' ? ['index'] : ['update', 'id' => $id];
-        return $this->redirect($url);
+
+        return $this->redirect(Url::previous('actions-redirect'));
     }
 
     /**
@@ -213,28 +262,16 @@ class AdminController extends Controller
 
     /**
      * Performs AJAX validation.
-     * @param array|Model $models
-     * @throws \yii\base\ExitException
+     * @param array|Model $model
+     * @throws ExitException
      */
-    protected function performAjaxValidation($models)
+    protected function performAjaxValidation($model)
     {
-        if (\Yii::$app->request->isAjax) {
-            if (is_array($models)) {
-                $result = [];
-                foreach ($models as $model) {
-                    if ($model->load(\Yii::$app->request->post())) {
-                        \Yii::$app->response->format = Response::FORMAT_JSON;
-                        $result = array_merge($result, ActiveForm::validate($model));
-                    }
-                }
-                echo json_encode($result);
-                \Yii::$app->end();
-            } else {
-                if ($models->load(\Yii::$app->request->post())) {
-                    \Yii::$app->response->format = Response::FORMAT_JSON;
-                    echo json_encode(ActiveForm::validate($models));
-                    \Yii::$app->end();
-                }
+        if (Yii::$app->request->isAjax && !Yii::$app->request->isPjax) {
+            if ($model->load(Yii::$app->request->post())) {
+                Yii::$app->response->format = Response::FORMAT_JSON;
+                echo json_encode(ActiveForm::validate($model));
+                Yii::$app->end();
             }
         }
     }

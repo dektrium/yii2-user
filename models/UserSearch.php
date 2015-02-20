@@ -49,8 +49,8 @@ class UserSearch extends Model
     public function rules()
     {
         return [
-            [['created_at'], 'integer'],
-            [['username', 'email', 'registration_ip'], 'safe'],
+            [['username', 'email', 'registration_ip', 'created_at'], 'safe'],
+            ['created_at', 'default', 'value' => null]
         ];
     }
 
@@ -80,9 +80,13 @@ class UserSearch extends Model
         if (!($this->load($params) && $this->validate())) {
             return $dataProvider;
         }
-
-        $query->andFilterWhere(['created_at'=> $this->created_at])
-            ->andFilterWhere(['like', 'username', $this->username])
+        
+        if ($this->created_at !== null) {
+            $date = strtotime($this->created_at);
+            $query->andFilterWhere(['between', 'created_at', $date, $date + 3600 * 24]);
+        }
+        
+        $query->andFilterWhere(['like', 'username', $this->username])
             ->andFilterWhere(['like', 'email', $this->email])
             ->andFilterWhere(['registration_ip' => $this->registration_ip]);
 

@@ -20,33 +20,33 @@ use yii\bootstrap\Nav;
     ],
     'items' => [
         [
-            'label'   => Yii::t('rbac', 'Users'),
+            'label'   => Yii::t('user', 'Users'),
             'url'     => ['/user/admin/index'],
         ],
         [
-            'label' => Yii::t('rbac', 'Roles'),
+            'label' => Yii::t('user', 'Roles'),
             'url'   => ['/rbac/role/index'],
             'visible' => isset(Yii::$app->extensions['dektrium/yii2-rbac']),
         ],
         [
-            'label' => Yii::t('rbac', 'Permissions'),
+            'label' => Yii::t('user', 'Permissions'),
             'url'   => ['/rbac/permission/index'],
             'visible' => isset(Yii::$app->extensions['dektrium/yii2-rbac']),
         ],
         [
-            'label' => Yii::t('rbac', 'Create'),
+            'label' => Yii::t('user', 'Create'),
             'items' => [
                 [
-                    'label'   => Yii::t('rbac', 'New user'),
+                    'label'   => Yii::t('user', 'New user'),
                     'url'     => ['/user/admin/create'],
                 ],
                 [
-                    'label' => Yii::t('rbac', 'New role'),
+                    'label' => Yii::t('user', 'New role'),
                     'url'   => ['/rbac/role/create'],
                     'visible' => isset(Yii::$app->extensions['dektrium/yii2-rbac']),
                 ],
                 [
-                    'label' => Yii::t('rbac', 'New permission'),
+                    'label' => Yii::t('user', 'New permission'),
                     'url'   => ['/rbac/permission/create'],
                     'visible' => isset(Yii::$app->extensions['dektrium/yii2-rbac']),
                 ]

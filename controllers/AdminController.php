@@ -83,7 +83,7 @@ class AdminController extends Controller
      */
     public function actionIndex()
     {
-        Url::remember(Url::current(), 'actions-redirect');
+        Url::remember('', 'actions-redirect');
         $searchModel  = Yii::createObject(UserSearch::className());
         $dataProvider = $searchModel->search(Yii::$app->request->get());
 
@@ -125,7 +125,7 @@ class AdminController extends Controller
      */
     public function actionUpdate($id)
     {
-        Url::remember(Url::current(), 'actions-redirect');
+        Url::remember('', 'actions-redirect');
         $user = $this->findModel($id);
         $user->scenario = 'update';
 
@@ -148,7 +148,7 @@ class AdminController extends Controller
      */
     public function actionUpdateProfile($id)
     {
-        Url::remember(Url::current(), 'actions-redirect');
+        Url::remember('', 'actions-redirect');
         $user    = $this->findModel($id);
         $profile = $user->profile;
         
@@ -172,7 +172,7 @@ class AdminController extends Controller
      */
     public function actionInfo($id)
     {
-        Url::remember(Url::current(), 'actions-redirect');
+        Url::remember('', 'actions-redirect');
         $user = $this->findModel($id);
         
         return $this->render('_info', [
@@ -191,7 +191,7 @@ class AdminController extends Controller
         if (!isset(Yii::$app->extensions['dektrium/yii2-rbac'])) {
             throw new NotFoundHttpException;
         }
-        Url::remember(Url::current(), 'actions-redirect');
+        Url::remember('', 'actions-redirect');
         $user = $this->findModel($id);
         
         return $this->render('_assignments', [

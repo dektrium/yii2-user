@@ -20,7 +20,7 @@ return array (
     '{0, date, MMMM dd, YYYY HH:mm}' => '{0, date, dd MMMM, YYYY HH:mm}',
     'Account has successfully been connected' => 'Zugang wurde erfolgreich verbunden',
     'All user tokens have been deleted' => 'Alle Benutzerschlüssel wurden gelöscht',
-    'Already registered? Sign in!' => 'Bereits angemeldet? Melden Sie sich an!',
+    'Already registered? Sign in!' => 'Bereits registriert? Melden Sie sich an!',
     'Are you sure? Deleted user can not be restored' => 'Sind Sie sicher? Ein gelöschter Benutzer kann nicht wieder hergestellt werden',
     'Are you sure you want to block this user?' => 'Sind Sie sicher, dass Sie den Benutzer sperren möchten?',
     'Are you sure you want to confirm this user?' => 'Sind Sie sicher, dass Sie den Benutzer bestätigen möchten?',

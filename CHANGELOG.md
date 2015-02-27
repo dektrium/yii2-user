@@ -1,5 +1,94 @@
 # CHANGELOG
 
+## 0.9.4 [Work in progress]
+
+- `enh` Improved admin views and controller (dmeroff)
+- `enh` Added datepicker in user grid view (dmeroff)
+
+## 0.9.3 [9 February 2015]
+
+- `fix` Fixed bug with inability to connect network account #275 (dmeroff)
+- `enh` Added turkish translation (veyselsahin)
+- `enh` Added lithuanian translation (vilkazz)
+- `fix` Fixed button css on profile settings page (sosojni)
+- `enh` Hidden recovery link when `enablePasswordRecovery` is false (marsuboss)
+- `fix` Fixed gravatar hash creation (nigelterry)
+- `fix` Fixed invalid redirection after changing account settings (WeeSee)
+- `fix` Updated messages to be more readable (jspaine)
+- `fix` Reverted initialization of `user` component (dmeroff)
+- `fix` Fixed bug on confirmation and recovery when invalid token was used (anders-akero)
+
+## 0.9.2 [14 January 2015]
+
+- `enh` Improved initialization of `user` application component (dmeroff)
+- `fix` Fixed encoding problem with plain text email messages (dmeroff)
+- `fix` Fixed migration (dmeroff)
+- `fix` Fixed overriding of mailer view files (dmeroff)
+- `fix` Fixed troubles with overriding user search model (dmeroff)
+- `fix` Fixed bug when model was defined as array in modelMap (dmeroff)
+- `fix` Removed ajax-request flood on login form (thiagotalma)
+- `enh` Added `th` translation (kongoon)
+
+## 0.9.1 [1 January 2015]
+
+- `fix` Fixed overriding of active record models (dmeroff)
+- `fix` Fixed pt-BR translation (thiagotalma)
+
+## 0.9.0 [30 December 2014]
+
+- `fix` Changed ip field type to VARCHAR(45) to handle IPv6 (dmeroff)
+- `enh` Improved mailer component (dmeroff)
+- `enh` Updated flash messages and added new module option to disable them (dmeroff)
+- `enh` Added ajax-validation (dmeroff)
+- `enh` Added secured email changing strategy (dmeroff)
+- `chg` Removed ability to delete or block your own account from admin pages (dmeroff)
+- `chg` Updated create and update admin pages (dmeroff)
+- `chg` Updated admin index page (dmeroff)
+- `chg` Removed auto-injecting module in application (belerophon)
+- `chg` Removed Mailcatcher dependency from test suite (dmeroff)
+- `chg` Refactored all models (dmeroff)
+- `enh` Refactored model overriding system (dmeroff)
+
+## 0.8.2 [14 December 2014]
+
+- `fix` Fixed croatian translation (trbsi)
+- `fix` Fixed spanish translation (abolivar)
+- `chg` Added persian farsi translation (bepehr)
+- `chg` Added hungarian translation (akosk)
+- `chg` Added dutch translation (infoweb-internet-solutions)
+- `fix` Fixed pt_BR translate (thiagotalma)
+- `fix` Fixed relation between User and Profile (anders-akero)
+- `fix` Fixed translations (sosojni)
+- `fix` Added registration_ip label (sosojni)
+
+## 0.8.1 [13 October 2014] Yii 2.0.0 compatible
+
+- `fix` Fixed test suite (dmeroff)
+- `chg` Updated `composer.json` (dmeroff)
+- `chg` Added check for `enableConfirmation` for resending link (makroxyz)
+- `fix` Fixed compatibility with PostgreSQL (makroxyz)
+
+## 0.8.0 [5 October 2014] Yii 2.0.0-rc compatible
+
+- `fix` Updated admin grid view (hoksilato)
+- `fix` Recovery token is now deleted after recovery process (mrarthur)
+- `fix` Registration_ip is now filled with user ip address on registration (mrarthur)
+- `chg` Refactored email change process (dmeroff)
+- `enh` Added account settings page and removed email and password settings pages (dmeroff)
+- `enh` Added tab index on login page (maxxer)
+- `enh` Added `getIsAdmin` method on user model (maxxer)
+- `fix` Fixed bug when registration page was not available with `enableConfirmation` option disabled (marsuboss)
+
+## 0.7.0 [31 August 2014]
+
+- Reverted removing registration without password
+- Updated test suite
+- Added new translations
+- Added options to configure url rules (#99)
+- Added new advanced configuration (#93) (BC break)
+- Refactored registration, confirmation, password recovery
+- Updated database structure (BC break)
+
 ## 0.6.0 [04 May 2014]
 
 - Supported MySQL and PostgreSQL

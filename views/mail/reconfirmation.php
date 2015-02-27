@@ -12,23 +12,22 @@
 use yii\helpers\Html;
 
 /**
- * @var dektrium\user\models\User $user
+ * @var dektrium\user\models\Token $token
  */
 ?>
 <p style="font-family: 'Helvetica Neue', 'Helvetica', Helvetica, Arial, sans-serif; font-size: 14px; line-height: 1.6; font-weight: normal; margin: 0 0 10px; padding: 0;">
     <?= Yii::t('user', 'Hello') ?>,
 </p>
 <p style="font-family: 'Helvetica Neue', 'Helvetica', Helvetica, Arial, sans-serif; font-size: 14px; line-height: 1.6; font-weight: normal; margin: 0 0 10px; padding: 0;">
-    <?= Yii::t('user', 'You have recently requested email change on {0}', Yii::$app->name) ?>.
+    <?= Yii::t('user', 'We have received a request to change the email address for your account on {0}', Yii::$app->name) ?>.
     <?= Yii::t('user', 'In order to complete your request, please click the link below') ?>.
 </p>
 <p style="font-family: 'Helvetica Neue', 'Helvetica', Helvetica, Arial, sans-serif; font-size: 14px; line-height: 1.6; font-weight: normal; margin: 0 0 10px; padding: 0;">
-    <?= Html::a(Html::encode($user->getConfirmationUrl()), $user->getConfirmationUrl()); ?>
+    <?= Html::a(Html::encode($token->getUrl()), $token->getUrl()); ?>
 </p>
 <p style="font-family: 'Helvetica Neue', 'Helvetica', Helvetica, Arial, sans-serif; font-size: 14px; line-height: 1.6; font-weight: normal; margin: 0 0 10px; padding: 0;">
-    <?= Yii::t('user', 'If you have problems, please paste the above URL into your web browser') ?>.
-    <?= Yii::t('user', 'This URL will only be valid for a limited time and will expire') ?>.
+    <?= Yii::t('user', 'If you cannot click the link, please try pasting the text into your browser') ?>.
 </p>
 <p style="font-family: 'Helvetica Neue', 'Helvetica', Helvetica, Arial, sans-serif; font-size: 14px; line-height: 1.6; font-weight: normal; margin: 0 0 10px; padding: 0;">
-    <?= Yii::t('user', 'P.S. If you received this email by mistake, simply delete it') ?>.
+    <?= Yii::t('user', 'If you did not make this request you can ignore this email') ?>.
 </p>

@@ -11,11 +11,17 @@
 
 namespace dektrium\user\controllers;
 
+use dektrium\user\Finder;
+use dektrium\user\models\Account;
+use dektrium\user\models\LoginForm;
+use yii\base\Model;
 use yii\helpers\Url;
 use yii\web\Controller;
 use yii\filters\AccessControl;
 use yii\filters\VerbFilter;
 use yii\authclient\ClientInterface;
+use yii\web\Response;
+use yii\widgets\ActiveForm;
 
 /**
  * Controller that manages user authentication process.
@@ -26,25 +32,30 @@ use yii\authclient\ClientInterface;
  */
 class SecurityController extends Controller
 {
+    /** @var Finder */
+    protected $finder;
+
     /**
-     * @inheritdoc
+     * @param string $id
+     * @param \yii\base\Module $module
+     * @param Finder $finder
+     * @param array $config
      */
+    public function __construct($id, $module, Finder $finder, $config = [])
+    {
+        $this->finder = $finder;
+        parent::__construct($id, $module, $config);
+    }
+
+    /** @inheritdoc */
     public function behaviors()
     {
         return [
             'access' => [
                 'class' => AccessControl::className(),
                 'rules' => [
-                    [
-                        'allow' => true,
-                        'actions' => ['login', 'auth'],
-                        'roles' => ['?']
-                    ],
-                    [
-                        'allow' => true,
-                        'actions' => ['logout'],
-                        'roles' => ['@']
-                    ],
+                    ['allow' => true, 'actions' => ['login', 'auth'], 'roles' => ['?']],
+                    ['allow' => true, 'actions' => ['logout'], 'roles' => ['@']],
                 ]
             ],
             'verbs' => [
@@ -56,9 +67,7 @@ class SecurityController extends Controller
         ];
     }
 
-    /**
-     * @inheritdoc
-     */
+    /** @inheritdoc */
     public function actions()
     {
         return [
@@ -71,37 +80,36 @@ class SecurityController extends Controller
 
     /**
      * Displays the login page.
-     *
      * @return string|\yii\web\Response
      */
     public function actionLogin()
     {
-        $model = $this->module->manager->createLoginForm();
+        $model = \Yii::createObject(LoginForm::className());
+
+        $this->performAjaxValidation($model);
 
         if ($model->load(\Yii::$app->getRequest()->post()) && $model->login()) {
             return $this->goBack();
         }
 
         return $this->render('login', [
-            'model' => $model
+            'model'  => $model,
+            'module' => $this->module,
         ]);
     }
 
     /**
      * Logs the user out and then redirects to the homepage.
-     *
      * @return \yii\web\Response
      */
     public function actionLogout()
     {
         \Yii::$app->getUser()->logout();
-
         return $this->goHome();
     }
 
     /**
      * Logs the user in if this social account has been already used. Otherwise shows registration form.
-     *
      * @param  ClientInterface $client
      * @return \yii\web\Response
      */
@@ -111,11 +119,14 @@ class SecurityController extends Controller
         $provider   = $client->getId();
         $clientId   = $attributes['id'];
 
-        if (null === ($account = $this->module->manager->findAccount($provider, $clientId))) {
-            $account = $this->module->manager->createAccount([
+        $account = $this->finder->findAccountByProviderAndClientId($provider, $clientId);
+
+        if ($account === null) {
+            $account = \Yii::createObject([
+                'class'      => Account::className(),
                 'provider'   => $provider,
                 'client_id'  => $clientId,
-                'properties' => json_encode($attributes)
+                'data'       => json_encode($attributes),
             ]);
             $account->save(false);
         }
@@ -124,6 +135,20 @@ class SecurityController extends Controller
             $this->action->successUrl = Url::to(['/user/registration/connect', 'account_id' => $account->id]);
         } else {
             \Yii::$app->user->login($user, $this->module->rememberFor);
+        }
+    }
+
+    /**
+     * Performs ajax validation.
+     * @param Model $model
+     * @throws \yii\base\ExitException
+     */
+    protected function performAjaxValidation(Model $model)
+    {
+        if (\Yii::$app->request->isAjax && $model->load(\Yii::$app->request->post())) {
+            \Yii::$app->response->format = Response::FORMAT_JSON;
+            echo json_encode(ActiveForm::validate($model));
+            \Yii::$app->end();
         }
     }
 }

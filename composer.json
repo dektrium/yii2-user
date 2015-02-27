@@ -18,15 +18,16 @@
     ],
     "minimum-stability": "dev",
     "require": {
-        "yiisoft/yii2": "*",
-        "yiisoft/yii2-swiftmailer": "*",
-        "yiisoft/yii2-authclient": "*"
+        "yiisoft/yii2": "~2.0",
+        "yiisoft/yii2-swiftmailer": "~2.0",
+        "yiisoft/yii2-authclient": "~2.0",
+        "yiisoft/yii2-jui": "~2.0",
+        "yiisoft/yii2-bootstrap": "~2.0"
     },
     "require-dev": {
-        "yiisoft/yii2-codeception": "*",
+        "yiisoft/yii2-codeception": "~2.0",
         "codeception/specify": "*",
-        "codeception/verify": "*",
-        "guzzlehttp/guzzle": "~4.0"
+        "codeception/verify": "*"
     },
     "autoload": {
         "psr-4": {
@@ -34,6 +35,14 @@
         }
     },
     "extra": {
-        "bootstrap": "dektrium\\user\\Bootstrap"
+        "bootstrap": "dektrium\\user\\Bootstrap",
+        "branch-alias": {
+            "dev-master": "0.9.x-dev",
+            "dev-develop": "1.0.x-dev"
+        },
+        "asset-installer-paths": {
+            "npm-asset-library": "vendor/npm",
+            "bower-asset-library": "vendor/bower"
+        }
     }
 }

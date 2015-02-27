@@ -11,12 +11,20 @@
 
 namespace dektrium\user\controllers;
 
+use dektrium\user\Finder;
+use dektrium\user\models\Account;
+use dektrium\user\models\SettingsForm;
+use dektrium\user\Module;
 use yii\authclient\ClientInterface;
+use yii\base\Model;
+use yii\helpers\Url;
 use yii\web\Controller;
 use yii\filters\AccessControl;
 use yii\filters\VerbFilter;
 use yii\web\ForbiddenHttpException;
 use yii\web\NotFoundHttpException;
+use yii\web\Response;
+use yii\widgets\ActiveForm;
 
 /**
  * SettingsController manages updating user settings (e.g. profile, email and password).
@@ -27,21 +35,31 @@ use yii\web\NotFoundHttpException;
  */
 class SettingsController extends Controller
 {
-    /**
-     * @inheritdoc
-     */
+    /** @inheritdoc */
     public $defaultAction = 'profile';
 
+    /** @var Finder */
+    protected $finder;
+
     /**
-     * @inheritdoc
+     * @param string $id
+     * @param \yii\base\Module $module
+     * @param Finder $finder
+     * @param array $config
      */
+    public function __construct($id, $module, Finder $finder, $config = [])
+    {
+        $this->finder = $finder;
+        parent::__construct($id, $module, $config);
+    }
+
+    /** @inheritdoc */
     public function behaviors()
     {
         return [
             'verbs' => [
                 'class' => VerbFilter::className(),
                 'actions' => [
-                    'reset' => ['post'],
                     'disconnect' => ['post']
                 ],
             ],
@@ -49,23 +67,21 @@ class SettingsController extends Controller
                 'class' => AccessControl::className(),
                 'rules' => [
                     [
-                        'allow' => true,
-                        'actions' => ['profile', 'email', 'password', 'networks', 'reset', 'connect', 'disconnect'],
-                        'roles' => ['@']
+                        'allow'   => true,
+                        'actions' => ['profile', 'account', 'confirm', 'networks', 'connect', 'disconnect'],
+                        'roles'   => ['@']
                     ],
                 ]
             ],
         ];
     }
 
-    /**
-     * @inheritdoc
-     */
+    /** @inheritdoc */
     public function actions()
     {
         return [
             'connect' => [
-                'class' => 'yii\authclient\AuthAction',
+                'class'           => 'yii\authclient\AuthAction',
                 'successCallback' => [$this, 'connect'],
             ]
         ];
@@ -73,107 +89,86 @@ class SettingsController extends Controller
 
     /**
      * Shows profile settings form.
-     *
      * @return string|\yii\web\Response
      */
     public function actionProfile()
     {
-        $model = $this->module->manager->findProfileById(\Yii::$app->user->identity->getId());
+        $model = $this->finder->findProfileById(\Yii::$app->user->identity->getId());
 
-        if ($model->load(\Yii::$app->getRequest()->post()) && $model->save()) {
-            \Yii::$app->getSession()->setFlash('settings_saved', \Yii::t('user', 'Profile updated successfully'));
+        $this->performAjaxValidation($model);
 
+        if ($model->load(\Yii::$app->request->post()) && $model->save()) {
+            \Yii::$app->getSession()->setFlash('success', \Yii::t('user', 'Your profile has been updated'));
             return $this->refresh();
         }
 
         return $this->render('profile', [
-            'model' => $model
+            'model' => $model,
         ]);
     }
 
     /**
-     * Shows email settings form.
-     *
+     * Displays page where user can update account settings (username, email or password).
      * @return string|\yii\web\Response
      */
-    public function actionEmail()
+    public function actionAccount()
     {
-        $model = $this->module->manager->findUserById(\Yii::$app->user->identity->getId());
-        $model->scenario = 'update_email';
+        /** @var SettingsForm $model */
+        $model = \Yii::createObject(SettingsForm::className());
 
-        if ($model->load(\Yii::$app->getRequest()->post()) && $model->updateEmail()) {
-            $this->refresh();
+        $this->performAjaxValidation($model);
+
+        if ($model->load(\Yii::$app->request->post()) && $model->save()) {
+            \Yii::$app->session->setFlash('success', \Yii::t('user', 'Your account details have been updated'));
+            return $this->refresh();
         }
 
-        return $this->render('email', [
-            'model' => $model
+        return $this->render('account', [
+            'model' => $model,
         ]);
     }
 
     /**
-     * Resets email update.
-     *
-     * @return \yii\web\Response
-     * @throws \yii\web\NotFoundHttpException
+     * Attempts changing user's password.
+     * @param  integer $id
+     * @param  string  $code
+     * @return string
+     * @throws \yii\web\HttpException
      */
-    public function actionReset()
+    public function actionConfirm($id, $code)
     {
-        if ($this->module->confirmable) {
-            $model = $this->module->manager->findUserById(\Yii::$app->user->identity->getId());
-            $model->resetEmailUpdate();
-            \Yii::$app->getSession()->setFlash('settings_saved', \Yii::t('user', 'Email change has been cancelled'));
+        $user = $this->finder->findUserById($id);
 
-            return $this->redirect(['email']);
+        if ($user === null || $this->module->emailChangeStrategy == Module::STRATEGY_INSECURE) {
+            throw new NotFoundHttpException;
         }
 
-        throw new NotFoundHttpException;
-    }
+        $user->attemptEmailChange($code);
 
-    /**
-     * Shows password settings form.
-     *
-     * @return string|\yii\web\Response
-     */
-    public function actionPassword()
-    {
-        $model = $this->module->manager->findUser(['id' => \Yii::$app->user->identity->getId()])->one();
-        $model->scenario = 'update_password';
-
-        if ($model->load(\Yii::$app->getRequest()->post()) && $model->save()) {
-            \Yii::$app->getSession()->setFlash('settings_saved', \Yii::t('user', 'Password has been changed'));
-            $this->refresh();
-        }
-
-        return $this->render('password', [
-            'model' => $model
-        ]);
+        return $this->redirect(['account']);
     }
 
     /**
      * Displays list of connected network accounts.
-     * 
      * @return string
      */
     public function actionNetworks()
     {
-        $user = $this->module->manager->findUser(['id' => \Yii::$app->user->id])->with('accounts')->one();
-
-        return $this->render('accounts', [
-            'user' => $user
+        return $this->render('networks', [
+            'user' => \Yii::$app->user->identity
         ]);
     }
 
     /**
      * Disconnects a network account from user.
-     *
-     * @param $id
+     * @param  integer $id
      * @return \yii\web\Response
      * @throws \yii\web\NotFoundHttpException
      * @throws \yii\web\ForbiddenHttpException
      */
     public function actionDisconnect($id)
     {
-        $account = $this->module->manager->findAccountById($id);
+        $account = $this->finder->findAccountById($id);
         if ($account === null) {
             throw new NotFoundHttpException;
         }
@@ -187,7 +182,6 @@ class SettingsController extends Controller
 
     /**
      * Connects social account to user.
-     *
      * @param  ClientInterface $client
      * @return \yii\web\Response
      */
@@ -197,18 +191,39 @@ class SettingsController extends Controller
         $provider   = $client->getId();
         $clientId   = $attributes['id'];
 
-        if (null === ($account = $this->module->manager->findAccount($provider, $clientId))) {
-            $account = $this->module->manager->createAccount([
-                'provider'   => $provider,
-                'client_id'  => $clientId,
-                'properties' => json_encode($attributes),
-                'user_id'    => \Yii::$app->user->id
+        $account = $this->finder->findAccountByProviderAndClientId($provider, $clientId);
+
+        if ($account === null) {
+            $account = \Yii::createObject([
+                'class'     => Account::className(),
+                'provider'  => $provider,
+                'client_id' => $clientId,
+                'data'      => json_encode($attributes),
+                'user_id'   => \Yii::$app->user->id,
             ]);
             $account->save(false);
-            \Yii::$app->session->setFlash('account_connected', \Yii::t('user', 'Account has successfully been connected'));
+            \Yii::$app->session->setFlash('success', \Yii::t('user', 'Your account has been connected'));
+        } else if (null == $account->user) {
+            $account->user_id = \Yii::$app->user->id;
+            $account->save(false);
         } else {
-            \Yii::$app->session->setFlash('account_not_connected', \Yii::t('user', 'This account has already been connected to another user'));
+            \Yii::$app->session->setFlash('error', \Yii::t('user', 'This account has already been connected to another user'));
         }
-        return $this->redirect(['networks']);
+
+        $this->action->successUrl = Url::to(['/user/settings/networks']);
+    }
+
+    /**
+     * Performs ajax validation.
+     * @param Model $model
+     * @throws \yii\base\ExitException
+     */
+    protected function performAjaxValidation(Model $model)
+    {
+        if (\Yii::$app->request->isAjax && $model->load(\Yii::$app->request->post())) {
+            \Yii::$app->response->format = Response::FORMAT_JSON;
+            echo json_encode(ActiveForm::validate($model));
+            \Yii::$app->end();
+        }
     }
 }

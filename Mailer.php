@@ -11,6 +11,7 @@
 
 namespace dektrium\user;
 
+use dektrium\user\models\Token;
 use dektrium\user\models\User;
 use yii\base\Component;
 
@@ -21,73 +22,107 @@ use yii\base\Component;
  */
 class Mailer extends Component
 {
-    /**
-     * @var string
-     */
+    /** @var string */
     public $viewPath = '@dektrium/user/views/mail';
 
-    /**
-     * @var string|array
-     */
+    /** @var string|array */
     public $sender = 'no-reply@example.com';
+
+    /** @var string */
+    public $welcomeSubject;
+
+    /** @var string */
+    public $confirmationSubject;
+
+    /** @var string */
+    public $reconfirmationSubject;
+
+    /** @var string */
+    public $recoverySubject;
 
     /**
      * Sends an email to a user with credentials and confirmation link.
      *
-     * @param  User $user
+     * @param  User  $user
+     * @param  Token $token
      * @return bool
      */
-    public function sendWelcomeMessage(User $user)
+    public function sendWelcomeMessage(User $user, Token $token = null)
     {
-        return $this->sendMessage($user->email, \Yii::t('user', 'Welcome to {0}', \Yii::$app->name), 'welcome', $user);
+        return $this->sendMessage($user->email,
+            $this->welcomeSubject,
+            'welcome',
+            ['user' => $user, 'token' => $token]
+        );
     }
 
     /**
      * Sends an email to a user with confirmation link.
      *
-     * @param  User $user
+     * @param  User  $user
+     * @param  Token $token
      * @return bool
      */
-    public function sendConfirmationMessage(User $user)
+    public function sendConfirmationMessage(User $user, Token $token)
     {
-        return $this->sendMessage($user->email, \Yii::t('user', 'Confirm your account on {0}', \Yii::$app->name), 'confirmation', $user);
+        return $this->sendMessage($user->email,
+            $this->confirmationSubject,
+            'confirmation',
+            ['user' => $user, 'token' => $token]
+        );
     }
 
     /**
      * Sends an email to a user with reconfirmation link.
      *
-     * @param  User $user
+     * @param  User  $user
+     * @param  Token $token
      * @return bool
      */
-    public function sendReconfirmationMessage(User $user)
+    public function sendReconfirmationMessage(User $user, Token $token)
     {
-        return $this->sendMessage($user->unconfirmed_email, \Yii::t('user', 'Confirm your email change on {0}', \Yii::$app->name), 'reconfirmation', $user);
+        if ($token->type == Token::TYPE_CONFIRM_NEW_EMAIL) {
+            $email = $user->unconfirmed_email;
+        } else {
+            $email = $user->email;
+        }
+        return $this->sendMessage($email,
+            $this->reconfirmationSubject,
+            'reconfirmation',
+            ['user' => $user, 'token' => $token]
+        );
     }
 
     /**
      * Sends an email to a user with recovery link.
      *
-     * @param  User $user
+     * @param  User  $user
+     * @param  Token $token
      * @return bool
      */
-    public function sendRecoveryMessage(User $user)
+    public function sendRecoveryMessage(User $user, Token $token)
     {
-        return $this->sendMessage($user->email, \Yii::t('user', 'Complete your password reset on {0}', \Yii::$app->name), 'recovery', $user);
+        return $this->sendMessage($user->email,
+            $this->recoverySubject,
+            'recovery',
+            ['user' => $user, 'token' => $token]
+        );
     }
 
     /**
      * @param  string $to
      * @param  string $subject
      * @param  string $view
-     * @param  User   $user
+     * @param  array  $params
      * @return bool
      */
-    protected function sendMessage($to, $subject, $view, User $user)
+    protected function sendMessage($to, $subject, $view, $params = [])
     {
-        $mail = \Yii::$app->mail;
-        $mail->viewPath = $this->viewPath;
+        $mailer = \Yii::$app->mailer;
+        $mailer->viewPath = $this->viewPath;
+        $mailer->getView()->theme = \Yii::$app->view->theme;
 
-        return $mail->compose($view, ['user' => $user])
+        return $mailer->compose(['html' => $view, 'text' => 'text/' . $view], $params)
             ->setTo($to)
             ->setFrom($this->sender)
             ->setSubject($subject)

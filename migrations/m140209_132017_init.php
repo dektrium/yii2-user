@@ -10,57 +10,34 @@
  */
 
 use yii\db\Schema;
+use dektrium\user\migrations\Migration;
 
 /**
  * @author Dmitry Erofeev <dmeroff@gmail.com
  */
-class m140209_132017_init extends \yii\db\Migration
+class m140209_132017_init extends Migration
 {
     public function up()
     {
-        switch (Yii::$app->db->driverName) {
-            case 'mysql':
-                $tableOptions = 'CHARACTER SET utf8 COLLATE utf8_general_ci ENGINE=InnoDB';
-                break;
-            case 'pgsql':
-                $tableOptions = null;
-                break;
-            default:
-                throw new RuntimeException('Your database is not supported!');
-        }
-
         $this->createTable('{{%user}}', [
-            'id'            => Schema::TYPE_PK,
-            'username'      => Schema::TYPE_STRING . '(25) NOT NULL',
-            'email'         => Schema::TYPE_STRING . '(255) NOT NULL',
-            'password_hash' => Schema::TYPE_STRING . '(60) NOT NULL',
-            'auth_key'      => Schema::TYPE_STRING . '(32) NOT NULL',
-
-            // confirmation
+            'id'                   => Schema::TYPE_PK,
+            'username'             => Schema::TYPE_STRING . '(25) NOT NULL',
+            'email'                => Schema::TYPE_STRING . '(255) NOT NULL',
+            'password_hash'        => Schema::TYPE_STRING . '(60) NOT NULL',
+            'auth_key'             => Schema::TYPE_STRING . '(32) NOT NULL',
             'confirmation_token'   => Schema::TYPE_STRING . '(32)',
             'confirmation_sent_at' => Schema::TYPE_INTEGER,
             'confirmed_at'         => Schema::TYPE_INTEGER,
             'unconfirmed_email'    => Schema::TYPE_STRING . '(255)',
-
-            // recovery
-            'recovery_token'   => Schema::TYPE_STRING . '(32)',
-            'recovery_sent_at' => Schema::TYPE_INTEGER,
-
-            // block
-            'blocked_at' => Schema::TYPE_INTEGER,
-
-            // RBAC
-            'role' => Schema::TYPE_STRING . '(255)',
-
-            // trackable
-            'registered_from' => Schema::TYPE_INTEGER,
-            'logged_in_from'  => Schema::TYPE_INTEGER,
-            'logged_in_at'    => Schema::TYPE_INTEGER,
-
-            // timestamps
-            'created_at' => Schema::TYPE_INTEGER . ' NOT NULL',
-            'updated_at' => Schema::TYPE_INTEGER . ' NOT NULL',
-        ], $tableOptions);
+            'recovery_token'       => Schema::TYPE_STRING . '(32)',
+            'recovery_sent_at'     => Schema::TYPE_INTEGER,
+            'blocked_at'           => Schema::TYPE_INTEGER,
+            'registered_from'      => Schema::TYPE_INTEGER,
+            'logged_in_from'       => Schema::TYPE_INTEGER,
+            'logged_in_at'         => Schema::TYPE_INTEGER,
+            'created_at'           => Schema::TYPE_INTEGER . ' NOT NULL',
+            'updated_at'           => Schema::TYPE_INTEGER . ' NOT NULL',
+        ], $this->tableOptions);
 
         $this->createIndex('user_unique_username', '{{%user}}', 'username', true);
         $this->createIndex('user_unique_email', '{{%user}}', 'email', true);
@@ -76,7 +53,7 @@ class m140209_132017_init extends \yii\db\Migration
             'location'       => Schema::TYPE_STRING . '(255)',
             'website'        => Schema::TYPE_STRING . '(255)',
             'bio'            => Schema::TYPE_TEXT
-        ], $tableOptions);
+        ], $this->tableOptions);
 
         $this->addForeignKey('fk_user_profile', '{{%profile}}', 'user_id', '{{%user}}', 'id', 'CASCADE', 'RESTRICT');
     }

@@ -1,16 +1,17 @@
 <?php
 
 /*
-* This file is part of the Dektrium project.
-*
-* (c) Dektrium project <http://github.com/dektrium/>
-*
-* For the full copyright and license information, please view the LICENSE
-* file that was distributed with this source code.
-*/
+ * This file is part of the Dektrium project.
+ *
+ * (c) Dektrium project <http://github.com/dektrium/>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
 
 namespace dektrium\user\models;
 
+use dektrium\user\Finder;
 use yii\base\Model;
 use yii\data\ActiveDataProvider;
 
@@ -19,47 +20,48 @@ use yii\data\ActiveDataProvider;
  */
 class UserSearch extends Model
 {
-    /**
-     * @var string
-     */
+    /** @var string */
     public $username;
 
-    /**
-     * @var string
-     */
+    /** @var string */
     public $email;
 
-    /**
-     * @var integer
-     */
+    /** @var integer */
     public $created_at;
 
-    /**
-     * @var string
-     */
-    public $registered_from;
+    /** @var string */
+    public $registration_ip;
+
+    /** @var Finder */
+    protected $finder;
 
     /**
-     * @inheritdoc
+     * @param Finder $finder
+     * @param array $config
      */
+    public function __construct(Finder $finder, $config = [])
+    {
+        $this->finder = $finder;
+        parent::__construct($config);
+    }
+
+    /** @inheritdoc */
     public function rules()
     {
         return [
-            [['created_at'], 'integer'],
-            [['username', 'email', 'registered_from'], 'safe'],
+            [['username', 'email', 'registration_ip', 'created_at'], 'safe'],
+            ['created_at', 'default', 'value' => null]
         ];
     }
 
-    /**
-     * @inheritdoc
-     */
+    /** @inheritdoc */
     public function attributeLabels()
     {
         return [
-            'username' => \Yii::t('user', 'Username'),
-            'email' => \Yii::t('user', 'Email'),
-            'created_at' => \Yii::t('user', 'Registration time'),
-            'registered_from' => \Yii::t('user', 'Registration ip'),
+            'username'        => \Yii::t('user', 'Username'),
+            'email'           => \Yii::t('user', 'Email'),
+            'created_at'      => \Yii::t('user', 'Registration time'),
+            'registration_ip' => \Yii::t('user', 'Registration ip'),
         ];
     }
 
@@ -69,7 +71,8 @@ class UserSearch extends Model
      */
     public function search($params)
     {
-        $query = User::find();
+        $query = $this->finder->getUserQuery();
+
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
         ]);
@@ -77,33 +80,16 @@ class UserSearch extends Model
         if (!($this->load($params) && $this->validate())) {
             return $dataProvider;
         }
-
-        $this->addCondition($query, 'username', true);
-        $this->addCondition($query, 'email', true);
-        $this->addCondition($query, 'created_at');
-        $this->addCondition($query, 'registered_from');
+        
+        if ($this->created_at !== null) {
+            $date = strtotime($this->created_at);
+            $query->andFilterWhere(['between', 'created_at', $date, $date + 3600 * 24]);
+        }
+        
+        $query->andFilterWhere(['like', 'username', $this->username])
+            ->andFilterWhere(['like', 'email', $this->email])
+            ->andFilterWhere(['registration_ip' => $this->registration_ip]);
 
         return $dataProvider;
-    }
-
-    /**
-     * @param $query
-     * @param $attribute
-     * @param bool $partialMatch
-     */
-    protected function addCondition($query, $attribute, $partialMatch = false)
-    {
-        $value = $this->$attribute;
-        if (trim($value) === '') {
-            return;
-        }
-        if ($attribute == 'registered_from') {
-            $value = ip2long($value);
-        }
-        if ($partialMatch) {
-            $query->andWhere(['like', $attribute, $value]);
-        } else {
-            $query->andWhere([$attribute => $value]);
-        }
     }
 }

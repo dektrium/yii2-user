@@ -11,17 +11,16 @@
 
 namespace dektrium\user\models;
 
-use dektrium\user\helpers\ModuleTrait;
 use yii\db\ActiveRecord;
 
 /**
- * @property integer $id         Id
- * @property integer $user_id    User id, null if account is not bind to user
- * @property string  $provider   Name of service
- * @property string  $client_id  Account id
- * @property string  $properties Account properties returned by social network (json encoded)
- * @property string  $data       Json-decoded properties
- * @property User    $user       User that this account is connected for.
+ * @property integer $id          Id
+ * @property integer $user_id     User id, null if account is not bind to user
+ * @property string  $provider    Name of service
+ * @property string  $client_id   Account id
+ * @property string  $data        Account properties returned by social network (json encoded)
+ * @property string  $decodedData Json-decoded properties
+ * @property User    $user        User that this account is connected for.
  *
  * @property \dektrium\user\Module $module
  *
@@ -29,19 +28,22 @@ use yii\db\ActiveRecord;
  */
 class Account extends ActiveRecord
 {
-    use ModuleTrait;
+    /** @var \dektrium\user\Module */
+    protected $module;
 
-    /**
-     * @var
-     */
+    /** @var */
     private $_data;
 
-    /**
-     * @inheritdoc
-     */
+    /** @inheritdoc */
+    public function init()
+    {
+        $this->module = \Yii::$app->getModule('user');
+    }
+
+    /** @inheritdoc */
     public static function tableName()
     {
-        return '{{%account}}';
+        return '{{%social_account}}';
     }
 
     /**
@@ -49,7 +51,7 @@ class Account extends ActiveRecord
      */
     public function getUser()
     {
-        return $this->hasOne($this->module->manager->userClass, ['id' => 'user_id']);
+        return $this->hasOne($this->module->modelMap['User'], ['id' => 'user_id']);
     }
 
     /**
@@ -63,10 +65,10 @@ class Account extends ActiveRecord
     /**
      * @return mixed Json decoded properties.
      */
-    public function getData()
+    public function getDecodedData()
     {
         if ($this->_data == null) {
-            $this->_data = json_decode($this->properties);
+            $this->_data = json_decode($this->data);
         }
 
         return $this->_data;

@@ -9,8 +9,6 @@
  * file that was distributed with this source code.
  */
 
-use yii\helpers\Html;
-
 /**
  * @var dektrium\user\models\User $user
  */
@@ -19,21 +17,14 @@ use yii\helpers\Html;
     <?= Yii::t('user', 'Hello') ?>,
 </p>
 <p style="font-family: 'Helvetica Neue', 'Helvetica', Helvetica, Arial, sans-serif; font-size: 14px; line-height: 1.6; font-weight: normal; margin: 0 0 10px; padding: 0;">
-    <?= Yii::t('user', 'Your account on {0} has been successfully created', Yii::$app->name) ?>.
-    <?= Yii::t('user', 'Your username is {0} and your password is {1}', [$user->username, $user->password]) ?>.
+    <?= Yii::t('user', 'Your account on {0} has been created', Yii::$app->name) ?>.
+    <?= Yii::t('user', 'You can now log in with the following credentials:') ?>.
 </p>
-<?php if (Yii::$app->getModule('user')->confirmable): ?>
-    <p style="font-family: 'Helvetica Neue', 'Helvetica', Helvetica, Arial, sans-serif; font-size: 14px; line-height: 1.6; font-weight: normal; margin: 0 0 10px; padding: 0;">
-        <?= Yii::t('user', 'In order to complete your registration, please click the link below') ?>:
-    </p>
-    <p style="font-family: 'Helvetica Neue', 'Helvetica', Helvetica, Arial, sans-serif; font-size: 14px; line-height: 1.6; font-weight: normal; margin: 0 0 10px; padding: 0;">
-        <?= Html::a(Html::encode($user->getConfirmationUrl()), $user->getConfirmationUrl()); ?>
-    </p>
-    <p style="font-family: 'Helvetica Neue', 'Helvetica', Helvetica, Arial, sans-serif; font-size: 14px; line-height: 1.6; font-weight: normal; margin: 0 0 10px; padding: 0;">
-        <?= Yii::t('user', 'If you have problems, please paste the above URL into your web browser') ?>.
-        <?= Yii::t('user', 'This URL will only be valid for a limited time and will expire') ?>.
-    </p>
-<?php endif; ?>
 <p style="font-family: 'Helvetica Neue', 'Helvetica', Helvetica, Arial, sans-serif; font-size: 14px; line-height: 1.6; font-weight: normal; margin: 0 0 10px; padding: 0;">
-    <?= Yii::t('user', 'P.S. If you received this email by mistake, simply delete it') ?>.
+    <?= Yii::t('user', 'Email') ?>: <?= $user->email ?><br>
+    <?= Yii::t('user', 'Username') ?>: <?= $user->username ?><br>
+    <?= Yii::t('user', 'Password') ?>: <?= $user->password ?>
+</p>
+<p style="font-family: 'Helvetica Neue', 'Helvetica', Helvetica, Arial, sans-serif; font-size: 14px; line-height: 1.6; font-weight: normal; margin: 0 0 10px; padding: 0;">
+    <?= Yii::t('user', 'If you did not make this request you can ignore this email') ?>.
 </p>

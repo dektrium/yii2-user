@@ -20,33 +20,12 @@ use yii\helpers\Html;
 $this->title = Yii::t('user', 'Profile settings');
 $this->params['breadcrumbs'][] = $this->title;
 ?>
+
+<?= $this->render('/_alert', ['module' => Yii::$app->getModule('user')]) ?>
+
 <div class="row">
-    <?php if (Yii::$app->getSession()->hasFlash('settings_saved')): ?>
-        <div class="col-md-12">
-            <div class="alert alert-success">
-                <?= Yii::$app->getSession()->getFlash('settings_saved') ?>
-            </div>
-        </div>
-    <?php endif; ?>
     <div class="col-md-3">
-        <div class="panel panel-default">
-            <div class="panel-heading">
-                <h3 class="panel-title"><?= Yii::$app->getUser()->getIdentity()->username ?></h3>
-            </div>
-            <div class="panel-body">
-                <?= \yii\widgets\Menu::widget([
-                    'options' => [
-                        'class' => 'nav nav-pills nav-stacked'
-                    ],
-                    'items' => [
-                        ['label' => Yii::t('user', 'Profile'), 'url' => ['/user/settings/profile']],
-                        ['label' => Yii::t('user', 'Email'), 'url' => ['/user/settings/email']],
-                        ['label' => Yii::t('user', 'Password'), 'url' => ['/user/settings/password']],
-                        ['label' => Yii::t('user', 'Networks'), 'url' => ['/user/settings/networks']],
-                    ]
-                ]) ?>
-            </div>
-        </div>
+        <?= $this->render('_menu') ?>
     </div>
     <div class="col-md-9">
         <div class="panel panel-default">
@@ -61,6 +40,9 @@ $this->params['breadcrumbs'][] = $this->title;
                         'template' => "{label}\n<div class=\"col-lg-9\">{input}</div>\n<div class=\"col-sm-offset-3 col-lg-9\">{error}\n{hint}</div>",
                         'labelOptions' => ['class' => 'col-lg-3 control-label'],
                     ],
+                    'enableAjaxValidation'   => true,
+                    'enableClientValidation' => false,
+                    'validateOnBlur'         => false,
                 ]); ?>
 
                 <?= $form->field($model, 'name') ?>
@@ -77,7 +59,7 @@ $this->params['breadcrumbs'][] = $this->title;
 
                 <div class="form-group">
                     <div class="col-lg-offset-3 col-lg-9">
-                        <?= \yii\helpers\Html::submitButton(Yii::t('user', 'Save'), ['class' => 'btn btn-success']) ?><br>
+                        <?= \yii\helpers\Html::submitButton(Yii::t('user', 'Save'), ['class' => 'btn btn-block btn-success']) ?><br>
                     </div>
                 </div>
 

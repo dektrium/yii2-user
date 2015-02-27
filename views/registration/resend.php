@@ -13,9 +13,8 @@ use yii\helpers\Html;
 use yii\widgets\ActiveForm;
 
 /**
- * @var yii\web\View $this
- * @var yii\widgets\ActiveForm $form
- * @var dektrium\user\forms\Resend $model
+ * @var yii\web\View                    $this
+ * @var dektrium\user\models\ResendForm $model
  */
 
 $this->title = Yii::t('user', 'Request new confirmation message');
@@ -29,7 +28,9 @@ $this->params['breadcrumbs'][] = $this->title;
             </div>
             <div class="panel-body">
                 <?php $form = ActiveForm::begin([
-                    'id' => 'resend-form',
+                    'id'                     => 'resend-form',
+                    'enableAjaxValidation'   => true,
+                    'enableClientValidation' => false
                 ]); ?>
 
                 <?= $form->field($model, 'email')->textInput(['autofocus' => true]) ?>

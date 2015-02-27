@@ -11,8 +11,8 @@
 
 namespace dektrium\user\models;
 
-use dektrium\user\helpers\ModuleTrait;
-use yii\base\InvalidParamException;
+use dektrium\user\Finder;
+use dektrium\user\Mailer;
 use yii\base\Model;
 
 /**
@@ -24,93 +24,120 @@ use yii\base\Model;
  */
 class RecoveryForm extends Model
 {
-    use ModuleTrait;
+    /** @var string */
+    public $email;
 
-    /**
-     * @var string
-     */
+    /** @var string */
     public $password;
 
-    /**
-     * @var integer
-     */
-    public $id;
+    /** @var User */
+    protected $user;
+
+    /** @var \dektrium\user\Module */
+    protected $module;
+
+    /** @var Mailer */
+    protected $mailer;
+
+    /** @var Finder */
+    protected $finder;
 
     /**
-     * @var string
+     * @param Mailer $mailer
+     * @param Finder $finder
+     * @param array  $config
      */
-    public $token;
-
-    /**
-     * @var \dektrium\user\models\User
-     */
-    private $_user;
-
-    /**
-     * @inheritdoc
-     * @throws \yii\base\InvalidParamException
-     */
-    public function init()
+    public function __construct(Mailer $mailer, Finder $finder, $config = [])
     {
-        parent::init();
-        if ($this->id == null || $this->token == null) {
-            throw new \RuntimeException('Id and token should be passed to config');
-        }
-
-        $this->_user = $this->module->manager->findUserByIdAndRecoveryToken($this->id, $this->token);
-        if (!$this->_user) {
-            throw new InvalidParamException('Wrong password reset token');
-        }
-        if ($this->_user->isRecoveryPeriodExpired) {
-            throw new InvalidParamException('Token has been expired');
-        }
+        $this->module = \Yii::$app->getModule('user');
+        $this->mailer = $mailer;
+        $this->finder = $finder;
+        parent::__construct($config);
     }
 
-    /**
-     * @inheritdoc
-     */
+    /** @inheritdoc */
     public function attributeLabels()
     {
         return [
+            'email'    => \Yii::t('user', 'Email'),
             'password' => \Yii::t('user', 'Password'),
         ];
     }
 
-    /**
-     * @inheritdoc
-     */
+    /** @inheritdoc */
     public function scenarios()
     {
         return [
-            'default' => ['password']
+            'request' => ['email'],
+            'reset'   => ['password']
         ];
     }
 
-    /**
-     * @inheritdoc
-     */
+    /** @inheritdoc */
     public function rules()
     {
         return [
+            ['email', 'filter', 'filter' => 'trim'],
+            ['email', 'required'],
+            ['email', 'email'],
+            ['email', 'exist',
+                'targetClass' => $this->module->modelMap['User'],
+                'message' => \Yii::t('user', 'There is no user with this email address')
+            ],
+            ['email', function ($attribute) {
+                $this->user = $this->finder->findUserByEmail($this->email);
+                if ($this->user !== null && $this->module->enableConfirmation && !$this->user->getIsConfirmed()) {
+                    $this->addError($attribute, \Yii::t('user', 'You need to confirm your email address'));
+                }
+            }],
             ['password', 'required'],
             ['password', 'string', 'min' => 6],
         ];
     }
 
     /**
-     * Resets user's password.
+     * Sends recovery message.
      *
      * @return bool
      */
-    public function resetPassword()
+    public function sendRecoveryMessage()
     {
         if ($this->validate()) {
-            $this->_user->resetPassword($this->password);
-
+            /** @var Token $token */
+            $token = \Yii::createObject([
+                'class'   => Token::className(),
+                'user_id' => $this->user->id,
+                'type'    => Token::TYPE_RECOVERY
+            ]);
+            $token->save(false);
+            $this->mailer->sendRecoveryMessage($this->user, $token);
+            \Yii::$app->session->setFlash('info', \Yii::t('user', 'An email has been sent with instructions for resetting your password'));
             return true;
         }
 
         return false;
+    }
+
+    /**
+     * Resets user's password.
+     *
+     * @param  Token $token
+     * @return bool
+     */
+    public function resetPassword(Token $token)
+    {
+        if (!$this->validate() || $token->user === null) {
+            return false;
+        }
+
+        if ($token->user->resetPassword($this->password)) {
+            \Yii::$app->session->setFlash('success', \Yii::t('user', 'Your password has been changed successfully.'));
+            $token->delete();
+        } else {
+            \Yii::$app->session->setFlash('danger', \Yii::t('user', 'An error occurred and your password has not been changed. Please try again later.'));
+        }
+
+        return true;
     }
 
     /**

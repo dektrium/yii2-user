@@ -9,76 +9,94 @@
  * file that was distributed with this source code.
  */
 
-
-use yii\helpers\Html;
-use yii\widgets\ActiveForm;
+use dektrium\user\models\User;
+use yii\bootstrap\Nav;
+use yii\web\View;
 
 /**
- * @var yii\web\View $this
- * @var dektrium\user\models\User $model
+ * @var View $this
+ * @var User $user
  */
 
 $this->title = Yii::t('user', 'Update user account');
 $this->params['breadcrumbs'][] = ['label' => Yii::t('user', 'Users'), 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
+
 ?>
-<h1><i class="glyphicon glyphicon-user"></i> <?= Html::encode($model->username) ?>
-    <?php if (!$model->getIsConfirmed()): ?>
-        <?= Html::a(Yii::t('user', 'Confirm'), ['confirm', 'id' => $model->id], ['class' => 'btn btn-success btn-xs', 'data-method' => 'post']) ?>
-    <?php endif; ?>
-    <?php if (!is_null($model->recovery_token)): ?>
-        <?= Html::a(Yii::t('user', 'Delete recovery tokens'), ['delete-tokens', 'id' => $model->id], ['class' => 'btn btn-warning btn-xs', 'data-method' => 'post']) ?>
-    <?php endif; ?>
-    <?php if ($model->getIsBlocked()): ?>
-        <?= Html::a(Yii::t('user', 'Unblock'), ['block', 'id' => $model->id], ['class' => 'btn btn-success btn-xs', 'data-method' => 'post', 'data-confirm' => Yii::t('user', 'Are you sure to block this user?')]) ?>
-    <?php else: ?>
-        <?= Html::a(Yii::t('user', 'Block'), ['block', 'id' => $model->id], ['class' => 'btn btn-danger btn-xs', 'data-method' => 'post', 'data-confirm' => Yii::t('user', 'Are you sure to block this user?')]) ?>
-    <?php endif; ?>
-</h1>
 
-<?php if (Yii::$app->getSession()->hasFlash('admin_user')): ?>
-    <div class="alert alert-success">
-        <p><?= Yii::$app->getSession()->getFlash('admin_user') ?></p>
-    </div>
-<?php endif; ?>
+<?= $this->render('/_alert', [
+    'module' => Yii::$app->getModule('user'),
+]) ?>
 
-<div class="panel panel-info">
-    <div class="panel-heading"><?= Yii::t('user', 'Information') ?></div>
-    <div class="panel-body">
-        <?= Yii::t('user', 'Registered at {0, date, MMMM dd, YYYY HH:mm} from {1}', [$model->created_at, is_null($model->registered_from) ? 'N/D' : long2ip($model->registered_from)]) ?>
-        <br/>
-        <?php if (Yii::$app->getModule('user')->confirmable && $model->getIsConfirmed()): ?>
-            <?= Yii::t('user', 'Confirmed at {0, date, MMMM dd, YYYY HH:mm}', [$model->created_at]) ?>
-            <br/>
-        <?php endif; ?>
-        <?php if (!is_null($model->logged_in_at)): ?>
-            <?= Yii::t('user', 'Last login at {0, date, MMMM dd, YYYY HH:mm} from {1}', [$model->logged_in_at, long2ip($model->logged_in_from)]) ?>
-        <?php endif;?>
-        <?php if ($model->getIsBlocked()): ?>
-            <?= Yii::t('user', 'Blocked at {0, date, MMMM dd, YYYY HH:mm}', [$model->blocked_at]) ?>
-        <?php endif;?>
-    </div>
-</div>
+<?= $this->render('_menu') ?>
 
-<div class="panel panel-default">
-    <div class="panel-heading">
-        <?= Html::encode($this->title) ?>
-    </div>
-    <div class="panel-body">
-        <?php $form = ActiveForm::begin(); ?>
-
-        <?= $form->field($model, 'username')->textInput(['maxlength' => 25]) ?>
-
-        <?= $form->field($model, 'email')->textInput(['maxlength' => 255]) ?>
-
-        <?= $form->field($model, 'password')->passwordInput() ?>
-
-        <?= $form->field($model, 'role')->textInput(['maxlength' => 255]) ?>
-
-        <div class="form-group">
-            <?= Html::submitButton(Yii::t('user', 'Save'), ['class' => 'btn btn-primary']) ?>
+<div class="row">
+    <div class="col-md-3">
+        <div class="panel panel-default">
+            <div class="panel-body">
+                <?= Nav::widget([
+                    'options' => [
+                        'class' => 'nav-pills nav-stacked'
+                    ],
+                    'items' => [
+                        ['label' => Yii::t('user', 'Account details'), 'url' => ['/user/admin/update', 'id' => $user->id]],
+                        ['label' => Yii::t('user', 'Profile details'), 'url' => ['/user/admin/update-profile', 'id' => $user->id]],
+                        ['label' => Yii::t('user', 'Information'), 'url' => ['/user/admin/info', 'id' => $user->id]],
+                        [
+                            'label' => Yii::t('user', 'Assignments'),
+                            'url' => ['/user/admin/assignments', 'id' => $user->id],
+                            'visible' => isset(Yii::$app->extensions['dektrium/yii2-rbac']),
+                        ],
+                        '<hr>',
+                        [
+                            'label' => Yii::t('user', 'Confirm'),
+                            'url'   => ['/user/admin/confirm', 'id' => $user->id],
+                            'visible' => !$user->isConfirmed,
+                            'linkOptions' => [
+                                'class' => 'text-success',
+                                'data-method' => 'post',
+                                'data-confirm' => Yii::t('user', 'Are you sure you want to confirm this user?')
+                            ],
+                        ],
+                        [
+                            'label' => Yii::t('user', 'Block'),
+                            'url'   => ['/user/admin/block', 'id' => $user->id],
+                            'visible' => !$user->isBlocked,
+                            'linkOptions' => [
+                                'class' => 'text-danger',
+                                'data-method' => 'post',
+                                'data-confirm' => Yii::t('user', 'Are you sure you want to block this user?')
+                            ],
+                        ],
+                        [
+                            'label' => Yii::t('user', 'Unblock'),
+                            'url'   => ['/user/admin/block', 'id' => $user->id],
+                            'visible' => $user->isBlocked,
+                            'linkOptions' => [
+                                'class' => 'text-success',
+                                'data-method' => 'post',
+                                'data-confirm' => Yii::t('user', 'Are you sure you want to unblock this user?')
+                            ],
+                        ],
+                        [
+                            'label' => Yii::t('user', 'Delete'),
+                            'url'   => ['/user/admin/delete', 'id' => $user->id],
+                            'linkOptions' => [
+                                'class' => 'text-danger',
+                                'data-method' => 'post',
+                                'data-confirm' => Yii::t('user', 'Are you sure you want to delete this user?')
+                            ],
+                        ],
+                    ]
+                ]) ?>
+            </div>
         </div>
-
-        <?php ActiveForm::end(); ?>
+    </div>
+    <div class="col-md-9">
+        <div class="panel panel-default">
+            <div class="panel-body">
+                <?= $content ?>
+            </div>
+        </div>
     </div>
 </div>

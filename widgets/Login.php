@@ -11,7 +11,7 @@
 
 namespace dektrium\user\widgets;
 
-use dektrium\user\helpers\ModuleTrait;
+use dektrium\user\models\LoginForm;
 use yii\base\Widget;
 
 /**
@@ -19,22 +19,16 @@ use yii\base\Widget;
  */
 class Login extends Widget
 {
-    use ModuleTrait;
-
-    /**
-     * @var bool
-     */
+    /** @var bool */
     public $validate = true;
 
-    /**
-     * @inheritdoc
-     */
+    /** @inheritdoc */
     public function run()
     {
-        $model  = $this->module->manager->createLoginForm();
+        $model  = \Yii::createObject(LoginForm::className());
         $action = $this->validate ? null : ['/user/security/login'];
 
-        if ($this->validate && $model->load(\Yii::$app->getRequest()->post()) && $model->login()) {
+        if ($this->validate && $model->load(\Yii::$app->request->post()) && $model->login()) {
             return \Yii::$app->response->redirect(\Yii::$app->user->returnUrl);
         }
 

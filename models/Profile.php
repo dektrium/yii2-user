@@ -11,7 +11,6 @@
 
 namespace dektrium\user\models;
 
-use dektrium\user\helpers\ModuleTrait;
 use yii\db\ActiveRecord;
 
 /**
@@ -30,11 +29,16 @@ use yii\db\ActiveRecord;
  */
 class Profile extends ActiveRecord
 {
-    use ModuleTrait;
+    /** @var \dektrium\user\Module */
+    protected $module;
 
-    /**
-     * @inheritdoc
-     */
+    /** @inheritdoc */
+    public function init()
+    {
+        $this->module = \Yii::$app->getModule('user');
+    }
+
+    /** @inheritdoc */
     public static function tableName()
     {
         return '{{%profile}}';
@@ -53,35 +57,30 @@ class Profile extends ActiveRecord
         ];
     }
 
-    /**
-     * @inheritdoc
-     */
+    /** @inheritdoc */
     public function attributeLabels()
     {
         return [
-            'name' => \Yii::t('user', 'Name'),
-            'public_email' => \Yii::t('user', 'Email (public)'),
+            'name'           => \Yii::t('user', 'Name'),
+            'public_email'   => \Yii::t('user', 'Email (public)'),
             'gravatar_email' => \Yii::t('user', 'Gravatar email'),
-            'location' => \Yii::t('user', 'Location'),
-            'website' => \Yii::t('user', 'Website'),
-            'bio' => \Yii::t('user', 'Bio'),
+            'location'       => \Yii::t('user', 'Location'),
+            'website'        => \Yii::t('user', 'Website'),
+            'bio'            => \Yii::t('user', 'Bio'),
         ];
     }
 
-    /**
-     * @inheritdoc
-     */
+    /** @inheritdoc */
     public function beforeSave($insert)
     {
         if (parent::beforeSave($insert)) {
             if ($this->isAttributeChanged('gravatar_email')) {
-                $this->setAttribute('gravatar_id', md5($this->getAttribute('gravatar_email')));
+                $this->setAttribute('gravatar_id', md5(strtolower($this->getAttribute('gravatar_email'))));
             }
-
             return true;
-        } else {
-            return false;
         }
+
+        return false;
     }
 
     /**
@@ -89,6 +88,6 @@ class Profile extends ActiveRecord
      */
     public function getUser()
     {
-        return $this->hasOne('\dektrium\user\models\User', ['id' => 'user_id']);
+        return $this->hasOne($this->module->modelMap['User'], ['id' => 'user_id']);
     }
 }

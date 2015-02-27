@@ -11,10 +11,13 @@
 
 namespace dektrium\user\commands;
 
+use dektrium\user\models\User;
 use yii\console\Controller;
 use yii\helpers\Console;
 
 /**
+ * Creates new user account.
+ *
  * @property \dektrium\user\Module $module
  *
  * @author Dmitry Erofeev <dmeroff@gmail.com>
@@ -22,27 +25,24 @@ use yii\helpers\Console;
 class CreateController extends Controller
 {
     /**
-     * @var bool Whether user should confirm account.
-     */
-    public $unconfirmed = false;
-
-    /**
-     * Creates new user account. If password is not set it will be generated automatically. After creation email
-     * message contains username and password will be sent to user.
+     * This command creates new user account. If password is not set, this command will generate new 8-char password.
+     * After saving user to database, this command uses mailer component to send credentials (username and password) to
+     * user via email.
      *
-     * @param string      $email
-     * @param string      $username
-     * @param null|string $password If null password will be generated automatically
+     * @param string      $email    Email address
+     * @param string      $username Username
+     * @param null|string $password Password (if null it will be generated automatically)
      */
     public function actionIndex($email, $username, $password = null)
     {
-        $this->module->confirmable = $this->unconfirmed;
-        $user = $this->module->manager->createUser(['scenario' => 'create']);
-        $user->setAttributes([
+        $user = \Yii::createObject([
+            'class'    => User::className(),
+            'scenario' => 'create',
             'email'    => $email,
             'username' => $username,
             'password' => $password
         ]);
+
         if ($user->create()) {
             $this->stdout(\Yii::t('user', 'User has been created') . "!\n", Console::FG_GREEN);
         } else {
@@ -53,13 +53,5 @@ class CreateController extends Controller
                 }
             }
         }
-    }
-
-    /**
-     * @inheritdoc
-     */
-    public function options($id)
-    {
-        return array_merge(parent::options($id), ['unconfirmed']);
     }
 }

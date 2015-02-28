@@ -79,7 +79,7 @@ return [
     'Email settings' => 'Configurações do email',
     'A password will be generated automatically if not provided' => 'Se quer que a sua password seja gerada automaticamente deixe este campo vazio',
     'Information' => 'Informação',
-    'Last login at {0, date, MMMM dd, YYYY HH:mm} from {1}' => @Último inicio de sessão em {0, date, dd MMMM, YYYY HH:mm} desde {1}',
+    'Last login at {0, date, MMMM dd, YYYY HH:mm} from {1}' => 'Último inicio de sessão em {0, date, dd MMMM, YYYY HH:mm} desde {1}',
     'Password and username will be sent to user by email' => 'Password e username serão enviado o utilizador por email',
     'Password recovery finished' => 'Recuperação da password terminada',
     'Password settings' => 'Configurações da password',

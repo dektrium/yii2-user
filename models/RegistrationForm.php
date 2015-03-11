@@ -51,7 +51,7 @@ class RegistrationForm extends Model
     {
         return [
             ['username', 'filter', 'filter' => 'trim'],
-            ['username', 'match', 'pattern' => '/^[a-zA-Z0-9_\.-@]+$/'],
+            ['username', 'match', 'pattern' => '/^[-a-zA-Z0-9_\.@]+$/'],
             ['username', 'required'],
             ['username', 'unique', 'targetClass' => $this->module->modelMap['User'],
                 'message' => \Yii::t('user', 'This username has already been taken')],

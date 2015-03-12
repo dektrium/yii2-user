@@ -75,7 +75,7 @@ class SettingsForm extends Model
         return [
             [['username', 'email', 'current_password'], 'required'],
             [['username', 'email'], 'filter', 'filter' => 'trim'],
-            ['username', 'match', 'pattern' => '/^[a-zA-Z]\w+$/'],
+            ['username', 'match', 'pattern' => '/^[-a-zA-Z0-9_\.@]+$/'],
             ['username', 'string', 'min' => 3, 'max' => 20],
             ['email', 'email'],
             [['email', 'username'], 'unique', 'when' => function ($model, $attribute) {

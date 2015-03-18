@@ -26,7 +26,7 @@ class Mailer extends Component
     public $viewPath = '@dektrium/user/views/mail';
 
     /** @var string|array */
-    public $sender = 'no-reply@example.com';
+    public $sender;
 
     /** @var string */
     public $welcomeSubject;
@@ -121,6 +121,10 @@ class Mailer extends Component
         $mailer = \Yii::$app->mailer;
         $mailer->viewPath = $this->viewPath;
         $mailer->getView()->theme = \Yii::$app->view->theme;
+
+        if ($this->sender === null) {
+            $this->sender = \Yii::$app->params['adminEmail'];
+        }
 
         return $mailer->compose(['html' => $view, 'text' => 'text/' . $view], $params)
             ->setTo($to)

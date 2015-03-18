@@ -59,7 +59,7 @@ $this->params['breadcrumbs'][] = $this->title;
         <?php endif ?>
         <?php if ($module->enableRegistration): ?>
             <p class="text-center">
-                <?= Html::a(Yii::t('user', 'Don\'t have a account? Sign up!'), ['/user/registration/register']) ?>
+                <?= Html::a(Yii::t('user', 'Don\'t have an account? Sign up!'), ['/user/registration/register']) ?>
             </p>
         <?php endif ?>
         <?= Connect::widget([

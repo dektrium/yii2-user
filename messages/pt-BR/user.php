@@ -128,7 +128,7 @@ return [
     'Current password is not valid' => 'Senha atual não é válida',
     'Didn\'t receive confirmation message?' => 'Não recebeu uma mensagem de confirmação?',
     'Disconnect' => 'Desconectar',
-    'Don\'t have a account? Sign up!' => 'Não tem cadastro? Inscreva-se!',
+    'Don\'t have an account? Sign up!' => 'Não tem cadastro? Inscreva-se!',
     'Email' => 'E-mail',
     'Email (public)' => 'E-mail (público)',
     'Error occurred while changing password' => 'Ocorreu um erro ao tentar alterar a senha',

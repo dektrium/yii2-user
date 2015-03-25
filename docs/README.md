@@ -26,3 +26,4 @@ Guides
 ------
 
 - [How to add captcha](adding-captcha.md)
+- [Simpler RBAC with access control filter](guide-custom-access-control.md)

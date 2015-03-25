@@ -69,6 +69,7 @@ return [
     'Current password' => 'Текущий пароль',
     'Current password is not valid' => 'Текущий пароль введен неправильно',
     'Didn\'t receive confirmation message?' => 'Не пришло письмо?',
+    'Don\'t have an account? Sign up!' => 'Нет аккаунта? Зарегистрируйся!',
     'Disconnect' => 'Отключить',
     'Email' => 'Email',
     'Email (public)' => 'Публичный email',

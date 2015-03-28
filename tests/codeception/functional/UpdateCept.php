@@ -1,5 +1,7 @@
 <?php
 
+namespace dektrium\user\tests;
+
 use tests\codeception\_pages\UpdatePage;
 use tests\codeception\_pages\LoginPage;
 

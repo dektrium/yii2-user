@@ -1,5 +1,7 @@
 <?php
 
+namespace dektrium\user\tests;
+
 use tests\codeception\_pages\ResendPage;
 
 $I = new FunctionalTester($scenario);

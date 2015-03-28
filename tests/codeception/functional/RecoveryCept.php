@@ -1,5 +1,7 @@
 <?php
 
+namespace dektrium\user\tests;
+
 use tests\codeception\_pages\RecoveryPage;
 use tests\codeception\_pages\LoginPage;
 use yii\helpers\Html;

@@ -1,5 +1,6 @@
 <?php
 
+namespace dektrium\user\tests;
 use yii\helpers\Url;
 
 $I = new FunctionalTester($scenario);

@@ -1,4 +1,7 @@
 <?php
+
+namespace dektrium\user\tests;
+
 use dektrium\user\models\Token;
 use dektrium\user\models\User;
 use tests\codeception\_pages\LoginPage;
@@ -27,7 +30,7 @@ $token = $I->grabRecord(Token::className(), ['user_id' => $user->id, 'type' => T
 $I->seeInEmail(Html::encode($token->getUrl()));
 $I->seeInEmailRecipients($user->unconfirmed_email);
 
-Yii::$app->user->logout();
+\Yii::$app->user->logout();
 
 $I->amGoingTo('log in using new email address before clicking the confirmation link');
 $page = LoginPage::openBy($I);
@@ -68,7 +71,7 @@ $I->seeRecord(User::className(), [
     'email'    => 'new_user@example.com'
 ]);
 
-Yii::$app->user->logout();
+\Yii::$app->user->logout();
 
 $I->amGoingTo('login with new credentials');
 $page = LoginPage::openBy($I);

@@ -1,6 +1,5 @@
 <?php
-
-return [
+$config = [
     'id'        => 'yii2-user-test',
     'basePath'  => dirname(__DIR__),
     'bootstrap' => [
@@ -38,3 +37,12 @@ return [
         ],
     ],
 ];
+
+if (defined('YII_APP_BASE_PATH')){
+    $config = Codeception\Configuration::mergeConfigs(
+        $config,
+        require YII_APP_BASE_PATH.'/tests/codeception/config/config.php'
+    );
+}
+
+return $config;

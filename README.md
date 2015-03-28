@@ -17,9 +17,14 @@ handles common tasks such as registration, authentication and password retrieval
 
 [Installation instructions](docs/installation.md) | [Definitive guide to Yii2-user](docs/README.md)
 
-## Contributing
+## Contributing to this project
 
-Contributing instructions are located in [CONTRIBUTING.md](CONTRIBUTING.md) file.
+Anyone and everyone is welcome to contribute. Please take a moment to
+review the [guidelines for contributing](CONTRIBUTING.md).
+
+* [Bug reports](CONTRIBUTING.md#bugs)
+* [Feature requests](CONTRIBUTING.md#features)
+* [Pull requests](CONTRIBUTING.md#pull-requests)
 
 ## License
 

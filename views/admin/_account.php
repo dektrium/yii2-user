@@ -32,13 +32,7 @@ use yii\helpers\Html;
         ],
     ]); ?>
 
-    <?= $form->field($profile, 'name') ?>
-    <?= $form->field($profile, 'public_email') ?>
-    <?= $form->field($profile, 'website') ?>
-    <?= $form->field($profile, 'location') ?>
-    <?= $form->field($profile, 'gravatar_email') ?>
-    <?= $form->field($profile, 'bio')->textarea() ?>
-
+    <?= $this->render('_user', ['form' => $form, 'user' => $user]) ?>
 
     <div class="form-group">
         <div class="col-lg-offset-3 col-lg-9">

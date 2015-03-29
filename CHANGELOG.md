@@ -1,5 +1,10 @@
 # CHANGELOG
 
+## 0.9.4 [Work in progress]
+
+- `enh` Improved admin views and controller (dmeroff)
+- `enh` Added datepicker in user grid view (dmeroff)
+
 ## 0.9.3 [9 February 2015]
 
 - `fix` Fixed bug with inability to connect network account #275 (dmeroff)

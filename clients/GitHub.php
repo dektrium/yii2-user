@@ -11,27 +11,26 @@
 
 namespace dektrium\user\clients;
 
-use yii\authclient\clients\VKontakte as BaseVKontakte;
+use yii\authclient\clients\GitHub as BaseGitHub;
 
 /**
  * @author Dmitry Erofeev <dmeroff@gmail.com>
  */
-class VKontakte extends BaseVKontakte implements ClientInterface
+class GitHub extends BaseGitHub implements ClientInterface
 {
-    /** @inheritdoc */
-    public $scope = 'email';
-    
     /** @inheritdoc */
     public function getEmail()
     {
-        return $this->getAccessToken()->getParam('email');
+        return isset($this->getUserAttributes()['email'])
+            ? $this->getUserAttributes()['email']
+            : null;
     }
     
     /** @inheritdoc */
     public function getUsername()
     {
-        return isset($this->getUserAttributes()['screen_name'])
-            ? $this->getUserAttributes()['screen_name']
+        return isset($this->getUserAttributes()['login'])
+            ? $this->getUserAttributes()['login']
             : null;
     }
 }

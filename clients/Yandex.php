@@ -11,27 +11,32 @@
 
 namespace dektrium\user\clients;
 
-use yii\authclient\clients\VKontakte as BaseVKontakte;
+use yii\authclient\clients\YandexOAuth as BaseYandex;
 
 /**
  * @author Dmitry Erofeev <dmeroff@gmail.com>
  */
-class VKontakte extends BaseVKontakte implements ClientInterface
+class Yandex extends BaseYandex implements ClientInterface
 {
-    /** @inheritdoc */
-    public $scope = 'email';
-    
     /** @inheritdoc */
     public function getEmail()
     {
-        return $this->getAccessToken()->getParam('email');
+        $emails = isset($this->getUserAttributes()['emails'])
+            ? $this->getUserAttributes()['emails']
+            : null;
+        
+        if ($emails !== null && isset($emails[0])) {
+            return $emails[0];
+        } else {
+            return null;
+        }
     }
     
     /** @inheritdoc */
     public function getUsername()
     {
-        return isset($this->getUserAttributes()['screen_name'])
-            ? $this->getUserAttributes()['screen_name']
+        return isset($this->getUserAttributes()['login'])
+            ? $this->getUserAttributes()['login']
             : null;
     }
 }

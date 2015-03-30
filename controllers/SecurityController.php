@@ -59,7 +59,7 @@ class SecurityController extends Controller
                 'class' => AccessControl::className(),
                 'rules' => [
                     ['allow' => true, 'actions' => ['login', 'auth'], 'roles' => ['?']],
-                    ['allow' => true, 'actions' => ['logout'], 'roles' => ['@']],
+                    ['allow' => true, 'actions' => ['login', 'logout'], 'roles' => ['@']],
                 ]
             ],
             'verbs' => [
@@ -88,7 +88,11 @@ class SecurityController extends Controller
      */
     public function actionLogin()
     {
-        $model = Yii::createObject(LoginForm::className());
+        if (!\Yii::$app->user->isGuest) {
+            $this->goHome();
+        }
+
+        $model = \Yii::createObject(LoginForm::className());
 
         $this->performAjaxValidation($model);
 

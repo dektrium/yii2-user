@@ -2,6 +2,7 @@
 
 ## 0.9.4 [Work in progress]
 
+- `enh` Improved authentication via social networks (dmeroff)
 - `enh` Improved admin views and controller (dmeroff)
 - `enh` Added datepicker in user grid view (dmeroff)
 

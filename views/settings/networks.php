@@ -33,6 +33,9 @@ $this->params['breadcrumbs'][] = $this->title;
                 <?= Html::encode($this->title) ?>
             </div>
             <div class="panel-body">
+                <div class="alert alert-info">
+                    <p><?= Yii::t('user', 'You can connect multiple accounts to be able to log in using them') ?>.</p>
+                </div>
                 <?php $auth = Connect::begin([
                     'baseAuthUrl' => ['/user/settings/connect'],
                     'accounts'    => $user->accounts,
@@ -42,11 +45,11 @@ $this->params['breadcrumbs'][] = $this->title;
                 <table class="table">
                     <?php foreach ($auth->getClients() as $client): ?>
                         <tr>
-                            <td style="width: 32px">
+                            <td style="width: 32px; vertical-align: middle">
                                 <?= Html::tag('span', '', ['class' => 'auth-icon ' . $client->getName()]) ?>
                             </td>
-                            <td>
-                                <?= $client->getTitle() ?>
+                            <td style="vertical-align: middle">
+                                <strong><?= $client->getTitle() ?></strong>
                             </td>
                             <td style="width: 120px">
                                 <?= $auth->isConnected($client) ?

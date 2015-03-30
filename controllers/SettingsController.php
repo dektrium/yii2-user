@@ -207,7 +207,7 @@ class SettingsController extends Controller
             $account->user_id = \Yii::$app->user->id;
             $account->save(false);
         } else {
-            \Yii::$app->session->setFlash('error', \Yii::t('user', 'This account has already been connected to another user'));
+            \Yii::$app->session->setFlash('danger', \Yii::t('user', 'This account has already been connected to another user'));
         }
 
         $this->action->successUrl = Url::to(['/user/settings/networks']);

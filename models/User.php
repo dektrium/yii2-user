@@ -18,6 +18,7 @@ use dektrium\user\Module;
 use yii\base\NotSupportedException;
 use yii\behaviors\TimestampBehavior;
 use yii\db\ActiveRecord;
+use yii\db\Query;
 use yii\log\Logger;
 use yii\web\IdentityInterface;
 
@@ -219,6 +220,10 @@ class User extends ActiveRecord implements IdentityInterface
         if ($this->password == null) {
             $this->password = Password::generate(8);
         }
+        
+        if ($this->username === null) {
+            $this->generateUsername();
+        }
 
         $this->trigger(self::USER_CREATE_INIT);
 
@@ -401,6 +406,27 @@ class User extends ActiveRecord implements IdentityInterface
     {
         return (bool) $this->updateAttributes(['blocked_at' => null]);
     }
+    
+    /**
+     * Generates new username based on email address, or creates new username
+     * like "user1".
+     */
+    public function generateUsername()
+    {
+        $this->username = explode('@', $this->email)[0];
+        if ($this->validate(['username'])) {
+            return;
+        }
+        
+        while (!$this->validate(['username'])) {
+            $row = (new Query())
+                ->from('{{%user}}')
+                ->select('MAX(id) as id')
+                ->one();
+            
+            $this->username = 'user' . ++$row['id'];
+        }
+    }
 
     /** @inheritdoc */
     public function beforeSave($insert)
@@ -448,7 +474,7 @@ class User extends ActiveRecord implements IdentityInterface
             return \Yii::t('user', 'Welcome! Registration is complete.');
         }
     }
-
+    
     /** @inheritdoc */
     public static function tableName()
     {

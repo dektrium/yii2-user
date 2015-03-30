@@ -11,6 +11,11 @@
 
 namespace dektrium\user\models;
 
+use dektrium\user\Module;
+use dektrium\user\Finder;
+use Yii;
+use yii\authclient\ClientInterface as BaseClientInterface;
+use dektrium\user\clients\ClientInterface;
 use yii\db\ActiveRecord;
 
 /**
@@ -22,22 +27,25 @@ use yii\db\ActiveRecord;
  * @property string  $decodedData Json-decoded properties
  * @property User    $user        User that this account is connected for.
  *
- * @property \dektrium\user\Module $module
+ * @property Module $module
  *
  * @author Dmitry Erofeev <dmeroff@gmail.com>
  */
 class Account extends ActiveRecord
 {
-    /** @var \dektrium\user\Module */
+    /** @var Module */
     protected $module;
 
+    /** @var Finder */
+    protected static $finder;
+    
     /** @var */
     private $_data;
 
     /** @inheritdoc */
     public function init()
     {
-        $this->module = \Yii::$app->getModule('user');
+        $this->module = Yii::$app->getModule('user');
     }
 
     /** @inheritdoc */
@@ -72,5 +80,83 @@ class Account extends ActiveRecord
         }
 
         return $this->_data;
+    }
+    
+    /**
+     * At first it tries to find existing account model using data provided by
+     * client. If account has not been found it is created.
+     * 
+     * If client is instance of "dektrium\clients\ClientInterface" and account
+     * has no connected user, it will try to create new user.
+     * 
+     * @param  BaseClientInterface $client
+     * @return Account
+     */
+    public static function createFromClient(BaseClientInterface $client)
+    {
+        $account = static::getFinder()->findAccountByClient($client);
+        
+        if (null === $account) {
+            $account = \Yii::createObject([
+                'class'      => static::className(),
+                'provider'   => $client->getId(),
+                'client_id'  => $client->getUserAttributes()['id'],
+                'data'       => json_encode($client->getUserAttributes()),
+            ]);
+            $account->save(false);
+        }
+        
+        if ($account->user === null && $client instanceof ClientInterface) {
+            $user = static::createUser($client);
+            if ($user instanceof User) {
+                $account->link('user', $user);
+            }
+        }
+        
+        return $account;
+    }
+    
+    /**
+     * Tries to find user or create a new one.
+     * 
+     * @param  ClientInterface $client
+     * @return User|boolean False when can't create user.
+     */
+    protected static function createUser(ClientInterface $client)
+    {
+        $user = static::getFinder()->findUserByEmail($client->getEmail());
+        
+        if (null !== $user) {
+            return $user;
+        }
+        
+        $user = Yii::createObject([
+            'class'    => User::className(),
+            'scenario' => 'connect',
+            'username' => $client->getUsername(),
+            'email'    => $client->getEmail(),
+        ]);
+        
+        if (!$user->validate(['email'])) {
+            return false;
+        }
+        
+        if (!$user->validate(['username'])) {
+            $user->username = null;
+        }
+        
+        return $user->create() ? $user : false;
+    }
+    
+    /**
+     * @return Finder
+     */
+    protected static function getFinder()
+    {
+        if (static::$finder === null) {
+            static::$finder = Yii::$container->get(Finder::className());
+        }
+        
+        return static::$finder;
     }
 }

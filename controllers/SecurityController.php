@@ -126,7 +126,7 @@ class SecurityController extends Controller
      */
     public function authenticate(ClientInterface $client)
     {
-        $account = Account::createFromClient($client);
+        $account = forward_static_call([$this->module->modelMap['Account'], 'createFromClient'], $client);
         $user    = $account->user;
         
         if (null === $user) {

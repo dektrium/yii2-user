@@ -68,22 +68,11 @@ class SettingsController extends Controller
                 'rules' => [
                     [
                         'allow'   => true,
-                        'actions' => ['profile', 'account', 'confirm', 'networks', 'connect', 'disconnect'],
+                        'actions' => ['profile', 'account', 'confirm', 'networks', 'disconnect'],
                         'roles'   => ['@']
                     ],
                 ]
             ],
-        ];
-    }
-
-    /** @inheritdoc */
-    public function actions()
-    {
-        return [
-            'connect' => [
-                'class'           => 'yii\authclient\AuthAction',
-                'successCallback' => [$this, 'connect'],
-            ]
         ];
     }
 
@@ -178,39 +167,6 @@ class SettingsController extends Controller
         $account->delete();
 
         return $this->redirect(['networks']);
-    }
-
-    /**
-     * Connects social account to user.
-     * @param  ClientInterface $client
-     * @return \yii\web\Response
-     */
-    public function connect(ClientInterface $client)
-    {
-        $attributes = $client->getUserAttributes();
-        $provider   = $client->getId();
-        $clientId   = $attributes['id'];
-
-        $account = $this->finder->findAccountByProviderAndClientId($provider, $clientId);
-
-        if ($account === null) {
-            $account = \Yii::createObject([
-                'class'     => Account::className(),
-                'provider'  => $provider,
-                'client_id' => $clientId,
-                'data'      => json_encode($attributes),
-                'user_id'   => \Yii::$app->user->id,
-            ]);
-            $account->save(false);
-            \Yii::$app->session->setFlash('success', \Yii::t('user', 'Your account has been connected'));
-        } else if (null == $account->user) {
-            $account->user_id = \Yii::$app->user->id;
-            $account->save(false);
-        } else {
-            \Yii::$app->session->setFlash('danger', \Yii::t('user', 'This account has already been connected to another user'));
-        }
-
-        $this->action->successUrl = Url::to(['/user/settings/networks']);
     }
 
     /**

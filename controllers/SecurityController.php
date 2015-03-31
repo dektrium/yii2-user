@@ -59,7 +59,7 @@ class SecurityController extends Controller
                 'class' => AccessControl::className(),
                 'rules' => [
                     ['allow' => true, 'actions' => ['login', 'auth'], 'roles' => ['?']],
-                    ['allow' => true, 'actions' => ['login', 'logout'], 'roles' => ['@']],
+                    ['allow' => true, 'actions' => ['login', 'auth', 'logout'], 'roles' => ['@']],
                 ]
             ],
             'verbs' => [
@@ -76,8 +76,12 @@ class SecurityController extends Controller
     {
         return [
             'auth' => [
-                'class'           => AuthAction::className(),
-                'successCallback' => [$this, 'authenticate'],
+                'class' => AuthAction::className(),
+                // if user is not logged in, will try to log him in, otherwise
+                // will try to connect social account to user.
+                'successCallback' => \Yii::$app->user->isGuest
+                    ? [$this, 'authenticate']
+                    : [$this, 'connect'],
             ]
         ];
     }
@@ -122,14 +126,15 @@ class SecurityController extends Controller
      * to create new user account.
      *  
      * @param  ClientInterface $client
-     * @return Response
      */
     public function authenticate(ClientInterface $client)
     {
-        $account = forward_static_call([$this->module->modelMap['Account'], 'createFromClient'], $client);
-        $user    = $account->user;
+        $account = forward_static_call([
+            $this->module->modelMap['Account'],
+            'createFromClient'
+        ], $client);
         
-        if (null === $user) {
+        if (null === ($user = $account->user)) {
             $this->action->successUrl = Url::to([
                 '/user/registration/connect',
                 'account_id' => $account->id
@@ -137,6 +142,20 @@ class SecurityController extends Controller
         } else {
             Yii::$app->user->login($user, $this->module->rememberFor);
         }
+    }
+
+    /**
+     * Tries to connect social account to user.
+     * 
+     * @param ClientInterface $client
+     */
+    public function connect(ClientInterface $client)
+    {
+        forward_static_call([
+            $this->module->modelMap['Account'],
+            'connectWithUser',
+        ], $client);
+        $this->action->successUrl = Url::to(['/user/settings/networks']);
     }
 
     /**

@@ -37,7 +37,7 @@ $this->params['breadcrumbs'][] = $this->title;
                     <p><?= Yii::t('user', 'You can connect multiple accounts to be able to log in using them') ?>.</p>
                 </div>
                 <?php $auth = Connect::begin([
-                    'baseAuthUrl' => ['/user/settings/connect'],
+                    'baseAuthUrl' => ['/user/security/auth'],
                     'accounts'    => $user->accounts,
                     'autoRender'  => false,
                     'popupMode'   => false

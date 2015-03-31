@@ -83,6 +83,28 @@ class Account extends ActiveRecord
     }
     
     /**
+     * Tries to find an account and then connect that account with current user.
+     * 
+     * @param BaseClientInterface $client
+     */
+    public static function connectWithUser(BaseClientInterface $client)
+    {
+        if (\Yii::$app->user->isGuest) {
+            \Yii::$app->session->setFlash('danger', \Yii::t('user', 'Something went wrong'));
+            return;
+        }
+        
+        $account = static::fetchAccount($client);
+        
+        if ($account->user === null) {
+            $account->link('user', Yii::$app->user->identity);
+            \Yii::$app->session->setFlash('success', \Yii::t('user', 'Your account has been connected'));
+        } else {
+            \Yii::$app->session->setFlash('danger', \Yii::t('user', 'This account has already been connected to another user'));
+        }
+    }
+    
+    /**
      * At first it tries to find existing account model using data provided by
      * client. If account has not been found it is created.
      * 
@@ -93,6 +115,24 @@ class Account extends ActiveRecord
      * @return Account
      */
     public static function createFromClient(BaseClientInterface $client)
+    {
+        $account = static::fetchAccount($client);
+
+        if ($account->user === null && $client instanceof ClientInterface) {
+            $user = static::fetchUser($client);
+            if ($user instanceof User) {
+                $account->link('user', $user);
+            }
+        }
+        
+        return $account;
+    }
+    
+    /**
+     * Tries to find account, otherwise creates new account.
+     * @return Account
+     */
+    protected static function fetchAccount(BaseClientInterface $client)
     {
         $account = static::getFinder()->findAccountByClient($client);
         
@@ -106,13 +146,6 @@ class Account extends ActiveRecord
             $account->save(false);
         }
         
-        if ($account->user === null && $client instanceof ClientInterface) {
-            $user = static::createUser($client);
-            if ($user instanceof User) {
-                $account->link('user', $user);
-            }
-        }
-        
         return $account;
     }
     
@@ -122,7 +155,7 @@ class Account extends ActiveRecord
      * @param  ClientInterface $client
      * @return User|boolean False when can't create user.
      */
-    protected static function createUser(ClientInterface $client)
+    protected static function fetchUser(ClientInterface $client)
     {
         $user = static::getFinder()->findUserByEmail($client->getEmail());
         

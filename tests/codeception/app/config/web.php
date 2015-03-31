@@ -38,10 +38,10 @@ $config = [
     ],
 ];
 
-if (defined('YII_APP_BASE_PATH')){
+if (defined('YII_APP_BASE_PATH')) {
     $config = Codeception\Configuration::mergeConfigs(
         $config,
-        require YII_APP_BASE_PATH.'/tests/codeception/config/config.php'
+        require YII_APP_BASE_PATH . '/tests/codeception/config/config.php'
     );
 }
 

@@ -66,6 +66,7 @@ Here is the list of clients supported by the module:
 
 ### Google
 
+- You can register new application and get secret keys [here](https://console.developers.google.com/project).
 - First of all you need to enable Google+ API in `APIs & auth` section.
 - Then you need to create new client id on `APIs & auth > Credentials` section
 - `Authorized JavaScript origins` should contain url like `http://localhost`

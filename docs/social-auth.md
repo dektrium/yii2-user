@@ -54,7 +54,7 @@ Here is the list of clients supported by the module:
 
 ### Twitter
 
-- You can register new application and get secret keys [here](https://developers.facebook.com/apps).
+- You can register new application and get secret keys [here](https://dev.twitter.com/apps/new).
 
 > NOTE: Current version of Twitter API does not provide user's email address, so we can't register user without making him enter his email address
 

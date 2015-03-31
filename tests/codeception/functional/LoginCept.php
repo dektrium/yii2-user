@@ -1,7 +1,6 @@
 <?php
 
-namespace dektrium\user\tests;
-
+use dektrium\user\tests\FunctionalTester;
 use tests\codeception\_pages\LoginPage;
 
 $I = new FunctionalTester($scenario);

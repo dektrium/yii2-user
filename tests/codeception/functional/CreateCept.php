@@ -1,6 +1,6 @@
 <?php
-namespace dektrium\user\tests;
 
+use dektrium\user\tests\FunctionalTester;
 use tests\codeception\_pages\CreatePage;
 use tests\codeception\_pages\LoginPage;
 
@@ -24,6 +24,6 @@ $I->see('User has been created');
 $I->see('toster');
 $I->see('toster@example.com');
 
-\Yii::$app->user->logout();
+Yii::$app->user->logout();
 LoginPage::openBy($I)->login('toster@example.com', 'toster');
 $I->see('Logout');

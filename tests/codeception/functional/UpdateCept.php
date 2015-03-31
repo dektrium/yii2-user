@@ -1,7 +1,6 @@
 <?php
 
-namespace dektrium\user\tests;
-
+use dektrium\user\tests\FunctionalTester;
 use tests\codeception\_pages\UpdatePage;
 use tests\codeception\_pages\LoginPage;
 
@@ -17,6 +16,6 @@ $page = UpdatePage::openBy($I, ['id' => $user->id]);
 $page->update('user', 'updated_user@example.com', 'new_pass');
 $I->see('Account details have been updated');
 
-\Yii::$app->user->logout();
+Yii::$app->user->logout();
 LoginPage::openBy($I)->login('updated_user@example.com', 'new_pass');
 $I->see('Logout');

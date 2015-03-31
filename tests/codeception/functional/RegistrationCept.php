@@ -1,7 +1,6 @@
 <?php
 
-namespace dektrium\user\tests;
-
+use dektrium\user\tests\FunctionalTester;
 use dektrium\user\models\Token;
 use dektrium\user\models\User;
 use tests\codeception\_pages\RegistrationPage;

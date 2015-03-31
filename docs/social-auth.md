@@ -1,23 +1,21 @@
 Authentication via social networks
 ==================================
 
-Yii2-user provides a way to use social networks to authenticate users on your
-website. There is a way for users to connect their social network account to
-their account on your website and use it for authentication.
+Yii2-user provides user registration and login using social sites credentials. It
+also allows to connect multiple social networks to user account and use them to
+log in.
 
 Getting started
 ---------------
 
-To get started you should configure `authClientCollection` application component.
-You can get more information about it in Yii2-authclient extension's
-[documentation](https://github.com/yiisoft/yii2-authclient).
+To get started you should configure `authClientCollection` application component:
 
 ```php
 ...
 'components' => [
     ...
     'authClientCollection' => [
-        'class' => 'yii\authclient\Collection',
+        'class'   => \yii\authclient\Collection::className(),
         'clients' => [
             // here is the list of clients you want to use
             // you can read more in the "Available clients" section
@@ -33,12 +31,12 @@ Available clients
 
 Here is the list of clients supported by the module:
 
-- Facebook
-- Twitter
-- Google
-- Github
-- VKontakte
-- Yandex
+- [Facebook](#facebook)
+- [Twitter](#twitter)
+- [Google](#google)
+- [Github](#github)
+- [VKontakte](#vkontakte)
+- [Yandex](#yandex)
 
 ### Facebook
 
@@ -116,5 +114,33 @@ Here is the list of clients supported by the module:
     'class'        => 'dektrium\user\clients\Yandex',
     'clientId'     => 'CLIENT_ID',
     'clientSecret' => 'CLIENT_SECRET'
+],
+```
+
+Configuration example
+---------------------
+
+The following config allows to log in using 3 networks (Twitter, Facebook and Google):
+
+```php
+'authClientCollection' => [
+    'class' => yii\authclient\Collection::className(),
+    'clients' => [
+        'facebook' => [
+            'class'        => 'dektrium\user\clients\Facebook',
+            'clientId'     => 'CLIENT_ID',
+            'clientSecret' => 'CLIENT_SECRET',
+        ],
+        'twitter' => [
+            'class'          => 'dektrium\user\clients\Twitter',
+            'consumerKey'    => 'CONSUMER_KEY',
+            'consumerSecret' => 'CONSUMER_SECRET',
+        ],
+        'google' => [
+            'class'        => 'dektrium\user\clients\Google',
+            'clientId'     => 'CLIENT_ID',
+            'clientSecret' => 'CLIENT_SECRET',
+        ],
+    ],
 ],
 ```

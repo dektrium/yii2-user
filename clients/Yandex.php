@@ -39,4 +39,10 @@ class Yandex extends BaseYandex implements ClientInterface
             ? $this->getUserAttributes()['login']
             : null;
     }
+        
+    /** @inheritdoc */
+    protected function defaultTitle()
+    {
+        return \Yii::t('user', 'Yandex');
+    }
 }

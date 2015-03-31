@@ -34,4 +34,10 @@ class VKontakte extends BaseVKontakte implements ClientInterface
             ? $this->getUserAttributes()['screen_name']
             : null;
     }
+    
+    /** @inheritdoc */
+    protected function defaultTitle()
+    {
+        return \Yii::t('user', 'VKontakte');
+    }
 }

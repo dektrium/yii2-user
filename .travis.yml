@@ -1,3 +1,4 @@
+sudo: false
 language: php
 env: TEST_ENVIRONMENT=travis
 php:

@@ -17,15 +17,11 @@
  * NOTE: this file must be saved in UTF-8 encoding.
  */
 return [
-    'In order to finish your registration, we need you to enter your email address' => '',
-    'Something went wrong' => '',
-    'VKontakte' => '',
-    'Yandex' => '',
-    'You can connect multiple accounts to be able to log in using them' => '',
-    'Connect this account by entering desired username and your email address below' => '@@Conecte esta conta informando o usuário e e-mail abaixo@@',
-    'Connect your account to {0}' => '@@Conecte a sua conta no site {0}@@',
-    'Looks like this is first time you are using {0} account to sign in to {1}' => '@@Parece que esta é a primeira vez que você usa a conta {0} para fazer login no site {1}@@',
-    'You will never have to use this form again' => '@@Você nunca mais terá que utilizar este formulário@@',
+    'In order to finish your registration, we need you to enter your email address' => 'Para concluir seu registro você precisa informar seu endereço de email',
+    'Something went wrong' => 'Algo deu errado',
+    'VKontakte' => 'VKontakte',
+    'Yandex' => 'Yandex',
+    'You can connect multiple accounts to be able to log in using them' => 'Você pode conectar múltiplas contas para serem usadas como autenticação',
     '(not set)' => '(não definido)',
     'A confirmation message has been sent to your new email address' => 'Uma mensagem de confirmação foi enviada para o seu novo endereço de e-mail',
     'A message has been sent to your email address. It contains a confirmation link that you must click to complete registration.' => 'Uma mensagem foi enviada para o seu endereço de e-mail. Ela contém um link de confirmação que você deve clicar para concluir o registro.',

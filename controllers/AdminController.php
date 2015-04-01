@@ -66,16 +66,6 @@ class AdminController extends Controller
                 'class' => AccessControl::className(),
                 'rules' => [
                     [
-                        'actions' => [
-                            'index',
-                            'create',
-                            'update',
-                            'update-profile',
-                            'delete',
-                            'block',
-                            'confirm',
-                            'info',
-                        ],
                         'allow' => true,
                         'roles' => ['@'],
                         'matchCallback' => function () {
@@ -93,7 +83,7 @@ class AdminController extends Controller
      */
     public function actionIndex()
     {
-        Url::remember(Url::current(), 'actions-redirect');
+        Url::remember('', 'actions-redirect');
         $searchModel  = Yii::createObject(UserSearch::className());
         $dataProvider = $searchModel->search(Yii::$app->request->get());
 
@@ -135,7 +125,7 @@ class AdminController extends Controller
      */
     public function actionUpdate($id)
     {
-        Url::remember(Url::current(), 'actions-redirect');
+        Url::remember('', 'actions-redirect');
         $user = $this->findModel($id);
         $user->scenario = 'update';
 
@@ -158,7 +148,7 @@ class AdminController extends Controller
      */
     public function actionUpdateProfile($id)
     {
-        Url::remember(Url::current(), 'actions-redirect');
+        Url::remember('', 'actions-redirect');
         $user    = $this->findModel($id);
         $profile = $user->profile;
         
@@ -182,14 +172,33 @@ class AdminController extends Controller
      */
     public function actionInfo($id)
     {
-        Url::remember(Url::current(), 'actions-redirect');
+        Url::remember('', 'actions-redirect');
         $user = $this->findModel($id);
         
         return $this->render('_info', [
-            'user'   => $user,
+            'user' => $user,
         ]);
     }
 
+    /**
+     * If "dektrium/yii2-rbac" extension is installed, this page displays form
+     * where user can assign multiple auth items to user.
+     * @param  integer $id
+     * @return string
+     */
+    public function actionAssignments($id)
+    {
+        if (!isset(Yii::$app->extensions['dektrium/yii2-rbac'])) {
+            throw new NotFoundHttpException;
+        }
+        Url::remember('', 'actions-redirect');
+        $user = $this->findModel($id);
+        
+        return $this->render('_assignments', [
+            'user' => $user,
+        ]);
+    }
+    
     /**
      * Confirms the User.
      * @param integer $id

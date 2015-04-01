@@ -107,12 +107,11 @@ class RegistrationController extends Controller
         /** @var User $user */
         $user = \Yii::createObject([
             'class'    => User::className(),
-            'scenario' => 'connect'
+            'scenario' => 'connect',
         ]);
-
+        
         if ($user->load(\Yii::$app->request->post()) && $user->create()) {
-            $account->user_id = $user->id;
-            $account->save(false);
+            $account->link('user', $user);
             \Yii::$app->user->login($user, $this->module->rememberFor);
             return $this->goBack();
         }

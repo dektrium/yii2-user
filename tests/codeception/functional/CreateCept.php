@@ -1,5 +1,6 @@
 <?php
 
+use dektrium\user\tests\FunctionalTester;
 use tests\codeception\_pages\CreatePage;
 use tests\codeception\_pages\LoginPage;
 

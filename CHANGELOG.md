@@ -2,6 +2,15 @@
 
 ## 0.9.4 [Work in progress]
 
+- `enh` Improved authentication via social networks (dmeroff)
+- `enh` Added Latvian translation (uldisn)
+- `enh` Added redirect to index page when logged in user tries to access login page (thiagotalma)
+- `fix` Updated Italian translation (maxxer)
+- `enh` Added usage of `adminEmail` param as default sender name if set (thiagotalma)
+- `enh` Added link to registration page on login form (thiagotalma)
+- `enh` Improved username regexp (thiagotalma)
+- `fix` Updated translations for Portuguese language (invaderhd & thiagotalma & andredp)
+- `enh` Added integration with Yii2-rbac (dmeroff)
 - `enh` Improved admin views and controller (dmeroff)
 - `enh` Added datepicker in user grid view (dmeroff)
 

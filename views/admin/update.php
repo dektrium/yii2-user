@@ -28,6 +28,8 @@ $this->params['breadcrumbs'][] = $this->title;
     'module' => Yii::$app->getModule('user'),
 ]) ?>
 
+<?= $this->render('_menu') ?>
+
 <div class="row">
     <div class="col-md-3">
         <div class="panel panel-default">
@@ -40,6 +42,11 @@ $this->params['breadcrumbs'][] = $this->title;
                         ['label' => Yii::t('user', 'Account details'), 'url' => ['/user/admin/update', 'id' => $user->id]],
                         ['label' => Yii::t('user', 'Profile details'), 'url' => ['/user/admin/update-profile', 'id' => $user->id]],
                         ['label' => Yii::t('user', 'Information'), 'url' => ['/user/admin/info', 'id' => $user->id]],
+                        [
+                            'label' => Yii::t('user', 'Assignments'),
+                            'url' => ['/user/admin/assignments', 'id' => $user->id],
+                            'visible' => isset(Yii::$app->extensions['dektrium/yii2-rbac']),
+                        ],
                         '<hr>',
                         [
                             'label' => Yii::t('user', 'Confirm'),

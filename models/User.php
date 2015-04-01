@@ -18,6 +18,7 @@ use dektrium\user\Module;
 use yii\base\NotSupportedException;
 use yii\behaviors\TimestampBehavior;
 use yii\db\ActiveRecord;
+use yii\db\Query;
 use yii\log\Logger;
 use yii\web\IdentityInterface;
 
@@ -176,7 +177,7 @@ class User extends ActiveRecord implements IdentityInterface
         return [
             // username rules
             ['username', 'required', 'on' => ['register', 'connect', 'create', 'update']],
-            ['username', 'match', 'pattern' => '/^[a-zA-Z]\w+$/'],
+            ['username', 'match', 'pattern' => '/^[-a-zA-Z0-9_\.@]+$/'],
             ['username', 'string', 'min' => 3, 'max' => 25],
             ['username', 'unique'],
             ['username', 'trim'],
@@ -218,6 +219,10 @@ class User extends ActiveRecord implements IdentityInterface
 
         if ($this->password == null) {
             $this->password = Password::generate(8);
+        }
+        
+        if ($this->username === null) {
+            $this->generateUsername();
         }
 
         $this->trigger(self::USER_CREATE_INIT);
@@ -401,6 +406,29 @@ class User extends ActiveRecord implements IdentityInterface
     {
         return (bool) $this->updateAttributes(['blocked_at' => null]);
     }
+    
+    /**
+     * Generates new username based on email address, or creates new username
+     * like "user1".
+     */
+    public function generateUsername()
+    {
+        // try to use name part of email
+        $this->username = explode('@', $this->email)[0];
+        if ($this->validate(['username'])) {
+            return;
+        }
+        
+        // generate username like "user1", "user2", etc...
+        while (!$this->validate(['username'])) {
+            $row = (new Query())
+                ->from('{{%user}}')
+                ->select('MAX(id) as id')
+                ->one();
+            
+            $this->username = 'user' . ++$row['id'];
+        }
+    }
 
     /** @inheritdoc */
     public function beforeSave($insert)
@@ -448,7 +476,7 @@ class User extends ActiveRecord implements IdentityInterface
             return \Yii::t('user', 'Welcome! Registration is complete.');
         }
     }
-
+    
     /** @inheritdoc */
     public static function tableName()
     {

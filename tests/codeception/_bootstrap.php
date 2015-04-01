@@ -2,26 +2,14 @@
 
 use AspectMock\Kernel;
 
-if (getenv('TEST_ENVIRONMENT') === 'travis') {
-    $vendor = __DIR__ . '/../../vendor';
-} else {
-    $vendor = __DIR__ . '/../../../../../vendor';
-}
-
-defined('YII_DEBUG') or define('YII_DEBUG', true);
-defined('YII_ENV') or define('YII_ENV', 'test');
-defined('YII_TEST_ENTRY_URL') or define('YII_TEST_ENTRY_URL', '/index.php');
-defined('YII_TEST_ENTRY_FILE') or define('YII_TEST_ENTRY_FILE', __DIR__ . '/app/web/index.php');
-defined('VENDOR_DIR') or define('VENDOR_DIR', $vendor);
-
-require_once(VENDOR_DIR . '/autoload.php');
+require __DIR__ . '/_init.php';
 
 $kernel = Kernel::getInstance();
 $kernel->init([
     'debug'        => true,
     'includePaths' => [__DIR__ . '/../../', VENDOR_DIR],
     'excludePaths' => [__DIR__],
-    'cacheDir'     => __DIR__ . '/app/runtime/aop',
+    'cacheDir'     => '/tmp/yii2-user/aop',
 ]);
 $kernel->loadFile(VENDOR_DIR . '/yiisoft/yii2/Yii.php');
 

@@ -10,6 +10,7 @@ $config = [
         '@dektrium/user' => realpath(__DIR__. '/../../../../'),
         '@vendor'        => VENDOR_DIR,
         '@bower'         => VENDOR_DIR . '/bower',
+        '@tests/codeception/config' => '@tests/codeception/_config'
     ],
     'modules' => [
         'user' => [
@@ -19,7 +20,7 @@ $config = [
     ],
     'components' => [
         'assetManager' => [
-            'basePath' => '@tests/codeception/app/assets'
+            'basePath' => __DIR__ . '/../assets',
         ],
         'log'   => null,
         'cache' => null,

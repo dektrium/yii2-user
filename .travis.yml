@@ -20,14 +20,14 @@ cache:
 # install dependencies
 install:
   - travis_retry composer self-update
+  - travis_retry composer global require "codeception/codeception:2.0.*@dev"
   - travis_retry composer global require "fxp/composer-asset-plugin:~1.0"
   - travis_retry composer install --prefer-dist
 
 before_script:
-  - wget -O ~/codecept.phar http://codeception.com/codecept.phar 
   - cd tests
   - mysql -e 'create database dektrium_test;'
   - php codeception/_app/yii migrate/up --interactive=0
-  - php ~/codecept.phar build
+  - ~/.composer/vendor/bin/codecept build
 
-script: php ~/codecept.phar run
+script: ~/.composer/vendor/bin/codecept run

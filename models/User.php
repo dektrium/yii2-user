@@ -413,11 +413,13 @@ class User extends ActiveRecord implements IdentityInterface
      */
     public function generateUsername()
     {
+        // try to use name part of email
         $this->username = explode('@', $this->email)[0];
         if ($this->validate(['username'])) {
             return;
         }
         
+        // generate username like "user1", "user2", etc...
         while (!$this->validate(['username'])) {
             $row = (new Query())
                 ->from('{{%user}}')

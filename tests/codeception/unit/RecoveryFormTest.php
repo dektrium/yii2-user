@@ -129,7 +129,5 @@ class RecoveryFormTest extends TestCase
             verify(\Yii::$app->session->getFlash('danger'))
                 ->equals('An error occurred and your password has not been changed. Please try again later.');
         });
-        
-
     }
 }

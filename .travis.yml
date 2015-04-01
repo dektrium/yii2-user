@@ -1,4 +1,5 @@
 language: php
+env: TEST_ENVIRONMENT=travis
 php:
   - 5.6
   - 5.5
@@ -7,11 +8,10 @@ install:
   - composer self-update
   - composer global require "fxp/composer-asset-plugin:~1.0"
   - composer install --prefer-dist --dev
-  - composer require --dev "codeception/codeception:2.0.*@dev"
+  - wget -O ~/codecept.phar http://codeception.com/codecept.phar 
 before_script:
-  - mysql -e 'create database dektrium_test;'
   - cd tests
-  - sed -i 's/\/..\/..\/..\/..\/..\//\/..\/..\//g' codeception/_bootstrap.php
+  - mysql -e 'create database dektrium_test;'
   - php codeception/bin/yii migrate/up --interactive=0
-  - ../vendor/bin/codecept build
-script: ../vendor/bin/codecept run
+  - php ~/codecept.phar build
+script: php ~/codecept.phar run

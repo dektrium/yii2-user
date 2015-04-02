@@ -176,22 +176,22 @@ class User extends ActiveRecord implements IdentityInterface
     {
         return [
             // username rules
-            ['username', 'required', 'on' => ['register', 'connect', 'create', 'update']],
-            ['username', 'match', 'pattern' => '/^[-a-zA-Z0-9_\.@]+$/'],
-            ['username', 'string', 'min' => 3, 'max' => 25],
-            ['username', 'unique'],
-            ['username', 'trim'],
+            'usernameRequired' => ['username', 'required', 'on' => ['register', 'connect', 'create', 'update']],
+            'usernameMatch' => ['username', 'match', 'pattern' => '/^[-a-zA-Z0-9_\.@]+$/'],
+            'usernameLength' => ['username', 'string', 'min' => 3, 'max' => 25],
+            'usernameUnique' => ['username', 'unique'],
+            'usernameTrim' => ['username', 'trim'],
 
             // email rules
-            ['email', 'required', 'on' => ['register', 'connect', 'create', 'update']],
-            ['email', 'email'],
-            ['email', 'string', 'max' => 255],
-            ['email', 'unique'],
-            ['email', 'trim'],
+            'emailRequired' => ['email', 'required', 'on' => ['register', 'connect', 'create', 'update']],
+            'emailPattern' => ['email', 'email'],
+            'emailLength' => ['email', 'string', 'max' => 255],
+            'emailUnique' => ['email', 'unique'],
+            'emailTrim' => ['email', 'trim'],
 
             // password rules
-            ['password', 'required', 'on' => ['register']],
-            ['password', 'string', 'min' => 6, 'on' => ['register', 'create']],
+            'passwordRequired' => ['password', 'required', 'on' => ['register']],
+            'passwordLength' => ['password', 'string', 'min' => 6, 'on' => ['register', 'create']],
         ];
     }
 

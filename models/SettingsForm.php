@@ -73,16 +73,19 @@ class SettingsForm extends Model
     public function rules()
     {
         return [
-            [['username', 'email', 'current_password'], 'required'],
-            [['username', 'email'], 'filter', 'filter' => 'trim'],
-            ['username', 'match', 'pattern' => '/^[-a-zA-Z0-9_\.@]+$/'],
-            ['username', 'string', 'min' => 3, 'max' => 20],
-            ['email', 'email'],
-            [['email', 'username'], 'unique', 'when' => function ($model, $attribute) {
+            'usernameRequired' => ['username', 'required'],
+            'usernameTrim' => ['username', 'filter', 'filter' => 'trim'],
+            'usernameLenth' => ['username', 'string', 'min' => 3, 'max' => 20],
+            'usernamePattern' => ['username', 'match', 'pattern' => '/^[-a-zA-Z0-9_\.@]+$/'],
+            'emailRequired' => ['email', 'required'],
+            'emailTrim' => ['email', 'filter', 'filter' => 'trim'],
+            'emailPattern' => ['email', 'email'],
+            'emailUsernameUnique' => [['email', 'username'], 'unique', 'when' => function ($model, $attribute) {
                 return $this->user->$attribute != $model->$attribute;
             }, 'targetClass' => $this->module->modelMap['User']],
-            ['new_password', 'string', 'min' => 6],
-            ['current_password', function ($attr) {
+            'newPasswordLength' => ['new_password', 'string', 'min' => 6],
+            'currentPasswordRequired' => ['current_password', 'required'],
+            'currentPasswordValidate' => ['current_password', function ($attr) {
                 if (!Password::validate($this->$attr, $this->user->password_hash)) {
                     $this->addError($attr, \Yii::t('user', 'Current password is not valid'));
                 }

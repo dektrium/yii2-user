@@ -77,21 +77,21 @@ class RecoveryForm extends Model
     public function rules()
     {
         return [
-            ['email', 'filter', 'filter' => 'trim'],
-            ['email', 'required'],
-            ['email', 'email'],
-            ['email', 'exist',
+            'trim' => ['email', 'filter', 'filter' => 'trim'],
+            'emailRequired' => ['email', 'required'],
+            'emailPattern' => ['email', 'email'],
+            'emailExist' => ['email', 'exist',
                 'targetClass' => $this->module->modelMap['User'],
                 'message' => \Yii::t('user', 'There is no user with this email address')
             ],
-            ['email', function ($attribute) {
+            'emailUnconfirmed' => ['email', function ($attribute) {
                 $this->user = $this->finder->findUserByEmail($this->email);
                 if ($this->user !== null && $this->module->enableConfirmation && !$this->user->getIsConfirmed()) {
                     $this->addError($attribute, \Yii::t('user', 'You need to confirm your email address'));
                 }
             }],
-            ['password', 'required'],
-            ['password', 'string', 'min' => 6],
+            'passwordRequired' => ['password', 'required'],
+            'passwordLength' => ['password', 'string', 'min' => 6],
         ];
     }
 

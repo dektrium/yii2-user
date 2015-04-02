@@ -12,19 +12,14 @@
 namespace dektrium\user\controllers;
 
 use dektrium\user\Finder;
-use dektrium\user\models\Account;
 use dektrium\user\models\SettingsForm;
 use dektrium\user\Module;
-use yii\authclient\ClientInterface;
-use yii\base\Model;
-use yii\helpers\Url;
 use yii\web\Controller;
 use yii\filters\AccessControl;
 use yii\filters\VerbFilter;
 use yii\web\ForbiddenHttpException;
 use yii\web\NotFoundHttpException;
-use yii\web\Response;
-use yii\widgets\ActiveForm;
+use dektrium\user\traits\AjaxValidationTrait;
 
 /**
  * SettingsController manages updating user settings (e.g. profile, email and password).
@@ -35,6 +30,8 @@ use yii\widgets\ActiveForm;
  */
 class SettingsController extends Controller
 {
+    use AjaxValidationTrait;
+    
     /** @inheritdoc */
     public $defaultAction = 'profile';
 
@@ -167,19 +164,5 @@ class SettingsController extends Controller
         $account->delete();
 
         return $this->redirect(['networks']);
-    }
-
-    /**
-     * Performs ajax validation.
-     * @param Model $model
-     * @throws \yii\base\ExitException
-     */
-    protected function performAjaxValidation(Model $model)
-    {
-        if (\Yii::$app->request->isAjax && $model->load(\Yii::$app->request->post())) {
-            \Yii::$app->response->format = Response::FORMAT_JSON;
-            echo json_encode(ActiveForm::validate($model));
-            \Yii::$app->end();
-        }
     }
 }

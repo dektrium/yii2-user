@@ -12,20 +12,17 @@
 namespace dektrium\user\controllers;
 
 use dektrium\user\Finder;
-use dektrium\user\models\Account;
 use dektrium\user\models\LoginForm;
 use dektrium\user\Module;
 use Yii;
 use yii\authclient\AuthAction;
 use yii\authclient\ClientInterface;
-use yii\base\ExitException;
-use yii\base\Model;
 use yii\filters\AccessControl;
 use yii\filters\VerbFilter;
 use yii\helpers\Url;
 use yii\web\Controller;
 use yii\web\Response;
-use yii\widgets\ActiveForm;
+use dektrium\user\traits\AjaxValidationTrait;
 
 /**
  * Controller that manages user authentication process.
@@ -36,6 +33,8 @@ use yii\widgets\ActiveForm;
  */
 class SecurityController extends Controller
 {
+    use AjaxValidationTrait;
+    
     /** @var Finder */
     protected $finder;
 
@@ -156,19 +155,5 @@ class SecurityController extends Controller
             'connectWithUser',
         ], $client);
         $this->action->successUrl = Url::to(['/user/settings/networks']);
-    }
-
-    /**
-     * Performs ajax validation.
-     * @param Model $model
-     * @throws ExitException
-     */
-    protected function performAjaxValidation(Model $model)
-    {
-        if (Yii::$app->request->isAjax && $model->load(Yii::$app->request->post())) {
-            Yii::$app->response->format = Response::FORMAT_JSON;
-            echo json_encode(ActiveForm::validate($model));
-            Yii::$app->end();
-        }
     }
 }

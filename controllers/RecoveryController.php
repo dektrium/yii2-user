@@ -14,12 +14,10 @@ namespace dektrium\user\controllers;
 use dektrium\user\Finder;
 use dektrium\user\models\RecoveryForm;
 use dektrium\user\models\Token;
-use yii\base\Model;
 use yii\web\Controller;
 use yii\filters\AccessControl;
 use yii\web\NotFoundHttpException;
-use yii\web\Response;
-use yii\widgets\ActiveForm;
+use dektrium\user\traits\AjaxValidationTrait;
 
 /**
  * RecoveryController manages password recovery process.
@@ -30,6 +28,8 @@ use yii\widgets\ActiveForm;
  */
 class RecoveryController extends Controller
 {
+    use AjaxValidationTrait;
+    
     /** @var Finder */
     protected $finder;
 
@@ -129,19 +129,5 @@ class RecoveryController extends Controller
         return $this->render('reset', [
             'model' => $model,
         ]);
-    }
-
-    /**
-     * Performs ajax validation.
-     * @param Model $model
-     * @throws \yii\base\ExitException
-     */
-    protected function performAjaxValidation(Model $model)
-    {
-        if (\Yii::$app->request->isAjax && $model->load(\Yii::$app->request->post())) {
-            \Yii::$app->response->format = Response::FORMAT_JSON;
-            echo json_encode(ActiveForm::validate($model));
-            \Yii::$app->end();
-        }
     }
 }

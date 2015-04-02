@@ -4,6 +4,10 @@ use AspectMock\Kernel;
 
 require __DIR__ . '/_init.php';
 
+// TODO: remove this shitty hack
+// without following line test on travis fails
+require_once VENDOR_DIR . '/yiisoft/yii2/base/ErrorException.php';
+
 $kernel = Kernel::getInstance();
 $kernel->init([
     'debug'        => true,

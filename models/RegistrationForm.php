@@ -50,21 +50,21 @@ class RegistrationForm extends Model
     public function rules()
     {
         return [
-            ['username', 'filter', 'filter' => 'trim'],
-            ['username', 'match', 'pattern' => '/^[-a-zA-Z0-9_\.@]+$/'],
-            ['username', 'required'],
-            ['username', 'unique', 'targetClass' => $this->module->modelMap['User'],
+            'usernameTrim' => ['username', 'filter', 'filter' => 'trim'],
+            'usernamePattern' => ['username', 'match', 'pattern' => '/^[-a-zA-Z0-9_\.@]+$/'],
+            'usernameRequired' => ['username', 'required'],
+            'usernameUnique' => ['username', 'unique', 'targetClass' => $this->module->modelMap['User'],
                 'message' => \Yii::t('user', 'This username has already been taken')],
-            ['username', 'string', 'min' => 3, 'max' => 20],
+            'usernameLength' => ['username', 'string', 'min' => 3, 'max' => 20],
 
-            ['email', 'filter', 'filter' => 'trim'],
-            ['email', 'required'],
-            ['email', 'email'],
-            ['email', 'unique', 'targetClass' => $this->module->modelMap['User'],
+            'emailTrim' => ['email', 'filter', 'filter' => 'trim'],
+            'emailRequired' => ['email', 'required'],
+            'emailPattern' => ['email', 'email'],
+            'emailUnique' => ['email', 'unique', 'targetClass' => $this->module->modelMap['User'],
                 'message' => \Yii::t('user', 'This email address has already been taken')],
 
-            ['password', 'required', 'skipOnEmpty' => $this->module->enableGeneratingPassword],
-            ['password', 'string', 'min' => 6],
+            'passwordRequired' => ['password', 'required', 'skipOnEmpty' => $this->module->enableGeneratingPassword],
+            'passwordLength' => ['password', 'string', 'min' => 6],
         ];
     }
 

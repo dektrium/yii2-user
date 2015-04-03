@@ -69,10 +69,10 @@ class ResendForm extends Model
     public function rules()
     {
         return [
-            ['email', 'required'],
-            ['email', 'email'],
-            ['email', 'exist', 'targetClass' => $this->module->modelMap['User']],
-            ['email', function () {
+            'emailRequired' => ['email', 'required'],
+            'emailPattern' => ['email', 'email'],
+            'emailExist' => ['email', 'exist', 'targetClass' => $this->module->modelMap['User']],
+            'emailConfirmed' => ['email', function () {
                 if ($this->user != null && $this->user->getIsConfirmed()) {
                     $this->addError('email', \Yii::t('user', 'This account has already been confirmed'));
                 }

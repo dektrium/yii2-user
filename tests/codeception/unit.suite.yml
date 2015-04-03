@@ -1,3 +1,5 @@
 class_name: UnitTester
 modules:
-    enabled: [Asserts]
+    enabled:
+        - Asserts
+        - tests\codeception\_support\CodeHelper

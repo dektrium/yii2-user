@@ -27,7 +27,8 @@
     "require-dev": {
         "yiisoft/yii2-codeception": "~2.0",
         "codeception/specify": "*",
-        "codeception/verify": "*"
+        "codeception/verify": "*",
+        "codeception/aspect-mock": "*"
     },
     "autoload": {
         "psr-4": {

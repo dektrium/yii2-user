@@ -7,7 +7,7 @@ use dektrium\user\helpers\Password;
 use dektrium\user\models\RegistrationForm;
 use dektrium\user\models\Token;
 use dektrium\user\models\User;
-use tests\codeception\fixtures\UserFixture;
+use tests\codeception\_fixtures\UserFixture;
 use yii\codeception\TestCase;
 
 class RegistrationFormTest extends TestCase
@@ -25,7 +25,7 @@ class RegistrationFormTest extends TestCase
         return [
             'user' => [
                 'class' => UserFixture::className(),
-                'dataFile' => '@tests/codeception/fixtures/data/init_user.php'
+                'dataFile' => '@tests/codeception/_fixtures/data/init_user.php'
             ],
         ];
     }

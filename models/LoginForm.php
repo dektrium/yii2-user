@@ -66,14 +66,14 @@ class LoginForm extends Model
     public function rules()
     {
         return [
-            [['login', 'password'], 'required'],
-            ['login', 'trim'],
-            ['password', function ($attribute) {
+            'requiredFields' => [['login', 'password'], 'required'],
+            'loginTrim' => ['login', 'trim'],
+            'passwordValidate' => ['password', function ($attribute) {
                 if ($this->user === null || !Password::validate($this->password, $this->user->password_hash)) {
                     $this->addError($attribute, \Yii::t('user', 'Invalid login or password'));
                 }
             }],
-            ['login', function ($attribute) {
+            'confirmationValidate' => ['login', function ($attribute) {
                 if ($this->user !== null) {
                     $confirmationRequired = $this->module->enableConfirmation && !$this->module->enableUnconfirmedLogin;
                     if ($confirmationRequired && !$this->user->getIsConfirmed()) {
@@ -84,7 +84,7 @@ class LoginForm extends Model
                     }
                 }
             }],
-            ['rememberMe', 'boolean'],
+            'rememberMe' => ['rememberMe', 'boolean'],
         ];
     }
 

@@ -4,9 +4,9 @@ namespace tests\codeception\_support;
 
 use Codeception\Module;
 use Codeception\TestCase;
-use tests\codeception\fixtures\ProfileFixture;
-use tests\codeception\fixtures\TokenFixture;
-use tests\codeception\fixtures\UserFixture;
+use tests\codeception\_fixtures\ProfileFixture;
+use tests\codeception\_fixtures\TokenFixture;
+use tests\codeception\_fixtures\UserFixture;
 use yii\test\FixtureTrait;
 
 class FixtureHelper extends Module
@@ -45,15 +45,15 @@ class FixtureHelper extends Module
         return [
             'user' => [
                 'class'    => UserFixture::className(),
-                'dataFile' => '@tests/codeception/fixtures/data/init_user.php',
+                'dataFile' => '@tests/codeception/_fixtures/data/init_user.php',
             ],
             'token' => [
                 'class'    => TokenFixture::className(),
-                'dataFile' => '@tests/codeception/fixtures/data/init_token.php',
+                'dataFile' => '@tests/codeception/_fixtures/data/init_token.php',
             ],
             'profile' => [
                 'class'    => ProfileFixture::className(),
-                'dataFile' => '@tests/codeception/fixtures/data/init_profile.php',
+                'dataFile' => '@tests/codeception/_fixtures/data/init_profile.php',
             ],
         ];
     }

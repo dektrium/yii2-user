@@ -15,12 +15,10 @@ use dektrium\user\Finder;
 use dektrium\user\models\RegistrationForm;
 use dektrium\user\models\ResendForm;
 use dektrium\user\models\User;
-use yii\base\Model;
 use yii\web\Controller;
 use yii\filters\AccessControl;
 use yii\web\NotFoundHttpException;
-use yii\web\Response;
-use yii\widgets\ActiveForm;
+use dektrium\user\traits\AjaxValidationTrait;
 
 /**
  * RegistrationController is responsible for all registration process, which includes registration of a new account,
@@ -32,6 +30,8 @@ use yii\widgets\ActiveForm;
  */
 class RegistrationController extends Controller
 {
+    use AjaxValidationTrait;
+    
     /** @var Finder */
     protected $finder;
 
@@ -107,12 +107,11 @@ class RegistrationController extends Controller
         /** @var User $user */
         $user = \Yii::createObject([
             'class'    => User::className(),
-            'scenario' => 'connect'
+            'scenario' => 'connect',
         ]);
-
+        
         if ($user->load(\Yii::$app->request->post()) && $user->create()) {
-            $account->user_id = $user->id;
-            $account->save(false);
+            $account->link('user', $user);
             \Yii::$app->user->login($user, $this->module->rememberFor);
             return $this->goBack();
         }
@@ -172,19 +171,5 @@ class RegistrationController extends Controller
         return $this->render('resend', [
             'model' => $model
         ]);
-    }
-
-    /**
-     * Performs ajax validation.
-     * @param Model $model
-     * @throws \yii\base\ExitException
-     */
-    protected function performAjaxValidation(Model $model)
-    {
-        if (\Yii::$app->request->isAjax && $model->load(\Yii::$app->request->post())) {
-            \Yii::$app->response->format = Response::FORMAT_JSON;
-            echo json_encode(ActiveForm::validate($model));
-            \Yii::$app->end();
-        }
     }
 }

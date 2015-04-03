@@ -1,6 +1,5 @@
 <?php
-
-return [
+$config = [
     'id'        => 'yii2-user-test',
     'basePath'  => dirname(__DIR__),
     'bootstrap' => [
@@ -11,19 +10,17 @@ return [
         '@dektrium/user' => realpath(__DIR__. '/../../../../'),
         '@vendor'        => VENDOR_DIR,
         '@bower'         => VENDOR_DIR . '/bower',
+        '@tests/codeception/config' => '@tests/codeception/_config'
     ],
     'modules' => [
         'user' => [
             'class' => 'dektrium\user\Module',
             'admins' => ['user'],
-            'mailer' => [
-                'class' => 'app\components\MailerMock',
-            ],
         ]
     ],
     'components' => [
         'assetManager' => [
-            'basePath' => '@tests/codeception/app/assets'
+            'basePath' => __DIR__ . '/../assets',
         ],
         'log'   => null,
         'cache' => null,
@@ -38,3 +35,12 @@ return [
         ],
     ],
 ];
+
+if (defined('YII_APP_BASE_PATH')) {
+    $config = Codeception\Configuration::mergeConfigs(
+        $config,
+        require YII_APP_BASE_PATH . '/tests/codeception/config/config.php'
+    );
+}
+
+return $config;

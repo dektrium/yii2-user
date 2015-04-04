@@ -2,6 +2,7 @@
 
 ## 0.9.4 [Work in progress]
 
+- `enh` Added ability to override translations (dmeroff)
 - `enh` Improved authentication via social networks (dmeroff)
 - `enh` Added Latvian translation (uldisn)
 - `enh` Added redirect to index page when logged in user tries to access login page (thiagotalma)

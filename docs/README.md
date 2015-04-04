@@ -1,29 +1,33 @@
-Guide to Yii2-user
-==================
+# Guide to Yii2-user
 
-Getting Started
----------------
+Yii2-user documentation is licensed under the [CC BY 4.0](http://creativecommons.org/licenses/by/4.0/).
 
-- [Installation](installation.md)
+© [Dektrium project](http://github.com/dektrium/) 2013 - 2015 
+
+## Getting Started
+
+- [Installation](getting-started.md)
 - [Configuration](configuration.md)
 - [List of available actions](available-actions.md)
+- [Troubleshooting](troubleshooting.md)
 
-Overriding
-----------
+## Overriding
 
 - [Overriding models](overriding-models.md)
 - [Overriding views](overriding-views.md)
 - [Overriding controllers](overriding-controllers.md)
 
-Basics
-------
+## Basics
 
 - [User management](user-management.md)
 - [Authentication via social networks](social-auth.md)
 - [Mailer](mailer.md)
 
-Guides
-------
+## RBAC
+
+- [Simpler RBAC with access control filter](custom-access-control.md)
+
+## Guides
 
 - [How to add captcha](adding-captcha.md)
-- [Simpler RBAC with access control filter](guide-custom-access-control.md)
+- [How to add custom field to User model](adding-new-field-to-user-model.md)

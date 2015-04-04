@@ -92,10 +92,12 @@ class Bootstrap implements BootstrapInterface
                 }
             }
 
-            $app->get('i18n')->translations['user*'] = [
-                'class'    => PhpMessageSource::className(),
-                'basePath' => __DIR__ . '/messages',
-            ];
+            if (!isset($app->get('i18n')->translations['user*'])) {
+                $app->get('i18n')->translations['user*'] = [
+                    'class'    => PhpMessageSource::className(),
+                    'basePath' => __DIR__ . '/messages',
+                ];
+            }
 
             $defaults = [
                 'welcomeSubject'        => \Yii::t('user', 'Welcome to {0}', \Yii::$app->name),

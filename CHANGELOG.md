@@ -1,6 +1,6 @@
 # CHANGELOG
 
-## 0.9.4 [Work in progress]
+## 0.9.4 [6 April 2015]
 
 - `enh` Added ability to override translations (dmeroff)
 - `enh` Improved authentication via social networks (dmeroff)

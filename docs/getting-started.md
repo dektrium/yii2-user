@@ -4,6 +4,8 @@ Yii2-user is designed to work out of the box. It means that installation require
 minimal steps. Only one configuration step should be taken and you are ready to
 have user management on your Yii2 website.
 
+> If you're using Yii2 advanced template, you should read [this article](usage-with-advanced-template.md) firstly.
+
 ### 1. Download
 
 Yii2-user can be installed using composer. Run following command to download and
@@ -36,6 +38,11 @@ and run the following command:
 ```bash
 $ php yii migrate/up --migrationPath=@vendor/dektrium/yii2-user/migrations
 ```
+
+## Where do I go now?
+
+You have Yii2-user installed. Not you can check out the [list of articles](README.md)
+for more information.
 
 ## Troubleshooting
 

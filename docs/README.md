@@ -10,6 +10,7 @@ Yii2-user documentation is licensed under the [CC BY 4.0](http://creativecommons
 - [Configuration](configuration.md)
 - [List of available actions](available-actions.md)
 - [Troubleshooting](troubleshooting.md)
+- [Usage with Yii2 advanced template](usage-with-advanced-template.md)
 
 ## Overriding
 
@@ -25,6 +26,7 @@ Yii2-user documentation is licensed under the [CC BY 4.0](http://creativecommons
 
 ## RBAC
 
+- [Powerful RBAC with Yii2-rbac](yii2-rbac.md)
 - [Simpler RBAC with access control filter](custom-access-control.md)
 
 ## Guides

@@ -1,12 +1,10 @@
-Authentication via social networks
-==================================
+# Authentication via social networks
 
 Yii2-user provides user registration and login using social sites credentials. It
 also allows to connect multiple social networks to user account and use them to
 log in.
 
-Getting started
----------------
+## Getting started
 
 To get started you should configure `authClientCollection` application component:
 
@@ -26,8 +24,7 @@ To get started you should configure `authClientCollection` application component
 ...
 ```
 
-Available clients
------------------
+## Available clients
 
 Here is the list of clients supported by the module:
 
@@ -118,8 +115,7 @@ Here is the list of clients supported by the module:
 ],
 ```
 
-Configuration example
----------------------
+## Configuration example
 
 The following config allows to log in using 3 networks (Twitter, Facebook and Google):
 

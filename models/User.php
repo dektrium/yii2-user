@@ -102,6 +102,37 @@ class User extends ActiveRecord implements IdentityInterface
      */
     public function getIsAdmin()
     {
+        if(isset(\Yii::$app->extensions['dektrium/yii2-rbac']) 
+                && \Yii::$app->getModule('rbac')->adminRole 
+                && \Yii::$app->authManager != null){
+            return \Yii::$app->authManager->checkAccess($this->id,\Yii::$app->getModule('rbac')->adminRole);
+        }
+        return in_array($this->username, $this->module->admins);
+    }
+
+    /**
+     * @return bool Whether the user is an user admin or not.
+     */
+    public function getIsUserAdmin()
+    {
+        if(isset(\Yii::$app->extensions['dektrium/yii2-rbac']) 
+                && \Yii::$app->getModule('rbac')->userAdminRole 
+                && \Yii::$app->authManager != null){
+            return \Yii::$app->authManager->checkAccess($this->id,\Yii::$app->getModule('rbac')->userAdminRole);
+        }
+        return in_array($this->username, $this->module->admins);
+    }
+
+    /**
+     * @return bool Whether the user is an user viewer or not.
+     */
+    public function getIsUserViewer()
+    {
+        if(isset(\Yii::$app->extensions['dektrium/yii2-rbac']) 
+                && \Yii::$app->getModule('rbac')->userViewRole 
+                && \Yii::$app->authManager != null){
+            return \Yii::$app->authManager->checkAccess($this->id,\Yii::$app->getModule('rbac')->userViewRole);
+        }        
         return in_array($this->username, $this->module->admins);
     }
 

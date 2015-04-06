@@ -66,12 +66,24 @@ class AdminController extends Controller
                 'class' => AccessControl::className(),
                 'rules' => [
                     [
+                        'actions' => [
+                            'assignments','block','confirm','delete','index',
+                            'info','update','updateProfile','update-profile'
+                            ],
                         'allow' => true,
-                        'roles' => ['@'],
+                        //'roles' => ['@'],
                         'matchCallback' => function () {
-                            return Yii::$app->user->identity->getIsAdmin();
+                            return Yii::$app->user->identity->getIsUserAdmin();
                         }
                     ],
+                    [
+                        'actions' => ['index','info',],
+                        'allow' => true,
+                        //'roles' => ['@'],
+                        'matchCallback' => function () {
+                            return Yii::$app->user->identity->getIsUserViewer();
+                        }
+                    ]
                 ]
             ]
         ];

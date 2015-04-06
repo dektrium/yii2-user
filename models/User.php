@@ -25,6 +25,10 @@ use yii\web\IdentityInterface;
 /**
  * User ActiveRecord model.
  *
+ * @property bool    $isAdmin
+ * @property bool    $isBlocked
+ * @property bool    $isConfirmed
+ *
  * Database fields:
  * @property integer $id
  * @property string  $username

@@ -41,7 +41,7 @@ $ php yii migrate/up --migrationPath=@vendor/dektrium/yii2-user/migrations
 
 ## Where do I go now?
 
-You have Yii2-user installed. Not you can check out the [list of articles](README.md)
+You have Yii2-user installed. Now you can check out the [list of articles](README.md)
 for more information.
 
 ## Troubleshooting

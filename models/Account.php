@@ -136,12 +136,30 @@ class Account extends ActiveRecord
     {
         $account = static::getFinder()->findAccountByClient($client);
         
+        /**
+         * xiaoma update;
+         */
+        $clientId = 0; $data = '';
+        $provider = $client->getId();
+        if(isset($client->getUserAttributes()['id'])){
+                    $clientId = $client->getUserAttributes()['id'];
+                    $data = json_encode($client->getUserAttributes());
+        }else{
+                 if($provider == 'qq'){
+                            $clientId = $client->getUserAttributes()['openid'];
+                            $data = json_encode($client->getUserInfo());
+                 }else if($provider == 'sina'){
+                            $clientId = $client->getUserAttributes()['uid'];
+                            $data = json_encode($client->getUserInfo());
+                 }
+        }
+
         if (null === $account) {
             $account = \Yii::createObject([
                 'class'      => static::className(),
-                'provider'   => $client->getId(),
-                'client_id'  => $client->getUserAttributes()['id'],
-                'data'       => json_encode($client->getUserAttributes()),
+                'provider'   => $provider,
+                'client_id'  => $clientId,
+                'data'       => $data,
             ]);
             $account->save(false);
         }

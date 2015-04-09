@@ -104,6 +104,25 @@ class RegistrationController extends Controller
             throw new NotFoundHttpException;
         }
 
+         /**
+         * xiaoma update;
+         */
+
+         $accountData = json_decode($account->data);
+         
+         switch($account->provider){
+                case 'qq' : $avatar = $accountData->figureurl;
+                                  $nickname = $accountData->nickname;
+                                  break;
+                case 'sina' : $avatar = $accountData->profile_image_url;
+                                   $nickname = $accountData->name;
+                                   break;
+                case 'github' : $avatar = $accountData->avatar_url;
+                                   $nickname = $accountData->login;
+                                   break;
+                default :    $avatar = $nickname = '';
+         }
+
         /** @var User $user */
         $user = \Yii::createObject([
             'class'    => User::className(),
@@ -118,7 +137,10 @@ class RegistrationController extends Controller
 
         return $this->render('connect', [
             'model'   => $user,
-            'account' => $account
+            'account' => $account,
+            'avatar' => $avatar,
+            'nickname' => $nickname,
+            'provider' => $account->provider
         ]);
     }
 

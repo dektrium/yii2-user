@@ -26,7 +26,6 @@ use yii\db\ActiveRecord;
  * @property string  $data        Account properties returned by social network (json encoded)
  * @property string  $decodedData Json-decoded properties
  * @property User    $user        User that this account is connected for.
- *
  * @property Module $module
  *
  * @author Dmitry Erofeev <dmeroff@gmail.com>
@@ -38,7 +37,7 @@ class Account extends ActiveRecord
 
     /** @var Finder */
     protected static $finder;
-    
+
     /** @var */
     private $_data;
 
@@ -81,21 +80,22 @@ class Account extends ActiveRecord
 
         return $this->_data;
     }
-    
+
     /**
      * Tries to find an account and then connect that account with current user.
-     * 
+     *
      * @param BaseClientInterface $client
      */
     public static function connectWithUser(BaseClientInterface $client)
     {
         if (\Yii::$app->user->isGuest) {
             \Yii::$app->session->setFlash('danger', \Yii::t('user', 'Something went wrong'));
+
             return;
         }
-        
+
         $account = static::fetchAccount($client);
-        
+
         if ($account->user === null) {
             $account->link('user', Yii::$app->user->identity);
             \Yii::$app->session->setFlash('success', \Yii::t('user', 'Your account has been connected'));
@@ -103,15 +103,16 @@ class Account extends ActiveRecord
             \Yii::$app->session->setFlash('danger', \Yii::t('user', 'This account has already been connected to another user'));
         }
     }
-    
+
     /**
      * At first it tries to find existing account model using data provided by
      * client. If account has not been found it is created.
-     * 
+     *
      * If client is instance of "dektrium\clients\ClientInterface" and account
      * has no connected user, it will try to create new user.
-     * 
-     * @param  BaseClientInterface $client
+     *
+     * @param BaseClientInterface $client
+     *
      * @return Account
      */
     public static function createFromClient(BaseClientInterface $client)
@@ -124,18 +125,19 @@ class Account extends ActiveRecord
                 $account->link('user', $user);
             }
         }
-        
+
         return $account;
     }
-    
+
     /**
      * Tries to find account, otherwise creates new account.
+     *
      * @return Account
      */
     protected static function fetchAccount(BaseClientInterface $client)
     {
         $account = static::getFinder()->findAccountByClient($client);
-        
+
         if (null === $account) {
             $account = \Yii::createObject([
                 'class'      => static::className(),
@@ -145,42 +147,43 @@ class Account extends ActiveRecord
             ]);
             $account->save(false);
         }
-        
+
         return $account;
     }
-    
+
     /**
      * Tries to find user or create a new one.
-     * 
-     * @param  ClientInterface $client
-     * @return User|boolean False when can't create user.
+     *
+     * @param ClientInterface $client
+     *
+     * @return User|bool False when can't create user.
      */
     protected static function fetchUser(ClientInterface $client)
     {
         $user = static::getFinder()->findUserByEmail($client->getEmail());
-        
+
         if (null !== $user) {
             return $user;
         }
-        
+
         $user = Yii::createObject([
             'class'    => User::className(),
             'scenario' => 'connect',
             'username' => $client->getUsername(),
             'email'    => $client->getEmail(),
         ]);
-        
+
         if (!$user->validate(['email'])) {
             return false;
         }
-        
+
         if (!$user->validate(['username'])) {
             $user->username = null;
         }
-        
+
         return $user->create() ? $user : false;
     }
-    
+
     /**
      * @return Finder
      */
@@ -189,7 +192,7 @@ class Account extends ActiveRecord
         if (static::$finder === null) {
             static::$finder = Yii::$container->get(Finder::className());
         }
-        
+
         return static::$finder;
     }
 }

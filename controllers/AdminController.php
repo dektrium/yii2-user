@@ -31,6 +31,7 @@ use yii\widgets\ActiveForm;
  * AdminController allows you to administrate users.
  *
  * @property Module $module
+ *
  * @author Dmitry Erofeev <dmeroff@gmail.com
  */
 class AdminController extends Controller
@@ -39,10 +40,10 @@ class AdminController extends Controller
     protected $finder;
 
     /**
-     * @param string $id
+     * @param string  $id
      * @param Module2 $module
-     * @param Finder $finder
-     * @param array $config
+     * @param Finder  $finder
+     * @param array   $config
      */
     public function __construct($id, $module, Finder $finder, $config = [])
     {
@@ -59,7 +60,7 @@ class AdminController extends Controller
                 'actions' => [
                     'delete'  => ['post'],
                     'confirm' => ['post'],
-                    'block'   => ['post']
+                    'block'   => ['post'],
                 ],
             ],
             'access' => [
@@ -70,15 +71,16 @@ class AdminController extends Controller
                         'roles' => ['@'],
                         'matchCallback' => function () {
                             return Yii::$app->user->identity->getIsAdmin();
-                        }
+                        },
                     ],
-                ]
-            ]
+                ],
+            ],
         ];
     }
 
     /**
      * Lists all User models.
+     *
      * @return mixed
      */
     public function actionIndex()
@@ -96,6 +98,7 @@ class AdminController extends Controller
     /**
      * Creates a new User model.
      * If creation is successful, the browser will be redirected to the 'index' page.
+     *
      * @return mixed
      */
     public function actionCreate()
@@ -110,17 +113,20 @@ class AdminController extends Controller
 
         if ($user->load(Yii::$app->request->post()) && $user->create()) {
             Yii::$app->getSession()->setFlash('success', Yii::t('user', 'User has been created'));
+
             return $this->redirect(['update', 'id' => $user->id]);
         }
 
         return $this->render('create', [
-            'user' => $user
+            'user' => $user,
         ]);
     }
 
     /**
      * Updates an existing User model.
-     * @param  integer $id
+     *
+     * @param int $id
+     *
      * @return mixed
      */
     public function actionUpdate($id)
@@ -133,6 +139,7 @@ class AdminController extends Controller
 
         if ($user->load(Yii::$app->request->post()) && $user->save()) {
             Yii::$app->getSession()->setFlash('success', Yii::t('user', 'Account details have been updated'));
+
             return $this->refresh();
         }
 
@@ -140,10 +147,12 @@ class AdminController extends Controller
             'user'    => $user,
         ]);
     }
-    
+
     /**
      * Updates an existing profile.
-     * @param  integer $id
+     *
+     * @param int $id
+     *
      * @return mixed
      */
     public function actionUpdateProfile($id)
@@ -151,30 +160,33 @@ class AdminController extends Controller
         Url::remember('', 'actions-redirect');
         $user    = $this->findModel($id);
         $profile = $user->profile;
-        
+
         $this->performAjaxValidation($profile);
-        
+
         if ($profile->load(Yii::$app->request->post()) && $profile->save()) {
             Yii::$app->getSession()->setFlash('success', Yii::t('user', 'Profile details have been updated'));
+
             return $this->refresh();
         }
-        
+
         return $this->render('_profile', [
             'user'    => $user,
             'profile' => $profile,
         ]);
     }
-    
+
     /**
      * Shows information about user.
-     * @param  integer $id
+     *
+     * @param int $id
+     *
      * @return string
      */
     public function actionInfo($id)
     {
         Url::remember('', 'actions-redirect');
         $user = $this->findModel($id);
-        
+
         return $this->render('_info', [
             'user' => $user,
         ]);
@@ -183,39 +195,45 @@ class AdminController extends Controller
     /**
      * If "dektrium/yii2-rbac" extension is installed, this page displays form
      * where user can assign multiple auth items to user.
-     * @param  integer $id
+     *
+     * @param int $id
+     *
      * @return string
      */
     public function actionAssignments($id)
     {
         if (!isset(Yii::$app->extensions['dektrium/yii2-rbac'])) {
-            throw new NotFoundHttpException;
+            throw new NotFoundHttpException();
         }
         Url::remember('', 'actions-redirect');
         $user = $this->findModel($id);
-        
+
         return $this->render('_assignments', [
             'user' => $user,
         ]);
     }
-    
+
     /**
      * Confirms the User.
-     * @param integer $id
+     *
+     * @param int $id
+     *
      * @return Response
      */
     public function actionConfirm($id)
     {
         $this->findModel($id)->confirm();
         Yii::$app->getSession()->setFlash('success', Yii::t('user', 'User has been confirmed'));
-        
+
         return $this->redirect(Url::previous('actions-redirect'));
     }
 
     /**
      * Deletes an existing User model.
      * If deletion is successful, the browser will be redirected to the 'index' page.
-     * @param  integer $id
+     *
+     * @param int $id
+     *
      * @return mixed
      */
     public function actionDelete($id)
@@ -226,13 +244,15 @@ class AdminController extends Controller
             $this->findModel($id)->delete();
             Yii::$app->getSession()->setFlash('success', Yii::t('user', 'User has been deleted'));
         }
-        
+
         return $this->redirect(['index']);
     }
 
     /**
      * Blocks the user.
-     * @param  integer $id
+     *
+     * @param int $id
+     *
      * @return Response
      */
     public function actionBlock($id)
@@ -256,8 +276,11 @@ class AdminController extends Controller
     /**
      * Finds the User model based on its primary key value.
      * If the model is not found, a 404 HTTP exception will be thrown.
-     * @param  integer               $id
-     * @return User                  the loaded model
+     *
+     * @param int $id
+     *
+     * @return User the loaded model
+     *
      * @throws NotFoundHttpException if the model cannot be found
      */
     protected function findModel($id)
@@ -266,12 +289,15 @@ class AdminController extends Controller
         if ($user === null) {
             throw new NotFoundHttpException('The requested page does not exist');
         }
+
         return $user;
     }
 
     /**
      * Performs AJAX validation.
+     *
      * @param array|Model $model
+     *
      * @throws ExitException
      */
     protected function performAjaxValidation($model)

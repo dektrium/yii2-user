@@ -10,10 +10,9 @@
  */
 
 /**
- * @var yii\widgets\ActiveForm    $form
- * @var dektrium\user\models\User $user
+ * @var yii\widgets\ActiveForm   
+ * @var dektrium\user\models\User
  */
-
 ?>
 
 <?= $form->field($user, 'username')->textInput(['maxlength' => 25]) ?>

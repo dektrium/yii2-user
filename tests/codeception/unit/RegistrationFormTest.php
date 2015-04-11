@@ -25,7 +25,7 @@ class RegistrationFormTest extends TestCase
         return [
             'user' => [
                 'class' => UserFixture::className(),
-                'dataFile' => '@tests/codeception/_fixtures/data/init_user.php'
+                'dataFile' => '@tests/codeception/_fixtures/data/init_user.php',
             ],
         ];
     }
@@ -65,10 +65,10 @@ class RegistrationFormTest extends TestCase
         $this->model->setAttributes([
             'email'    => 'foobar@example.com',
             'username' => 'foobar',
-            'password' => 'foobar'
+            'password' => 'foobar',
         ]);
 
-        /** @var User $user */
+        /* @var User $user */
         verify($this->model->register())->true();
 
         $user = User::findOne(['email' => 'foobar@example.com']);

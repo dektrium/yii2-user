@@ -31,7 +31,7 @@ use dektrium\user\traits\AjaxValidationTrait;
 class SettingsController extends Controller
 {
     use AjaxValidationTrait;
-    
+
     /** @inheritdoc */
     public $defaultAction = 'profile';
 
@@ -39,10 +39,10 @@ class SettingsController extends Controller
     protected $finder;
 
     /**
-     * @param string $id
+     * @param string           $id
      * @param \yii\base\Module $module
-     * @param Finder $finder
-     * @param array $config
+     * @param Finder           $finder
+     * @param array            $config
      */
     public function __construct($id, $module, Finder $finder, $config = [])
     {
@@ -57,7 +57,7 @@ class SettingsController extends Controller
             'verbs' => [
                 'class' => VerbFilter::className(),
                 'actions' => [
-                    'disconnect' => ['post']
+                    'disconnect' => ['post'],
                 ],
             ],
             'access' => [
@@ -66,15 +66,16 @@ class SettingsController extends Controller
                     [
                         'allow'   => true,
                         'actions' => ['profile', 'account', 'confirm', 'networks', 'disconnect'],
-                        'roles'   => ['@']
+                        'roles'   => ['@'],
                     ],
-                ]
+                ],
             ],
         ];
     }
 
     /**
      * Shows profile settings form.
+     *
      * @return string|\yii\web\Response
      */
     public function actionProfile()
@@ -85,6 +86,7 @@ class SettingsController extends Controller
 
         if ($model->load(\Yii::$app->request->post()) && $model->save()) {
             \Yii::$app->getSession()->setFlash('success', \Yii::t('user', 'Your profile has been updated'));
+
             return $this->refresh();
         }
 
@@ -95,6 +97,7 @@ class SettingsController extends Controller
 
     /**
      * Displays page where user can update account settings (username, email or password).
+     *
      * @return string|\yii\web\Response
      */
     public function actionAccount()
@@ -106,6 +109,7 @@ class SettingsController extends Controller
 
         if ($model->load(\Yii::$app->request->post()) && $model->save()) {
             \Yii::$app->session->setFlash('success', \Yii::t('user', 'Your account details have been updated'));
+
             return $this->refresh();
         }
 
@@ -116,9 +120,12 @@ class SettingsController extends Controller
 
     /**
      * Attempts changing user's password.
-     * @param  integer $id
-     * @param  string  $code
+     *
+     * @param int    $id
+     * @param string $code
+     *
      * @return string
+     *
      * @throws \yii\web\HttpException
      */
     public function actionConfirm($id, $code)
@@ -126,7 +133,7 @@ class SettingsController extends Controller
         $user = $this->finder->findUserById($id);
 
         if ($user === null || $this->module->emailChangeStrategy == Module::STRATEGY_INSECURE) {
-            throw new NotFoundHttpException;
+            throw new NotFoundHttpException();
         }
 
         $user->attemptEmailChange($code);
@@ -136,19 +143,23 @@ class SettingsController extends Controller
 
     /**
      * Displays list of connected network accounts.
+     *
      * @return string
      */
     public function actionNetworks()
     {
         return $this->render('networks', [
-            'user' => \Yii::$app->user->identity
+            'user' => \Yii::$app->user->identity,
         ]);
     }
 
     /**
      * Disconnects a network account from user.
-     * @param  integer $id
+     *
+     * @param int $id
+     *
      * @return \yii\web\Response
+     *
      * @throws \yii\web\NotFoundHttpException
      * @throws \yii\web\ForbiddenHttpException
      */
@@ -156,10 +167,10 @@ class SettingsController extends Controller
     {
         $account = $this->finder->findAccountById($id);
         if ($account === null) {
-            throw new NotFoundHttpException;
+            throw new NotFoundHttpException();
         }
         if ($account->user_id != \Yii::$app->user->id) {
-            throw new ForbiddenHttpException;
+            throw new ForbiddenHttpException();
         }
         $account->delete();
 

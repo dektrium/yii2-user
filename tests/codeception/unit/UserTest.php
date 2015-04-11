@@ -30,7 +30,7 @@ class UserTest extends TestCase
         return [
             'user' => [
                 'class' => UserFixture::className(),
-                'dataFile' => '@tests/codeception/_fixtures/data/init_user.php'
+                'dataFile' => '@tests/codeception/_fixtures/data/init_user.php',
             ],
         ];
     }

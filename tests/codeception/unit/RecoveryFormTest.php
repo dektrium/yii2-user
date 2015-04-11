@@ -15,25 +15,25 @@ use yii\db\ActiveQuery;
 
 /**
  * Tests for a recovery form.
- * 
+ *
  * @author Dmitry Erofeev <dmeroff@gmail.com>
  */
 class RecoveryFormTest extends TestCase
 {
     use Specify;
-    
+
     /**
      * Tests recovery request form.
      */
     public function testRecoveryRequest()
     {
         $mailer = test::double(Mailer::className(), ['sendRecoveryMessage' => true]);
-        
+
         $form = Yii::createObject([
             'class'    => RecoveryForm::className(),
             'scenario' => 'request',
         ]);
-        
+
         $this->specify('form is not valid when email is empty', function () use ($form) {
             $form->setAttributes(['email' => '']);
             verify($form->validate())->false();
@@ -53,7 +53,7 @@ class RecoveryFormTest extends TestCase
             verify($form->getErrors('email'))->contains('There is no user with this email address');
             test::double(ActiveQuery::className(), ['exists' => true]);
         });
-        
+
         $this->specify('form is not valid when user is not confirmed', function () use ($form) {
             $user = \Yii::createObject(User::className());
             test::double($user, ['getIsConfirmed' => false]);
@@ -64,7 +64,7 @@ class RecoveryFormTest extends TestCase
             test::double($user, ['getIsConfirmed' => true]);
             verify($form->validate())->true();
         });
-        
+
         $this->specify('sendRecoveryMessage return true if validation succeeded', function () use ($form, $mailer) {
             test::double($form, ['validate' => true]);
             $token = test::double(Token::className(), ['save' => true]);
@@ -77,7 +77,7 @@ class RecoveryFormTest extends TestCase
             $mailer->verifyInvoked('sendRecoveryMessage');
         });
     }
-    
+
     /**
      * Tests resetting of password.
      */
@@ -87,18 +87,18 @@ class RecoveryFormTest extends TestCase
             'class'    => RecoveryForm::className(),
             'scenario' => 'reset',
         ]);
-        
+
         $this->specify('password is required', function () use ($form) {
             $form->setAttributes(['password' => '']);
             verify($form->validate())->false();
             verify($form->getErrors('password'))->contains('Password cannot be blank.');
         });
-        
+
         $user  = Yii::createObject(User::className());
         $umock = test::double($user, ['resetPassword' => true]);
         $token = Yii::createObject(Token::className());
         $tmock = test::double($token, ['delete' => true, 'getUser' => $user]);
-        
+
         $this->specify('return false if validation fails', function () use ($form) {
             $token = Yii::createObject(Token::className());
             $mock = test::double($form, ['validate' => false]);
@@ -113,7 +113,7 @@ class RecoveryFormTest extends TestCase
             verify($form->resetPassword($token))->false();
             $tmock->verifyInvoked('getUser');
         });
-        
+
         $this->specify('method sets correct flash message', function () use ($form) {
             $user  = Yii::createObject(User::className());
             $umock = test::double($user, ['resetPassword' => true]);

@@ -43,7 +43,7 @@ $I->see('Logout');
 $I->seeRecord(User::className(), [
     'id' => 1,
     'email' => 'new_user@example.com',
-    'unconfirmed_email' => null
+    'unconfirmed_email' => null,
 ]);
 
 $I->amGoingTo('reset email changing process');
@@ -53,21 +53,21 @@ $I->see('A confirmation message has been sent to your new email address');
 $I->seeRecord(User::className(), [
     'id'    => 1,
     'email' => 'new_user@example.com',
-    'unconfirmed_email' => 'user@example.com'
+    'unconfirmed_email' => 'user@example.com',
 ]);
 $page->update('new_user@example.com', $user->username, 'qwerty');
 $I->see('Your account details have been updated');
 $I->seeRecord(User::className(), [
     'id'    => 1,
     'email' => 'new_user@example.com',
-    'unconfirmed_email' => null
+    'unconfirmed_email' => null,
 ]);
 $I->amGoingTo('change username and password');
 $page->update('new_user@example.com', 'nickname', 'qwerty', '123654');
 $I->see('Your account details have been updated');
 $I->seeRecord(User::className(), [
     'username' => 'nickname',
-    'email'    => 'new_user@example.com'
+    'email'    => 'new_user@example.com',
 ]);
 
 Yii::$app->user->logout();

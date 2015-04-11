@@ -13,32 +13,32 @@ use yii\codeception\TestCase;
 
 /**
  * Tests for a login form.
- * 
+ *
  * @author Dmitry Erofeev <dmeroff@gmail.com>
  */
 class LoginFormTest extends TestCase
 {
     use Specify;
-    
+
     /**
      * Tests validation rules for the model.
      */
     public function testLoginFormValidationRules()
     {
         $form = Yii::createObject(LoginForm::className());
-        
+
         $this->specify('login is required', function () use ($form) {
             $form->setAttributes(['login' => '']);
             verify($form->validate())->false();
             verify($form->getErrors('login'))->contains('Login cannot be blank.');
         });
-        
+
         $this->specify('password is required', function () use ($form) {
             $form->setAttributes(['password' => '']);
             verify($form->validate())->false();
             verify($form->getErrors('password'))->contains('Password cannot be blank.');
         });
-        
+
         $this->specify('user should exist in database', function () use ($form) {
             $finder = test::double(Finder::className(), ['findUserByUsernameOrEmail' => null]);
             $form->setAttributes(['login' => 'tester', 'password' => 'qwerty']);
@@ -46,7 +46,7 @@ class LoginFormTest extends TestCase
             verify($form->getErrors('password'))->contains('Invalid login or password');
             $finder->verifyInvoked('findUserByUsernameOrEmail');
         });
-        
+
         $this->specify('password should be valid', function () use ($form) {
             test::double(Finder::className(), ['findUserByUsernameOrEmail' => \Yii::createObject(User::className())]);
             test::double(Security::className(), ['validatePassword' => false]);
@@ -56,7 +56,7 @@ class LoginFormTest extends TestCase
             test::double(Security::className(), ['validatePassword' => true]);
             verify($form->validate(['password']))->true();
         });
-        
+
         $this->specify('user may not be confirmed when enableUnconfirmedLogin is true', function () use ($form) {
             \Yii::$app->getModule('user')->enableUnconfirmedLogin = true;
             $user = \Yii::createObject(User::className());
@@ -66,7 +66,7 @@ class LoginFormTest extends TestCase
             test::double($user, ['getIsConfirmed' => false]);
             verify($form->validate())->true();
         });
-        
+
         $this->specify('user should be confirmed when enableUnconfirmedLogin is true', function () use ($form) {
             \Yii::$app->getModule('user')->enableUnconfirmedLogin = false;
             verify($form->validate())->false();
@@ -76,7 +76,7 @@ class LoginFormTest extends TestCase
             test::double(Finder::className(), ['findUserByUsernameOrEmail' => $user]);
             verify($form->validate())->true();
         });
-        
+
         $this->specify('user should not be blocked', function () use ($form) {
             $user = \Yii::createObject(User::className());
             test::double($user, ['getIsBlocked' => true]);
@@ -85,7 +85,7 @@ class LoginFormTest extends TestCase
             verify($form->getErrors('login'))->contains('Your account has been blocked');
         });
     }
-    
+
     /**
      * Tests login method.
      */
@@ -93,16 +93,16 @@ class LoginFormTest extends TestCase
     {
         $user = \Yii::createObject(User::className());
         test::double(Finder::className(), ['findUserByUsernameOrEmail' => $user]);
-        
+
         $form = Yii::createObject(LoginForm::className());
         $form->beforeValidate();
         test::double($form, ['validate' => false]);
         verify($form->login())->false();
-        
+
         test::double($form, ['validate' => true]);
         test::double(\yii\web\User::className(), ['login' => false]);
         verify($form->login())->false();
-        
+
         test::double(\yii\web\User::className(), ['login' => true]);
         verify($form->login())->true();
     }

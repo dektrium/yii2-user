@@ -1,10 +1,10 @@
 <?php
 
-/* 
+/*
  * This file is part of the Dektrium project
- * 
+ *
  * (c) Dektrium project <http://github.com/dektrium>
- * 
+ *
  * For the full copyright and license information, please view the LICENSE.md
  * file that was distributed with this source code.
  */
@@ -24,14 +24,14 @@ class Yandex extends BaseYandex implements ClientInterface
         $emails = isset($this->getUserAttributes()['emails'])
             ? $this->getUserAttributes()['emails']
             : null;
-        
+
         if ($emails !== null && isset($emails[0])) {
             return $emails[0];
         } else {
-            return null;
+            return;
         }
     }
-    
+
     /** @inheritdoc */
     public function getUsername()
     {
@@ -39,7 +39,7 @@ class Yandex extends BaseYandex implements ClientInterface
             ? $this->getUserAttributes()['login']
             : null;
     }
-        
+
     /** @inheritdoc */
     protected function defaultTitle()
     {

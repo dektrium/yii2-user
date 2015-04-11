@@ -68,7 +68,7 @@ class Token extends ActiveRecord
                 $route = '/user/settings/confirm';
                 break;
             default:
-                throw new \RuntimeException;
+                throw new \RuntimeException();
         }
 
         return Url::to([$route, 'id' => $this->user_id, 'code' => $this->code], true);
@@ -89,7 +89,7 @@ class Token extends ActiveRecord
                 $expirationTime = $this->module->recoverWithin;
                 break;
             default:
-                throw new \RuntimeException;
+                throw new \RuntimeException();
         }
 
         return ($this->created_at + $expirationTime) < time();

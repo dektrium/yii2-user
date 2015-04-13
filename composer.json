@@ -38,8 +38,7 @@
     "extra": {
         "bootstrap": "dektrium\\user\\Bootstrap",
         "branch-alias": {
-            "dev-master": "0.9.x-dev",
-            "dev-develop": "1.0.x-dev"
+            "dev-master": "1.0.x-dev"
         },
         "asset-installer-paths": {
             "npm-asset-library": "vendor/npm",

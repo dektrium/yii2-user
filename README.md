@@ -17,7 +17,7 @@ The latest version includes following features:
 
 ## Documentation
 
-[Installation instructions](docs/installation.md) | [Definitive guide to Yii2-user](docs/README.md)
+[Installation instructions](docs/getting-started.md) | [Definitive guide to Yii2-user](docs/README.md)
 
 ## Contributing to this project
 

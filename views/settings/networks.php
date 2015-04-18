@@ -12,7 +12,7 @@
 use dektrium\user\widgets\Connect;
 use yii\helpers\Html;
 
-/**
+/*
  * @var yii\web\View $this
  * @var yii\widgets\ActiveForm $form
  */
@@ -40,13 +40,13 @@ $this->params['breadcrumbs'][] = $this->title;
                     'baseAuthUrl' => ['/user/security/auth'],
                     'accounts'    => $user->accounts,
                     'autoRender'  => false,
-                    'popupMode'   => false
+                    'popupMode'   => false,
                 ]) ?>
                 <table class="table">
                     <?php foreach ($auth->getClients() as $client): ?>
                         <tr>
                             <td style="width: 32px; vertical-align: middle">
-                                <?= Html::tag('span', '', ['class' => 'auth-icon ' . $client->getName()]) ?>
+                                <?= Html::tag('span', '', ['class' => 'auth-icon '.$client->getName()]) ?>
                             </td>
                             <td style="vertical-align: middle">
                                 <strong><?= $client->getTitle() ?></strong>
@@ -58,7 +58,7 @@ $this->params['breadcrumbs'][] = $this->title;
                                         'data-method' => 'post',
                                     ]) :
                                     Html::a(Yii::t('user', 'Connect'), $auth->createClientUrl($client), [
-                                        'class' => 'btn btn-success btn-block'
+                                        'class' => 'btn btn-success btn-block',
                                     ])
                                 ?>
                             </td>

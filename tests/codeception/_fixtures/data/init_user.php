@@ -36,7 +36,7 @@ return [
         'created_at'    => $time,
         'updated_at'    => $time,
         'blocked_at'    => $time,
-        'confirmed_at'  => $time
+        'confirmed_at'  => $time,
     ],
     'user_with_expired_recovery_token' => [
         'username'      => 'andrew',

@@ -22,7 +22,7 @@ use yii\base\Module as BaseModule;
  */
 class Module extends BaseModule
 {
-    const VERSION = '0.9.4';
+    const VERSION = '1.0.0-dev';
 
     /** Email is changed right after user enter's new email address. */
     const STRATEGY_INSECURE = 0;
@@ -51,7 +51,7 @@ class Module extends BaseModule
     /** @var bool Whether to enable password recovery. */
     public $enablePasswordRecovery = true;
 
-    /** @var integer Email changing strategy. */
+    /** @var int Email changing strategy. */
     public $emailChangeStrategy = self::STRATEGY_DEFAULT;
 
     /** @var int The time you want the user will be remembered without asking for credentials. */
@@ -77,6 +77,7 @@ class Module extends BaseModule
 
     /**
      * @var string The prefix for user module URL.
+     *
      * @See [[GroupUrlRule::prefix]]
      */
     public $urlPrefix = 'user';
@@ -89,6 +90,6 @@ class Module extends BaseModule
         'confirm/<id:\d+>/<code:\w+>' => 'registration/confirm',
         'forgot'                      => 'recovery/request',
         'recover/<id:\d+>/<code:\w+>' => 'recovery/reset',
-        'settings/<action:\w+>'       => 'settings/<action>'
+        'settings/<action:\w+>'       => 'settings/<action>',
     ];
 }

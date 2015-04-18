@@ -43,7 +43,7 @@ class LoginForm extends Model
 
     /**
      * @param Finder $finder
-     * @param array $config
+     * @param array  $config
      */
     public function __construct(Finder $finder, $config = [])
     {
@@ -90,7 +90,8 @@ class LoginForm extends Model
 
     /**
      * Validates form and logs the user in.
-     * @return boolean whether the user is logged in successfully
+     *
+     * @return bool whether the user is logged in successfully
      */
     public function login()
     {
@@ -112,6 +113,7 @@ class LoginForm extends Model
     {
         if (parent::beforeValidate()) {
             $this->user = $this->finder->findUserByUsernameOrEmail($this->login);
+
             return true;
         } else {
             return false;

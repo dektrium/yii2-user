@@ -41,7 +41,7 @@ class RegistrationForm extends Model
     {
         $this->user = \Yii::createObject([
             'class'    => User::className(),
-            'scenario' => 'register'
+            'scenario' => 'register',
         ]);
         $this->module = \Yii::$app->getModule('user');
     }
@@ -54,14 +54,14 @@ class RegistrationForm extends Model
             'usernamePattern' => ['username', 'match', 'pattern' => '/^[-a-zA-Z0-9_\.@]+$/'],
             'usernameRequired' => ['username', 'required'],
             'usernameUnique' => ['username', 'unique', 'targetClass' => $this->module->modelMap['User'],
-                'message' => \Yii::t('user', 'This username has already been taken')],
+                'message' => \Yii::t('user', 'This username has already been taken'), ],
             'usernameLength' => ['username', 'string', 'min' => 3, 'max' => 20],
 
             'emailTrim' => ['email', 'filter', 'filter' => 'trim'],
             'emailRequired' => ['email', 'required'],
             'emailPattern' => ['email', 'email'],
             'emailUnique' => ['email', 'unique', 'targetClass' => $this->module->modelMap['User'],
-                'message' => \Yii::t('user', 'This email address has already been taken')],
+                'message' => \Yii::t('user', 'This email address has already been taken'), ],
 
             'passwordRequired' => ['password', 'required', 'skipOnEmpty' => $this->module->enableGeneratingPassword],
             'passwordLength' => ['password', 'string', 'min' => 6],
@@ -86,6 +86,7 @@ class RegistrationForm extends Model
 
     /**
      * Registers a new user account.
+     *
      * @return bool
      */
     public function register()
@@ -97,7 +98,7 @@ class RegistrationForm extends Model
         $this->user->setAttributes([
             'email'    => $this->email,
             'username' => $this->username,
-            'password' => $this->password
+            'password' => $this->password,
         ]);
 
         return $this->user->register();

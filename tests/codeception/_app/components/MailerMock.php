@@ -22,4 +22,3 @@ class MailerMock extends Mailer
         ];
     }
 }
- 

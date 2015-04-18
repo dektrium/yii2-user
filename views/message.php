@@ -10,11 +10,10 @@
  */
 
 /**
- * @var $this   yii\web\View
- * @var $title  string
- * @var $module dektrium\user\Module
+ * @var   yii\web\View
+ * @var  string
+ * @var dektrium\user\Module
  */
-
 $this->title = $title;
 
 ?>

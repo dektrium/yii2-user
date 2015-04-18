@@ -21,12 +21,14 @@ class m141222_110026_update_ip_field extends Migration
 
         $transaction = Yii::$app->db->beginTransaction();
         try {
-            $this->alterColumn('{{%user}}', 'registration_ip', Schema::TYPE_STRING . '(45)');
+            $this->alterColumn('{{%user}}', 'registration_ip', Schema::TYPE_STRING.'(45)');
             foreach ($users as $user) {
-                if ($user['ip'] == null) continue;
+                if ($user['ip'] == null) {
+                    continue;
+                }
                 Yii::$app->db->createCommand()->update('{{%user}}', [
-                    'registration_ip' => long2ip($user['ip'])
-                ], 'id = ' . $user['id'])->execute();
+                    'registration_ip' => long2ip($user['ip']),
+                ], 'id = '.$user['id'])->execute();
             }
             $transaction->commit();
         } catch (Exception $e) {

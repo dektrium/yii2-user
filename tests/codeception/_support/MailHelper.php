@@ -9,7 +9,7 @@ class MailHelper extends Module
     public static $mails = [];
 
     /**
-     * Asserts that last message contains $needle
+     * Asserts that last message contains $needle.
      *
      * @param $needle
      */
@@ -19,9 +19,8 @@ class MailHelper extends Module
         $this->assertContains($needle, $email['body']);
     }
 
-
     /**
-     * Asserts that last message subject contains $needle
+     * Asserts that last message subject contains $needle.
      *
      * @param $needle
      */
@@ -31,7 +30,7 @@ class MailHelper extends Module
         $this->assertContains($needle, $email['subject']);
     }
     /**
-     * Asserts that last message recipients contain $needle
+     * Asserts that last message recipients contain $needle.
      *
      * @param $needle
      */

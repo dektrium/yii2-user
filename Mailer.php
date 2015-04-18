@@ -43,8 +43,9 @@ class Mailer extends Component
     /**
      * Sends an email to a user with credentials and confirmation link.
      *
-     * @param  User  $user
-     * @param  Token $token
+     * @param User  $user
+     * @param Token $token
+     *
      * @return bool
      */
     public function sendWelcomeMessage(User $user, Token $token = null)
@@ -59,8 +60,9 @@ class Mailer extends Component
     /**
      * Sends an email to a user with confirmation link.
      *
-     * @param  User  $user
-     * @param  Token $token
+     * @param User  $user
+     * @param Token $token
+     *
      * @return bool
      */
     public function sendConfirmationMessage(User $user, Token $token)
@@ -75,8 +77,9 @@ class Mailer extends Component
     /**
      * Sends an email to a user with reconfirmation link.
      *
-     * @param  User  $user
-     * @param  Token $token
+     * @param User  $user
+     * @param Token $token
+     *
      * @return bool
      */
     public function sendReconfirmationMessage(User $user, Token $token)
@@ -86,6 +89,7 @@ class Mailer extends Component
         } else {
             $email = $user->email;
         }
+
         return $this->sendMessage($email,
             $this->reconfirmationSubject,
             'reconfirmation',
@@ -96,8 +100,9 @@ class Mailer extends Component
     /**
      * Sends an email to a user with recovery link.
      *
-     * @param  User  $user
-     * @param  Token $token
+     * @param User  $user
+     * @param Token $token
+     *
      * @return bool
      */
     public function sendRecoveryMessage(User $user, Token $token)
@@ -110,10 +115,11 @@ class Mailer extends Component
     }
 
     /**
-     * @param  string $to
-     * @param  string $subject
-     * @param  string $view
-     * @param  array  $params
+     * @param string $to
+     * @param string $subject
+     * @param string $view
+     * @param array  $params
+     *
      * @return bool
      */
     protected function sendMessage($to, $subject, $view, $params = [])
@@ -126,7 +132,7 @@ class Mailer extends Component
             $this->sender = isset(\Yii::$app->params['adminEmail']) ? \Yii::$app->params['adminEmail'] : 'no-reply@example.com';
         }
 
-        return $mailer->compose(['html' => $view, 'text' => 'text/' . $view], $params)
+        return $mailer->compose(['html' => $view, 'text' => 'text/'.$view], $params)
             ->setTo($to)
             ->setFrom($this->sender)
             ->setSubject($subject)

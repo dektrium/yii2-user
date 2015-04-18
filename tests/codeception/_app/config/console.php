@@ -6,12 +6,12 @@ return [
     'controllerMap' => [
         'migrate' => [
             'class' => 'yii\console\controllers\MigrateController',
-            'migrationPath' => __DIR__ . '/../../../../migrations'
-        ]
+            'migrationPath' => __DIR__.'/../../../../migrations',
+        ],
     ],
     'components' => [
         'log'   => null,
         'cache' => null,
-        'db'    => require __DIR__ . '/db.php',
+        'db'    => require __DIR__.'/db.php',
     ],
 ];

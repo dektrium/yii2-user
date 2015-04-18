@@ -15,7 +15,6 @@ use dektrium\user\helpers\Password;
 use dektrium\user\Mailer;
 use dektrium\user\Module;
 use yii\base\Model;
-use yii\base\NotSupportedException;
 
 /**
  * SettingsForm gets user's username, email and password and changes them.
@@ -64,7 +63,7 @@ class SettingsForm extends Model
         $this->module = \Yii::$app->getModule('user');
         $this->setAttributes([
             'username' => $this->user->username,
-            'email'    => $this->user->unconfirmed_email ?: $this->user->email
+            'email'    => $this->user->unconfirmed_email ?: $this->user->email,
         ], false);
         parent::__construct($config);
     }
@@ -89,7 +88,7 @@ class SettingsForm extends Model
                 if (!Password::validate($this->$attr, $this->user->password_hash)) {
                     $this->addError($attr, \Yii::t('user', 'Current password is not valid'));
                 }
-            }]
+            }],
         ];
     }
 
@@ -100,7 +99,7 @@ class SettingsForm extends Model
             'email'            => \Yii::t('user', 'Email'),
             'username'         => \Yii::t('user', 'Username'),
             'new_password'     => \Yii::t('user', 'New password'),
-            'current_password' => \Yii::t('user', 'Current password')
+            'current_password' => \Yii::t('user', 'Current password'),
         ];
     }
 
@@ -123,7 +122,7 @@ class SettingsForm extends Model
             $this->user->password = $this->new_password;
             if ($this->email == $this->user->email && $this->user->unconfirmed_email != null) {
                 $this->user->unconfirmed_email = null;
-            } else if ($this->email != $this->user->email) {
+            } elseif ($this->email != $this->user->email) {
                 switch ($this->module->emailChangeStrategy) {
                     case Module::STRATEGY_INSECURE:
                         $this->insecureEmailChange(); break;
@@ -135,6 +134,7 @@ class SettingsForm extends Model
                         throw new \OutOfBoundsException('Invalid email changing strategy');
                 }
             }
+
             return $this->user->save();
         }
 
@@ -160,7 +160,7 @@ class SettingsForm extends Model
         $token = \Yii::createObject([
             'class'   => Token::className(),
             'user_id' => $this->user->id,
-            'type'    => Token::TYPE_CONFIRM_NEW_EMAIL
+            'type'    => Token::TYPE_CONFIRM_NEW_EMAIL,
         ]);
         $token->save(false);
         $this->mailer->sendReconfirmationMessage($this->user, $token);
@@ -169,6 +169,7 @@ class SettingsForm extends Model
 
     /**
      * Sends a confirmation message to both old and new email addresses with link to confirm changing of email.
+     *
      * @throws \yii\base\InvalidConfigException
      */
     protected function secureEmailChange()
@@ -178,7 +179,7 @@ class SettingsForm extends Model
         $token = \Yii::createObject([
             'class'   => Token::className(),
             'user_id' => $this->user->id,
-            'type'    => Token::TYPE_CONFIRM_OLD_EMAIL
+            'type'    => Token::TYPE_CONFIRM_OLD_EMAIL,
         ]);
         $token->save(false);
         $this->mailer->sendReconfirmationMessage($this->user, $token);

@@ -11,7 +11,7 @@
 
 use yii\mail\BaseMessage;
 
-/**
+/*
  * @var \yii\web\View $this
  * @var BaseMessage $content
  */

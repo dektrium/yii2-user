@@ -29,10 +29,10 @@ class ProfileController extends Controller
     protected $finder;
 
     /**
-     * @param string $id
+     * @param string           $id
      * @param \yii\base\Module $module
-     * @param Finder $finder
-     * @param array $config
+     * @param Finder           $finder
+     * @param array            $config
      */
     public function __construct($id, $module, Finder $finder, $config = [])
     {
@@ -49,13 +49,14 @@ class ProfileController extends Controller
                 'rules' => [
                     ['allow' => true, 'actions' => ['index'], 'roles' => ['@']],
                     ['allow' => true, 'actions' => ['show'], 'roles' => ['?', '@']],
-                ]
+                ],
             ],
         ];
     }
 
     /**
      * Redirects to current user's profile.
+     *
      * @return \yii\web\Response
      */
     public function actionIndex()
@@ -65,8 +66,11 @@ class ProfileController extends Controller
 
     /**
      * Shows user's profile.
-     * @param  integer $id
+     *
+     * @param int $id
+     *
      * @return \yii\web\Response
+     *
      * @throws \yii\web\NotFoundHttpException
      */
     public function actionShow($id)
@@ -74,7 +78,7 @@ class ProfileController extends Controller
         $profile = $this->finder->findProfileById($id);
 
         if ($profile === null) {
-            throw new NotFoundHttpException;
+            throw new NotFoundHttpException();
         }
 
         return $this->render('show', [

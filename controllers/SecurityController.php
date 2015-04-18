@@ -34,7 +34,7 @@ use dektrium\user\traits\AjaxValidationTrait;
 class SecurityController extends Controller
 {
     use AjaxValidationTrait;
-    
+
     /** @var Finder */
     protected $finder;
 
@@ -59,14 +59,14 @@ class SecurityController extends Controller
                 'rules' => [
                     ['allow' => true, 'actions' => ['login', 'auth'], 'roles' => ['?']],
                     ['allow' => true, 'actions' => ['login', 'auth', 'logout'], 'roles' => ['@']],
-                ]
+                ],
             ],
             'verbs' => [
                 'class' => VerbFilter::className(),
                 'actions' => [
-                    'logout' => ['post']
-                ]
-            ]
+                    'logout' => ['post'],
+                ],
+            ],
         ];
     }
 
@@ -81,12 +81,13 @@ class SecurityController extends Controller
                 'successCallback' => \Yii::$app->user->isGuest
                     ? [$this, 'authenticate']
                     : [$this, 'connect'],
-            ]
+            ],
         ];
     }
 
     /**
      * Displays the login page.
+     *
      * @return string|Response
      */
     public function actionLogin()
@@ -111,11 +112,13 @@ class SecurityController extends Controller
 
     /**
      * Logs the user out and then redirects to the homepage.
+     *
      * @return Response
      */
     public function actionLogout()
     {
         Yii::$app->getUser()->logout();
+
         return $this->goHome();
     }
 
@@ -123,20 +126,20 @@ class SecurityController extends Controller
      * Tries to authenticate user via social network. If user has alredy used
      * this network's account, he will be logged in. Otherwise, it will try
      * to create new user account.
-     *  
-     * @param  ClientInterface $client
+     *
+     * @param ClientInterface $client
      */
     public function authenticate(ClientInterface $client)
     {
         $account = forward_static_call([
             $this->module->modelMap['Account'],
-            'createFromClient'
+            'createFromClient',
         ], $client);
-        
+
         if (null === ($user = $account->user)) {
             $this->action->successUrl = Url::to([
                 '/user/registration/connect',
-                'account_id' => $account->id
+                'account_id' => $account->id,
             ]);
         } else {
             Yii::$app->user->login($user, $this->module->rememberFor);
@@ -145,7 +148,7 @@ class SecurityController extends Controller
 
     /**
      * Tries to connect social account to user.
-     * 
+     *
      * @param ClientInterface $client
      */
     public function connect(ClientInterface $client)

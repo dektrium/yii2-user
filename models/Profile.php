@@ -82,6 +82,7 @@ class Profile extends ActiveRecord
             if ($this->isAttributeChanged('gravatar_email')) {
                 $this->setAttribute('gravatar_id', md5(strtolower($this->getAttribute('gravatar_email'))));
             }
+
             return true;
         }
 

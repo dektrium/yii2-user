@@ -40,7 +40,7 @@ $this->params['breadcrumbs'][] = $this->title;
                     'validateOnType'         => false,
                     'validateOnChange'       => false,
                 ]) ?>
-
+                 <?php if(Yii::$app->id == 'app-backend') { $module->enablePasswordRecovery = false;}?>
                 <?= $form->field($model, 'login', ['inputOptions' => ['autofocus' => 'autofocus', 'class' => 'form-control', 'tabindex' => '1']]) ?>
 
                 <?= $form->field($model, 'password', ['inputOptions' => ['class' => 'form-control', 'tabindex' => '2']])->passwordInput()->label(Yii::t('user', 'Password').($module->enablePasswordRecovery ? ' ('.Html::a(Yii::t('user', 'Forgot password?'), ['/user/recovery/request'], ['tabindex' => '5']).')' : '')) ?>
@@ -52,18 +52,21 @@ $this->params['breadcrumbs'][] = $this->title;
                 <?php ActiveForm::end(); ?>
             </div>
         </div>
-        <?php if ($module->enableConfirmation): ?>
-            <p class="text-center">
-                <?= Html::a(Yii::t('user', 'Didn\'t receive confirmation message?'), ['/user/registration/resend']) ?>
-            </p>
-        <?php endif ?>
-        <?php if ($module->enableRegistration): ?>
-            <p class="text-center">
-                <?= Html::a(Yii::t('user', 'Don\'t have an account? Sign up!'), ['/user/registration/register']) ?>
-            </p>
-        <?php endif ?>
-        <?= Connect::widget([
-            'baseAuthUrl' => ['/user/security/auth'],
-        ]) ?>
+        <?php if(Yii::$app->id !='app-backend') { ?>
+                <?php if ($module->enableConfirmation): ?>
+                    <p class="text-center">
+                        <?= Html::a(Yii::t('user', 'Didn\'t receive confirmation message?'), ['/user/registration/resend']) ?>
+                    </p>
+                <?php endif ?>
+                <?php if ($module->enableRegistration): ?>
+                    <p class="text-center">
+                        <?= Html::a(Yii::t('user', 'Don\'t have an account? Sign up!'), ['/user/registration/register']) ?>
+                    </p>
+                <?php endif ?>
+                <?= Connect::widget([
+                    'baseAuthUrl' => ['/user/security/auth'],
+                ]) ?>
+        <?php } ?>
+
     </div>
 </div>

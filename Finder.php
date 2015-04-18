@@ -196,14 +196,10 @@ class Finder extends Object
          */
         $clientId = 0;
         $provider = $client->getId();
-        if(isset($client->getUserAttributes()['id'])){
-                    $clientId = $client->getUserAttributes()['id'];
-        }else{
-                 if($provider == 'qq'){
-                            $clientId = $client->getUserAttributes()['openid'];
-                 }else if($provider == 'sina'){
-                            $clientId = $client->getUserAttributes()['uid'];
-                 }
+        switch($provider){
+            case 'qq' : $clientId = $client->getUserAttributes()['openid'];break;
+            case 'sina' : $clientId = $client->getUserAttributes()['uid'];break;
+            default: $clientId = $client->getUserAttributes()['id'];break;
         }
 
         return $this->accountQuery->where([

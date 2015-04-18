@@ -137,7 +137,6 @@ class Account extends ActiveRecord
     protected static function fetchAccount(BaseClientInterface $client)
     {
         $account = static::getFinder()->findAccountByClient($client);
-<<<<<<< HEAD
         
         /**
          * xiaoma update;
@@ -156,8 +155,6 @@ class Account extends ActiveRecord
                             $data = json_encode($client->getUserInfo());
                  }
         }
-=======
->>>>>>> source/master
 
         if (null === $account) {
             $account = \Yii::createObject([

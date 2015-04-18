@@ -144,12 +144,9 @@ class RegistrationController extends Controller
         return $this->render('connect', [
             'model'   => $user,
             'account' => $account,
-<<<<<<< HEAD
             'avatar' => $avatar,
             'nickname' => $nickname,
             'provider' => $account->provider
-=======
->>>>>>> source/master
         ]);
     }
 

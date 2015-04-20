@@ -19,7 +19,7 @@
  */
 return [
     'Account details' => 'Detalhes da conta',
-    'Account details have been updated' => Os detalhes da conta foram atualizados'',
+    'Account details have been updated' => 'Os detalhes da conta foram atualizados',
     'Assignments' => 'Atribuições',
     'Confirmation status' => 'Confirmação do estado',
     'Create' => 'Criar',

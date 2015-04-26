@@ -40,12 +40,20 @@ class Mailer extends Component
     /** @var string */
     public $recoverySubject;
 
+    /** @var \dektrium\user\Module */
+    protected $module;
+
+    /** @inheritdoc */
+    public function init()
+    {
+        $this->module = \Yii::$app->getModule('user');
+        parent::init();
+    }
+
     /**
-     * Sends an email to a user with credentials and confirmation link.
-     *
-     * @param User  $user
-     * @param Token $token
-     *
+     * Sends an email to a user after registration.
+     * @param  User  $user
+     * @param  Token $token
      * @return bool
      */
     public function sendWelcomeMessage(User $user, Token $token = null)
@@ -53,7 +61,7 @@ class Mailer extends Component
         return $this->sendMessage($user->email,
             $this->welcomeSubject,
             'welcome',
-            ['user' => $user, 'token' => $token]
+            ['user' => $user, 'token' => $token, 'module' => $this->module]
         );
     }
 

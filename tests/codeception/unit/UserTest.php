@@ -54,7 +54,6 @@ class UserTest extends TestCase
             $user->email = 'john_doe@example.com';
             $user->password = 'qwerty';
             verify($user->register())->true();
-            verify($user->profile->gravatar_email)->equals('john_doe@example.com');
         });
     }
 

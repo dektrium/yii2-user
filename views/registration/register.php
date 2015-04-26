@@ -34,9 +34,9 @@ $this->params['breadcrumbs'][] = $this->title;
                     'enableClientValidation' => false,
                 ]); ?>
 
-                <?= $form->field($model, 'username') ?>
-
                 <?= $form->field($model, 'email') ?>
+
+                <?= $form->field($model, 'username') ?>
 
                 <?php if ($module->enableGeneratingPassword == false): ?>
                     <?= $form->field($model, 'password')->passwordInput() ?>

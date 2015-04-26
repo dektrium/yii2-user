@@ -1,6 +1,7 @@
 class_name: FunctionalTester
 modules:
     enabled:
+      - Asserts
       - Yii2
       - tests\codeception\_support\FixtureHelper
       - tests\codeception\_support\MailHelper

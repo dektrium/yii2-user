@@ -11,6 +11,7 @@
 
 namespace dektrium\user;
 
+use dektrium\user\models\Token;
 use yii\authclient\ClientInterface;
 use yii\base\Object;
 use yii\db\ActiveQuery;
@@ -207,6 +208,22 @@ class Finder extends Object
     public function findToken($condition)
     {
         return $this->tokenQuery->where($condition);
+    }
+
+    /**
+     * Finds a token by params.
+     * @param  integer $userId
+     * @param  string  $code
+     * @param  integer $type
+     * @return Token
+     */
+    public function findTokenByParams($userId, $code, $type)
+    {
+        return $this->findToken([
+            'user_id' => $userId,
+            'code'    => $code,
+            'type'    => $type,
+        ])->one();
     }
 
     /**

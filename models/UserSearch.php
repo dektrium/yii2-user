@@ -26,7 +26,7 @@ class UserSearch extends Model
     /** @var string */
     public $email;
 
-    /** @var integer */
+    /** @var int */
     public $created_at;
 
     /** @var string */
@@ -37,7 +37,7 @@ class UserSearch extends Model
 
     /**
      * @param Finder $finder
-     * @param array $config
+     * @param array  $config
      */
     public function __construct(Finder $finder, $config = [])
     {
@@ -49,8 +49,8 @@ class UserSearch extends Model
     public function rules()
     {
         return [
-            [['username', 'email', 'registration_ip', 'created_at'], 'safe'],
-            ['created_at', 'default', 'value' => null]
+            'fieldsSafe' => [['username', 'email', 'registration_ip', 'created_at'], 'safe'],
+            'createdDefault' => ['created_at', 'default', 'value' => null],
         ];
     }
 
@@ -67,6 +67,7 @@ class UserSearch extends Model
 
     /**
      * @param $params
+     *
      * @return ActiveDataProvider
      */
     public function search($params)
@@ -80,12 +81,12 @@ class UserSearch extends Model
         if (!($this->load($params) && $this->validate())) {
             return $dataProvider;
         }
-        
+
         if ($this->created_at !== null) {
             $date = strtotime($this->created_at);
             $query->andFilterWhere(['between', 'created_at', $date, $date + 3600 * 24]);
         }
-        
+
         $query->andFilterWhere(['like', 'username', $this->username])
             ->andFilterWhere(['like', 'email', $this->email])
             ->andFilterWhere(['registration_ip' => $this->registration_ip]);

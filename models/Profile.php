@@ -50,10 +50,15 @@ class Profile extends ActiveRecord
     public function rules()
     {
         return [
-            [['bio'], 'string'],
-            [['public_email', 'gravatar_email'], 'email'],
-            ['website', 'url'],
-            [['name', 'public_email', 'gravatar_email', 'location', 'website'], 'string', 'max' => 255],
+            'bioString' => ['bio', 'string'],
+            'publicEmailPattern' => ['public_email', 'email'],
+            'gravatarEmailPattern' => ['gravatar_email', 'email'],
+            'websiteUrl' => ['website', 'url'],
+            'nameLength' => ['name', 'string', 'max' => 255],
+            'publicEmailLength' => ['public_email', 'string', 'max' => 255],
+            'gravatarEmailLength' => ['gravatar_email', 'string', 'max' => 255],
+            'locationLength' => ['location', 'string', 'max' => 255],
+            'websiteLength' => ['website', 'string', 'max' => 255],
         ];
     }
 
@@ -77,6 +82,7 @@ class Profile extends ActiveRecord
             if ($this->isAttributeChanged('gravatar_email')) {
                 $this->setAttribute('gravatar_id', md5(strtolower($this->getAttribute('gravatar_email'))));
             }
+
             return true;
         }
 

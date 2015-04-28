@@ -10,9 +10,8 @@
  */
 
 /**
- * @var $content string main view render result
+ * @var string main view render result
  */
-
 ?>
 
 <?php $this->beginPage() ?>

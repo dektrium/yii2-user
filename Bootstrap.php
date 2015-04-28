@@ -13,7 +13,6 @@ namespace dektrium\user;
 
 use yii\authclient\Collection;
 use yii\base\BootstrapInterface;
-use yii\base\InvalidConfigException;
 use yii\i18n\PhpMessageSource;
 use yii\web\GroupUrlRule;
 use yii\console\Application as ConsoleApplication;
@@ -48,12 +47,12 @@ class Bootstrap implements BootstrapInterface
         if ($app->hasModule('user') && ($module = $app->getModule('user')) instanceof Module) {
             $this->_modelMap = array_merge($this->_modelMap, $module->modelMap);
             foreach ($this->_modelMap as $name => $definition) {
-                $class = "dektrium\\user\\models\\" . $name;
+                $class = "dektrium\\user\\models\\".$name;
                 \Yii::$container->set($class, $definition);
                 $modelName = is_array($definition) ? $definition['class'] : $definition;
                 $module->modelMap[$name] = $modelName;
                 if (in_array($name, ['User', 'Profile', 'Token', 'Account'])) {
-                    \Yii::$container->set($name . 'Query', function () use ($modelName) {
+                    \Yii::$container->set($name.'Query', function () use ($modelName) {
                         return $modelName::find();
                     });
                 }
@@ -76,7 +75,7 @@ class Bootstrap implements BootstrapInterface
 
                 $configUrlRule = [
                     'prefix' => $module->urlPrefix,
-                    'rules'  => $module->urlRules
+                    'rules'  => $module->urlRules,
                 ];
 
                 if ($module->urlPrefix != 'user') {
@@ -92,20 +91,21 @@ class Bootstrap implements BootstrapInterface
                 }
             }
 
-            $app->get('i18n')->translations['user*'] = [
-                'class'    => PhpMessageSource::className(),
-                'basePath' => __DIR__ . '/messages',
-            ];
+            if (!isset($app->get('i18n')->translations['user*'])) {
+                $app->get('i18n')->translations['user*'] = [
+                    'class'    => PhpMessageSource::className(),
+                    'basePath' => __DIR__.'/messages',
+                ];
+            }
 
             $defaults = [
                 'welcomeSubject'        => \Yii::t('user', 'Welcome to {0}', \Yii::$app->name),
                 'confirmationSubject'   => \Yii::t('user', 'Confirm account on {0}', \Yii::$app->name),
                 'reconfirmationSubject' => \Yii::t('user', 'Confirm email change on {0}', \Yii::$app->name),
-                'recoverySubject'       => \Yii::t('user', 'Complete password reset on {0}', \Yii::$app->name)
+                'recoverySubject'       => \Yii::t('user', 'Complete password reset on {0}', \Yii::$app->name),
             ];
 
             \Yii::$container->set('dektrium\user\Mailer', array_merge($defaults, $module->mailer));
         }
-        
     }
 }

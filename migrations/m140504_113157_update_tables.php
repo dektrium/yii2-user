@@ -29,7 +29,7 @@ class m140504_113157_update_tables extends Migration
         $this->dropColumn('{{%user}}', 'logged_in_from');
         $this->dropColumn('{{%user}}', 'logged_in_at');
         $this->renameColumn('{{%user}}', 'registered_from', 'registration_ip');
-        $this->addColumn('{{%user}}', 'flags', Schema::TYPE_INTEGER . ' NOT NULL DEFAULT 0');
+        $this->addColumn('{{%user}}', 'flags', Schema::TYPE_INTEGER.' NOT NULL DEFAULT 0');
 
         // account table
         $this->renameColumn('{{%account}}', 'properties', 'data');

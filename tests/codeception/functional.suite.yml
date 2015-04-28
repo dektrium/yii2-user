@@ -6,4 +6,4 @@ modules:
       - tests\codeception\_support\MailHelper
     config:
         Yii2:
-            configFile: 'codeception/config/functional.php'
+            configFile: 'codeception/_config/functional.php'

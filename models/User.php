@@ -18,11 +18,16 @@ use dektrium\user\Module;
 use yii\base\NotSupportedException;
 use yii\behaviors\TimestampBehavior;
 use yii\db\ActiveRecord;
+use yii\db\Query;
 use yii\log\Logger;
 use yii\web\IdentityInterface;
 
 /**
  * User ActiveRecord model.
+ *
+ * @property bool    $isAdmin
+ * @property bool    $isBlocked
+ * @property bool    $isConfirmed
  *
  * Database fields:
  * @property integer $id
@@ -166,7 +171,7 @@ class User extends ActiveRecord implements IdentityInterface
             'connect'  => ['username', 'email'],
             'create'   => ['username', 'email', 'password'],
             'update'   => ['username', 'email', 'password'],
-            'settings' => ['username', 'email', 'password']
+            'settings' => ['username', 'email', 'password'],
         ];
     }
 
@@ -175,22 +180,22 @@ class User extends ActiveRecord implements IdentityInterface
     {
         return [
             // username rules
-            ['username', 'required', 'on' => ['register', 'connect', 'create', 'update']],
-            ['username', 'match', 'pattern' => '/^[a-zA-Z]\w+$/'],
-            ['username', 'string', 'min' => 3, 'max' => 25],
-            ['username', 'unique'],
-            ['username', 'trim'],
+            'usernameRequired' => ['username', 'required', 'on' => ['register', 'connect', 'create', 'update']],
+            'usernameMatch' => ['username', 'match', 'pattern' => '/^[-a-zA-Z0-9_\.@]+$/'],
+            'usernameLength' => ['username', 'string', 'min' => 3, 'max' => 25],
+            'usernameUnique' => ['username', 'unique'],
+            'usernameTrim' => ['username', 'trim'],
 
             // email rules
-            ['email', 'required', 'on' => ['register', 'connect', 'create', 'update']],
-            ['email', 'email'],
-            ['email', 'string', 'max' => 255],
-            ['email', 'unique'],
-            ['email', 'trim'],
+            'emailRequired' => ['email', 'required', 'on' => ['register', 'connect', 'create', 'update']],
+            'emailPattern' => ['email', 'email'],
+            'emailLength' => ['email', 'string', 'max' => 255],
+            'emailUnique' => ['email', 'unique'],
+            'emailTrim' => ['email', 'trim'],
 
             // password rules
-            ['password', 'required', 'on' => ['register']],
-            ['password', 'string', 'min' => 6, 'on' => ['register', 'create']],
+            'passwordRequired' => ['password', 'required', 'on' => ['register']],
+            'passwordLength' => ['password', 'string', 'min' => 6, 'on' => ['register', 'create']],
         ];
     }
 
@@ -199,7 +204,6 @@ class User extends ActiveRecord implements IdentityInterface
     {
         return $this->getAttribute('auth_key') == $authKey;
     }
-
 
     /**
      * This method is used to create new user account. If password is not set, this method will generate new 8-char
@@ -211,7 +215,7 @@ class User extends ActiveRecord implements IdentityInterface
     public function create()
     {
         if ($this->getIsNewRecord() == false) {
-            throw new \RuntimeException('Calling "' . __CLASS__ . '::' . __METHOD__ . '" on existing user');
+            throw new \RuntimeException('Calling "'.__CLASS__.'::'.__METHOD__.'" on existing user');
         }
 
         $this->confirmed_at = time();
@@ -220,12 +224,17 @@ class User extends ActiveRecord implements IdentityInterface
             $this->password = Password::generate(8);
         }
 
+        if ($this->username === null) {
+            $this->generateUsername();
+        }
+
         $this->trigger(self::USER_CREATE_INIT);
 
         if ($this->save()) {
             $this->trigger(self::USER_CREATE_DONE);
             $this->mailer->sendWelcomeMessage($this);
             \Yii::getLogger()->log('User has been created', Logger::LEVEL_INFO);
+
             return true;
         }
 
@@ -245,7 +254,7 @@ class User extends ActiveRecord implements IdentityInterface
     public function register()
     {
         if ($this->getIsNewRecord() == false) {
-            throw new \RuntimeException('Calling "' . __CLASS__ . '::' . __METHOD__ . '" on existing user');
+            throw new \RuntimeException('Calling "'.__CLASS__.'::'.__METHOD__.'" on existing user');
         }
 
         if ($this->module->enableConfirmation == false) {
@@ -275,6 +284,7 @@ class User extends ActiveRecord implements IdentityInterface
             }
             \Yii::$app->session->setFlash('info', $this->getFlashMessage());
             \Yii::getLogger()->log('User has been registered', Logger::LEVEL_INFO);
+
             return true;
         }
 
@@ -289,7 +299,7 @@ class User extends ActiveRecord implements IdentityInterface
      *
      * If confirmation passes it will return true, otherwise it will return false.
      *
-     * @param  string  $code Confirmation code.
+     * @param string $code Confirmation code.
      */
     public function attemptConfirmation($code)
     {
@@ -304,13 +314,13 @@ class User extends ActiveRecord implements IdentityInterface
             \Yii::$app->session->setFlash('danger', \Yii::t('user', 'The confirmation link is invalid or expired. Please try requesting a new one.'));
         } else {
             $token->delete();
-    
+
             $this->confirmed_at = time();
-    
+
             \Yii::$app->user->login($this);
-    
+
             \Yii::getLogger()->log('User has been confirmed', Logger::LEVEL_INFO);
-    
+
             if ($this->save(false)) {
                 \Yii::$app->session->setFlash('success', \Yii::t('user', 'Thank you, registration is now complete.'));
             } else {
@@ -324,8 +334,10 @@ class User extends ActiveRecord implements IdentityInterface
      * somebody already has email that equals user's "unconfirmed_email" it returns false, otherwise returns true and
      * updates user's password.
      *
-     * @param  string $code
+     * @param string $code
+     *
      * @return bool
+     *
      * @throws \Exception
      */
     public function attemptEmailChange($code)
@@ -339,12 +351,11 @@ class User extends ActiveRecord implements IdentityInterface
         if (empty($this->unconfirmed_email) || $token === null || $token->isExpired) {
             \Yii::$app->session->setFlash('danger', \Yii::t('user', 'Your confirmation token is invalid or expired'));
         } else {
-
             $token->delete();
-    
+
             if (empty($this->unconfirmed_email)) {
                 \Yii::$app->session->setFlash('danger', \Yii::t('user', 'An error occurred processing your request'));
-            } else if (static::find()->where(['email' => $this->unconfirmed_email])->exists() == false) {
+            } elseif (static::find()->where(['email' => $this->unconfirmed_email])->exists() == false) {
                 if ($this->module->emailChangeStrategy == Module::STRATEGY_SECURE) {
                     switch ($token->type) {
                         case Token::TYPE_CONFIRM_NEW_EMAIL:
@@ -370,7 +381,8 @@ class User extends ActiveRecord implements IdentityInterface
     /**
      * Resets password.
      *
-     * @param  string $password
+     * @param string $password
+     *
      * @return bool
      */
     public function resetPassword($password)
@@ -400,6 +412,29 @@ class User extends ActiveRecord implements IdentityInterface
     public function unblock()
     {
         return (bool) $this->updateAttributes(['blocked_at' => null]);
+    }
+
+    /**
+     * Generates new username based on email address, or creates new username
+     * like "user1".
+     */
+    public function generateUsername()
+    {
+        // try to use name part of email
+        $this->username = explode('@', $this->email)[0];
+        if ($this->validate(['username'])) {
+            return;
+        }
+
+        // generate username like "user1", "user2", etc...
+        while (!$this->validate(['username'])) {
+            $row = (new Query())
+                ->from('{{%user}}')
+                ->select('MAX(id) as id')
+                ->one();
+
+            $this->username = 'user'.++$row['id'];
+        }
     }
 
     /** @inheritdoc */
@@ -440,9 +475,9 @@ class User extends ActiveRecord implements IdentityInterface
     {
         if ($this->module->enableGeneratingPassword && $this->module->enableConfirmation) {
             return \Yii::t('user', 'A message has been sent to your email address. It contains your password and a confirmation link that you must click to complete registration.');
-        } else if ($this->module->enableGeneratingPassword) {
+        } elseif ($this->module->enableGeneratingPassword) {
             return \Yii::t('user', 'A message has been sent to your email address. It contains a password that we generated for you.');
-        } else if ($this->module->enableConfirmation) {
+        } elseif ($this->module->enableConfirmation) {
             return \Yii::t('user', 'A message has been sent to your email address. It contains a confirmation link that you must click to complete registration.');
         } else {
             return \Yii::t('user', 'Welcome! Registration is complete.');

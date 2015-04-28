@@ -12,34 +12,37 @@
 namespace dektrium\user\controllers;
 
 use dektrium\user\Finder;
-use dektrium\user\models\Account;
 use dektrium\user\models\LoginForm;
-use yii\base\Model;
-use yii\helpers\Url;
-use yii\web\Controller;
+use dektrium\user\Module;
+use Yii;
+use yii\authclient\AuthAction;
+use yii\authclient\ClientInterface;
 use yii\filters\AccessControl;
 use yii\filters\VerbFilter;
-use yii\authclient\ClientInterface;
+use yii\helpers\Url;
+use yii\web\Controller;
 use yii\web\Response;
-use yii\widgets\ActiveForm;
+use dektrium\user\traits\AjaxValidationTrait;
 
 /**
  * Controller that manages user authentication process.
  *
- * @property \dektrium\user\Module $module
+ * @property Module $module
  *
  * @author Dmitry Erofeev <dmeroff@gmail.com>
  */
 class SecurityController extends Controller
 {
+    use AjaxValidationTrait;
+
     /** @var Finder */
     protected $finder;
 
     /**
      * @param string $id
-     * @param \yii\base\Module $module
+     * @param Module $module
      * @param Finder $finder
-     * @param array $config
+     * @param array  $config
      */
     public function __construct($id, $module, Finder $finder, $config = [])
     {
@@ -55,15 +58,15 @@ class SecurityController extends Controller
                 'class' => AccessControl::className(),
                 'rules' => [
                     ['allow' => true, 'actions' => ['login', 'auth'], 'roles' => ['?']],
-                    ['allow' => true, 'actions' => ['logout'], 'roles' => ['@']],
-                ]
+                    ['allow' => true, 'actions' => ['login', 'auth', 'logout'], 'roles' => ['@']],
+                ],
             ],
             'verbs' => [
                 'class' => VerbFilter::className(),
                 'actions' => [
-                    'logout' => ['post']
-                ]
-            ]
+                    'logout' => ['post'],
+                ],
+            ],
         ];
     }
 
@@ -72,23 +75,32 @@ class SecurityController extends Controller
     {
         return [
             'auth' => [
-                'class' => 'yii\authclient\AuthAction',
-                'successCallback' => [$this, 'authenticate'],
-            ]
+                'class' => AuthAction::className(),
+                // if user is not logged in, will try to log him in, otherwise
+                // will try to connect social account to user.
+                'successCallback' => \Yii::$app->user->isGuest
+                    ? [$this, 'authenticate']
+                    : [$this, 'connect'],
+            ],
         ];
     }
 
     /**
      * Displays the login page.
-     * @return string|\yii\web\Response
+     *
+     * @return string|Response
      */
     public function actionLogin()
     {
+        if (!\Yii::$app->user->isGuest) {
+            $this->goHome();
+        }
+
         $model = \Yii::createObject(LoginForm::className());
 
         $this->performAjaxValidation($model);
 
-        if ($model->load(\Yii::$app->getRequest()->post()) && $model->login()) {
+        if ($model->load(Yii::$app->getRequest()->post()) && $model->login()) {
             return $this->goBack();
         }
 
@@ -100,55 +112,51 @@ class SecurityController extends Controller
 
     /**
      * Logs the user out and then redirects to the homepage.
-     * @return \yii\web\Response
+     *
+     * @return Response
      */
     public function actionLogout()
     {
-        \Yii::$app->getUser()->logout();
+        Yii::$app->getUser()->logout();
+
         return $this->goHome();
     }
 
     /**
-     * Logs the user in if this social account has been already used. Otherwise shows registration form.
-     * @param  ClientInterface $client
-     * @return \yii\web\Response
+     * Tries to authenticate user via social network. If user has alredy used
+     * this network's account, he will be logged in. Otherwise, it will try
+     * to create new user account.
+     *
+     * @param ClientInterface $client
      */
     public function authenticate(ClientInterface $client)
     {
-        $attributes = $client->getUserAttributes();
-        $provider   = $client->getId();
-        $clientId   = $attributes['id'];
-
-        $account = $this->finder->findAccountByProviderAndClientId($provider, $clientId);
-
-        if ($account === null) {
-            $account = \Yii::createObject([
-                'class'      => Account::className(),
-                'provider'   => $provider,
-                'client_id'  => $clientId,
-                'data'       => json_encode($attributes),
-            ]);
-            $account->save(false);
-        }
+        $account = forward_static_call([
+            $this->module->modelMap['Account'],
+            'createFromClient',
+        ], $client);
 
         if (null === ($user = $account->user)) {
-            $this->action->successUrl = Url::to(['/user/registration/connect', 'account_id' => $account->id]);
+            $this->action->successUrl = Url::to([
+                '/user/registration/connect',
+                'account_id' => $account->id,
+            ]);
         } else {
-            \Yii::$app->user->login($user, $this->module->rememberFor);
+            Yii::$app->user->login($user, $this->module->rememberFor);
         }
     }
 
     /**
-     * Performs ajax validation.
-     * @param Model $model
-     * @throws \yii\base\ExitException
+     * Tries to connect social account to user.
+     *
+     * @param ClientInterface $client
      */
-    protected function performAjaxValidation(Model $model)
+    public function connect(ClientInterface $client)
     {
-        if (\Yii::$app->request->isAjax && $model->load(\Yii::$app->request->post())) {
-            \Yii::$app->response->format = Response::FORMAT_JSON;
-            echo json_encode(ActiveForm::validate($model));
-            \Yii::$app->end();
-        }
+        forward_static_call([
+            $this->module->modelMap['Account'],
+            'connectWithUser',
+        ], $client);
+        $this->action->successUrl = Url::to(['/user/settings/networks']);
     }
 }

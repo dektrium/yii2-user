@@ -34,7 +34,7 @@ class Login extends Widget
 
         return $this->render('login', [
             'model'  => $model,
-            'action' => $action
+            'action' => $action,
         ]);
     }
 }

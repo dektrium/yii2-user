@@ -1,3 +1,3 @@
 <?php
 
-new yii\web\Application(require(dirname(__DIR__) . '/config/unit.php'));
+new yii\web\Application(require(dirname(__DIR__).'/_config/unit.php'));

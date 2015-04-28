@@ -10,7 +10,7 @@
  */
 
 /**
- * @var dektrium\user\models\Token $token
+ * @var dektrium\user\models\Token
  */
 ?>
 <?= Yii::t('user', 'Hello') ?>,

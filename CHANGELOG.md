@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 1.0.0-alpha [Work in progress]
+
+- `fix` Fixed display of confirmation time #361 (pedros80)
+
 ## 0.9.4 [6 April 2015]
 
 - `enh` Added ability to override translations (dmeroff)

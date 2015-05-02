@@ -150,7 +150,7 @@ return [
     'Information' => 'Information',
     'Invalid login or password' => 'Identifiant ou mot de passe incorrect',
     'Invalid or expired link' => 'Lien invalide ou expiré',
-    'Joined on {0, date}' => 'Joint à {0, date}',
+    'Joined on {0, date}' => 'Inscrit le {0, date}',
     'Location' => 'Localisation',
     'Login' => 'Connexion',
     'Logout' => 'Déconnexion',

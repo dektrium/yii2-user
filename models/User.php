@@ -196,7 +196,7 @@ class User extends ActiveRecord implements IdentityInterface
             // username rules
             'usernameRequired' => ['username', 'required', 'on' => ['register', 'create', 'connect', 'update']],
             'usernameMatch'    => ['username', 'match', 'pattern' => static::$usernameRegexp],
-            'usernameLength'   => ['username', 'string', 'min' => 3, 'max' => 25],
+            'usernameLength'   => ['username', 'string', 'min' => 3, 'max' => 255],
             'usernameUnique'   => ['username', 'unique', 'message' => \Yii::t('user', 'This username has already been taken')],
             'usernameTrim'     => ['username', 'trim'],
 

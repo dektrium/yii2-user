@@ -111,7 +111,7 @@ class RegistrationForm extends Model
         /** @var User $user */
         $user = \Yii::createObject(User::className());
         $user->setScenario('register');
-        $user->setAttributes($this->attributes);
+        $this->loadAttributes($user);
 
         if (!$user->register()) {
             return false;
@@ -123,5 +123,19 @@ class RegistrationForm extends Model
         );
 
         return true;
+    }
+
+    /**
+     * Loads attributes to the user model. You should override this method if you are going to add new fields to the
+     * registration form. You can read more in special guide.
+     *
+     * By default this method set all attributes of this model to the attributes of User model, so you should properly
+     * configure safe attributes of your User model.
+     *
+     * @param User $user
+     */
+    protected function loadAttributes(User $user)
+    {
+        $user->setAttributes($this->attributes);
     }
 }

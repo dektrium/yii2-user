@@ -28,6 +28,7 @@ use yii\helpers\Html;
         <?= Yii::t('user', 'We have generated a password for you') ?>:
         <strong><?= $user->password ?></strong>
     <?php endif ?>
+
 </p>
 
 <?php if ($token !== null): ?>

@@ -72,6 +72,9 @@ class User extends ActiveRecord implements IdentityInterface
     /** @var Finder */
     protected $finder;
 
+    /** @var Profile|null */
+    private $_profile;
+
     /** @var string Default username regexp */
     public static $usernameRegexp = '/^[-a-zA-Z0-9_\.@]+$/';
 
@@ -114,6 +117,14 @@ class User extends ActiveRecord implements IdentityInterface
     public function getProfile()
     {
         return $this->hasOne($this->module->modelMap['Profile'], ['user_id' => 'id']);
+    }
+
+    /**
+     * @param Profile $profile
+     */
+    public function setProfile(Profile $profile)
+    {
+        $this->_profile = $profile;
     }
 
     /**
@@ -428,10 +439,11 @@ class User extends ActiveRecord implements IdentityInterface
     public function afterSave($insert, $changedAttributes)
     {
         parent::afterSave($insert, $changedAttributes);
-        if ($insert && $this->profile == null) {
-            /** @var Profile $profile */
-            $profile = \Yii::createObject(Profile::className());
-            $profile->link('user', $this);
+        if ($insert) {
+            if ($this->_profile == null) {
+                $this->_profile = \Yii::createObject(Profile::className());
+            }
+            $this->_profile->link('user', $this);
         }
     }
 
@@ -450,6 +462,6 @@ class User extends ActiveRecord implements IdentityInterface
     /** @inheritdoc */
     public static function findIdentityByAccessToken($token, $type = null)
     {
-        throw new NotSupportedException('"findIdentityByAccessToken" is not implemented.');
+        throw new NotSupportedException('Method "'.__CLASS__.'::'.__METHOD__.'" is not implemented.');
     }
 }

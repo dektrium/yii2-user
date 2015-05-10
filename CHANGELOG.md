@@ -2,6 +2,7 @@
 
 ## 1.0.0-alpha [Work in progress]
 
+- `enh` Improved registration process #236 (dmeroff)
 - `fix` Fixed display of confirmation time #361 (pedros80)
 
 ## 0.9.4 [6 April 2015]

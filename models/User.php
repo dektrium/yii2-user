@@ -378,11 +378,14 @@ class User extends ActiveRecord implements IdentityInterface
     }
 
     /**
-     * Blocks the user by setting 'blocked_at' field to current time.
+     * Blocks the user by setting 'blocked_at' field to current time and regenerates auth_key.
      */
     public function block()
     {
-        return (bool) $this->updateAttributes(['blocked_at' => time()]);
+        return (bool) $this->updateAttributes([
+            'blocked_at' => time(),
+            'auth_key'   => \Yii::$app->security->generateRandomString(),
+        ]);
     }
 
     /**

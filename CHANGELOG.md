@@ -2,6 +2,7 @@
 
 ## 1.0.0-alpha [Work in progress]
 
+- `enh` Regenerate `auth_key` after blocking the user (dmeroff)
 - `enh` Improved registration process #236 (dmeroff)
 - `fix` Fixed display of confirmation time #361 (pedros80)
 

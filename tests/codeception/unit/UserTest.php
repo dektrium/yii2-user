@@ -61,9 +61,11 @@ class UserTest extends TestCase
     {
         $this->specify('user can be blocked and unblocked', function () {
             $user = $this->getFixture('user')->getModel('user');
+            $authKey = $user->auth_key;
             verify('user is not blocked', $user->getIsBlocked())->false();
             $user->block();
             verify('user is blocked', $user->getIsBlocked())->true();
+            verify('auth_key has been changed', $user->auth_key)->notEquals($authKey);
             $user->unblock();
             verify('user is unblocked', $user->getIsBlocked())->false();
         });

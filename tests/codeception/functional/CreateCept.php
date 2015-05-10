@@ -21,8 +21,6 @@ $I->see('Email cannot be blank.');
 
 $page->create('toster', 'toster@example.com', 'toster');
 $I->see('User has been created');
-$I->see('toster');
-$I->see('toster@example.com');
 
 Yii::$app->user->logout();
 LoginPage::openBy($I)->login('toster@example.com', 'toster');

@@ -4,6 +4,7 @@
 
 - `enh` Regenerate `auth_key` after blocking the user (dmeroff)
 - `enh` Improved registration process #236 (dmeroff)
+- `fix` Ensure user/index works without php-intl extension #370 (thyseus)
 - `fix` Fixed display of confirmation time #361 (pedros80)
 - `fix` Do not limit username length to 25 chars #369 (thyseus)
 

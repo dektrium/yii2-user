@@ -54,7 +54,10 @@ $this->params['breadcrumbs'][] = $this->title;
         [
             'attribute' => 'created_at',
             'value' => function ($model) {
+              if (extension_loaded('intl'))
                 return Yii::t('user', '{0, date, MMMM dd, YYYY HH:mm}', [$model->created_at]);
+              else
+                return date('Y-m-d G:i:s', $model->created_at);
             },
             'filter' => DatePicker::widget([
                 'model'      => $searchModel,

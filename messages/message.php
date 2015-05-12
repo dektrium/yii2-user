@@ -39,6 +39,7 @@ return [
         '.hgkeep',
         '/messages',
         '/tests',
+        '/vendor',
     ],
     'format' => 'php',
 ];

@@ -29,8 +29,8 @@ $this->params['breadcrumbs'][] = $this->title;
             </div>
             <div class="panel-body">
                 <?php $form = ActiveForm::begin([
-                    'id'                     => 'password-recovery-form',
-                    'enableAjaxValidation'   => true,
+                    'id' => 'password-recovery-form',
+                    'enableAjaxValidation' => true,
                     'enableClientValidation' => false,
                 ]); ?>
 

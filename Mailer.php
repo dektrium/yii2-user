@@ -52,8 +52,10 @@ class Mailer extends Component
 
     /**
      * Sends an email to a user after registration.
-     * @param  User  $user
+     *
+     * @param  User $user
      * @param  Token $token
+     *
      * @return bool
      */
     public function sendWelcomeMessage(User $user, Token $token = null)
@@ -68,7 +70,7 @@ class Mailer extends Component
     /**
      * Sends an email to a user with confirmation link.
      *
-     * @param User  $user
+     * @param User $user
      * @param Token $token
      *
      * @return bool
@@ -85,7 +87,7 @@ class Mailer extends Component
     /**
      * Sends an email to a user with reconfirmation link.
      *
-     * @param User  $user
+     * @param User $user
      * @param Token $token
      *
      * @return bool
@@ -108,7 +110,7 @@ class Mailer extends Component
     /**
      * Sends an email to a user with recovery link.
      *
-     * @param User  $user
+     * @param User $user
      * @param Token $token
      *
      * @return bool
@@ -126,12 +128,13 @@ class Mailer extends Component
      * @param string $to
      * @param string $subject
      * @param string $view
-     * @param array  $params
+     * @param array $params
      *
      * @return bool
      */
     protected function sendMessage($to, $subject, $view, $params = [])
     {
+        /** @var \yii\mail\BaseMailer $mailer */
         $mailer = \Yii::$app->mailer;
         $mailer->viewPath = $this->viewPath;
         $mailer->getView()->theme = \Yii::$app->view->theme;
@@ -140,7 +143,7 @@ class Mailer extends Component
             $this->sender = isset(\Yii::$app->params['adminEmail']) ? \Yii::$app->params['adminEmail'] : 'no-reply@example.com';
         }
 
-        return $mailer->compose(['html' => $view, 'text' => 'text/'.$view], $params)
+        return $mailer->compose(['html' => $view, 'text' => 'text/' . $view], $params)
             ->setTo($to)
             ->setFrom($this->sender)
             ->setSubject($subject)

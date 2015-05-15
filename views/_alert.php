@@ -10,7 +10,7 @@
  */
 
 /**
- * @var dektrium\user\Module
+ * @var dektrium\user\Module $module
  */
 ?>
 

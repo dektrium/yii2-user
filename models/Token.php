@@ -29,8 +29,8 @@ use yii\helpers\Url;
  */
 class Token extends ActiveRecord
 {
-    const TYPE_CONFIRMATION      = 0;
-    const TYPE_RECOVERY          = 1;
+    const TYPE_CONFIRMATION = 0;
+    const TYPE_RECOVERY = 1;
     const TYPE_CONFIRM_NEW_EMAIL = 2;
     const TYPE_CONFIRM_OLD_EMAIL = 3;
 

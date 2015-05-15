@@ -11,8 +11,8 @@
 
 namespace dektrium\user\traits;
 
-use yii\base\Model;
 use Yii;
+use yii\base\Model;
 use yii\web\Response;
 use yii\widgets\ActiveForm;
 

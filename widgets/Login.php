@@ -25,7 +25,7 @@ class Login extends Widget
     /** @inheritdoc */
     public function run()
     {
-        $model  = \Yii::createObject(LoginForm::className());
+        $model = \Yii::createObject(LoginForm::className());
         $action = $this->validate ? null : ['/user/security/login'];
 
         if ($this->validate && $model->load(\Yii::$app->request->post()) && $model->login()) {
@@ -33,7 +33,7 @@ class Login extends Widget
         }
 
         return $this->render('login', [
-            'model'  => $model,
+            'model' => $model,
             'action' => $action,
         ]);
     }

@@ -14,12 +14,12 @@ namespace dektrium\user\controllers;
 use dektrium\user\Finder;
 use dektrium\user\models\SettingsForm;
 use dektrium\user\Module;
-use yii\web\Controller;
+use dektrium\user\traits\AjaxValidationTrait;
 use yii\filters\AccessControl;
 use yii\filters\VerbFilter;
+use yii\web\Controller;
 use yii\web\ForbiddenHttpException;
 use yii\web\NotFoundHttpException;
-use dektrium\user\traits\AjaxValidationTrait;
 
 /**
  * SettingsController manages updating user settings (e.g. profile, email and password).
@@ -39,10 +39,10 @@ class SettingsController extends Controller
     protected $finder;
 
     /**
-     * @param string           $id
+     * @param string $id
      * @param \yii\base\Module $module
-     * @param Finder           $finder
-     * @param array            $config
+     * @param Finder $finder
+     * @param array $config
      */
     public function __construct($id, $module, Finder $finder, $config = [])
     {
@@ -64,9 +64,9 @@ class SettingsController extends Controller
                 'class' => AccessControl::className(),
                 'rules' => [
                     [
-                        'allow'   => true,
+                        'allow' => true,
                         'actions' => ['profile', 'account', 'confirm', 'networks', 'disconnect'],
-                        'roles'   => ['@'],
+                        'roles' => ['@'],
                     ],
                 ],
             ],
@@ -121,11 +121,10 @@ class SettingsController extends Controller
     /**
      * Attempts changing user's password.
      *
-     * @param int    $id
+     * @param int $id
      * @param string $code
      *
      * @return string
-     *
      * @throws \yii\web\HttpException
      */
     public function actionConfirm($id, $code)
@@ -159,7 +158,6 @@ class SettingsController extends Controller
      * @param int $id
      *
      * @return \yii\web\Response
-     *
      * @throws \yii\web\NotFoundHttpException
      * @throws \yii\web\ForbiddenHttpException
      */

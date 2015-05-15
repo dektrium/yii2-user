@@ -13,8 +13,8 @@ use yii\helpers\Html;
 
 /**
  * @var $module dektrium\user\Module
- * @var $user   dektrium\user\models\User
- * @var $token  dektrium\user\models\Token
+ * @var $user dektrium\user\models\User
+ * @var $token dektrium\user\models\Token
  */
 
 ?>

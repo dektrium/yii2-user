@@ -213,9 +213,9 @@ class Finder extends Object
     /**
      * Finds a token by params.
      *
-     * @param  integer $userId
-     * @param  string $code
-     * @param  integer $type
+     * @param integer $userId
+     * @param string $code
+     * @param integer $type
      *
      * @return Token
      */

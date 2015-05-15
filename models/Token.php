@@ -18,12 +18,12 @@ use yii\helpers\Url;
  * Token Active Record model.
  *
  * @property integer $user_id
- * @property string  $code
+ * @property string $code
  * @property integer $created_at
  * @property integer $type
- * @property string  $url
- * @property bool    $isExpired
- * @property User    $user
+ * @property string $url
+ * @property bool $isExpired
+ * @property User $user
  *
  * @author Dmitry Erofeev <dmeroff@gmail.com>
  */

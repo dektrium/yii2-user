@@ -53,8 +53,8 @@ class Mailer extends Component
     /**
      * Sends an email to a user after registration.
      *
-     * @param  User $user
-     * @param  Token $token
+     * @param User $user
+     * @param Token $token
      *
      * @return bool
      */

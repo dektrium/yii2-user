@@ -25,16 +25,16 @@ use yii\web\IdentityInterface;
 /**
  * User ActiveRecord model.
  *
- * @property bool    $isAdmin
- * @property bool    $isBlocked
- * @property bool    $isConfirmed
+ * @property bool $isAdmin
+ * @property bool $isBlocked
+ * @property bool $isConfirmed
  * Database fields:
  * @property integer $id
- * @property string  $username
- * @property string  $email
- * @property string  $unconfirmed_email
- * @property string  $password_hash
- * @property string  $auth_key
+ * @property string $username
+ * @property string $email
+ * @property string $unconfirmed_email
+ * @property string $password_hash
+ * @property string $auth_key
  * @property integer $registration_ip
  * @property integer $confirmed_at
  * @property integer $blocked_at
@@ -277,7 +277,7 @@ class User extends ActiveRecord implements IdentityInterface
     /**
      * Attempts user confirmation.
      *
-     * @param  string $code Confirmation code.
+     * @param string $code Confirmation code.
      *
      * @return boolean
      */

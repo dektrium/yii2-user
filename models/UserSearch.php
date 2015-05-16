@@ -37,7 +37,7 @@ class UserSearch extends Model
 
     /**
      * @param Finder $finder
-     * @param array  $config
+     * @param array $config
      */
     public function __construct(Finder $finder, $config = [])
     {
@@ -58,9 +58,9 @@ class UserSearch extends Model
     public function attributeLabels()
     {
         return [
-            'username'        => \Yii::t('user', 'Username'),
-            'email'           => \Yii::t('user', 'Email'),
-            'created_at'      => \Yii::t('user', 'Registration time'),
+            'username' => \Yii::t('user', 'Username'),
+            'email' => \Yii::t('user', 'Email'),
+            'created_at' => \Yii::t('user', 'Registration time'),
             'registration_ip' => \Yii::t('user', 'Registration ip'),
         ];
     }

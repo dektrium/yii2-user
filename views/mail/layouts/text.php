@@ -10,7 +10,7 @@
  */
 
 /**
- * @var string main view render result
+ * @var string $content main view render result
  */
 ?>
 

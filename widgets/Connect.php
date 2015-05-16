@@ -39,7 +39,7 @@ class Connect extends AuthChoice
     {
         AuthChoiceAsset::register(\Yii::$app->view);
         if ($this->popupMode) {
-            \Yii::$app->view->registerJs("\$('#".$this->getId()."').authchoice();");
+            \Yii::$app->view->registerJs("\$('#" . $this->getId() . "').authchoice();");
         }
         $this->options['id'] = $this->getId();
         echo Html::beginTag('div', $this->options);

@@ -55,25 +55,32 @@ class RegistrationForm extends Model
     public function rules()
     {
         $user = $this->module->modelMap['User'];
+
         return [
             // username rules
-            'usernameLength'   => ['username', 'string', 'min' => 3, 'max' => 255],
-            'usernameTrim'     => ['username', 'filter', 'filter' => 'trim'],
-            'usernamePattern'  => ['username', 'match', 'pattern' => $user::$usernameRegexp],
+            'usernameLength' => ['username', 'string', 'min' => 3, 'max' => 255],
+            'usernameTrim' => ['username', 'filter', 'filter' => 'trim'],
+            'usernamePattern' => ['username', 'match', 'pattern' => $user::$usernameRegexp],
             'usernameRequired' => ['username', 'required'],
-            'usernameUnique'   => ['username', 'unique', 'targetClass' => $user,
-                'message' => \Yii::t('user', 'This username has already been taken')],
-
+            'usernameUnique' => [
+                'username',
+                'unique',
+                'targetClass' => $user,
+                'message' => \Yii::t('user', 'This username has already been taken')
+            ],
             // email rules
-            'emailTrim'     => ['email', 'filter', 'filter' => 'trim'],
+            'emailTrim' => ['email', 'filter', 'filter' => 'trim'],
             'emailRequired' => ['email', 'required'],
-            'emailPattern'  => ['email', 'email'],
-            'emailUnique'   => ['email', 'unique', 'targetClass' => $user,
-                'message' => \Yii::t('user', 'This email address has already been taken')],
-
+            'emailPattern' => ['email', 'email'],
+            'emailUnique' => [
+                'email',
+                'unique',
+                'targetClass' => $user,
+                'message' => \Yii::t('user', 'This email address has already been taken')
+            ],
             // password rules
             'passwordRequired' => ['password', 'required', 'skipOnEmpty' => $this->module->enableGeneratingPassword],
-            'passwordLength'   => ['password', 'string', 'min' => 6],
+            'passwordLength' => ['password', 'string', 'min' => 6],
         ];
     }
 
@@ -83,7 +90,7 @@ class RegistrationForm extends Model
     public function attributeLabels()
     {
         return [
-            'email'    => \Yii::t('user', 'Email'),
+            'email' => \Yii::t('user', 'Email'),
             'username' => \Yii::t('user', 'Username'),
             'password' => \Yii::t('user', 'Password'),
         ];
@@ -128,7 +135,6 @@ class RegistrationForm extends Model
     /**
      * Loads attributes to the user model. You should override this method if you are going to add new fields to the
      * registration form. You can read more in special guide.
-     *
      * By default this method set all attributes of this model to the attributes of User model, so you should properly
      * configure safe attributes of your User model.
      *

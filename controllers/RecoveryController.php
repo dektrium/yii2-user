@@ -14,10 +14,10 @@ namespace dektrium\user\controllers;
 use dektrium\user\Finder;
 use dektrium\user\models\RecoveryForm;
 use dektrium\user\models\Token;
-use yii\web\Controller;
-use yii\filters\AccessControl;
-use yii\web\NotFoundHttpException;
 use dektrium\user\traits\AjaxValidationTrait;
+use yii\filters\AccessControl;
+use yii\web\Controller;
+use yii\web\NotFoundHttpException;
 
 /**
  * RecoveryController manages password recovery process.
@@ -34,10 +34,10 @@ class RecoveryController extends Controller
     protected $finder;
 
     /**
-     * @param string           $id
+     * @param string $id
      * @param \yii\base\Module $module
-     * @param Finder           $finder
-     * @param array            $config
+     * @param Finder $finder
+     * @param array $config
      */
     public function __construct($id, $module, Finder $finder, $config = [])
     {
@@ -62,7 +62,6 @@ class RecoveryController extends Controller
      * Shows page where user can request password recovery.
      *
      * @return string
-     *
      * @throws \yii\web\NotFoundHttpException
      */
     public function actionRequest()
@@ -71,8 +70,9 @@ class RecoveryController extends Controller
             throw new NotFoundHttpException();
         }
 
+        /** @var RecoveryForm $model */
         $model = \Yii::createObject([
-            'class'    => RecoveryForm::className(),
+            'class' => RecoveryForm::className(),
             'scenario' => 'request',
         ]);
 
@@ -80,7 +80,7 @@ class RecoveryController extends Controller
 
         if ($model->load(\Yii::$app->request->post()) && $model->sendRecoveryMessage()) {
             return $this->render('/message', [
-                'title'  => \Yii::t('user', 'Recovery message sent'),
+                'title' => \Yii::t('user', 'Recovery message sent'),
                 'module' => $this->module,
             ]);
         }
@@ -93,11 +93,10 @@ class RecoveryController extends Controller
     /**
      * Displays page where user can reset password.
      *
-     * @param int    $id
+     * @param int $id
      * @param string $code
      *
      * @return string
-     *
      * @throws \yii\web\NotFoundHttpException
      */
     public function actionReset($id, $code)
@@ -113,13 +112,14 @@ class RecoveryController extends Controller
             \Yii::$app->session->setFlash('danger', \Yii::t('user', 'Recovery link is invalid or expired. Please try requesting a new one.'));
 
             return $this->render('/message', [
-                'title'  => \Yii::t('user', 'Invalid or expired link'),
+                'title' => \Yii::t('user', 'Invalid or expired link'),
                 'module' => $this->module,
             ]);
         }
 
+        /** @var RecoveryForm $model */
         $model = \Yii::createObject([
-            'class'    => RecoveryForm::className(),
+            'class' => RecoveryForm::className(),
             'scenario' => 'reset',
         ]);
 
@@ -127,7 +127,7 @@ class RecoveryController extends Controller
 
         if ($model->load(\Yii::$app->getRequest()->post()) && $model->resetPassword($token)) {
             return $this->render('/message', [
-                'title'  => \Yii::t('user', 'Password has been changed'),
+                'title' => \Yii::t('user', 'Password has been changed'),
                 'module' => $this->module,
             ]);
         }

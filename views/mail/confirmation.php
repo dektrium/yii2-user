@@ -11,8 +11,8 @@
 
 use yii\helpers\Html;
 
-/*
- * @var dektrium\user\models\User  $user
+/**
+ * @var dektrium\user\models\User $user
  * @var dektrium\user\models\Token $token
  */
 ?>

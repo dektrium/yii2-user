@@ -15,10 +15,10 @@ use dektrium\user\Finder;
 use dektrium\user\models\RegistrationForm;
 use dektrium\user\models\ResendForm;
 use dektrium\user\models\User;
-use yii\web\Controller;
-use yii\filters\AccessControl;
-use yii\web\NotFoundHttpException;
 use dektrium\user\traits\AjaxValidationTrait;
+use yii\filters\AccessControl;
+use yii\web\Controller;
+use yii\web\NotFoundHttpException;
 
 /**
  * RegistrationController is responsible for all registration process, which includes registration of a new account,
@@ -36,10 +36,10 @@ class RegistrationController extends Controller
     protected $finder;
 
     /**
-     * @param string           $id
+     * @param string $id
      * @param \yii\base\Module $module
-     * @param Finder           $finder
-     * @param array            $config
+     * @param Finder $finder
+     * @param array $config
      */
     public function __construct($id, $module, Finder $finder, $config = [])
     {
@@ -66,7 +66,6 @@ class RegistrationController extends Controller
      * After successful registration if enableConfirmation is enabled shows info message otherwise redirects to home page.
      *
      * @return string
-     *
      * @throws \yii\web\HttpException
      */
     public function actionRegister()
@@ -75,19 +74,20 @@ class RegistrationController extends Controller
             throw new NotFoundHttpException();
         }
 
+        /** @var RegistrationForm $model */
         $model = \Yii::createObject(RegistrationForm::className());
 
         $this->performAjaxValidation($model);
 
         if ($model->load(\Yii::$app->request->post()) && $model->register()) {
             return $this->render('/message', [
-                'title'  => \Yii::t('user', 'Your account has been created'),
+                'title' => \Yii::t('user', 'Your account has been created'),
                 'module' => $this->module,
             ]);
         }
 
         return $this->render('register', [
-            'model'  => $model,
+            'model' => $model,
             'module' => $this->module,
         ]);
     }
@@ -98,7 +98,6 @@ class RegistrationController extends Controller
      * @param int $account_id
      *
      * @return string
-     *
      * @throws NotFoundHttpException
      */
     public function actionConnect($account_id)
@@ -111,7 +110,7 @@ class RegistrationController extends Controller
 
         /** @var User $user */
         $user = \Yii::createObject([
-            'class'    => User::className(),
+            'class' => User::className(),
             'scenario' => 'connect',
         ]);
 
@@ -123,7 +122,7 @@ class RegistrationController extends Controller
         }
 
         return $this->render('connect', [
-            'model'   => $user,
+            'model' => $user,
             'account' => $account,
         ]);
     }
@@ -132,11 +131,10 @@ class RegistrationController extends Controller
      * Confirms user's account. If confirmation was successful logs the user and shows success message. Otherwise
      * shows error message.
      *
-     * @param int    $id
+     * @param int $id
      * @param string $code
      *
      * @return string
-     *
      * @throws \yii\web\HttpException
      */
     public function actionConfirm($id, $code)
@@ -150,7 +148,7 @@ class RegistrationController extends Controller
         $user->attemptConfirmation($code);
 
         return $this->render('/message', [
-            'title'  => \Yii::t('user', 'Account confirmation'),
+            'title' => \Yii::t('user', 'Account confirmation'),
             'module' => $this->module,
         ]);
     }
@@ -159,7 +157,6 @@ class RegistrationController extends Controller
      * Displays page where user can request new confirmation token. If resending was successful, displays message.
      *
      * @return string
-     *
      * @throws \yii\web\HttpException
      */
     public function actionResend()
@@ -168,13 +165,14 @@ class RegistrationController extends Controller
             throw new NotFoundHttpException();
         }
 
+        /** @var ResendForm $model */
         $model = \Yii::createObject(ResendForm::className());
 
         $this->performAjaxValidation($model);
 
         if ($model->load(\Yii::$app->request->post()) && $model->resend()) {
             return $this->render('/message', [
-                'title'  => \Yii::t('user', 'A new confirmation link has been sent'),
+                'title' => \Yii::t('user', 'A new confirmation link has been sent'),
                 'module' => $this->module,
             ]);
         }

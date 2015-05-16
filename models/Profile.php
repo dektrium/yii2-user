@@ -17,13 +17,14 @@ use yii\db\ActiveRecord;
  * This is the model class for table "profile".
  *
  * @property integer $user_id
- * @property string  $name
- * @property string  $public_email
- * @property string  $gravatar_email
- * @property string  $gravatar_id
- * @property string  $location
- * @property string  $website
- * @property string  $bio
+ * @property string $name
+ * @property string $public_email
+ * @property string $gravatar_email
+ * @property string $gravatar_id
+ * @property string $location
+ * @property string $website
+ * @property string $bio
+ * @property User $user
  *
  * @author Dmitry Erofeev <dmeroff@gmail.com
  */
@@ -66,12 +67,12 @@ class Profile extends ActiveRecord
     public function attributeLabels()
     {
         return [
-            'name'           => \Yii::t('user', 'Name'),
-            'public_email'   => \Yii::t('user', 'Email (public)'),
+            'name' => \Yii::t('user', 'Name'),
+            'public_email' => \Yii::t('user', 'Email (public)'),
             'gravatar_email' => \Yii::t('user', 'Gravatar email'),
-            'location'       => \Yii::t('user', 'Location'),
-            'website'        => \Yii::t('user', 'Website'),
-            'bio'            => \Yii::t('user', 'Bio'),
+            'location' => \Yii::t('user', 'Location'),
+            'website' => \Yii::t('user', 'Website'),
+            'bio' => \Yii::t('user', 'Bio'),
         ];
     }
 

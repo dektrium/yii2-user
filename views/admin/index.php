@@ -17,7 +17,7 @@ use yii\jui\DatePicker;
 use yii\web\View;
 use yii\widgets\Pjax;
 
-/*
+/**
  * @var View $this
  * @var ActiveDataProvider $dataProvider
  * @var UserSearch $searchModel
@@ -37,31 +37,32 @@ $this->params['breadcrumbs'][] = $this->title;
 
 <?= GridView::widget([
     'dataProvider' => $dataProvider,
-    'filterModel'  => $searchModel,
-    'layout'  => "{items}\n{pager}",
+    'filterModel' => $searchModel,
+    'layout' => "{items}\n{pager}",
     'columns' => [
         'username',
         'email:email',
         [
             'attribute' => 'registration_ip',
             'value' => function ($model) {
-                    return $model->registration_ip == null
-                        ? '<span class="not-set">'.Yii::t('user', '(not set)').'</span>'
-                        : $model->registration_ip;
-                },
+                return $model->registration_ip == null
+                    ? '<span class="not-set">' . Yii::t('user', '(not set)') . '</span>'
+                    : $model->registration_ip;
+            },
             'format' => 'html',
         ],
         [
             'attribute' => 'created_at',
             'value' => function ($model) {
-              if (extension_loaded('intl'))
-                return Yii::t('user', '{0, date, MMMM dd, YYYY HH:mm}', [$model->created_at]);
-              else
-                return date('Y-m-d G:i:s', $model->created_at);
+                if (extension_loaded('intl')) {
+                    return Yii::t('user', '{0, date, MMMM dd, YYYY HH:mm}', [$model->created_at]);
+                } else {
+                    return date('Y-m-d G:i:s', $model->created_at);
+                }
             },
             'filter' => DatePicker::widget([
-                'model'      => $searchModel,
-                'attribute'  => 'created_at',
+                'model' => $searchModel,
+                'attribute' => 'created_at',
                 'dateFormat' => 'php:Y-m-d',
                 'options' => [
                     'class' => 'form-control',
@@ -72,7 +73,7 @@ $this->params['breadcrumbs'][] = $this->title;
             'header' => Yii::t('user', 'Confirmation'),
             'value' => function ($model) {
                 if ($model->isConfirmed) {
-                    return '<div class="text-center"><span class="text-success">'.Yii::t('user', 'Confirmed').'</span></div>';
+                    return '<div class="text-center"><span class="text-success">' . Yii::t('user', 'Confirmed') . '</span></div>';
                 } else {
                     return Html::a(Yii::t('user', 'Confirm'), ['confirm', 'id' => $model->id], [
                         'class' => 'btn btn-xs btn-success btn-block',

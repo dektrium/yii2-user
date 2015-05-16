@@ -18,19 +18,19 @@ use yii\helpers\Url;
  * Token Active Record model.
  *
  * @property integer $user_id
- * @property string  $code
+ * @property string $code
  * @property integer $created_at
  * @property integer $type
- * @property string  $url
- * @property bool    $isExpired
- * @property User    $user
+ * @property string $url
+ * @property bool $isExpired
+ * @property User $user
  *
  * @author Dmitry Erofeev <dmeroff@gmail.com>
  */
 class Token extends ActiveRecord
 {
-    const TYPE_CONFIRMATION      = 0;
-    const TYPE_RECOVERY          = 1;
+    const TYPE_CONFIRMATION = 0;
+    const TYPE_RECOVERY = 1;
     const TYPE_CONFIRM_NEW_EMAIL = 2;
     const TYPE_CONFIRM_OLD_EMAIL = 3;
 

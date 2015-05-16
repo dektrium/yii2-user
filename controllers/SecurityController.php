@@ -14,6 +14,7 @@ namespace dektrium\user\controllers;
 use dektrium\user\Finder;
 use dektrium\user\models\LoginForm;
 use dektrium\user\Module;
+use dektrium\user\traits\AjaxValidationTrait;
 use Yii;
 use yii\authclient\AuthAction;
 use yii\authclient\ClientInterface;
@@ -22,7 +23,6 @@ use yii\filters\VerbFilter;
 use yii\helpers\Url;
 use yii\web\Controller;
 use yii\web\Response;
-use dektrium\user\traits\AjaxValidationTrait;
 
 /**
  * Controller that manages user authentication process.
@@ -42,7 +42,7 @@ class SecurityController extends Controller
      * @param string $id
      * @param Module $module
      * @param Finder $finder
-     * @param array  $config
+     * @param array $config
      */
     public function __construct($id, $module, Finder $finder, $config = [])
     {
@@ -96,6 +96,7 @@ class SecurityController extends Controller
             $this->goHome();
         }
 
+        /** @var LoginForm $model */
         $model = \Yii::createObject(LoginForm::className());
 
         $this->performAjaxValidation($model);
@@ -105,7 +106,7 @@ class SecurityController extends Controller
         }
 
         return $this->render('login', [
-            'model'  => $model,
+            'model' => $model,
             'module' => $this->module,
         ]);
     }

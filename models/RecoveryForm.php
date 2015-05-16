@@ -45,7 +45,7 @@ class RecoveryForm extends Model
     /**
      * @param Mailer $mailer
      * @param Finder $finder
-     * @param array  $config
+     * @param array $config
      */
     public function __construct(Mailer $mailer, Finder $finder, $config = [])
     {
@@ -59,7 +59,7 @@ class RecoveryForm extends Model
     public function attributeLabels()
     {
         return [
-            'email'    => \Yii::t('user', 'Email'),
+            'email' => \Yii::t('user', 'Email'),
             'password' => \Yii::t('user', 'Password'),
         ];
     }
@@ -69,7 +69,7 @@ class RecoveryForm extends Model
     {
         return [
             'request' => ['email'],
-            'reset'   => ['password'],
+            'reset' => ['password'],
         ];
     }
 
@@ -80,16 +80,21 @@ class RecoveryForm extends Model
             'emailTrim' => ['email', 'filter', 'filter' => 'trim'],
             'emailRequired' => ['email', 'required'],
             'emailPattern' => ['email', 'email'],
-            'emailExist' => ['email', 'exist',
+            'emailExist' => [
+                'email',
+                'exist',
                 'targetClass' => $this->module->modelMap['User'],
                 'message' => \Yii::t('user', 'There is no user with this email address'),
             ],
-            'emailUnconfirmed' => ['email', function ($attribute) {
-                $this->user = $this->finder->findUserByEmail($this->email);
-                if ($this->user !== null && $this->module->enableConfirmation && !$this->user->getIsConfirmed()) {
-                    $this->addError($attribute, \Yii::t('user', 'You need to confirm your email address'));
+            'emailUnconfirmed' => [
+                'email',
+                function ($attribute) {
+                    $this->user = $this->finder->findUserByEmail($this->email);
+                    if ($this->user !== null && $this->module->enableConfirmation && !$this->user->getIsConfirmed()) {
+                        $this->addError($attribute, \Yii::t('user', 'You need to confirm your email address'));
+                    }
                 }
-            }],
+            ],
             'passwordRequired' => ['password', 'required'],
             'passwordLength' => ['password', 'string', 'min' => 6],
         ];
@@ -105,9 +110,9 @@ class RecoveryForm extends Model
         if ($this->validate()) {
             /** @var Token $token */
             $token = \Yii::createObject([
-                'class'   => Token::className(),
+                'class' => Token::className(),
                 'user_id' => $this->user->id,
-                'type'    => Token::TYPE_RECOVERY,
+                'type' => Token::TYPE_RECOVERY,
             ]);
             $token->save(false);
             $this->mailer->sendRecoveryMessage($this->user, $token);

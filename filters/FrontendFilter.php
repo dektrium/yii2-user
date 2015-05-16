@@ -26,6 +26,9 @@ class FrontendFilter extends \yii\base\ActionFilter
 
     /**
      * @param \yii\base\Action $action
+     *
+     * @return bool
+     * @throws \yii\web\NotFoundHttpException
      */
     public function beforeAction($action)
     {

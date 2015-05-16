@@ -12,10 +12,10 @@
 use yii\helpers\Html;
 use yii\widgets\ActiveForm;
 
-/*
- * @var yii\web\View              $this
+/**
+ * @var yii\web\View $this
  * @var dektrium\user\models\User $user
- * @var dektrium\user\Module      $module
+ * @var dektrium\user\Module $module
  */
 
 $this->title = Yii::t('user', 'Sign up');
@@ -29,8 +29,8 @@ $this->params['breadcrumbs'][] = $this->title;
             </div>
             <div class="panel-body">
                 <?php $form = ActiveForm::begin([
-                    'id'                     => 'registration-form',
-                    'enableAjaxValidation'   => true,
+                    'id' => 'registration-form',
+                    'enableAjaxValidation' => true,
                     'enableClientValidation' => false,
                 ]); ?>
 

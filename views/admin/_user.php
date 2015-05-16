@@ -10,7 +10,7 @@
  */
 
 /**
- * @var yii\widgets\ActiveForm   
+ * @var yii\widgets\ActiveForm
  * @var dektrium\user\models\User
  */
 ?>

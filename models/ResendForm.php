@@ -43,7 +43,7 @@ class ResendForm extends Model
     /**
      * @param Mailer $mailer
      * @param Finder $finder
-     * @param array  $config
+     * @param array $config
      */
     public function __construct(Mailer $mailer, Finder $finder, $config = [])
     {
@@ -72,11 +72,14 @@ class ResendForm extends Model
             'emailRequired' => ['email', 'required'],
             'emailPattern' => ['email', 'email'],
             'emailExist' => ['email', 'exist', 'targetClass' => $this->module->modelMap['User']],
-            'emailConfirmed' => ['email', function () {
-                if ($this->user != null && $this->user->getIsConfirmed()) {
-                    $this->addError('email', \Yii::t('user', 'This account has already been confirmed'));
+            'emailConfirmed' => [
+                'email',
+                function () {
+                    if ($this->user != null && $this->user->getIsConfirmed()) {
+                        $this->addError('email', \Yii::t('user', 'This account has already been confirmed'));
+                    }
                 }
-            }],
+            ],
         ];
     }
 
@@ -106,13 +109,14 @@ class ResendForm extends Model
         }
         /** @var Token $token */
         $token = \Yii::createObject([
-            'class'   => Token::className(),
+            'class' => Token::className(),
             'user_id' => $this->user->id,
-            'type'    => Token::TYPE_CONFIRMATION,
+            'type' => Token::TYPE_CONFIRMATION,
         ]);
         $token->save(false);
         $this->mailer->sendConfirmationMessage($this->user, $token);
-        \Yii::$app->session->setFlash('info', \Yii::t('user', 'A message has been sent to your email address. It contains a confirmation link that you must click to complete registration.'));
+        \Yii::$app->session->setFlash('info',
+            \Yii::t('user', 'A message has been sent to your email address. It contains a confirmation link that you must click to complete registration.'));
 
         return true;
     }

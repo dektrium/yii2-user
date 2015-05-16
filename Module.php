@@ -77,19 +77,18 @@ class Module extends BaseModule
 
     /**
      * @var string The prefix for user module URL.
-     *
      * @See [[GroupUrlRule::prefix]]
      */
     public $urlPrefix = 'user';
 
     /** @var array The rules to be used in URL management. */
     public $urlRules = [
-        '<id:\d+>'                    => 'profile/show',
-        '<action:(login|logout)>'     => 'security/<action>',
-        '<action:(register|resend)>'  => 'registration/<action>',
+        '<id:\d+>' => 'profile/show',
+        '<action:(login|logout)>' => 'security/<action>',
+        '<action:(register|resend)>' => 'registration/<action>',
         'confirm/<id:\d+>/<code:\w+>' => 'registration/confirm',
-        'forgot'                      => 'recovery/request',
+        'forgot' => 'recovery/request',
         'recover/<id:\d+>/<code:\w+>' => 'recovery/reset',
-        'settings/<action:\w+>'       => 'settings/<action>',
+        'settings/<action:\w+>' => 'settings/<action>',
     ];
 }

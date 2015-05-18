@@ -9,6 +9,7 @@ return [
         'de',
         'es',
         'fa-IR',
+        'fi',
         'fr',
         'hr',
         'hu',

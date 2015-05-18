@@ -11,6 +11,7 @@
 
 namespace dektrium\user\clients;
 
+use Yii;
 use yii\authclient\clients\YandexOAuth as BaseYandex;
 
 /**
@@ -43,6 +44,6 @@ class Yandex extends BaseYandex implements ClientInterface
     /** @inheritdoc */
     protected function defaultTitle()
     {
-        return \Yii::t('user', 'Yandex');
+        return Yii::t('user', 'Yandex');
     }
 }

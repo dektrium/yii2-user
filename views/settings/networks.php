@@ -38,9 +38,9 @@ $this->params['breadcrumbs'][] = $this->title;
                 </div>
                 <?php $auth = Connect::begin([
                     'baseAuthUrl' => ['/user/security/auth'],
-                    'accounts' => $user->accounts,
-                    'autoRender' => false,
-                    'popupMode' => false,
+                    'accounts'    => $user->accounts,
+                    'autoRender'  => false,
+                    'popupMode'   => false,
                 ]) ?>
                 <table class="table">
                     <?php foreach ($auth->getClients() as $client): ?>

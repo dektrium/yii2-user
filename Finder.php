@@ -178,7 +178,7 @@ class Finder extends Object
     public function findAccountByProviderAndClientId($provider, $clientId)
     {
         return $this->accountQuery->where([
-            'provider' => $provider,
+            'provider'  => $provider,
             'client_id' => $clientId,
         ])->one();
     }
@@ -193,7 +193,7 @@ class Finder extends Object
     public function findAccountByClient(ClientInterface $client)
     {
         return $this->accountQuery->where([
-            'provider' => $client->getId(),
+            'provider'  => $client->getId(),
             'client_id' => $client->getUserAttributes()['id'],
         ])->one();
     }
@@ -214,7 +214,7 @@ class Finder extends Object
      * Finds a token by params.
      *
      * @param integer $userId
-     * @param string $code
+     * @param string  $code
      * @param integer $type
      *
      * @return Token
@@ -223,8 +223,8 @@ class Finder extends Object
     {
         return $this->findToken([
             'user_id' => $userId,
-            'code' => $code,
-            'type' => $type,
+            'code'    => $code,
+            'type'    => $type,
         ])->one();
     }
 

@@ -42,7 +42,7 @@ class SecurityController extends Controller
      * @param string $id
      * @param Module $module
      * @param Finder $finder
-     * @param array $config
+     * @param array  $config
      */
     public function __construct($id, $module, Finder $finder, $config = [])
     {
@@ -78,7 +78,7 @@ class SecurityController extends Controller
                 'class' => AuthAction::className(),
                 // if user is not logged in, will try to log him in, otherwise
                 // will try to connect social account to user.
-                'successCallback' => \Yii::$app->user->isGuest
+                'successCallback' => Yii::$app->user->isGuest
                     ? [$this, 'authenticate']
                     : [$this, 'connect'],
             ],
@@ -92,12 +92,12 @@ class SecurityController extends Controller
      */
     public function actionLogin()
     {
-        if (!\Yii::$app->user->isGuest) {
+        if (!Yii::$app->user->isGuest) {
             $this->goHome();
         }
 
         /** @var LoginForm $model */
-        $model = \Yii::createObject(LoginForm::className());
+        $model = Yii::createObject(LoginForm::className());
 
         $this->performAjaxValidation($model);
 
@@ -106,7 +106,7 @@ class SecurityController extends Controller
         }
 
         return $this->render('login', [
-            'model' => $model,
+            'model'  => $model,
             'module' => $this->module,
         ]);
     }

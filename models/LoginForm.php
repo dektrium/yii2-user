@@ -13,6 +13,7 @@ namespace dektrium\user\models;
 
 use dektrium\user\Finder;
 use dektrium\user\helpers\Password;
+use Yii;
 use yii\base\Model;
 
 /**
@@ -43,12 +44,12 @@ class LoginForm extends Model
 
     /**
      * @param Finder $finder
-     * @param array $config
+     * @param array  $config
      */
     public function __construct(Finder $finder, $config = [])
     {
         $this->finder = $finder;
-        $this->module = \Yii::$app->getModule('user');
+        $this->module = Yii::$app->getModule('user');
         parent::__construct($config);
     }
 
@@ -56,9 +57,9 @@ class LoginForm extends Model
     public function attributeLabels()
     {
         return [
-            'login' => \Yii::t('user', 'Login'),
-            'password' => \Yii::t('user', 'Password'),
-            'rememberMe' => \Yii::t('user', 'Remember me next time'),
+            'login'      => Yii::t('user', 'Login'),
+            'password'   => Yii::t('user', 'Password'),
+            'rememberMe' => Yii::t('user', 'Remember me next time'),
         ];
     }
 
@@ -72,7 +73,7 @@ class LoginForm extends Model
                 'password',
                 function ($attribute) {
                     if ($this->user === null || !Password::validate($this->password, $this->user->password_hash)) {
-                        $this->addError($attribute, \Yii::t('user', 'Invalid login or password'));
+                        $this->addError($attribute, Yii::t('user', 'Invalid login or password'));
                     }
                 }
             ],
@@ -82,10 +83,10 @@ class LoginForm extends Model
                     if ($this->user !== null) {
                         $confirmationRequired = $this->module->enableConfirmation && !$this->module->enableUnconfirmedLogin;
                         if ($confirmationRequired && !$this->user->getIsConfirmed()) {
-                            $this->addError($attribute, \Yii::t('user', 'You need to confirm your email address'));
+                            $this->addError($attribute, Yii::t('user', 'You need to confirm your email address'));
                         }
                         if ($this->user->getIsBlocked()) {
-                            $this->addError($attribute, \Yii::t('user', 'Your account has been blocked'));
+                            $this->addError($attribute, Yii::t('user', 'Your account has been blocked'));
                         }
                     }
                 }
@@ -102,7 +103,7 @@ class LoginForm extends Model
     public function login()
     {
         if ($this->validate()) {
-            return \Yii::$app->getUser()->login($this->user, $this->rememberMe ? $this->module->rememberFor : 0);
+            return Yii::$app->getUser()->login($this->user, $this->rememberMe ? $this->module->rememberFor : 0);
         } else {
             return false;
         }

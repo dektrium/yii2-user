@@ -36,9 +36,9 @@ $this->params['breadcrumbs'][] = $this->title;
 <?php Pjax::begin() ?>
 
 <?= GridView::widget([
-    'dataProvider' => $dataProvider,
-    'filterModel' => $searchModel,
-    'layout' => "{items}\n{pager}",
+    'dataProvider' 	=> $dataProvider,
+    'filterModel'  	=> $searchModel,
+    'layout'  		=> "{items}\n{pager}",
     'columns' => [
         'username',
         'email:email',
@@ -61,8 +61,8 @@ $this->params['breadcrumbs'][] = $this->title;
                 }
             },
             'filter' => DatePicker::widget([
-                'model' => $searchModel,
-                'attribute' => 'created_at',
+                'model'      => $searchModel,
+                'attribute'  => 'created_at',
                 'dateFormat' => 'php:Y-m-d',
                 'options' => [
                     'class' => 'form-control',

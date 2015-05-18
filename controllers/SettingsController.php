@@ -15,6 +15,7 @@ use dektrium\user\Finder;
 use dektrium\user\models\SettingsForm;
 use dektrium\user\Module;
 use dektrium\user\traits\AjaxValidationTrait;
+use Yii;
 use yii\filters\AccessControl;
 use yii\filters\VerbFilter;
 use yii\web\Controller;
@@ -39,10 +40,10 @@ class SettingsController extends Controller
     protected $finder;
 
     /**
-     * @param string $id
+     * @param string           $id
      * @param \yii\base\Module $module
-     * @param Finder $finder
-     * @param array $config
+     * @param Finder           $finder
+     * @param array            $config
      */
     public function __construct($id, $module, Finder $finder, $config = [])
     {
@@ -64,9 +65,9 @@ class SettingsController extends Controller
                 'class' => AccessControl::className(),
                 'rules' => [
                     [
-                        'allow' => true,
+                        'allow'   => true,
                         'actions' => ['profile', 'account', 'confirm', 'networks', 'disconnect'],
-                        'roles' => ['@'],
+                        'roles'   => ['@'],
                     ],
                 ],
             ],
@@ -80,12 +81,12 @@ class SettingsController extends Controller
      */
     public function actionProfile()
     {
-        $model = $this->finder->findProfileById(\Yii::$app->user->identity->getId());
+        $model = $this->finder->findProfileById(Yii::$app->user->identity->getId());
 
         $this->performAjaxValidation($model);
 
-        if ($model->load(\Yii::$app->request->post()) && $model->save()) {
-            \Yii::$app->getSession()->setFlash('success', \Yii::t('user', 'Your profile has been updated'));
+        if ($model->load(Yii::$app->request->post()) && $model->save()) {
+            Yii::$app->getSession()->setFlash('success', Yii::t('user', 'Your profile has been updated'));
 
             return $this->refresh();
         }
@@ -103,12 +104,12 @@ class SettingsController extends Controller
     public function actionAccount()
     {
         /** @var SettingsForm $model */
-        $model = \Yii::createObject(SettingsForm::className());
+        $model = Yii::createObject(SettingsForm::className());
 
         $this->performAjaxValidation($model);
 
-        if ($model->load(\Yii::$app->request->post()) && $model->save()) {
-            \Yii::$app->session->setFlash('success', \Yii::t('user', 'Your account details have been updated'));
+        if ($model->load(Yii::$app->request->post()) && $model->save()) {
+            Yii::$app->session->setFlash('success', Yii::t('user', 'Your account details have been updated'));
 
             return $this->refresh();
         }
@@ -121,7 +122,7 @@ class SettingsController extends Controller
     /**
      * Attempts changing user's password.
      *
-     * @param int $id
+     * @param int    $id
      * @param string $code
      *
      * @return string
@@ -148,7 +149,7 @@ class SettingsController extends Controller
     public function actionNetworks()
     {
         return $this->render('networks', [
-            'user' => \Yii::$app->user->identity,
+            'user' => Yii::$app->user->identity,
         ]);
     }
 
@@ -167,7 +168,7 @@ class SettingsController extends Controller
         if ($account === null) {
             throw new NotFoundHttpException();
         }
-        if ($account->user_id != \Yii::$app->user->id) {
+        if ($account->user_id != Yii::$app->user->id) {
             throw new ForbiddenHttpException();
         }
         $account->delete();

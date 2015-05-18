@@ -9,10 +9,10 @@
  * file that was distributed with this source code.
  */
 
-use yii\helpers\Html;
 use yii\widgets\ActiveForm;
+use yii\helpers\Html;
 
-/**
+/*
  * @var yii\web\View $this
  * @var yii\widgets\ActiveForm $form
  * @var dektrium\user\models\LoginForm $model

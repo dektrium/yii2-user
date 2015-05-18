@@ -12,6 +12,7 @@
 namespace dektrium\user\controllers;
 
 use dektrium\user\Finder;
+use Yii;
 use yii\filters\AccessControl;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
@@ -29,10 +30,10 @@ class ProfileController extends Controller
     protected $finder;
 
     /**
-     * @param string $id
+     * @param string           $id
      * @param \yii\base\Module $module
-     * @param Finder $finder
-     * @param array $config
+     * @param Finder           $finder
+     * @param array            $config
      */
     public function __construct($id, $module, Finder $finder, $config = [])
     {
@@ -61,7 +62,7 @@ class ProfileController extends Controller
      */
     public function actionIndex()
     {
-        return $this->redirect(['show', 'id' => \Yii::$app->user->getId()]);
+        return $this->redirect(['show', 'id' => Yii::$app->user->getId()]);
     }
 
     /**

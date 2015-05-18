@@ -40,10 +40,10 @@ class AdminController extends Controller
     protected $finder;
 
     /**
-     * @param string $id
+     * @param string  $id
      * @param Module2 $module
-     * @param Finder $finder
-     * @param array $config
+     * @param Finder  $finder
+     * @param array   $config
      */
     public function __construct($id, $module, Finder $finder, $config = [])
     {
@@ -58,9 +58,9 @@ class AdminController extends Controller
             'verbs' => [
                 'class' => VerbFilter::className(),
                 'actions' => [
-                    'delete' => ['post'],
+                    'delete'  => ['post'],
                     'confirm' => ['post'],
-                    'block' => ['post'],
+                    'block'   => ['post'],
                 ],
             ],
             'access' => [
@@ -86,12 +86,12 @@ class AdminController extends Controller
     public function actionIndex()
     {
         Url::remember('', 'actions-redirect');
-        $searchModel = Yii::createObject(UserSearch::className());
+        $searchModel  = Yii::createObject(UserSearch::className());
         $dataProvider = $searchModel->search(Yii::$app->request->get());
 
         return $this->render('index', [
             'dataProvider' => $dataProvider,
-            'searchModel' => $searchModel,
+            'searchModel'  => $searchModel,
         ]);
     }
 
@@ -105,7 +105,7 @@ class AdminController extends Controller
     {
         /** @var User $user */
         $user = Yii::createObject([
-            'class' => User::className(),
+            'class'    => User::className(),
             'scenario' => 'create',
         ]);
 
@@ -158,7 +158,7 @@ class AdminController extends Controller
     public function actionUpdateProfile($id)
     {
         Url::remember('', 'actions-redirect');
-        $user = $this->findModel($id);
+        $user    = $this->findModel($id);
         $profile = $user->profile;
 
         $this->performAjaxValidation($profile);
@@ -170,7 +170,7 @@ class AdminController extends Controller
         }
 
         return $this->render('_profile', [
-            'user' => $user,
+            'user'    => $user,
             'profile' => $profile,
         ]);
     }

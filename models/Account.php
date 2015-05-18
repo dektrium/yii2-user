@@ -19,13 +19,13 @@ use yii\authclient\ClientInterface as BaseClientInterface;
 use yii\db\ActiveRecord;
 
 /**
- * @property integer $id Id
- * @property integer $user_id User id, null if account is not bind to user
- * @property string $provider Name of service
- * @property string $client_id Account id
- * @property string $data Account properties returned by social network (json encoded)
- * @property string $decodedData Json-decoded properties
- * @property User $user User that this account is connected for.
+ * @property integer $id          Id
+ * @property integer $user_id     User id, null if account is not bind to user
+ * @property string  $provider    Name of service
+ * @property string  $client_id   Account id
+ * @property string  $data        Account properties returned by social network (json encoded)
+ * @property string  $decodedData Json-decoded properties
+ * @property User    $user        User that this account is connected for.
  * @property Module $module
  *
  * @author Dmitry Erofeev <dmeroff@gmail.com>
@@ -88,8 +88,8 @@ class Account extends ActiveRecord
      */
     public static function connectWithUser(BaseClientInterface $client)
     {
-        if (\Yii::$app->user->isGuest) {
-            \Yii::$app->session->setFlash('danger', \Yii::t('user', 'Something went wrong'));
+        if (Yii::$app->user->isGuest) {
+            Yii::$app->session->setFlash('danger', Yii::t('user', 'Something went wrong'));
 
             return;
         }
@@ -98,15 +98,16 @@ class Account extends ActiveRecord
 
         if ($account->user === null) {
             $account->link('user', Yii::$app->user->identity);
-            \Yii::$app->session->setFlash('success', \Yii::t('user', 'Your account has been connected'));
+            Yii::$app->session->setFlash('success', Yii::t('user', 'Your account has been connected'));
         } else {
-            \Yii::$app->session->setFlash('danger', \Yii::t('user', 'This account has already been connected to another user'));
+            Yii::$app->session->setFlash('danger', Yii::t('user', 'This account has already been connected to another user'));
         }
     }
 
     /**
      * At first it tries to find existing account model using data provided by
      * client. If account has not been found it is created.
+     *
      * If client is instance of "dektrium\clients\ClientInterface" and account
      * has no connected user, it will try to create new user.
      *
@@ -141,11 +142,11 @@ class Account extends ActiveRecord
         $account = static::getFinder()->findAccountByClient($client);
 
         if (null === $account) {
-            $account = \Yii::createObject([
-                'class' => static::className(),
-                'provider' => $client->getId(),
-                'client_id' => $client->getUserAttributes()['id'],
-                'data' => json_encode($client->getUserAttributes()),
+            $account = Yii::createObject([
+                'class'      => static::className(),
+                'provider'   => $client->getId(),
+                'client_id'  => $client->getUserAttributes()['id'],
+                'data'       => json_encode($client->getUserAttributes()),
             ]);
             $account->save(false);
         }
@@ -169,10 +170,10 @@ class Account extends ActiveRecord
         }
 
         $user = Yii::createObject([
-            'class' => User::className(),
+            'class'    => User::className(),
             'scenario' => 'connect',
             'username' => $client->getUsername(),
-            'email' => $client->getEmail(),
+            'email'    => $client->getEmail(),
         ]);
 
         if (!$user->validate(['email'])) {

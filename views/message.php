@@ -10,8 +10,8 @@
  */
 
 /**
- * @var yii\web\View $this
- * @var dektrium\user\Module $module
+ * @var yii\web\View 			$this
+ * @var dektrium\user\Module 	$module
  */
 
 $this->title = $title;

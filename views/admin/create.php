@@ -14,8 +14,8 @@ use yii\bootstrap\Nav;
 use yii\helpers\Html;
 
 /**
- * @var yii\web\View $this
- * @var dektrium\user\models\User $user
+ * @var yii\web\View 				$this
+ * @var dektrium\user\models\User 	$user
  */
 
 $this->title = Yii::t('user', 'Create a user account');
@@ -40,20 +40,14 @@ $this->params['breadcrumbs'][] = $this->title;
                     ],
                     'items' => [
                         ['label' => Yii::t('user', 'Account details'), 'url' => ['/user/admin/create']],
-                        [
-                            'label' => Yii::t('user', 'Profile details'),
-                            'options' => [
-                                'class' => 'disabled',
-                                'onclick' => 'return false;',
-                            ]
-                        ],
-                        [
-                            'label' => Yii::t('user', 'Information'),
-                            'options' => [
-                                'class' => 'disabled',
-                                'onclick' => 'return false;',
-                            ]
-                        ],
+                        ['label' => Yii::t('user', 'Profile details'), 'options' => [
+                            'class' => 'disabled',
+                            'onclick' => 'return false;',
+                        ]],
+                        ['label' => Yii::t('user', 'Information'), 'options' => [
+                            'class' => 'disabled',
+                            'onclick' => 'return false;',
+                        ]],
                     ],
                 ]) ?>
             </div>
@@ -68,7 +62,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 </div>
                 <?php $form = ActiveForm::begin([
                     'layout' => 'horizontal',
-                    'enableAjaxValidation' => true,
+                    'enableAjaxValidation'   => true,
                     'enableClientValidation' => false,
                     'fieldConfig' => [
                         'horizontalCssClasses' => [

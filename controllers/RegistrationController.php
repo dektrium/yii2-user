@@ -15,10 +15,11 @@ use dektrium\user\Finder;
 use dektrium\user\models\RegistrationForm;
 use dektrium\user\models\ResendForm;
 use dektrium\user\models\User;
-use yii\web\Controller;
-use yii\filters\AccessControl;
-use yii\web\NotFoundHttpException;
 use dektrium\user\traits\AjaxValidationTrait;
+use Yii;
+use yii\filters\AccessControl;
+use yii\web\Controller;
+use yii\web\NotFoundHttpException;
 
 /**
  * RegistrationController is responsible for all registration process, which includes registration of a new account,
@@ -66,7 +67,6 @@ class RegistrationController extends Controller
      * After successful registration if enableConfirmation is enabled shows info message otherwise redirects to home page.
      *
      * @return string
-     *
      * @throws \yii\web\HttpException
      */
     public function actionRegister()
@@ -75,13 +75,14 @@ class RegistrationController extends Controller
             throw new NotFoundHttpException();
         }
 
-        $model = \Yii::createObject(RegistrationForm::className());
+        /** @var RegistrationForm $model */
+        $model = Yii::createObject(RegistrationForm::className());
 
         $this->performAjaxValidation($model);
 
-        if ($model->load(\Yii::$app->request->post()) && $model->register()) {
+        if ($model->load(Yii::$app->request->post()) && $model->register()) {
             return $this->render('/message', [
-                'title'  => \Yii::t('user', 'Your account has been created'),
+                'title'  => Yii::t('user', 'Your account has been created'),
                 'module' => $this->module,
             ]);
         }
@@ -98,7 +99,6 @@ class RegistrationController extends Controller
      * @param int $account_id
      *
      * @return string
-     *
      * @throws NotFoundHttpException
      */
     public function actionConnect($account_id)
@@ -110,14 +110,14 @@ class RegistrationController extends Controller
         }
 
         /** @var User $user */
-        $user = \Yii::createObject([
+        $user = Yii::createObject([
             'class'    => User::className(),
             'scenario' => 'connect',
         ]);
 
-        if ($user->load(\Yii::$app->request->post()) && $user->create()) {
+        if ($user->load(Yii::$app->request->post()) && $user->create()) {
             $account->link('user', $user);
-            \Yii::$app->user->login($user, $this->module->rememberFor);
+            Yii::$app->user->login($user, $this->module->rememberFor);
 
             return $this->goBack();
         }
@@ -136,7 +136,6 @@ class RegistrationController extends Controller
      * @param string $code
      *
      * @return string
-     *
      * @throws \yii\web\HttpException
      */
     public function actionConfirm($id, $code)
@@ -150,7 +149,7 @@ class RegistrationController extends Controller
         $user->attemptConfirmation($code);
 
         return $this->render('/message', [
-            'title'  => \Yii::t('user', 'Account confirmation'),
+            'title'  => Yii::t('user', 'Account confirmation'),
             'module' => $this->module,
         ]);
     }
@@ -159,7 +158,6 @@ class RegistrationController extends Controller
      * Displays page where user can request new confirmation token. If resending was successful, displays message.
      *
      * @return string
-     *
      * @throws \yii\web\HttpException
      */
     public function actionResend()
@@ -168,13 +166,14 @@ class RegistrationController extends Controller
             throw new NotFoundHttpException();
         }
 
-        $model = \Yii::createObject(ResendForm::className());
+        /** @var ResendForm $model */
+        $model = Yii::createObject(ResendForm::className());
 
         $this->performAjaxValidation($model);
 
-        if ($model->load(\Yii::$app->request->post()) && $model->resend()) {
+        if ($model->load(Yii::$app->request->post()) && $model->resend()) {
             return $this->render('/message', [
-                'title'  => \Yii::t('user', 'A new confirmation link has been sent'),
+                'title'  => Yii::t('user', 'A new confirmation link has been sent'),
                 'module' => $this->module,
             ]);
         }

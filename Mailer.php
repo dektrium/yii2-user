@@ -13,6 +13,7 @@ namespace dektrium\user;
 
 use dektrium\user\models\Token;
 use dektrium\user\models\User;
+use Yii;
 use yii\base\Component;
 
 /**
@@ -25,7 +26,7 @@ class Mailer extends Component
     /** @var string */
     public $viewPath = '@dektrium/user/views/mail';
 
-    /** @var string|array Default: `\Yii::$app->params['adminEmail']` OR `no-reply@example.com` */
+    /** @var string|array Default: `Yii::$app->params['adminEmail']` OR `no-reply@example.com` */
     public $sender;
 
     /** @var string */
@@ -46,14 +47,16 @@ class Mailer extends Component
     /** @inheritdoc */
     public function init()
     {
-        $this->module = \Yii::$app->getModule('user');
+        $this->module = Yii::$app->getModule('user');
         parent::init();
     }
 
     /**
      * Sends an email to a user after registration.
-     * @param  User  $user
-     * @param  Token $token
+     *
+     * @param User  $user
+     * @param Token $token
+     *
      * @return bool
      */
     public function sendWelcomeMessage(User $user, Token $token = null)
@@ -132,15 +135,16 @@ class Mailer extends Component
      */
     protected function sendMessage($to, $subject, $view, $params = [])
     {
-        $mailer = \Yii::$app->mailer;
+        /** @var \yii\mail\BaseMailer $mailer */
+        $mailer = Yii::$app->mailer;
         $mailer->viewPath = $this->viewPath;
-        $mailer->getView()->theme = \Yii::$app->view->theme;
+        $mailer->getView()->theme = Yii::$app->view->theme;
 
         if ($this->sender === null) {
-            $this->sender = isset(\Yii::$app->params['adminEmail']) ? \Yii::$app->params['adminEmail'] : 'no-reply@example.com';
+            $this->sender = isset(Yii::$app->params['adminEmail']) ? Yii::$app->params['adminEmail'] : 'no-reply@example.com';
         }
 
-        return $mailer->compose(['html' => $view, 'text' => 'text/'.$view], $params)
+        return $mailer->compose(['html' => $view, 'text' => 'text/' . $view], $params)
             ->setTo($to)
             ->setFrom($this->sender)
             ->setSubject($subject)

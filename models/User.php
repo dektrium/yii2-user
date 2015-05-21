@@ -15,12 +15,13 @@ use dektrium\user\Finder;
 use dektrium\user\helpers\Password;
 use dektrium\user\Mailer;
 use dektrium\user\Module;
+use Yii;
 use yii\base\NotSupportedException;
 use yii\behaviors\TimestampBehavior;
 use yii\db\ActiveRecord;
 use yii\db\Query;
-use yii\web\IdentityInterface;
 use yii\web\Application as WebApplication;
+use yii\web\IdentityInterface;
 
 /**
  * User ActiveRecord model.
@@ -81,9 +82,9 @@ class User extends ActiveRecord implements IdentityInterface
     /** @inheritdoc */
     public function init()
     {
-        $this->finder = \Yii::$container->get(Finder::className());
-        $this->mailer = \Yii::$container->get(Mailer::className());
-        $this->module = \Yii::$app->getModule('user');
+        $this->finder = Yii::$container->get(Finder::className());
+        $this->mailer = Yii::$container->get(Mailer::className());
+        $this->module = Yii::$app->getModule('user');
         parent::init();
     }
 
@@ -159,13 +160,13 @@ class User extends ActiveRecord implements IdentityInterface
     public function attributeLabels()
     {
         return [
-            'username'          => \Yii::t('user', 'Username'),
-            'email'             => \Yii::t('user', 'Email'),
-            'registration_ip'   => \Yii::t('user', 'Registration ip'),
-            'unconfirmed_email' => \Yii::t('user', 'New email'),
-            'password'          => \Yii::t('user', 'Password'),
-            'created_at'        => \Yii::t('user', 'Registration time'),
-            'confirmed_at'      => \Yii::t('user', 'Confirmation time'),
+            'username'          => Yii::t('user', 'Username'),
+            'email'             => Yii::t('user', 'Email'),
+            'registration_ip'   => Yii::t('user', 'Registration ip'),
+            'unconfirmed_email' => Yii::t('user', 'New email'),
+            'password'          => Yii::t('user', 'Password'),
+            'created_at'        => Yii::t('user', 'Registration time'),
+            'confirmed_at'      => Yii::t('user', 'Confirmation time'),
         ];
     }
 
@@ -197,14 +198,14 @@ class User extends ActiveRecord implements IdentityInterface
             'usernameRequired' => ['username', 'required', 'on' => ['register', 'create', 'connect', 'update']],
             'usernameMatch'    => ['username', 'match', 'pattern' => static::$usernameRegexp],
             'usernameLength'   => ['username', 'string', 'min' => 3, 'max' => 255],
-            'usernameUnique'   => ['username', 'unique', 'message' => \Yii::t('user', 'This username has already been taken')],
+            'usernameUnique'   => ['username', 'unique', 'message' => Yii::t('user', 'This username has already been taken')],
             'usernameTrim'     => ['username', 'trim'],
 
             // email rules
             'emailRequired' => ['email', 'required', 'on' => ['register', 'connect', 'create', 'update']],
             'emailPattern'  => ['email', 'email'],
             'emailLength'   => ['email', 'string', 'max' => 255],
-            'emailUnique'   => ['email', 'unique', 'message' => \Yii::t('user', 'This email address has already been taken')],
+            'emailUnique'   => ['email', 'unique', 'message' => Yii::t('user', 'This email address has already been taken')],
             'emailTrim'     => ['email', 'trim'],
 
             // password rules
@@ -227,11 +228,11 @@ class User extends ActiveRecord implements IdentityInterface
     public function create()
     {
         if ($this->getIsNewRecord() == false) {
-            throw new \RuntimeException('Calling "'.__CLASS__.'::'.__METHOD__.'" on existing user');
+            throw new \RuntimeException('Calling "' . __CLASS__ . '::' . __METHOD__ . '" on existing user');
         }
 
         $this->confirmed_at = time();
-        $this->password     = $this->password == null ? Password::generate(8) : $this->password;
+        $this->password = $this->password == null ? Password::generate(8) : $this->password;
 
         $this->trigger(self::BEFORE_CREATE);
 
@@ -254,7 +255,7 @@ class User extends ActiveRecord implements IdentityInterface
     public function register()
     {
         if ($this->getIsNewRecord() == false) {
-            throw new \RuntimeException('Calling "'.__CLASS__.'::'.__METHOD__.'" on existing user');
+            throw new \RuntimeException('Calling "' . __CLASS__ . '::' . __METHOD__ . '" on existing user');
         }
 
         $this->confirmed_at = $this->module->enableConfirmation ? null : time();
@@ -268,7 +269,7 @@ class User extends ActiveRecord implements IdentityInterface
 
         if ($this->module->enableConfirmation) {
             /** @var Token $token */
-            $token = \Yii::createObject(['class' => Token::className(), 'type' => Token::TYPE_CONFIRMATION]);
+            $token = Yii::createObject(['class' => Token::className(), 'type' => Token::TYPE_CONFIRMATION]);
             $token->link('user', $this);
         }
 
@@ -281,7 +282,8 @@ class User extends ActiveRecord implements IdentityInterface
     /**
      * Attempts user confirmation.
      *
-     * @param  string  $code Confirmation code.
+     * @param string $code Confirmation code.
+     *
      * @return boolean
      */
     public function attemptConfirmation($code)
@@ -291,17 +293,17 @@ class User extends ActiveRecord implements IdentityInterface
         if ($token instanceof Token && !$token->isExpired) {
             $token->delete();
             if (($success = $this->confirm())) {
-                \Yii::$app->user->login($this, $this->module->rememberFor);
-                $message = \Yii::t('user', 'Thank you, registration is now complete.');
+                Yii::$app->user->login($this, $this->module->rememberFor);
+                $message = Yii::t('user', 'Thank you, registration is now complete.');
             } else {
-                $message = \Yii::t('user', 'Something went wrong and your account has not been confirmed.');
+                $message = Yii::t('user', 'Something went wrong and your account has not been confirmed.');
             }
         } else {
             $success = false;
-            $message = \Yii::t('user', 'The confirmation link is invalid or expired. Please try requesting a new one.');
+            $message = Yii::t('user', 'The confirmation link is invalid or expired. Please try requesting a new one.');
         }
 
-        \Yii::$app->session->setFlash($success ? 'success' : 'danger', $message);
+        Yii::$app->session->setFlash($success ? 'success' : 'danger', $message);
 
         return $success;
     }
@@ -314,7 +316,6 @@ class User extends ActiveRecord implements IdentityInterface
      * @param string $code
      *
      * @return bool
-     *
      * @throws \Exception
      */
     public function attemptEmailChange($code)
@@ -328,29 +329,29 @@ class User extends ActiveRecord implements IdentityInterface
         ])->andWhere(['in', 'type', [Token::TYPE_CONFIRM_NEW_EMAIL, Token::TYPE_CONFIRM_OLD_EMAIL]])->one();
 
         if (empty($this->unconfirmed_email) || $token === null || $token->isExpired) {
-            \Yii::$app->session->setFlash('danger', \Yii::t('user', 'Your confirmation token is invalid or expired'));
+            Yii::$app->session->setFlash('danger', Yii::t('user', 'Your confirmation token is invalid or expired'));
         } else {
             $token->delete();
 
             if (empty($this->unconfirmed_email)) {
-                \Yii::$app->session->setFlash('danger', \Yii::t('user', 'An error occurred processing your request'));
+                Yii::$app->session->setFlash('danger', Yii::t('user', 'An error occurred processing your request'));
             } elseif ($this->finder->findUser(['email' => $this->unconfirmed_email])->exists() == false) {
                 if ($this->module->emailChangeStrategy == Module::STRATEGY_SECURE) {
                     switch ($token->type) {
                         case Token::TYPE_CONFIRM_NEW_EMAIL:
                             $this->flags |= self::NEW_EMAIL_CONFIRMED;
-                            \Yii::$app->session->setFlash('success', \Yii::t('user', 'Awesome, almost there. Now you need to click the confirmation link sent to your old email address'));
+                            Yii::$app->session->setFlash('success', Yii::t('user', 'Awesome, almost there. Now you need to click the confirmation link sent to your old email address'));
                             break;
                         case Token::TYPE_CONFIRM_OLD_EMAIL:
                             $this->flags |= self::OLD_EMAIL_CONFIRMED;
-                            \Yii::$app->session->setFlash('success', \Yii::t('user', 'Awesome, almost there. Now you need to click the confirmation link sent to your new email address'));
+                            Yii::$app->session->setFlash('success', Yii::t('user', 'Awesome, almost there. Now you need to click the confirmation link sent to your new email address'));
                             break;
                     }
                 }
                 if ($this->module->emailChangeStrategy == Module::STRATEGY_DEFAULT || ($this->flags & self::NEW_EMAIL_CONFIRMED && $this->flags & self::OLD_EMAIL_CONFIRMED)) {
                     $this->email = $this->unconfirmed_email;
                     $this->unconfirmed_email = null;
-                    \Yii::$app->session->setFlash('success', \Yii::t('user', 'Your email address has been changed'));
+                    Yii::$app->session->setFlash('success', Yii::t('user', 'Your email address has been changed'));
                 }
                 $this->save(false);
             }
@@ -362,7 +363,7 @@ class User extends ActiveRecord implements IdentityInterface
      */
     public function confirm()
     {
-        return (bool) $this->updateAttributes(['confirmed_at' => time()]);
+        return (bool)$this->updateAttributes(['confirmed_at' => time()]);
     }
 
     /**
@@ -374,7 +375,7 @@ class User extends ActiveRecord implements IdentityInterface
      */
     public function resetPassword($password)
     {
-        return (bool) $this->updateAttributes(['password_hash' => Password::hash($password)]);
+        return (bool)$this->updateAttributes(['password_hash' => Password::hash($password)]);
     }
 
     /**
@@ -382,9 +383,9 @@ class User extends ActiveRecord implements IdentityInterface
      */
     public function block()
     {
-        return (bool) $this->updateAttributes([
+        return (bool)$this->updateAttributes([
             'blocked_at' => time(),
-            'auth_key'   => \Yii::$app->security->generateRandomString(),
+            'auth_key'   => Yii::$app->security->generateRandomString(),
         ]);
     }
 
@@ -393,7 +394,7 @@ class User extends ActiveRecord implements IdentityInterface
      */
     public function unblock()
     {
-        return (bool) $this->updateAttributes(['blocked_at' => null]);
+        return (bool)$this->updateAttributes(['blocked_at' => null]);
     }
 
     /**
@@ -415,7 +416,7 @@ class User extends ActiveRecord implements IdentityInterface
                 ->select('MAX(id) as id')
                 ->one();
 
-            $this->username = 'user'.++$row['id'];
+            $this->username = 'user' . ++$row['id'];
         }
 
         return $this->username;
@@ -425,9 +426,9 @@ class User extends ActiveRecord implements IdentityInterface
     public function beforeSave($insert)
     {
         if ($insert) {
-            $this->setAttribute('auth_key', \Yii::$app->security->generateRandomString());
-            if (\Yii::$app instanceof WebApplication) {
-                $this->setAttribute('registration_ip', \Yii::$app->request->userIP);
+            $this->setAttribute('auth_key', Yii::$app->security->generateRandomString());
+            if (Yii::$app instanceof WebApplication) {
+                $this->setAttribute('registration_ip', Yii::$app->request->userIP);
             }
         }
 
@@ -444,7 +445,7 @@ class User extends ActiveRecord implements IdentityInterface
         parent::afterSave($insert, $changedAttributes);
         if ($insert) {
             if ($this->_profile == null) {
-                $this->_profile = \Yii::createObject(Profile::className());
+                $this->_profile = Yii::createObject(Profile::className());
             }
             $this->_profile->link('user', $this);
         }
@@ -465,6 +466,6 @@ class User extends ActiveRecord implements IdentityInterface
     /** @inheritdoc */
     public static function findIdentityByAccessToken($token, $type = null)
     {
-        throw new NotSupportedException('Method "'.__CLASS__.'::'.__METHOD__.'" is not implemented.');
+        throw new NotSupportedException('Method "' . __CLASS__ . '::' . __METHOD__ . '" is not implemented.');
     }
 }

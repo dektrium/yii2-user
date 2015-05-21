@@ -13,9 +13,10 @@ use dektrium\user\models\User;
 use yii\bootstrap\Nav;
 use yii\web\View;
 
-/*
- * @var View $this
- * @var User $user
+/**
+ * @var View 	$this
+ * @var User 	$user
+ * @var string 	$content
  */
 
 $this->title = Yii::t('user', 'Update user account');

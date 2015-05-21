@@ -13,6 +13,7 @@ namespace dektrium\user\models;
 
 use dektrium\user\Finder;
 use dektrium\user\Mailer;
+use Yii;
 use yii\base\Model;
 
 /**
@@ -47,7 +48,7 @@ class ResendForm extends Model
      */
     public function __construct(Mailer $mailer, Finder $finder, $config = [])
     {
-        $this->module = \Yii::$app->getModule('user');
+        $this->module = Yii::$app->getModule('user');
         $this->mailer = $mailer;
         $this->finder = $finder;
         parent::__construct($config);
@@ -72,11 +73,14 @@ class ResendForm extends Model
             'emailRequired' => ['email', 'required'],
             'emailPattern' => ['email', 'email'],
             'emailExist' => ['email', 'exist', 'targetClass' => $this->module->modelMap['User']],
-            'emailConfirmed' => ['email', function () {
-                if ($this->user != null && $this->user->getIsConfirmed()) {
-                    $this->addError('email', \Yii::t('user', 'This account has already been confirmed'));
+            'emailConfirmed' => [
+                'email',
+                function () {
+                    if ($this->user != null && $this->user->getIsConfirmed()) {
+                        $this->addError('email', Yii::t('user', 'This account has already been confirmed'));
+                    }
                 }
-            }],
+            ],
         ];
     }
 
@@ -84,7 +88,7 @@ class ResendForm extends Model
     public function attributeLabels()
     {
         return [
-            'email' => \Yii::t('user', 'Email'),
+            'email' => Yii::t('user', 'Email'),
         ];
     }
 
@@ -105,14 +109,14 @@ class ResendForm extends Model
             return false;
         }
         /** @var Token $token */
-        $token = \Yii::createObject([
+        $token = Yii::createObject([
             'class'   => Token::className(),
             'user_id' => $this->user->id,
             'type'    => Token::TYPE_CONFIRMATION,
         ]);
         $token->save(false);
         $this->mailer->sendConfirmationMessage($this->user, $token);
-        \Yii::$app->session->setFlash('info', \Yii::t('user', 'A message has been sent to your email address. It contains a confirmation link that you must click to complete registration.'));
+        Yii::$app->session->setFlash('info', Yii::t('user', 'A message has been sent to your email address. It contains a confirmation link that you must click to complete registration.'));
 
         return true;
     }

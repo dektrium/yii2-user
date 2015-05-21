@@ -14,6 +14,7 @@ namespace dektrium\user\controllers;
 use dektrium\user\Finder;
 use dektrium\user\models\LoginForm;
 use dektrium\user\Module;
+use dektrium\user\traits\AjaxValidationTrait;
 use Yii;
 use yii\authclient\AuthAction;
 use yii\authclient\ClientInterface;
@@ -22,7 +23,6 @@ use yii\filters\VerbFilter;
 use yii\helpers\Url;
 use yii\web\Controller;
 use yii\web\Response;
-use dektrium\user\traits\AjaxValidationTrait;
 
 /**
  * Controller that manages user authentication process.
@@ -78,7 +78,7 @@ class SecurityController extends Controller
                 'class' => AuthAction::className(),
                 // if user is not logged in, will try to log him in, otherwise
                 // will try to connect social account to user.
-                'successCallback' => \Yii::$app->user->isGuest
+                'successCallback' => Yii::$app->user->isGuest
                     ? [$this, 'authenticate']
                     : [$this, 'connect'],
             ],
@@ -92,11 +92,12 @@ class SecurityController extends Controller
      */
     public function actionLogin()
     {
-        if (!\Yii::$app->user->isGuest) {
+        if (!Yii::$app->user->isGuest) {
             $this->goHome();
         }
 
-        $model = \Yii::createObject(LoginForm::className());
+        /** @var LoginForm $model */
+        $model = Yii::createObject(LoginForm::className());
 
         $this->performAjaxValidation($model);
 

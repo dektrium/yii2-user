@@ -11,11 +11,11 @@
 
 namespace dektrium\user\models;
 
-use dektrium\user\Module;
+use dektrium\user\clients\ClientInterface;
 use dektrium\user\Finder;
+use dektrium\user\Module;
 use Yii;
 use yii\authclient\ClientInterface as BaseClientInterface;
-use dektrium\user\clients\ClientInterface;
 use yii\db\ActiveRecord;
 
 /**
@@ -88,8 +88,8 @@ class Account extends ActiveRecord
      */
     public static function connectWithUser(BaseClientInterface $client)
     {
-        if (\Yii::$app->user->isGuest) {
-            \Yii::$app->session->setFlash('danger', \Yii::t('user', 'Something went wrong'));
+        if (Yii::$app->user->isGuest) {
+            Yii::$app->session->setFlash('danger', Yii::t('user', 'Something went wrong'));
 
             return;
         }
@@ -98,9 +98,9 @@ class Account extends ActiveRecord
 
         if ($account->user === null) {
             $account->link('user', Yii::$app->user->identity);
-            \Yii::$app->session->setFlash('success', \Yii::t('user', 'Your account has been connected'));
+            Yii::$app->session->setFlash('success', Yii::t('user', 'Your account has been connected'));
         } else {
-            \Yii::$app->session->setFlash('danger', \Yii::t('user', 'This account has already been connected to another user'));
+            Yii::$app->session->setFlash('danger', Yii::t('user', 'This account has already been connected to another user'));
         }
     }
 
@@ -132,14 +132,17 @@ class Account extends ActiveRecord
     /**
      * Tries to find account, otherwise creates new account.
      *
+     * @param BaseClientInterface $client
+     *
      * @return Account
+     * @throws \yii\base\InvalidConfigException
      */
     protected static function fetchAccount(BaseClientInterface $client)
     {
         $account = static::getFinder()->findAccountByClient($client);
 
         if (null === $account) {
-            $account = \Yii::createObject([
+            $account = Yii::createObject([
                 'class'      => static::className(),
                 'provider'   => $client->getId(),
                 'client_id'  => $client->getUserAttributes()['id'],

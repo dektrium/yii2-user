@@ -12,7 +12,7 @@
 use yii\helpers\Html;
 use yii\widgets\ActiveForm;
 
-/*
+/**
  * @var yii\web\View              $this
  * @var dektrium\user\models\User $user
  * @var dektrium\user\Module      $module

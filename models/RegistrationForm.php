@@ -12,6 +12,7 @@
 namespace dektrium\user\models;
 
 use dektrium\user\Module;
+use Yii;
 use yii\base\Model;
 
 /**
@@ -46,7 +47,7 @@ class RegistrationForm extends Model
      */
     public function init()
     {
-        $this->module = \Yii::$app->getModule('user');
+        $this->module = Yii::$app->getModule('user');
     }
 
     /**
@@ -55,22 +56,29 @@ class RegistrationForm extends Model
     public function rules()
     {
         $user = $this->module->modelMap['User'];
+
         return [
             // username rules
             'usernameLength'   => ['username', 'string', 'min' => 3, 'max' => 255],
             'usernameTrim'     => ['username', 'filter', 'filter' => 'trim'],
             'usernamePattern'  => ['username', 'match', 'pattern' => $user::$usernameRegexp],
             'usernameRequired' => ['username', 'required'],
-            'usernameUnique'   => ['username', 'unique', 'targetClass' => $user,
-                'message' => \Yii::t('user', 'This username has already been taken')],
-
+            'usernameUnique'   => [
+                'username',
+                'unique',
+                'targetClass' => $user,
+                'message' => Yii::t('user', 'This username has already been taken')
+            ],
             // email rules
             'emailTrim'     => ['email', 'filter', 'filter' => 'trim'],
             'emailRequired' => ['email', 'required'],
             'emailPattern'  => ['email', 'email'],
-            'emailUnique'   => ['email', 'unique', 'targetClass' => $user,
-                'message' => \Yii::t('user', 'This email address has already been taken')],
-
+            'emailUnique'   => [
+                'email',
+                'unique',
+                'targetClass' => $user,
+                'message' => Yii::t('user', 'This email address has already been taken')
+            ],
             // password rules
             'passwordRequired' => ['password', 'required', 'skipOnEmpty' => $this->module->enableGeneratingPassword],
             'passwordLength'   => ['password', 'string', 'min' => 6],
@@ -83,9 +91,9 @@ class RegistrationForm extends Model
     public function attributeLabels()
     {
         return [
-            'email'    => \Yii::t('user', 'Email'),
-            'username' => \Yii::t('user', 'Username'),
-            'password' => \Yii::t('user', 'Password'),
+            'email'    => Yii::t('user', 'Email'),
+            'username' => Yii::t('user', 'Username'),
+            'password' => Yii::t('user', 'Password'),
         ];
     }
 
@@ -109,7 +117,7 @@ class RegistrationForm extends Model
         }
 
         /** @var User $user */
-        $user = \Yii::createObject(User::className());
+        $user = Yii::createObject(User::className());
         $user->setScenario('register');
         $this->loadAttributes($user);
 
@@ -117,9 +125,9 @@ class RegistrationForm extends Model
             return false;
         }
 
-        \Yii::$app->session->setFlash(
+        Yii::$app->session->setFlash(
             'info',
-            \Yii::t('user', 'Your account has been created and a message with further instructions has been sent to your email')
+            Yii::t('user', 'Your account has been created and a message with further instructions has been sent to your email')
         );
 
         return true;

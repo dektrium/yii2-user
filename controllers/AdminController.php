@@ -144,7 +144,7 @@ class AdminController extends Controller
         }
 
         return $this->render('_account', [
-            'user'    => $user,
+            'user' => $user,
         ]);
     }
 
@@ -199,6 +199,7 @@ class AdminController extends Controller
      * @param int $id
      *
      * @return string
+     * @throws NotFoundHttpException
      */
     public function actionAssignments($id)
     {
@@ -280,7 +281,6 @@ class AdminController extends Controller
      * @param int $id
      *
      * @return User the loaded model
-     *
      * @throws NotFoundHttpException if the model cannot be found
      */
     protected function findModel($id)

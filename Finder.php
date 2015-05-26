@@ -192,9 +192,20 @@ class Finder extends Object
      */
     public function findAccountByClient(ClientInterface $client)
     {
+        /**
+         * xiaoma update;
+         */
+        $clientId = 0;
+        $provider = $client->getId();
+        switch($provider){
+            case 'qq' : $clientId = $client->getUserAttributes()['openid'];break;
+            case 'sina' : $clientId = $client->getUserAttributes()['uid'];break;
+            default: $clientId = $client->getUserAttributes()['id'];break;
+        }
+
         return $this->accountQuery->where([
-            'provider'  => $client->getId(),
-            'client_id' => $client->getUserAttributes()['id'],
+            'provider'  => $provider,
+            'client_id' => $clientId,
         ])->one();
     }
 

@@ -19,7 +19,7 @@ use yii\widgets\ActiveForm;
  * @var dektrium\user\models\Account $account
  */
 
-$this->title = Yii::t('user', 'Sign in');
+$this->title = $provider.Yii::t('user', 'Connect Sign in');
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="row">
@@ -29,9 +29,13 @@ $this->params['breadcrumbs'][] = $this->title;
                 <h3 class="panel-title"><?= Html::encode($this->title) ?></h3>
             </div>
             <div class="panel-body">
+                <div>
+                        <img src="<?=$avatar;?>" style="width:30px;height:30px;" />   <span><?= Yii::t('user', 'Users') ?><font color="red"><?=$nickname;?></font><?= Yii::t('user', 'Login success') ?></span>                 
+                </div>
+                 <br/>
                 <div class="alert alert-info">
                     <p>
-                        <?= Yii::t('user', 'In order to finish your registration, we need you to enter your email address') ?>.
+                        <?= Yii::t('user', 'In order to better experience the function of website, please binding mailbox.') ?>
                     </p>
                 </div>
                 <?php $form = ActiveForm::begin([

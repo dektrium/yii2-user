@@ -83,7 +83,7 @@ class Bootstrap implements BootstrapInterface
                     $configUrlRule['routePrefix'] = 'user';
                 }
 
-                $app->get('urlManager')->rules[] = new GroupUrlRule($configUrlRule);
+                $app->urlManager->addRules([new GroupUrlRule($configUrlRule)], false);
 
                 if (!$app->has('authClientCollection')) {
                     $app->set('authClientCollection', [

@@ -11,18 +11,21 @@
 
 namespace dektrium\user\filters;
 
+use yii\web\NotFoundHttpException;
+use yii\base\ActionFilter;
+
 /**
- * BackendFilter is used to allow access only to admin controller in frontend
- * when using Yii2-user with Yii2 advanced template.
+ * BackendFilter is used to allow access only to admin and security controller in frontend when using Yii2-user with
+ * Yii2 advanced template.
  *
  * @author Dmitry Erofeev <dmeroff@gmail.com>
  */
-class BackendFilter extends \yii\base\ActionFilter
+class BackendFilter extends ActionFilter
 {
     /**
      * @var array
      */
-    public $controllers = ['profile', 'recovery', 'registration', 'security', 'settings'];
+    public $controllers = ['profile', 'recovery', 'registration', 'settings'];
 
     /**
      * @param \yii\base\Action $action
@@ -33,7 +36,7 @@ class BackendFilter extends \yii\base\ActionFilter
     public function beforeAction($action)
     {
         if (in_array($action->controller->id, $this->controllers)) {
-            throw new \yii\web\NotFoundHttpException('Not found');
+            throw new NotFoundHttpException('Not found');
         }
 
         return true;

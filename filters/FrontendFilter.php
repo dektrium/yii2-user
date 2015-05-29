@@ -11,13 +11,16 @@
 
 namespace dektrium\user\filters;
 
+use yii\base\ActionFilter;
+use yii\web\NotFoundHttpException;
+
 /**
- * FrontendFilter is used to restrict access to admin controller in frontend
- * when using Yii2-user with Yii2 advanced template.
+ * FrontendFilter is used to restrict access to admin controller in frontend when using Yii2-user with Yii2
+ * advanced template.
  *
  * @author Dmitry Erofeev <dmeroff@gmail.com>
  */
-class FrontendFilter extends \yii\base\ActionFilter
+class FrontendFilter extends ActionFilter
 {
     /**
      * @var array
@@ -33,7 +36,7 @@ class FrontendFilter extends \yii\base\ActionFilter
     public function beforeAction($action)
     {
         if (in_array($action->controller->id, $this->controllers)) {
-            throw new \yii\web\NotFoundHttpException('Not found');
+            throw new NotFoundHttpException('Not found');
         }
 
         return true;

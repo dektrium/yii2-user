@@ -10,7 +10,9 @@
  */
 
 use dektrium\user\widgets\Connect;
+use dektrium\user\models\User;
 use yii\helpers\Html;
+use yii\helpers\ArrayHelper;
 use yii\widgets\ActiveForm;
 
 /**
@@ -41,9 +43,29 @@ $this->params['breadcrumbs'][] = $this->title;
                     'validateOnChange'       => false,
                 ]) ?>
 
-                <?= $form->field($model, 'login', ['inputOptions' => ['autofocus' => 'autofocus', 'class' => 'form-control', 'tabindex' => '1']]) ?>
+                <?php
+                $debug = Yii::$app->getModule('user')->debug;
 
-                <?= $form->field($model, 'password', ['inputOptions' => ['class' => 'form-control', 'tabindex' => '2']])->passwordInput()->label(Yii::t('user', 'Password') . ($module->enablePasswordRecovery ? ' (' . Html::a(Yii::t('user', 'Forgot password?'), ['/user/recovery/request'], ['tabindex' => '5']) . ')' : '')) ?>
+                if($debug) {
+                    echo $form->field($model, 'login', ['inputOptions' => ['autofocus' => 'autofocus', 'class' => 'form-control', 'tabindex' => '1']])->dropDownList(
+                        ArrayHelper::map(User::find()->where(['blocked_at' => null])->all(), 'username', 'username'));
+                }
+                else
+                    echo $form->field($model, 'login', ['inputOptions' => ['autofocus' => 'autofocus', 'class' => 'form-control', 'tabindex' => '1']])
+                ?>
+
+                <?php
+                $label = sprintf('%s %s', Yii::t('user', 'Password'),
+                    ($module->enablePasswordRecovery ? ' (' . Html::a(Yii::t('user', 'Forgot password?'), ['/user/recovery/request'], ['tabindex' => '5']) . ')' : ''));
+
+                echo $form->field($model, 'password', [ 'inputOptions' => [ 'class' => 'form-control', 'tabindex' => '2', 'disabled' => $debug]])->passwordInput()->label($label);
+
+                if($debug) {
+                    echo '<div class="alert alert-warning">';
+                    echo Yii::t('user', 'Password is not necessary because the module is in DEBUG mode.');
+                    echo '</div>';
+                }
+                ?>
 
                 <?= $form->field($model, 'rememberMe')->checkbox(['tabindex' => '4']) ?>
 

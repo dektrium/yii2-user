@@ -18,11 +18,13 @@
  * NOTE: this file must be saved in UTF-8 encoding.
  */
 return [
+    'We have generated a password for you' => 'Мы сгенерировали пароль для вас',
     'In order to finish your registration, we need you to enter your email address' => 'Чтобы закончить регистрацию, вы должны ввести свой почтовый адрес',
     'Something went wrong' => 'Что-то пошло не так',
     'VKontakte' => 'ВКонтакте',
     'Yandex' => 'Яндекс',
     'You can connect multiple accounts to be able to log in using them' => 'Вы можете подключить несколько аккаунтов, чтобы использовать их для входа',
+    'Your account has been created and a message with further instructions has been sent to your email' => 'Ваш аккаунт был создан и сообщение с дальнейшими инструкциями отправлено на ваш email',
     '(not set)' => '(не задано)',
     'A confirmation message has been sent to your new email address' => 'Ссылка для подтверждения была отправлена вам на почту',
     'A message has been sent to your email address. It contains a confirmation link that you must click to complete registration.' => 'Вам было отправлено письмо. Оно содержит ссылку, по которой вы должны перейти, чтобы завершить регистрацию.',

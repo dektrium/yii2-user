@@ -51,7 +51,7 @@ $this->params['breadcrumbs'][] = $this->title;
 
                 <?= $form->field($model, 'new_password')->passwordInput() ?>
 
-                <hr/>
+                <hr />
 
                 <?= $form->field($model, 'current_password')->passwordInput() ?>
 

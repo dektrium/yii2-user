@@ -2,6 +2,7 @@
 
 ## 1.0.0-alpha [Work in progress]
 
+- `fix` Fixed problems with url rules #351 (dmeroff)
 - `enh` Regenerate `auth_key` after blocking the user (dmeroff)
 - `enh` Improved registration process #236 (dmeroff)
 - `fix` Ensure user/index works without php-intl extension #370 (thyseus)

@@ -24,8 +24,8 @@ use yii\bootstrap\Nav;
             'url'     => ['/user/admin/index'],
         ],
         [
-            'label' => Yii::t('user', 'Roles'),
-            'url'   => ['/rbac/role/index'],
+            'label'   => Yii::t('user', 'Roles'),
+            'url'     => ['/rbac/role/index'],
             'visible' => isset(Yii::$app->extensions['dektrium/yii2-rbac']),
         ],
         [

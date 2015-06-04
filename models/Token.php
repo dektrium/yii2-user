@@ -11,6 +11,7 @@
 
 namespace dektrium\user\models;
 
+use Yii;
 use yii\db\ActiveRecord;
 use yii\helpers\Url;
 
@@ -40,7 +41,7 @@ class Token extends ActiveRecord
     /** @inheritdoc */
     public function init()
     {
-        $this->module = \Yii::$app->getModule('user');
+        $this->module = Yii::$app->getModule('user');
     }
 
     /**
@@ -100,7 +101,7 @@ class Token extends ActiveRecord
     {
         if ($insert) {
             $this->setAttribute('created_at', time());
-            $this->setAttribute('code', \Yii::$app->security->generateRandomString());
+            $this->setAttribute('code', Yii::$app->security->generateRandomString());
         }
 
         return parent::beforeSave($insert);

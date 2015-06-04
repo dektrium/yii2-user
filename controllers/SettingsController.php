@@ -14,12 +14,13 @@ namespace dektrium\user\controllers;
 use dektrium\user\Finder;
 use dektrium\user\models\SettingsForm;
 use dektrium\user\Module;
-use yii\web\Controller;
+use dektrium\user\traits\AjaxValidationTrait;
+use Yii;
 use yii\filters\AccessControl;
 use yii\filters\VerbFilter;
+use yii\web\Controller;
 use yii\web\ForbiddenHttpException;
 use yii\web\NotFoundHttpException;
-use dektrium\user\traits\AjaxValidationTrait;
 
 /**
  * SettingsController manages updating user settings (e.g. profile, email and password).
@@ -80,12 +81,12 @@ class SettingsController extends Controller
      */
     public function actionProfile()
     {
-        $model = $this->finder->findProfileById(\Yii::$app->user->identity->getId());
+        $model = $this->finder->findProfileById(Yii::$app->user->identity->getId());
 
         $this->performAjaxValidation($model);
 
-        if ($model->load(\Yii::$app->request->post()) && $model->save()) {
-            \Yii::$app->getSession()->setFlash('success', \Yii::t('user', 'Your profile has been updated'));
+        if ($model->load(Yii::$app->request->post()) && $model->save()) {
+            Yii::$app->getSession()->setFlash('success', Yii::t('user', 'Your profile has been updated'));
 
             return $this->refresh();
         }
@@ -103,12 +104,12 @@ class SettingsController extends Controller
     public function actionAccount()
     {
         /** @var SettingsForm $model */
-        $model = \Yii::createObject(SettingsForm::className());
+        $model = Yii::createObject(SettingsForm::className());
 
         $this->performAjaxValidation($model);
 
-        if ($model->load(\Yii::$app->request->post()) && $model->save()) {
-            \Yii::$app->session->setFlash('success', \Yii::t('user', 'Your account details have been updated'));
+        if ($model->load(Yii::$app->request->post()) && $model->save()) {
+            Yii::$app->session->setFlash('success', Yii::t('user', 'Your account details have been updated'));
 
             return $this->refresh();
         }
@@ -125,7 +126,6 @@ class SettingsController extends Controller
      * @param string $code
      *
      * @return string
-     *
      * @throws \yii\web\HttpException
      */
     public function actionConfirm($id, $code)
@@ -149,7 +149,7 @@ class SettingsController extends Controller
     public function actionNetworks()
     {
         return $this->render('networks', [
-            'user' => \Yii::$app->user->identity,
+            'user' => Yii::$app->user->identity,
         ]);
     }
 
@@ -159,7 +159,6 @@ class SettingsController extends Controller
      * @param int $id
      *
      * @return \yii\web\Response
-     *
      * @throws \yii\web\NotFoundHttpException
      * @throws \yii\web\ForbiddenHttpException
      */
@@ -169,7 +168,7 @@ class SettingsController extends Controller
         if ($account === null) {
             throw new NotFoundHttpException();
         }
-        if ($account->user_id != \Yii::$app->user->id) {
+        if ($account->user_id != Yii::$app->user->id) {
             throw new ForbiddenHttpException();
         }
         $account->delete();

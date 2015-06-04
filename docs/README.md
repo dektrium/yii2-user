@@ -33,3 +33,4 @@ Yii2-user documentation is licensed under the [CC BY 4.0](http://creativecommons
 
 - [How to add captcha](adding-captcha.md)
 - [How to add custom field to User model](adding-new-field-to-user-model.md)
+- [How to add Profile field to the registration form](adding-profile-fields-to-registration-form.md)

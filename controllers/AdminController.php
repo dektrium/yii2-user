@@ -12,6 +12,7 @@
 namespace dektrium\user\controllers;
 
 use dektrium\user\Finder;
+use dektrium\user\models\Profile;
 use dektrium\user\models\User;
 use dektrium\user\models\UserSearch;
 use dektrium\user\Module;
@@ -160,6 +161,11 @@ class AdminController extends Controller
         Url::remember('', 'actions-redirect');
         $user    = $this->findModel($id);
         $profile = $user->profile;
+
+        if ($profile == null) {
+            $profile = Yii::createObject(Profile::className());
+            $profile->link('user', $user);
+        }
 
         $this->performAjaxValidation($profile);
 

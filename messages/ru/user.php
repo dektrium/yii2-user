@@ -18,6 +18,8 @@
  * NOTE: this file must be saved in UTF-8 encoding.
  */
 return [
+    'We have generated a password for you' => 'Мы сгенерировали пароль для вас',
+    'Your account has been created and a message with further instructions has been sent to your email' => 'Ваш аккаунт был создан и сообщение с дальнейшими инструкциями отправлено на ваш email',
     'In order to finish your registration, we need you to enter your email address' => 'Чтобы закончить регистрацию, вы должны ввести свой почтовый адрес',
     'Something went wrong' => 'Что-то пошло не так',
     'VKontakte' => 'ВКонтакте',

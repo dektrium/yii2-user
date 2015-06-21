@@ -38,7 +38,7 @@ return [
     'Roles' => 'Cargos',
     'Something went wrong' => 'Alguma coisa correu mal',
     'Unconfirmed' => 'Não confirmado',
-    'Update' => 'Adualizar',
+    'Update' => 'Atualizar',
     'VKontakte' => 'VKontakte',
     'Yandex' => 'Yandex',
     'You can assign multiple roles or permissions to user by using the form below' => 'Pode atribuir multiplos cargos ou permissões a um utilizador utilizando o formulário abaixo',

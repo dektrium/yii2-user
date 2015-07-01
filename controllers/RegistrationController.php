@@ -96,14 +96,14 @@ class RegistrationController extends Controller
     /**
      * Displays page where user can create new account that will be connected to social account.
      *
-     * @param int $account_id
+     * @param string $code
      *
      * @return string
      * @throws NotFoundHttpException
      */
-    public function actionConnect($account_id)
+    public function actionConnect($code)
     {
-        $account = $this->finder->findAccountById($account_id);
+        $account = $this->finder->findAccount()->byCode($code)->one();
 
         if ($account === null || $account->getIsConnected()) {
             throw new NotFoundHttpException();
@@ -113,12 +113,13 @@ class RegistrationController extends Controller
         $user = Yii::createObject([
             'class'    => User::className(),
             'scenario' => 'connect',
+            'username' => $account->username,
+            'email'    => $account->email,
         ]);
 
         if ($user->load(Yii::$app->request->post()) && $user->create()) {
-            $account->link('user', $user);
+            $account->connect($user);
             Yii::$app->user->login($user, $this->module->rememberFor);
-
             return $this->goBack();
         }
 

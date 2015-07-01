@@ -164,7 +164,8 @@ class SettingsController extends Controller
      */
     public function actionDisconnect($id)
     {
-        $account = $this->finder->findAccountById($id);
+        $account = $this->finder->findAccount()->byId($id)->one();
+
         if ($account === null) {
             throw new NotFoundHttpException();
         }

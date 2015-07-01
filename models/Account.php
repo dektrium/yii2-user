@@ -13,10 +13,12 @@ namespace dektrium\user\models;
 
 use dektrium\user\clients\ClientInterface;
 use dektrium\user\Finder;
+use dektrium\user\models\query\AccountQuery;
 use dektrium\user\Module;
 use Yii;
 use yii\authclient\ClientInterface as BaseClientInterface;
 use yii\db\ActiveRecord;
+use yii\helpers\Url;
 
 /**
  * @property integer $id          Id
@@ -25,8 +27,12 @@ use yii\db\ActiveRecord;
  * @property string  $client_id   Account id
  * @property string  $data        Account properties returned by social network (json encoded)
  * @property string  $decodedData Json-decoded properties
+ * @property string  $code
+ * @property integer $created_at
+ * @property string  $email
+ * @property string  $username
+ *
  * @property User    $user        User that this account is connected for.
- * @property Module $module
  *
  * @author Dmitry Erofeev <dmeroff@gmail.com>
  */
@@ -82,6 +88,62 @@ class Account extends ActiveRecord
     }
 
     /**
+     * Returns connect url.
+     * @return string
+     */
+    public function getConnectUrl()
+    {
+        $code = Yii::$app->security->generateRandomString();
+        $this->updateAttributes(['code' => md5($code)]);
+
+        return Url::to(['/user/registration/connect', 'code' => $code]);
+    }
+
+    public function connect(User $user)
+    {
+        return $this->updateAttributes([
+            'username' => null,
+            'email'    => null,
+            'code'     => null,
+            'user_id'  => $user->id,
+        ]);
+    }
+
+    /**
+     * @return AccountQuery
+     */
+    public static function find()
+    {
+        return Yii::createObject(AccountQuery::className(), [get_called_class()]);
+    }
+
+    public static function create(BaseClientInterface $client)
+    {
+        /** @var Account $account */
+        $account = Yii::createObject([
+            'class'      => static::className(),
+            'provider'   => $client->getId(),
+            'client_id'  => $client->getUserAttributes()['id'],
+            'data'       => json_encode($client->getUserAttributes()),
+        ]);
+
+        if ($client instanceof ClientInterface) {
+            $account->setAttributes([
+                'username' => $client->getUsername(),
+                'email'    => $client->getEmail(),
+            ], false);
+        }
+
+        if (($user = static::fetchUser($account)) instanceof User) {
+            $account->user_id = $user->id;
+        }
+
+        $account->save(false);
+
+        return $account;
+    }
+
+    /**
      * Tries to find an account and then connect that account with current user.
      *
      * @param BaseClientInterface $client
@@ -105,31 +167,6 @@ class Account extends ActiveRecord
     }
 
     /**
-     * At first it tries to find existing account model using data provided by
-     * client. If account has not been found it is created.
-     *
-     * If client is instance of "dektrium\clients\ClientInterface" and account
-     * has no connected user, it will try to create new user.
-     *
-     * @param BaseClientInterface $client
-     *
-     * @return Account
-     */
-    public static function createFromClient(BaseClientInterface $client)
-    {
-        $account = static::fetchAccount($client);
-
-        if ($account->user === null && $client instanceof ClientInterface) {
-            $user = static::fetchUser($client);
-            if ($user instanceof User) {
-                $account->link('user', $user);
-            }
-        }
-
-        return $account;
-    }
-
-    /**
      * Tries to find account, otherwise creates new account.
      *
      * @param BaseClientInterface $client
@@ -139,7 +176,7 @@ class Account extends ActiveRecord
      */
     protected static function fetchAccount(BaseClientInterface $client)
     {
-        $account = static::getFinder()->findAccountByClient($client);
+        $account = static::getFinder()->findAccount()->byClient($client)->one();
 
         if (null === $account) {
             $account = Yii::createObject([
@@ -157,13 +194,13 @@ class Account extends ActiveRecord
     /**
      * Tries to find user or create a new one.
      *
-     * @param ClientInterface $client
+     * @param Account $account
      *
      * @return User|bool False when can't create user.
      */
-    protected static function fetchUser(ClientInterface $client)
+    protected static function fetchUser(Account $account)
     {
-        $user = static::getFinder()->findUserByEmail($client->getEmail());
+        $user = static::getFinder()->findUserByEmail($account->email);
 
         if (null !== $user) {
             return $user;
@@ -172,16 +209,16 @@ class Account extends ActiveRecord
         $user = Yii::createObject([
             'class'    => User::className(),
             'scenario' => 'connect',
-            'username' => $client->getUsername(),
-            'email'    => $client->getEmail(),
+            'username' => $account->username,
+            'email'    => $account->email,
         ]);
 
         if (!$user->validate(['email'])) {
-            return false;
+            $account->email = null;
         }
 
         if (!$user->validate(['username'])) {
-            $user->username = null;
+            $account->username = null;
         }
 
         return $user->create() ? $user : false;

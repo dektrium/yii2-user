@@ -11,6 +11,7 @@
 
 namespace dektrium\user;
 
+use dektrium\user\models\query\AccountQuery;
 use dektrium\user\models\Token;
 use yii\authclient\ClientInterface;
 use yii\base\Object;
@@ -29,7 +30,7 @@ class Finder extends Object
     /** @var ActiveQuery */
     protected $tokenQuery;
 
-    /** @var ActiveQuery */
+    /** @var AccountQuery */
     protected $accountQuery;
 
     /** @var ActiveQuery */
@@ -156,6 +157,14 @@ class Finder extends Object
     }
 
     /**
+     * @return AccountQuery
+     */
+    public function findAccount()
+    {
+        return $this->accountQuery;
+    }
+
+    /**
      * Finds an account by id.
      *
      * @param int $id
@@ -165,37 +174,6 @@ class Finder extends Object
     public function findAccountById($id)
     {
         return $this->accountQuery->where(['id' => $id])->one();
-    }
-
-    /**
-     * Finds an account by client id and provider name.
-     *
-     * @param string $provider
-     * @param string $clientId
-     *
-     * @return models\Account|null
-     */
-    public function findAccountByProviderAndClientId($provider, $clientId)
-    {
-        return $this->accountQuery->where([
-            'provider'  => $provider,
-            'client_id' => $clientId,
-        ])->one();
-    }
-
-    /**
-     * Finds an account by client.
-     *
-     * @param ClientInterface $client
-     *
-     * @return models\Account|null
-     */
-    public function findAccountByClient(ClientInterface $client)
-    {
-        return $this->accountQuery->where([
-            'provider'  => $client->getId(),
-            'client_id' => $client->getUserAttributes()['id'],
-        ])->one();
     }
 
     /**

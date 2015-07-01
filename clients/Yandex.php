@@ -29,7 +29,7 @@ class Yandex extends BaseYandex implements ClientInterface
         if ($emails !== null && isset($emails[0])) {
             return $emails[0];
         } else {
-            return true;
+            return null;
         }
     }
 

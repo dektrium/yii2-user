@@ -12,7 +12,9 @@
 namespace dektrium\user\controllers;
 
 use dektrium\user\Finder;
+use dektrium\user\models\Account;
 use dektrium\user\models\LoginForm;
+use dektrium\user\models\User;
 use dektrium\user\Module;
 use dektrium\user\traits\AjaxValidationTrait;
 use Yii;
@@ -124,7 +126,7 @@ class SecurityController extends Controller
     }
 
     /**
-     * Tries to authenticate user via social network. If user has alredy used
+     * Tries to authenticate user via social network. If user has already used
      * this network's account, he will be logged in. Otherwise, it will try
      * to create new user account.
      *
@@ -132,18 +134,17 @@ class SecurityController extends Controller
      */
     public function authenticate(ClientInterface $client)
     {
-        $account = forward_static_call([
-            $this->module->modelMap['Account'],
-            'createFromClient',
-        ], $client);
+        $account = $this->finder->findAccount()->byClient($client)->one();
 
-        if (null === ($user = $account->user)) {
-            $this->action->successUrl = Url::to([
-                '/user/registration/connect',
-                'account_id' => $account->id,
-            ]);
+        if ($account === null) {
+            $account = Account::create($client);
+        }
+
+        if ($account->user instanceof User) {
+            Yii::$app->user->login($account->user, $this->module->rememberFor);
+            $this->action->successUrl = Yii::$app->getUser()->getReturnUrl();
         } else {
-            Yii::$app->user->login($user, $this->module->rememberFor);
+            $this->action->successUrl = $account->getConnectUrl();
         }
     }
 
@@ -154,10 +155,9 @@ class SecurityController extends Controller
      */
     public function connect(ClientInterface $client)
     {
-        forward_static_call([
-            $this->module->modelMap['Account'],
-            'connectWithUser',
-        ], $client);
+        /** @var Account $account */
+        $account = Yii::createObject(Account::className());
+        $account->connectWithUser($client);
         $this->action->successUrl = Url::to(['/user/settings/networks']);
     }
 }

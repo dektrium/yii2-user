@@ -34,7 +34,7 @@ return [
     'Profile details' => 'Profil Detayı',
     'Profile details have been updated' => 'Profil detayı güncellendi',
     'Recovery message sent' => 'Kurtarma mesajı gönderildi',
-    'Registration IP' => 'Kayıt IP'si,
+    'Registration IP' => 'Kayıt IP\'si',
     'Roles' => 'Roller',
     'Something went wrong' => 'Birşeyler ters gitti',
     'Unconfirmed' => 'Doğrulanmamış',

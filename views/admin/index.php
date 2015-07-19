@@ -31,7 +31,7 @@ $this->params['breadcrumbs'][] = $this->title;
     'module' => Yii::$app->getModule('user'),
 ]) ?>
 
-<?= $this->render('_menu') ?>
+<?= $this->render('/admin/_menu') ?>
 
 <?php Pjax::begin() ?>
 

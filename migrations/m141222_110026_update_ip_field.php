@@ -39,8 +39,22 @@ class m141222_110026_update_ip_field extends Migration
 
     public function down()
     {
-        echo "m141222_110026_update_ip_field cannot be reverted.\n";
+        $users = (new Query())->from('{{%user}}')->select('id, registration_ip ip')->all();
 
-        return false;
+        $transaction = Yii::$app->db->beginTransaction();
+        try {
+            foreach ($users as $user) {
+                if ($user['ip'] == null)
+                    continue;
+                Yii::$app->db->createCommand()->update('{{%user}}', [
+                    'registration_ip' => ip2long($user['ip'])
+                ], 'id = ' . $user['id'])->execute();
+            }
+            $this->alterColumn('{{%user}}', 'registration_ip', Schema::TYPE_BIGINT);
+            $transaction->commit();
+        } catch (Exception $e) {
+            $transaction->rollBack();
+            throw $e;
+        }
     }
 }

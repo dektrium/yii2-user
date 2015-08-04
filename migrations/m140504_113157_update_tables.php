@@ -37,6 +37,19 @@ class m140504_113157_update_tables extends Migration
 
     public function down()
     {
-        return false;
+        // account table
+        $this->renameColumn('{{%account}}', 'data', 'properties');
+
+        // user table
+        $this->dropColumn('{{%user}}', 'flags');
+        $this->renameColumn('{{%user}}', 'registration_ip', 'registered_from');
+        $this->addColumn('{{%user}}', 'logged_in_at', Schema::TYPE_INTEGER);
+        $this->addColumn('{{%user}}', 'logged_in_from', Schema::TYPE_INTEGER);
+        $this->addColumn('{{%user}}', 'recovery_sent_at', Schema::TYPE_INTEGER);
+        $this->addColumn('{{%user}}', 'recovery_token', Schema::TYPE_STRING . '(32)');
+        $this->addColumn('{{%user}}', 'confirmation_sent_at', Schema::TYPE_INTEGER);
+        $this->addColumn('{{%user}}', 'confirmation_token', Schema::TYPE_STRING . '(32)');
+        $this->createIndex('user_confirmation', '{{%user}}', 'id, confirmation_token', true);
+        $this->createIndex('user_recovery', '{{%user}}', 'id, recovery_token', true);
     }
 }

@@ -19,6 +19,7 @@ return [
         'nl',
         'pt-BR',
         'pt-PT',
+        'ro',
         'ru',
         'th',
         'tr_TR',

@@ -51,7 +51,7 @@ passwords.
 
 ---
 
-#### emailChangingStrategy (Type: `integer`, Default value: `\dektrium\user\Module::STRATEGY_DEFAULT`)
+#### emailChangeStrategy (Type: `integer`, Default value: `\dektrium\user\Module::STRATEGY_DEFAULT`)
 
 When user tries change his password, there are three ways how this change will
 happen:

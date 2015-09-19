@@ -59,7 +59,7 @@ class SecurityController extends Controller
             'access' => [
                 'class' => AccessControl::className(),
                 'rules' => [
-                    ['allow' => true, 'actions' => ['login', 'auth'], 'roles' => ['?']],
+                    ['allow' => true, 'actions' => ['login', 'auth', 'blocked'], 'roles' => ['?']],
                     ['allow' => true, 'actions' => ['login', 'auth', 'logout'], 'roles' => ['@']],
                 ],
             ],
@@ -141,8 +141,13 @@ class SecurityController extends Controller
         }
 
         if ($account->user instanceof User) {
-            Yii::$app->user->login($account->user, $this->module->rememberFor);
-            $this->action->successUrl = Yii::$app->getUser()->getReturnUrl();
+            if ($account->user->isBlocked) {
+                Yii::$app->session->setFlash('danger', Yii::t('user', 'Your account has been blocked.'));
+                $this->action->successUrl = Url::to(['/user/security/login']);
+            } else {
+                Yii::$app->user->login($account->user, $this->module->rememberFor);
+                $this->action->successUrl = Yii::$app->getUser()->getReturnUrl();
+            }
         } else {
             $this->action->successUrl = $account->getConnectUrl();
         }

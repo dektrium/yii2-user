@@ -75,7 +75,7 @@ class SettingsForm extends Model
         return [
             'usernameRequired' => ['username', 'required'],
             'usernameTrim' => ['username', 'filter', 'filter' => 'trim'],
-            'usernameLenth' => ['username', 'string', 'min' => 3, 'max' => 20],
+            'usernameLength'   => ['username', 'string', 'min' => 3, 'max' => 255],
             'usernamePattern' => ['username', 'match', 'pattern' => '/^[-a-zA-Z0-9_\.@]+$/'],
             'emailRequired' => ['email', 'required'],
             'emailTrim' => ['email', 'filter', 'filter' => 'trim'],

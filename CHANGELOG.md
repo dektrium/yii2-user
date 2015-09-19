@@ -1,7 +1,8 @@
 # CHANGELOG
 
-## 1.0.0-alpha [Work in progress]
+## 0.9.5 [Work in progress]
 
+- `fix` Forbid ability to login via networks for blocked users (dmeroff)
 - `fix` Fixed problems with url rules #351 (dmeroff)
 - `enh` Regenerate `auth_key` after blocking the user (dmeroff)
 - `enh` Improved registration process #236 (dmeroff)

@@ -56,15 +56,16 @@ class Mailer extends Component
      *
      * @param User  $user
      * @param Token $token
+     * @param bool  $showPassword
      *
      * @return bool
      */
-    public function sendWelcomeMessage(User $user, Token $token = null)
+    public function sendWelcomeMessage(User $user, Token $token = null, $showPassword = false)
     {
         return $this->sendMessage($user->email,
             $this->welcomeSubject,
             'welcome',
-            ['user' => $user, 'token' => $token, 'module' => $this->module]
+            ['user' => $user, 'token' => $token, 'module' => $this->module, 'showPassword' => $showPassword]
         );
     }
 

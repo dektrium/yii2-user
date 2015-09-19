@@ -240,7 +240,7 @@ class User extends ActiveRecord implements IdentityInterface
             return false;
         }
 
-        $this->mailer->sendWelcomeMessage($this);
+        $this->mailer->sendWelcomeMessage($this, null, true);
         $this->trigger(self::AFTER_CREATE);
 
         return true;

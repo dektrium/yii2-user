@@ -11,119 +11,158 @@
 
 namespace dektrium\user\controllers;
 
-use yii\helpers\Url;
-use yii\web\Controller;
+use dektrium\user\Finder;
+use dektrium\user\models\Account;
+use dektrium\user\models\LoginForm;
+use dektrium\user\models\User;
+use dektrium\user\Module;
+use dektrium\user\traits\AjaxValidationTrait;
+use Yii;
+use yii\authclient\AuthAction;
+use yii\authclient\ClientInterface;
 use yii\filters\AccessControl;
 use yii\filters\VerbFilter;
-use yii\authclient\ClientInterface;
+use yii\helpers\Url;
+use yii\web\Controller;
+use yii\web\Response;
 
 /**
  * Controller that manages user authentication process.
  *
- * @property \dektrium\user\Module $module
+ * @property Module $module
  *
  * @author Dmitry Erofeev <dmeroff@gmail.com>
  */
 class SecurityController extends Controller
 {
+    use AjaxValidationTrait;
+
+    /** @var Finder */
+    protected $finder;
+
     /**
-     * @inheritdoc
+     * @param string $id
+     * @param Module $module
+     * @param Finder $finder
+     * @param array  $config
      */
+    public function __construct($id, $module, Finder $finder, $config = [])
+    {
+        $this->finder = $finder;
+        parent::__construct($id, $module, $config);
+    }
+
+    /** @inheritdoc */
     public function behaviors()
     {
         return [
             'access' => [
                 'class' => AccessControl::className(),
                 'rules' => [
-                    [
-                        'allow' => true,
-                        'actions' => ['login', 'auth'],
-                        'roles' => ['?']
-                    ],
-                    [
-                        'allow' => true,
-                        'actions' => ['logout'],
-                        'roles' => ['@']
-                    ],
-                ]
+                    ['allow' => true, 'actions' => ['login', 'auth', 'blocked'], 'roles' => ['?']],
+                    ['allow' => true, 'actions' => ['login', 'auth', 'logout'], 'roles' => ['@']],
+                ],
             ],
             'verbs' => [
                 'class' => VerbFilter::className(),
                 'actions' => [
-                    'logout' => ['post']
-                ]
-            ]
+                    'logout' => ['post'],
+                ],
+            ],
         ];
     }
 
-    /**
-     * @inheritdoc
-     */
+    /** @inheritdoc */
     public function actions()
     {
         return [
             'auth' => [
-                'class' => 'yii\authclient\AuthAction',
-                'successCallback' => [$this, 'authenticate'],
-            ]
+                'class' => AuthAction::className(),
+                // if user is not logged in, will try to log him in, otherwise
+                // will try to connect social account to user.
+                'successCallback' => Yii::$app->user->isGuest
+                    ? [$this, 'authenticate']
+                    : [$this, 'connect'],
+            ],
         ];
     }
 
     /**
      * Displays the login page.
      *
-     * @return string|\yii\web\Response
+     * @return string|Response
      */
     public function actionLogin()
     {
-        $model = $this->module->manager->createLoginForm();
+        if (!Yii::$app->user->isGuest) {
+            $this->goHome();
+        }
 
-        if ($model->load(\Yii::$app->getRequest()->post()) && $model->login()) {
+        /** @var LoginForm $model */
+        $model = Yii::createObject(LoginForm::className());
+
+        $this->performAjaxValidation($model);
+
+        if ($model->load(Yii::$app->getRequest()->post()) && $model->login()) {
             return $this->goBack();
         }
 
         return $this->render('login', [
-            'model' => $model
+            'model'  => $model,
+            'module' => $this->module,
         ]);
     }
 
     /**
      * Logs the user out and then redirects to the homepage.
      *
-     * @return \yii\web\Response
+     * @return Response
      */
     public function actionLogout()
     {
-        \Yii::$app->getUser()->logout();
+        Yii::$app->getUser()->logout();
 
         return $this->goHome();
     }
 
     /**
-     * Logs the user in if this social account has been already used. Otherwise shows registration form.
+     * Tries to authenticate user via social network. If user has already used
+     * this network's account, he will be logged in. Otherwise, it will try
+     * to create new user account.
      *
-     * @param  ClientInterface $client
-     * @return \yii\web\Response
+     * @param ClientInterface $client
      */
     public function authenticate(ClientInterface $client)
     {
-        $attributes = $client->getUserAttributes();
-        $provider   = $client->getId();
-        $clientId   = $attributes['id'];
+        $account = $this->finder->findAccount()->byClient($client)->one();
 
-        if (null === ($account = $this->module->manager->findAccount($provider, $clientId))) {
-            $account = $this->module->manager->createAccount([
-                'provider'   => $provider,
-                'client_id'  => $clientId,
-                'data'       => json_encode($attributes)
-            ]);
-            $account->save(false);
+        if ($account === null) {
+            $account = Account::create($client);
         }
 
-        if (null === ($user = $account->user)) {
-            $this->action->successUrl = Url::to(['/user/registration/connect', 'account_id' => $account->id]);
+        if ($account->user instanceof User) {
+            if ($account->user->isBlocked) {
+                Yii::$app->session->setFlash('danger', Yii::t('user', 'Your account has been blocked.'));
+                $this->action->successUrl = Url::to(['/user/security/login']);
+            } else {
+                Yii::$app->user->login($account->user, $this->module->rememberFor);
+                $this->action->successUrl = Yii::$app->getUser()->getReturnUrl();
+            }
         } else {
-            \Yii::$app->user->login($user, $this->module->rememberFor);
+            $this->action->successUrl = $account->getConnectUrl();
         }
+    }
+
+    /**
+     * Tries to connect social account to user.
+     *
+     * @param ClientInterface $client
+     */
+    public function connect(ClientInterface $client)
+    {
+        /** @var Account $account */
+        $account = Yii::createObject(Account::className());
+        $account->connectWithUser($client);
+        $this->action->successUrl = Url::to(['/user/settings/networks']);
     }
 }

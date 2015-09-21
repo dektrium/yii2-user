@@ -24,6 +24,6 @@ class UpdatePage extends BasePage
         $this->actor->fillField('#user-username', $username);
         $this->actor->fillField('#user-email', $email);
         $this->actor->fillField('#user-password', $password);
-        $this->actor->click('Save');
+        $this->actor->click('Update');
     }
 }

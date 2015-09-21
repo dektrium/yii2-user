@@ -11,8 +11,14 @@
 
 namespace dektrium\user\controllers;
 
-use yii\web\Controller;
+use dektrium\user\Finder;
+use dektrium\user\models\RegistrationForm;
+use dektrium\user\models\ResendForm;
+use dektrium\user\models\User;
+use dektrium\user\traits\AjaxValidationTrait;
+use Yii;
 use yii\filters\AccessControl;
+use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 
 /**
@@ -25,26 +31,33 @@ use yii\web\NotFoundHttpException;
  */
 class RegistrationController extends Controller
 {
+    use AjaxValidationTrait;
+
+    /** @var Finder */
+    protected $finder;
+
     /**
-     * @inheritdoc
+     * @param string           $id
+     * @param \yii\base\Module $module
+     * @param Finder           $finder
+     * @param array            $config
      */
+    public function __construct($id, $module, Finder $finder, $config = [])
+    {
+        $this->finder = $finder;
+        parent::__construct($id, $module, $config);
+    }
+
+    /** @inheritdoc */
     public function behaviors()
     {
         return [
             'access' => [
                 'class' => AccessControl::className(),
                 'rules' => [
-                    [
-                        'allow' => true,
-                        'actions' => ['register', 'connect'],
-                        'roles' => ['?']
-                    ],
-                    [
-                        'allow' => true,
-                        'actions' => ['confirm', 'resend'],
-                        'roles' => ['?', '@']
-                    ],
-                ]
+                    ['allow' => true, 'actions' => ['register', 'connect'], 'roles' => ['?']],
+                    ['allow' => true, 'actions' => ['confirm', 'resend'], 'roles' => ['?', '@']],
+                ],
             ],
         ];
     }
@@ -59,41 +72,60 @@ class RegistrationController extends Controller
     public function actionRegister()
     {
         if (!$this->module->enableRegistration) {
-            throw new NotFoundHttpException;
+            throw new NotFoundHttpException();
         }
 
-        $model = $this->module->manager->createRegistrationForm();
+        /** @var RegistrationForm $model */
+        $model = Yii::createObject(RegistrationForm::className());
 
-        if ($model->load(\Yii::$app->request->post()) && $model->register()) {
-            return $this->render('finish');
+        $this->performAjaxValidation($model);
+
+        if ($model->load(Yii::$app->request->post()) && $model->register()) {
+            return $this->render('/message', [
+                'title'  => Yii::t('user', 'Your account has been created'),
+                'module' => $this->module,
+            ]);
         }
 
         return $this->render('register', [
-            'model' => $model
+            'model'  => $model,
+            'module' => $this->module,
         ]);
     }
 
-    public function actionConnect($account_id)
+    /**
+     * Displays page where user can create new account that will be connected to social account.
+     *
+     * @param string $code
+     *
+     * @return string
+     * @throws NotFoundHttpException
+     */
+    public function actionConnect($code)
     {
-        $account = $this->module->manager->findAccountById($account_id);
+        $account = $this->finder->findAccount()->byCode($code)->one();
 
         if ($account === null || $account->getIsConnected()) {
-            throw new NotFoundHttpException('Something went wrong');
+            throw new NotFoundHttpException();
         }
 
-        $this->module->enableConfirmation = false;
+        /** @var User $user */
+        $user = Yii::createObject([
+            'class'    => User::className(),
+            'scenario' => 'connect',
+            'username' => $account->username,
+            'email'    => $account->email,
+        ]);
 
-        $model = $this->module->manager->createUser(['scenario' => 'connect']);
-        if ($model->load(\Yii::$app->request->post()) && $model->create()) {
-            $account->user_id = $model->id;
-            $account->save(false);
-            \Yii::$app->user->login($model, $this->module->rememberFor);
-            $this->goBack();
+        if ($user->load(Yii::$app->request->post()) && $user->create()) {
+            $account->connect($user);
+            Yii::$app->user->login($user, $this->module->rememberFor);
+            return $this->goBack();
         }
 
         return $this->render('connect', [
-            'model'   => $model,
-            'account' => $account
+            'model'   => $user,
+            'account' => $account,
         ]);
     }
 
@@ -101,27 +133,26 @@ class RegistrationController extends Controller
      * Confirms user's account. If confirmation was successful logs the user and shows success message. Otherwise
      * shows error message.
      *
-     * @param  integer $id
-     * @param  string  $code
+     * @param int    $id
+     * @param string $code
+     *
      * @return string
      * @throws \yii\web\HttpException
      */
     public function actionConfirm($id, $code)
     {
-        $user = $this->module->manager->findUserById($id);
+        $user = $this->finder->findUserById($id);
 
         if ($user === null || $this->module->enableConfirmation == false) {
-            throw new NotFoundHttpException;
+            throw new NotFoundHttpException();
         }
 
-        if ($user->attemptConfirmation($code)) {
-            \Yii::$app->user->login($user);
-            \Yii::$app->session->setFlash('user.confirmation_finished');
-        } else {
-            \Yii::$app->session->setFlash('user.invalid_token');
-        }
+        $user->attemptConfirmation($code);
 
-        return $this->render('finish');
+        return $this->render('/message', [
+            'title'  => Yii::t('user', 'Account confirmation'),
+            'module' => $this->module,
+        ]);
     }
 
     /**
@@ -132,18 +163,24 @@ class RegistrationController extends Controller
      */
     public function actionResend()
     {
-        if (!$this->module->enableConfirmation) {
-            throw new NotFoundHttpException;
+        if ($this->module->enableConfirmation == false) {
+            throw new NotFoundHttpException();
         }
 
-        $model = $this->module->manager->createResendForm();
+        /** @var ResendForm $model */
+        $model = Yii::createObject(ResendForm::className());
 
-        if ($model->load(\Yii::$app->request->post()) && $model->resend()) {
-            return $this->render('finish');
+        $this->performAjaxValidation($model);
+
+        if ($model->load(Yii::$app->request->post()) && $model->resend()) {
+            return $this->render('/message', [
+                'title'  => Yii::t('user', 'A new confirmation link has been sent'),
+                'module' => $this->module,
+            ]);
         }
 
         return $this->render('resend', [
-            'model' => $model
+            'model' => $model,
         ]);
     }
 }

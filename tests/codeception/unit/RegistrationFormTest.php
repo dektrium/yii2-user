@@ -7,7 +7,7 @@ use dektrium\user\helpers\Password;
 use dektrium\user\models\RegistrationForm;
 use dektrium\user\models\Token;
 use dektrium\user\models\User;
-use tests\codeception\fixtures\UserFixture;
+use tests\codeception\_fixtures\UserFixture;
 use yii\codeception\TestCase;
 
 class RegistrationFormTest extends TestCase
@@ -25,7 +25,7 @@ class RegistrationFormTest extends TestCase
         return [
             'user' => [
                 'class' => UserFixture::className(),
-                'dataFile' => '@tests/codeception/fixtures/data/init_user.php'
+                'dataFile' => '@tests/codeception/_fixtures/data/init_user.php',
             ],
         ];
     }
@@ -35,7 +35,8 @@ class RegistrationFormTest extends TestCase
         $this->model = new RegistrationForm();
 
         verify('username is required', $this->model->validate(['username']))->false();
-        $this->model->username = \Yii::$app->security->generateRandomKey();
+        $toolongstring = function() { $string = ''; for($i = 0; $i <= 256; $i++) $string .= 'X'; return $string; };
+        $this->model->username = $toolongstring();
         verify('username is too long', $this->model->validate(['username']))->false();
         $this->model->username = '!@# абв';
         verify('username contains invalid characters', $this->model->validate(['username']))->false();
@@ -65,10 +66,10 @@ class RegistrationFormTest extends TestCase
         $this->model->setAttributes([
             'email'    => 'foobar@example.com',
             'username' => 'foobar',
-            'password' => 'foobar'
+            'password' => 'foobar',
         ]);
 
-        /** @var User $user */
+        /* @var User $user */
         verify($this->model->register())->true();
 
         $user = User::findOne(['email' => 'foobar@example.com']);

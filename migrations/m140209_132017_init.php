@@ -1,16 +1,16 @@
 <?php
 
 /*
-* This file is part of the Dektrium project.
-*
-* (c) Dektrium project <http://github.com/dektrium/>
-*
-* For the full copyright and license information, please view the LICENSE
-* file that was distributed with this source code.
-*/
+ * This file is part of the Dektrium project.
+ *
+ * (c) Dektrium project <http://github.com/dektrium/>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
 
-use yii\db\Schema;
 use dektrium\user\migrations\Migration;
+use yii\db\Schema;
 
 /**
  * @author Dmitry Erofeev <dmeroff@gmail.com
@@ -20,7 +20,7 @@ class m140209_132017_init extends Migration
     public function up()
     {
         $this->createTable('{{%user}}', [
-            'id'                   => Schema::TYPE_PK,
+            'id' => Schema::TYPE_PK,
             'username'             => Schema::TYPE_STRING . '(25) NOT NULL',
             'email'                => Schema::TYPE_STRING . '(255) NOT NULL',
             'password_hash'        => Schema::TYPE_STRING . '(60) NOT NULL',
@@ -32,7 +32,6 @@ class m140209_132017_init extends Migration
             'recovery_token'       => Schema::TYPE_STRING . '(32)',
             'recovery_sent_at'     => Schema::TYPE_INTEGER,
             'blocked_at'           => Schema::TYPE_INTEGER,
-            'role'                 => Schema::TYPE_STRING . '(255)',
             'registered_from'      => Schema::TYPE_INTEGER,
             'logged_in_from'       => Schema::TYPE_INTEGER,
             'logged_in_at'         => Schema::TYPE_INTEGER,
@@ -53,7 +52,7 @@ class m140209_132017_init extends Migration
             'gravatar_id'    => Schema::TYPE_STRING . '(32)',
             'location'       => Schema::TYPE_STRING . '(255)',
             'website'        => Schema::TYPE_STRING . '(255)',
-            'bio'            => Schema::TYPE_TEXT
+            'bio'            => Schema::TYPE_TEXT,
         ], $this->tableOptions);
 
         $this->addForeignKey('fk_user_profile', '{{%profile}}', 'user_id', '{{%user}}', 'id', 'CASCADE', 'RESTRICT');

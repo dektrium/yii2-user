@@ -18,10 +18,10 @@
  * NOTE: this file must be saved in UTF-8 encoding.
  */
 return [
-    'A confirmation message has been sent to your new email address' => 'Poruka s potvrdom je poslana na vašu email adresu',
-    'A message has been sent to your email address. It contains a confirmation link that you must click to complete registration.' => 'Poruka je poslana na vašu email adresu. Sadrži link s kojim možete potvrditi registraciju',
-    'A message has been sent to your email address. It contains a password that we generated for you.' => 'Poruka je poslana na vašu email adresu. Sadrži vašu lozinku',
-    'A message has been sent to your email address. It contains your password and a confirmation link that you must click to complete registration.' => 'Poruka je poslana na vašu email adresu. Sadrži lozinku i link s kojim će te dovršiti registraciju',
+    'A confirmation message has been sent to your new email address' => 'Poruka s potvrdom je poslana na vašu email adresu.',
+    'A message has been sent to your email address. It contains a confirmation link that you must click to complete registration.' => 'Poruka je poslana na vašu email adresu. Sadrži link s kojim možete potvrditi registraciju.',
+    'A message has been sent to your email address. It contains a password that we generated for you.' => 'Poruka je poslana na vašu email adresu. Sadrži vašu lozinku.',
+    'A message has been sent to your email address. It contains your password and a confirmation link that you must click to complete registration.' => 'Poruka je poslana na vašu email adresu. Sadrži lozinku i link s kojim će te dovršiti registraciju.',
     'A new confirmation link has been sent' => 'Novi link za potvrdu je poslan',
     'Account' => 'Račun',
     'Account confirmation' => 'Potvrda računa',

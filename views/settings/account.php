@@ -12,7 +12,7 @@
 use yii\helpers\Html;
 use yii\widgets\ActiveForm;
 
-/**
+/*
  * @var $this  yii\web\View
  * @var $form  yii\widgets\ActiveForm
  * @var $model dektrium\user\models\SettingsForm
@@ -22,7 +22,7 @@ $this->title = Yii::t('user', 'Account settings');
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 
-<?= $this->render('/_alert') ?>
+<?= $this->render('/_alert', ['module' => Yii::$app->getModule('user')]) ?>
 
 <div class="row">
     <div class="col-md-3">
@@ -42,7 +42,7 @@ $this->params['breadcrumbs'][] = $this->title;
                         'labelOptions' => ['class' => 'col-lg-3 control-label'],
                     ],
                     'enableAjaxValidation'   => true,
-                    'enableClientValidation' => false
+                    'enableClientValidation' => false,
                 ]); ?>
 
                 <?= $form->field($model, 'email') ?>
@@ -51,7 +51,7 @@ $this->params['breadcrumbs'][] = $this->title;
 
                 <?= $form->field($model, 'new_password')->passwordInput() ?>
 
-                <hr/>
+                <hr />
 
                 <?= $form->field($model, 'current_password')->passwordInput() ?>
 

@@ -12,7 +12,7 @@
 use yii\widgets\ActiveForm;
 use yii\helpers\Html;
 
-/**
+/*
  * @var yii\web\View $this
  * @var yii\widgets\ActiveForm $form
  * @var dektrium\user\models\LoginForm $model
@@ -25,9 +25,9 @@ use yii\helpers\Html;
     <?php $form = ActiveForm::begin([
         'id' => 'login-widget-form',
         'fieldConfig' => [
-            'template' => "{input}\n{error}"
+            'template' => "{input}\n{error}",
         ],
-        'action' => $action
+        'action' => $action,
     ]) ?>
 
     <?= $form->field($model, 'login')->textInput(['placeholder' => 'Login']) ?>

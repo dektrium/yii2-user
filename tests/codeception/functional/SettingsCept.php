@@ -1,4 +1,6 @@
 <?php
+
+use dektrium\user\tests\FunctionalTester;
 use dektrium\user\models\Token;
 use dektrium\user\models\User;
 use tests\codeception\_pages\LoginPage;
@@ -21,7 +23,7 @@ $I->see('Current password is not valid');
 $I->amGoingTo('check that email is changing properly');
 $page->update('new_user@example.com', $user->username, 'qwerty');
 $I->seeRecord(User::className(), ['email' => $user->email, 'unconfirmed_email' => 'new_user@example.com']);
-$I->see('Confirmation message has been sent to your new email address');
+$I->see('A confirmation message has been sent to your new email address');
 $user  = $I->grabRecord(User::className(), ['id' => $user->id]);
 $token = $I->grabRecord(Token::className(), ['user_id' => $user->id, 'type' => Token::TYPE_CONFIRM_NEW_EMAIL]);
 $I->seeInEmail(Html::encode($token->getUrl()));
@@ -41,31 +43,31 @@ $I->see('Logout');
 $I->seeRecord(User::className(), [
     'id' => 1,
     'email' => 'new_user@example.com',
-    'unconfirmed_email' => null
+    'unconfirmed_email' => null,
 ]);
 
 $I->amGoingTo('reset email changing process');
 $page = SettingsPage::openBy($I);
 $page->update('user@example.com', $user->username, 'qwerty');
-$I->see('Confirmation message has been sent to your new email address');
+$I->see('A confirmation message has been sent to your new email address');
 $I->seeRecord(User::className(), [
     'id'    => 1,
     'email' => 'new_user@example.com',
-    'unconfirmed_email' => 'user@example.com'
+    'unconfirmed_email' => 'user@example.com',
 ]);
 $page->update('new_user@example.com', $user->username, 'qwerty');
-$I->see('You have successfully cancelled email changing process');
+$I->see('Your account details have been updated');
 $I->seeRecord(User::className(), [
     'id'    => 1,
     'email' => 'new_user@example.com',
-    'unconfirmed_email' => null
+    'unconfirmed_email' => null,
 ]);
 $I->amGoingTo('change username and password');
 $page->update('new_user@example.com', 'nickname', 'qwerty', '123654');
-$I->see('Account settings have been successfully saved');
+$I->see('Your account details have been updated');
 $I->seeRecord(User::className(), [
     'username' => 'nickname',
-    'email'    => 'new_user@example.com'
+    'email'    => 'new_user@example.com',
 ]);
 
 Yii::$app->user->logout();

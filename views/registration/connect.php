@@ -19,11 +19,11 @@ use yii\widgets\ActiveForm;
  * @var dektrium\user\models\Account $account
  */
 
-$this->title = Yii::t('user', 'Connect your account to {0}', $account->provider);
+$this->title = Yii::t('user', 'Sign in');
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="row">
-    <div class="col-md-6 col-md-offset-3">
+    <div class="col-md-4 col-md-offset-4">
         <div class="panel panel-default">
             <div class="panel-heading">
                 <h3 class="panel-title"><?= Html::encode($this->title) ?></h3>
@@ -31,26 +31,24 @@ $this->params['breadcrumbs'][] = $this->title;
             <div class="panel-body">
                 <div class="alert alert-info">
                     <p>
-                        <?= Yii::t('user', 'Looks like this is first time you are using {0} account to sign in to {1}', [$account->provider, Yii::$app->name]) ?>.
-                        <?= Yii::t('user', 'Connect this account by entering desired username and your email address below') ?>.
-                        <?= Yii::t('user', 'You will never have to use this form again') ?>.
+                        <?= Yii::t('user', 'In order to finish your registration, we need you to enter following fields') ?>:
                     </p>
                 </div>
                 <?php $form = ActiveForm::begin([
                     'id' => 'connect-account-form',
                 ]); ?>
 
-                <?= $form->field($model, 'username') ?>
-
                 <?= $form->field($model, 'email') ?>
 
-                <?= Html::submitButton(Yii::t('user', 'Finish'), ['class' => 'btn btn-success btn-block']) ?>
+                <?= $form->field($model, 'username') ?>
+
+                <?= Html::submitButton(Yii::t('user', 'Continue'), ['class' => 'btn btn-success btn-block']) ?>
 
                 <?php ActiveForm::end(); ?>
             </div>
         </div>
         <p class="text-center">
-            <?= Html::a(Yii::t('user', 'If you already registered, sign in and connect this account on settings page'), ['/user/security/login']) ?>.
+            <?= Html::a(Yii::t('user', 'If you already registered, sign in and connect this account on settings page'), ['/user/settings/networks']) ?>.
         </p>
     </div>
 </div>

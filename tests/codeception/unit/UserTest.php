@@ -4,7 +4,7 @@ namespace dektrium\user\tests;
 
 use Codeception\Specify;
 use dektrium\user\models\User;
-use tests\codeception\fixtures\UserFixture;
+use tests\codeception\_fixtures\UserFixture;
 use yii\codeception\TestCase;
 use Yii;
 
@@ -30,7 +30,7 @@ class UserTest extends TestCase
         return [
             'user' => [
                 'class' => UserFixture::className(),
-                'dataFile' => '@tests/codeception/fixtures/data/init_user.php'
+                'dataFile' => '@tests/codeception/_fixtures/data/init_user.php',
             ],
         ];
     }
@@ -54,7 +54,6 @@ class UserTest extends TestCase
             $user->email = 'john_doe@example.com';
             $user->password = 'qwerty';
             verify($user->register())->true();
-            verify($user->profile->gravatar_email)->equals('john_doe@example.com');
         });
     }
 
@@ -62,9 +61,11 @@ class UserTest extends TestCase
     {
         $this->specify('user can be blocked and unblocked', function () {
             $user = $this->getFixture('user')->getModel('user');
+            $authKey = $user->auth_key;
             verify('user is not blocked', $user->getIsBlocked())->false();
             $user->block();
             verify('user is blocked', $user->getIsBlocked())->true();
+            verify('auth_key has been changed', $user->auth_key)->notEquals($authKey);
             $user->unblock();
             verify('user is unblocked', $user->getIsBlocked())->false();
         });

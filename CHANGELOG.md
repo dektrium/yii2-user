@@ -1,8 +1,89 @@
 # CHANGELOG
 
+## 0.9.5 [Work in progress]
+
+- `fix` Forbid ability to login via networks for blocked users (dmeroff)
+- `fix` Fixed problems with url rules #351 (dmeroff)
+- `enh` Regenerate `auth_key` after blocking the user (dmeroff)
+- `enh` Improved registration process #236 (dmeroff)
+- `fix` Ensure user/index works without php-intl extension #370 (thyseus)
+- `fix` Fixed display of confirmation time #361 (pedros80)
+- `fix` Do not limit username length to 25 chars #369 (thyseus)
+
+## 0.9.4 [6 April 2015]
+
+- `enh` Added ability to override translations (dmeroff)
+- `enh` Improved authentication via social networks (dmeroff)
+- `enh` Added Latvian translation (uldisn)
+- `enh` Added redirect to index page when logged in user tries to access login page (thiagotalma)
+- `fix` Updated Italian translation (maxxer)
+- `enh` Added usage of `adminEmail` param as default sender name if set (thiagotalma)
+- `enh` Added link to registration page on login form (thiagotalma)
+- `enh` Improved username regexp (thiagotalma)
+- `fix` Updated translations for Portuguese language (invaderhd & thiagotalma & andredp)
+- `enh` Added integration with Yii2-rbac (dmeroff)
+- `enh` Improved admin views and controller (dmeroff)
+- `enh` Added datepicker in user grid view (dmeroff)
+
+## 0.9.3 [9 February 2015]
+
+- `fix` Fixed bug with inability to connect network account #275 (dmeroff)
+- `enh` Added turkish translation (veyselsahin)
+- `enh` Added lithuanian translation (vilkazz)
+- `fix` Fixed button css on profile settings page (sosojni)
+- `enh` Hidden recovery link when `enablePasswordRecovery` is false (marsuboss)
+- `fix` Fixed gravatar hash creation (nigelterry)
+- `fix` Fixed invalid redirection after changing account settings (WeeSee)
+- `fix` Updated messages to be more readable (jspaine)
+- `fix` Reverted initialization of `user` component (dmeroff)
+- `fix` Fixed bug on confirmation and recovery when invalid token was used (anders-akero)
+
+## 0.9.2 [14 January 2015]
+
+- `enh` Improved initialization of `user` application component (dmeroff)
+- `fix` Fixed encoding problem with plain text email messages (dmeroff)
+- `fix` Fixed migration (dmeroff)
+- `fix` Fixed overriding of mailer view files (dmeroff)
+- `fix` Fixed troubles with overriding user search model (dmeroff)
+- `fix` Fixed bug when model was defined as array in modelMap (dmeroff)
+- `fix` Removed ajax-request flood on login form (thiagotalma)
+- `enh` Added `th` translation (kongoon)
+
+## 0.9.1 [1 January 2015]
+
+- `fix` Fixed overriding of active record models (dmeroff)
+- `fix` Fixed pt-BR translation (thiagotalma)
+
+## 0.9.0 [30 December 2014]
+
+- `fix` Changed ip field type to VARCHAR(45) to handle IPv6 (dmeroff)
+- `enh` Improved mailer component (dmeroff)
+- `enh` Updated flash messages and added new module option to disable them (dmeroff)
+- `enh` Added ajax-validation (dmeroff)
+- `enh` Added secured email changing strategy (dmeroff)
+- `chg` Removed ability to delete or block your own account from admin pages (dmeroff)
+- `chg` Updated create and update admin pages (dmeroff)
+- `chg` Updated admin index page (dmeroff)
+- `chg` Removed auto-injecting module in application (belerophon)
+- `chg` Removed Mailcatcher dependency from test suite (dmeroff)
+- `chg` Refactored all models (dmeroff)
+- `enh` Refactored model overriding system (dmeroff)
+
+## 0.8.2 [14 December 2014]
+
+- `fix` Fixed croatian translation (trbsi)
+- `fix` Fixed spanish translation (abolivar)
+- `chg` Added persian farsi translation (bepehr)
+- `chg` Added hungarian translation (akosk)
+- `chg` Added dutch translation (infoweb-internet-solutions)
+- `fix` Fixed pt_BR translate (thiagotalma)
+- `fix` Fixed relation between User and Profile (anders-akero)
+- `fix` Fixed translations (sosojni)
+- `fix` Added registration_ip label (sosojni)
+
 ## 0.8.1 [13 October 2014] Yii 2.0.0 compatible
 
-- `fix` Fixed test suite
+- `fix` Fixed test suite (dmeroff)
 - `chg` Updated `composer.json` (dmeroff)
 - `chg` Added check for `enableConfirmation` for resending link (makroxyz)
 - `fix` Fixed compatibility with PostgreSQL (makroxyz)

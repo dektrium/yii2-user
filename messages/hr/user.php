@@ -28,7 +28,7 @@ return [
     'Account details' => 'Detalji računa',
     'Account details have been updated' => 'Račun je ažuriran',
     'An email has been sent with instructions for resetting your password' => 'Poslan je email sa uputama za obnavljanje lozinke',
-    'An error occurred and your password has not been changed. Please try again later.' => 'Došlo je do pogreške. Vaša lozinka nije promjenjena',
+    'An error occurred and your password has not been changed. Please try again later.' => 'Došlo je do pogreške. Vaša lozinka nije promjenjena.',
     'An error occurred processing your request' => 'Došlo je do pogreške pri obradi zahtjeva',
     'Assignments' => 'Zadaci',
     'Awesome, almost there. Now you need to click the confirmation link sent to your new email address' => 'Izvrsno, još malo pa gotovo. Sada trebate kliknuti na link za potvrdu poslanu na Vašu novu e-mail adresu',

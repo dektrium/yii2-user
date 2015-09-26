@@ -15,9 +15,7 @@ Let's create new file under `@app/filters` named
 
 namespace app\filters;
 
-use yii\filters\AccessRule;
-
-class AccessRule extends AccessRule
+class AccessRule extends \yii\filters\AccessRule
 {
 
     /** @inheritdoc */

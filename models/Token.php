@@ -100,6 +100,7 @@ class Token extends ActiveRecord
     public function beforeSave($insert)
     {
         if ($insert) {
+            static::deleteAll(['user_id' => $this->user_id, 'type' => $this->type]);
             $this->setAttribute('created_at', time());
             $this->setAttribute('code', Yii::$app->security->generateRandomString());
         }

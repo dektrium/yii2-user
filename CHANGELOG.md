@@ -2,7 +2,8 @@
 
 ## 0.9.5 [Work in progress]
 
-- `fix` Forbid ability to login via networks for blocked users (dmeroff)
+- `enh` Remove old user tokens with same type while creating new #340 (dmeroff)
+- `fix` Forbid ability to login via networks for blocked users #434 (dmeroff)
 - `fix` Fixed problems with url rules #351 (dmeroff)
 - `enh` Regenerate `auth_key` after blocking the user (dmeroff)
 - `enh` Improved registration process #236 (dmeroff)

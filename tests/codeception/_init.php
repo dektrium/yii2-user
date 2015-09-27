@@ -3,7 +3,7 @@
 if (getenv('TEST_ENVIRONMENT') === 'travis') {
     $vendor = __DIR__.'/../../vendor';
 } else {
-    $vendor = __DIR__.'/../../../../../vendor';
+    $vendor = __DIR__.'/../../../../vendor';
 }
 
 defined('YII_DEBUG') or define('YII_DEBUG', false);

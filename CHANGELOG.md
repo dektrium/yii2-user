@@ -2,6 +2,7 @@
 
 ## 0.9.5 [Work in progress]
 
+- `fix` Don't set mailer subject in bootstrap #451 (dmeroff)
 - `enh` Remove old user tokens with same type while creating new #340 (dmeroff)
 - `fix` Forbid ability to login via networks for blocked users #434 (dmeroff)
 - `fix` Fixed problems with url rules #351 (dmeroff)

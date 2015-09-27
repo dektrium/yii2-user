@@ -1,6 +1,6 @@
 # CHANGELOG
 
-## 0.9.5 [Work in progress]
+## 0.9.5 [27 September 2015]
 
 - `fix` Don't set mailer subject in bootstrap #451 (dmeroff)
 - `enh` Remove old user tokens with same type while creating new #340 (dmeroff)

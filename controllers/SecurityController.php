@@ -17,6 +17,7 @@ use dektrium\user\models\LoginForm;
 use dektrium\user\models\User;
 use dektrium\user\Module;
 use dektrium\user\traits\AjaxValidationTrait;
+use dektrium\user\traits\EventTrait;
 use Yii;
 use yii\authclient\AuthAction;
 use yii\authclient\ClientInterface;
@@ -36,6 +37,56 @@ use yii\web\Response;
 class SecurityController extends Controller
 {
     use AjaxValidationTrait;
+    use EventTrait;
+
+    /**
+     * Event is triggered before logging user in.
+     * Triggered with \dektrium\user\events\FormEvent.
+     */
+    const EVENT_BEFORE_LOGIN = 'beforeLogin';
+
+    /**
+     * Event is triggered after logging user in.
+     * Triggered with \dektrium\user\events\FormEvent.
+     */
+    const EVENT_AFTER_LOGIN = 'afterLogin';
+
+    /**
+     * Event is triggered before logging user out.
+     * Triggered with \dektrium\user\events\UserEvent.
+     */
+    const EVENT_BEFORE_LOGOUT = 'beforeLogout';
+
+    /**
+     * Event is triggered after logging user out.
+     * Triggered with \dektrium\user\events\UserEvent.
+     */
+    const EVENT_AFTER_LOGOUT = 'afterLogout';
+
+    /**
+     * Event is triggered before authenticating user via social network.
+     * Triggered with \dektrium\user\events\AuthEvent.
+     */
+    const EVENT_BEFORE_AUTHENTICATE = 'beforeAuthenticate';
+
+    /**
+     * Event is triggered after authenticating user via social network.
+     * Triggered with \dektrium\user\events\AuthEvent.
+     */
+    const EVENT_AFTER_AUTHENTICATE = 'afterAuthenticate';
+
+    /**
+     * Event is triggered before connecting social network account to user.
+     * Triggered with \dektrium\user\events\AuthEvent.
+     */
+    const EVENT_BEFORE_CONNECT = 'beforeConnect';
+
+    /**
+     * Event is triggered before connecting social network account to user.
+     * Triggered with \dektrium\user\events\AuthEvent.
+     */
+    const EVENT_AFTER_CONNECT = 'afterConnect';
+
 
     /** @var Finder */
     protected $finder;
@@ -100,10 +151,13 @@ class SecurityController extends Controller
 
         /** @var LoginForm $model */
         $model = Yii::createObject(LoginForm::className());
+        $event = $this->getFormEvent($model);
 
         $this->performAjaxValidation($model);
+        $this->trigger(self::EVENT_BEFORE_LOGIN, $event);
 
         if ($model->load(Yii::$app->getRequest()->post()) && $model->login()) {
+            $this->trigger(self::EVENT_AFTER_LOGIN, $event);
             return $this->goBack();
         }
 
@@ -120,7 +174,13 @@ class SecurityController extends Controller
      */
     public function actionLogout()
     {
+        $event = $this->getUserEvent(Yii::$app->user->identity);
+
+        $this->trigger(self::EVENT_BEFORE_LOGOUT, $event);
+
         Yii::$app->getUser()->logout();
+
+        $this->trigger(self::EVENT_AFTER_LOGOUT, $event);
 
         return $this->goHome();
     }
@@ -140,6 +200,10 @@ class SecurityController extends Controller
             $account = Account::create($client);
         }
 
+        $event = $this->getAuthEvent($account, $client);
+
+        $this->trigger(self::EVENT_BEFORE_AUTHENTICATE, $event);
+
         if ($account->user instanceof User) {
             if ($account->user->isBlocked) {
                 Yii::$app->session->setFlash('danger', Yii::t('user', 'Your account has been blocked.'));
@@ -151,6 +215,8 @@ class SecurityController extends Controller
         } else {
             $this->action->successUrl = $account->getConnectUrl();
         }
+
+        $this->trigger(self::EVENT_AFTER_AUTHENTICATE, $event);
     }
 
     /**
@@ -162,7 +228,14 @@ class SecurityController extends Controller
     {
         /** @var Account $account */
         $account = Yii::createObject(Account::className());
+        $event   = $this->getAuthEvent($account, $client);
+
+        $this->trigger(self::EVENT_BEFORE_CONNECT, $event);
+
         $account->connectWithUser($client);
+
+        $this->trigger(self::EVENT_AFTER_CONNECT, $event);
+
         $this->action->successUrl = Url::to(['/user/settings/networks']);
     }
 }

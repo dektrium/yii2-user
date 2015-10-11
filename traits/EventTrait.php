@@ -14,8 +14,11 @@ namespace dektrium\user\traits;
 use dektrium\user\events\AuthEvent;
 use dektrium\user\events\ConnectEvent;
 use dektrium\user\events\FormEvent;
+use dektrium\user\events\ResetPasswordEvent;
 use dektrium\user\events\UserEvent;
 use dektrium\user\models\Account;
+use dektrium\user\models\RecoveryForm;
+use dektrium\user\models\Token;
 use dektrium\user\models\User;
 use yii\authclient\ClientInterface;
 use yii\base\Model;
@@ -65,5 +68,16 @@ trait EventTrait
     protected function getAuthEvent(Account $account, ClientInterface $client)
     {
         return \Yii::createObject(['class' => AuthEvent::className(), 'account' => $account, 'client' => $client]);
+    }
+
+    /**
+     * @param  Token        $token
+     * @param  RecoveryForm $form
+     * @return ResetPasswordEvent
+     * @throws \yii\base\InvalidConfigException
+     */
+    protected function getResetPasswordEvent(Token $token, RecoveryForm $form = null)
+    {
+        return \Yii::createObject(['class' => ResetPasswordEvent::className(), 'token' => $token, 'form' => $form]);
     }
 }

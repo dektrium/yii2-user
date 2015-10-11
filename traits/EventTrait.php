@@ -12,6 +12,7 @@
 namespace dektrium\user\traits;
 
 use dektrium\user\events\AuthEvent;
+use dektrium\user\events\ConnectEvent;
 use dektrium\user\events\FormEvent;
 use dektrium\user\events\UserEvent;
 use dektrium\user\models\Account;
@@ -42,6 +43,17 @@ trait EventTrait
     protected function getUserEvent(User $user)
     {
         return \Yii::createObject(['class' => UserEvent::className(), 'user' => $user]);
+    }
+
+    /**
+     * @param  Account      $account
+     * @param  User         $user
+     * @return ConnectEvent
+     * @throws \yii\base\InvalidConfigException
+     */
+    protected function getConnectEvent(Account $account, User $user)
+    {
+        return \Yii::createObject(['class' => ConnectEvent::className(), 'account' => $account, 'user' => $user]);
     }
 
     /**

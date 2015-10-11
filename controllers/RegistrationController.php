@@ -19,6 +19,7 @@ use dektrium\user\models\RegistrationForm;
 use dektrium\user\models\ResendForm;
 use dektrium\user\models\User;
 use dektrium\user\traits\AjaxValidationTrait;
+use dektrium\user\traits\EventTrait;
 use Yii;
 use yii\filters\AccessControl;
 use yii\web\Controller;
@@ -35,6 +36,7 @@ use yii\web\NotFoundHttpException;
 class RegistrationController extends Controller
 {
     use AjaxValidationTrait;
+    use EventTrait;
 
     /**
      * Event is triggered after creating RegistrationForm class.
@@ -128,7 +130,7 @@ class RegistrationController extends Controller
 
         /** @var RegistrationForm $model */
         $model = Yii::createObject(RegistrationForm::className());
-        $event = Yii::createObject(['class' => FormEvent::className(), 'form' => $model]);
+        $event = $this->getFormEvent($model);
 
         $this->trigger(self::EVENT_BEFORE_REGISTER, $event);
 
@@ -174,7 +176,7 @@ class RegistrationController extends Controller
             'email'    => $account->email,
         ]);
 
-        $event = Yii::createObject(['class' => ConnectEvent::className(), 'user' => $user, 'account' => $account]);
+        $event = $this->getConnectEvent($account, $user);
 
         $this->trigger(self::EVENT_BEFORE_CONNECT, $event);
 
@@ -204,7 +206,7 @@ class RegistrationController extends Controller
     public function actionConfirm($id, $code)
     {
         $user  = $this->finder->findUserById($id);
-        $event = Yii::createObject(['class' => UserEvent::className(), 'user' => $user]);
+        $event = $this->getUserEvent($user);
 
         if ($user === null || $this->module->enableConfirmation == false) {
             throw new NotFoundHttpException();
@@ -236,7 +238,7 @@ class RegistrationController extends Controller
 
         /** @var ResendForm $model */
         $model = Yii::createObject(ResendForm::className());
-        $event = Yii::createObject(['class' => FormEvent::className(), 'form' => $model]);
+        $event = $this->getFormEvent($model);
 
         $this->trigger(self::EVENT_BEFORE_RESEND, $event);
 

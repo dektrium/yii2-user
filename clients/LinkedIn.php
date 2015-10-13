@@ -1,6 +1,15 @@
 <?php
-use dektrium\user\clients\ClientInterface;
 
+/*
+ * This file is part of the Dektrium project
+ *
+ * (c) Dektrium project <http://github.com/dektrium>
+ *
+ * For the full copyright and license information, please view the LICENSE.md
+ * file that was distributed with this source code.
+ */
+
+use dektrium\user\clients\ClientInterface;
 use yii\authclient\clients\LinkedIn as BaseLinkedIn;
 
 /*
@@ -8,7 +17,6 @@ use yii\authclient\clients\LinkedIn as BaseLinkedIn;
  */
 class LinkedIn extends BaseLinkedIn implements ClientInterface
 {
-
     /** @inheritdoc */
     public function getEmail()
     {

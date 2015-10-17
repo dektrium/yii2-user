@@ -17,6 +17,7 @@ return [
         'kz',
         'lt',
         'nl',
+        'pl',
         'pt-BR',
         'pt-PT',
         'ro',

@@ -15,8 +15,8 @@ message on a blank page:
     'class' => \dektrium\user\Module::className(),
     'controllerMap' => [
         'registration' => [
-            'class' => RegistrationController::className(),
-            'on ' . RegistrationController::EVENT_AFTER_REGISTER => function ($e) {
+            'class' => \dektrium\user\controllers\RegistrationController::className(),
+            'on ' . \dektrium\user\controllers\RegistrationController::EVENT_AFTER_REGISTER => function ($e) {
                 Yii::$app->response->redirect(array('/user/security/login'))->send();
                 Yii::$app->end();
             }

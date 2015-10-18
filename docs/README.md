@@ -16,6 +16,7 @@ Yii2-user documentation is licensed under the [CC BY 4.0](http://creativecommons
 
 - [Overriding models](overriding-models.md)
 - [Overriding views](overriding-views.md)
+- [Using controller events](using-controller-events.md)
 - [Overriding controllers](overriding-controllers.md)
 
 ## Basics

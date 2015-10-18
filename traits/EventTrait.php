@@ -14,9 +14,11 @@ namespace dektrium\user\traits;
 use dektrium\user\events\AuthEvent;
 use dektrium\user\events\ConnectEvent;
 use dektrium\user\events\FormEvent;
+use dektrium\user\events\ProfileEvent;
 use dektrium\user\events\ResetPasswordEvent;
 use dektrium\user\events\UserEvent;
 use dektrium\user\models\Account;
+use dektrium\user\models\Profile;
 use dektrium\user\models\RecoveryForm;
 use dektrium\user\models\Token;
 use dektrium\user\models\User;
@@ -47,6 +49,17 @@ trait EventTrait
     {
         return \Yii::createObject(['class' => UserEvent::className(), 'user' => $user]);
     }
+
+    /**
+     * @param  Profile      $profile
+     * @return ProfileEvent
+     * @throws \yii\base\InvalidConfigException
+     */
+    protected function getProfileEvent(Profile $profile)
+    {
+        return \Yii::createObject(['class' => ProfileEvent::className(), 'user' => $profile]);
+    }
+
 
     /**
      * @param  Account      $account

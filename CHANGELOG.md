@@ -2,7 +2,9 @@
 
 ## 1.0.0-alpha [Work in progress]
 
-- `enh` Added LinkedIn client (SamMousa)
+- `fix` Added check if profile model exists in Settings controller #497 (dmeroff)
+- `enh` Added event triggers to most of actions #411 (dmeroff)
+- `enh` Added LinkedIn client #496 (SamMousa)
 
 ## 0.9.5 [27 September 2015]
 

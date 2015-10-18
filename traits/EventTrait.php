@@ -57,7 +57,7 @@ trait EventTrait
      */
     protected function getProfileEvent(Profile $profile)
     {
-        return \Yii::createObject(['class' => ProfileEvent::className(), 'user' => $profile]);
+        return \Yii::createObject(['class' => ProfileEvent::className(), 'profile' => $profile]);
     }
 
 

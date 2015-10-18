@@ -12,6 +12,7 @@
 namespace dektrium\user\controllers;
 
 use dektrium\user\Finder;
+use dektrium\user\models\Profile;
 use dektrium\user\models\SettingsForm;
 use dektrium\user\Module;
 use dektrium\user\traits\AjaxValidationTrait;
@@ -132,6 +133,12 @@ class SettingsController extends Controller
     public function actionProfile()
     {
         $model = $this->finder->findProfileById(Yii::$app->user->identity->getId());
+
+        if ($model == null) {
+            $model = Yii::createObject(Profile::className());
+            $model->link('user', Yii::$app->user->identity);
+        }
+
         $event = $this->getProfileEvent($model);
 
         $this->performAjaxValidation($model);

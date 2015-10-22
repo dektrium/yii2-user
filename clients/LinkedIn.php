@@ -9,6 +9,8 @@
  * file that was distributed with this source code.
  */
 
+namespace dektrium\user\clients;
+
 use dektrium\user\clients\ClientInterface;
 use yii\authclient\clients\LinkedIn as BaseLinkedIn;
 

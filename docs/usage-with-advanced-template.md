@@ -1,13 +1,10 @@
 # Yii2-user with Yii2 advanced template
 
-When using advanced template, you may want to have AdminController only available
-in backend, and all other controllers available in frontend. This guide will
-help you with implementing this.
+When using advanced template, you may want to have AdminController only available in backend, and all other controllers available in frontend. This guide will help you with implementing this.
 
 ## Install
 
-Install module as described in [getting started](getting-started.md) guide, without
-configuring module as described in step 2.
+Install module as described in [getting started](getting-started.md) guide, without configuring module as described in step 2.
 
 ## Configure application
 
@@ -24,27 +21,39 @@ Let's start with defining module in `@common/config/main.php`:
 ],
 ```
 
-Now we should restrict access to admin controller in frontend application. Open
-`@frontend/config/main.php` and add following:
+Restrict access to admin controller from frontend. Open `@frontend/config/main.php` and add following:
 
 ```
 'modules' => [
     'user' => [
-        // following line will restrict access to admin page
+        // following line will restrict access to admin controller from frontend application
         'as frontend' => 'dektrium\user\filters\FrontendFilter',
     ],
 ],
 ```
 
-Also do the same thing with `@backend/config/main.php`:
+Restrict access to profile, recovery, registration and settings controllers from backend. Open `@backend/config/main.php` and add the following:
 
 ```
 'modules' => [
     'user' => [
-        // following line will restrict access to admin page
+        // following line will restrict access to profile, recovery, registration and settings controllers from backend
         'as backend' => 'dektrium\user\filters\BackendFilter',
     ],
 ],
+```
+
+Remove predefined Yii2 user component from frontend `@frontend/config/main.php` and backend `@backend/config/main.php` configuration files. You may simply comment it out the way it is shown below:
+
+```
+'components' => [
+        ...
+        /*'user' => [
+            'identityClass' => 'common\models\User',
+            'enableAutoLogin' => true,
+        ],*/
+        ...
+    ],
 ```
 
 That's all, now you have module installed and configured in advanced template.

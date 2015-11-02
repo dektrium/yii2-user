@@ -181,13 +181,14 @@ class User extends ActiveRecord implements IdentityInterface
     /** @inheritdoc */
     public function scenarios()
     {
-        return [
+        $scenarios = parent::scenarios();
+        return ArrayHelper::merge($scenarios, [
             'register' => ['username', 'email', 'password'],
             'connect'  => ['username', 'email'],
             'create'   => ['username', 'email', 'password'],
             'update'   => ['username', 'email', 'password'],
             'settings' => ['username', 'email', 'password'],
-        ];
+        ]);
     }
 
     /** @inheritdoc */

@@ -68,10 +68,11 @@ class RecoveryForm extends Model
     /** @inheritdoc */
     public function scenarios()
     {
-        return [
+        $scenarios = parent::scenarios();
+        return ArrayHelper::merge($scenarios, [
             'request' => ['email'],
             'reset'   => ['password'],
-        ];
+        ]);
     }
 
     /** @inheritdoc */

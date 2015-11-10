@@ -51,6 +51,9 @@ class Module extends BaseModule
     /** @var bool Whether to enable password recovery. */
     public $enablePasswordRecovery = true;
 
+    /** @var bool emailAsUsername to use email as username */
+    public $emailAsUsername = false;
+
     /** @var int Email changing strategy. */
     public $emailChangeStrategy = self::STRATEGY_DEFAULT;
 

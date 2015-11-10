@@ -177,6 +177,7 @@ class SettingsController extends Controller
 
         return $this->render('account', [
             'model' => $model,
+            'module' => $this->module,            
         ]);
     }
 

@@ -47,7 +47,9 @@ $this->params['breadcrumbs'][] = $this->title;
 
                 <?= $form->field($model, 'email') ?>
 
-                <?= $form->field($model, 'username') ?>
+                <?php if (!$module->emailAsUsername): ?>
+                    <?= $form->field($model, 'username') ?>
+                <?php endif ?>
 
                 <?= $form->field($model, 'new_password')->passwordInput() ?>
 

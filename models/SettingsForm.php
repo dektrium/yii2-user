@@ -117,6 +117,10 @@ class SettingsForm extends Model
      */
     public function save()
     {
+        if ($this->module->emailAsUsername) {
+            $this->username = $this->email;
+        }
+
         if ($this->validate()) {
             $this->user->scenario = 'settings';
             $this->user->username = $this->username;
@@ -151,6 +155,9 @@ class SettingsForm extends Model
     protected function insecureEmailChange()
     {
         $this->user->email = $this->email;
+        if ($this->module->emailAsUsername) {
+            $this->user->username = $this->email;
+        }
         Yii::$app->session->setFlash('success', Yii::t('user', 'Your email address has been changed'));
     }
 

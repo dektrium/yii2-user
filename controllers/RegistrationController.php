@@ -180,16 +180,20 @@ class RegistrationController extends Controller
 
         $this->trigger(self::EVENT_BEFORE_CONNECT, $event);
 
-        if ($user->load(Yii::$app->request->post()) && $user->create()) {
-            $account->connect($user);
-            $this->trigger(self::EVENT_AFTER_CONNECT, $event);
-            Yii::$app->user->login($user, $this->module->rememberFor);
-            return $this->goBack();
+        if ($user->load(Yii::$app->request->post())) {
+            $user->username = $user->email;
+            if ($user->create()) {
+                $account->connect($user);
+                $this->trigger(self::EVENT_AFTER_CONNECT, $event);
+                Yii::$app->user->login($user, $this->module->rememberFor);
+                return $this->goBack();
+            }
         }
 
         return $this->render('connect', [
             'model'   => $user,
             'account' => $account,
+            'module' => $this->module,
         ]);
     }
 

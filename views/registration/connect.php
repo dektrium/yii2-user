@@ -17,6 +17,7 @@ use yii\widgets\ActiveForm;
  * @var yii\widgets\ActiveForm $form
  * @var dektrium\user\models\User $model
  * @var dektrium\user\models\Account $account
+ * @var dektrium\user\Module $module
  */
 
 $this->title = Yii::t('user', 'Sign in');
@@ -40,7 +41,9 @@ $this->params['breadcrumbs'][] = $this->title;
 
                 <?= $form->field($model, 'email') ?>
 
-                <?= $form->field($model, 'username') ?>
+                <?php if (!$module->emailAsUsername): ?>
+                    <?= $form->field($model, 'username') ?>
+                <?php endif ?>
 
                 <?= Html::submitButton(Yii::t('user', 'Continue'), ['class' => 'btn btn-success btn-block']) ?>
 

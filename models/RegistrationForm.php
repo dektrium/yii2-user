@@ -112,6 +112,10 @@ class RegistrationForm extends Model
      */
     public function register()
     {
+        if ($this->module->emailAsUsername) {
+            $this->username = $this->email;
+        }
+
         if (!$this->validate()) {
             return false;
         }

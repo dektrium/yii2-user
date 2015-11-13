@@ -48,6 +48,8 @@ use yii\web\IdentityInterface;
  * @property Account[] $accounts
  * @property Profile   $profile
  *
+ * Dependencies:
+ *
  * @author Dmitry Erofeev <dmeroff@gmail.com>
  */
 class User extends ActiveRecord implements IdentityInterface
@@ -64,28 +66,22 @@ class User extends ActiveRecord implements IdentityInterface
     /** @var string Plain password. Used for model validation. */
     public $password;
 
-    /** @var \dektrium\user\Module */
-    protected $module;
-
-    /** @var Mailer */
-    protected $mailer;
-
-    /** @var Finder */
-    protected $finder;
-
     /** @var Profile|null */
     private $_profile;
 
     /** @var string Default username regexp */
     public static $usernameRegexp = '/^[-a-zA-Z0-9_\.@]+$/';
 
-    /** @inheritdoc */
-    public function init()
-    {
-        $this->finder = Yii::$container->get(Finder::className());
+    protected function getModule() {
+        return Yii::$app->getModule('user');
+    }
+
+    protected function getFinder() {
+        Yii::$container->get(Finder::className());
+    }
+
+    protected function getMailer() {
         $this->mailer = Yii::$container->get(Mailer::className());
-        $this->module = Yii::$app->getModule('user');
-        parent::init();
     }
 
     /**

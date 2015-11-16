@@ -2,7 +2,6 @@
 
 ## Setup
 To enable console commands, you need to add module into console config of you app.
-
 `/config/console.php` in yii2-app-basic template, or `/console/config/main.php` in yii2-app-advanced.
 
 ```php
@@ -18,37 +17,19 @@ To enable console commands, you need to add module into console config of you ap
 
 ```
 
-
-- user/confirm                     Confirms a user.
-    user/confirm/index (default)   Confirms a user by setting confirmed_at field to current time.
-
-- user/create                      Creates new user account.
-    user/create/index (default)    This command creates new user account. If password is not set, this command will generate new
-                                   8-char password.
-
-- user/delete                      Deletes a user.
-    user/delete/index (default)    Deletes a user.
-
-- user/password                    Updates user's password.
-    user/password/index (default)  Updates user's password to given.
-
-
-
 ## Available console actions
 
-    - *user/confirm* Confirms a user.
-    - *user/create* Creates new user account.
-    - *user/delete* Deletes a user.
-    - *user/password* Updates user's password.
+- **user/confirm** Confirms a user.
+- **user/create** Creates new user account.
+- **user/delete** Deletes a user.
+- **user/password** Updates user's password.
 
 ### user/confirm
 Confirms a user by setting confirmed_at field to current time.
 
 ```sh
 
-USAGE
-
-yii user/confirm <search> [...options...]
+./yii user/confirm <search> [...options...]
 
 - search (required): string
   Email or username
@@ -63,9 +44,7 @@ user via email.
 
 ```sh
 
-USAGE
-
-yii user/create <email> <username> [password] [...options...]
+./yii user/create <email> <username> [password] [...options...]
 
 - email (required): string
   Email address
@@ -83,9 +62,7 @@ Deletes a user.
 
 ```sh
 
-USAGE
-
-yii user/delete <search> [...options...]
+./yii user/delete <search> [...options...]
 
 - search (required): string
   Email or username
@@ -97,9 +74,7 @@ Updates user's password to given.
 
 ```sh
 
-USAGE
-
-yii user/password <search> <password> [...options...]
+./yii user/password <search> <password> [...options...]
 
 - search (required): string
   Email or username

@@ -21,8 +21,8 @@ class Google extends BaseGoogle implements ClientInterface
     /** @inheritdoc */
     public function getEmail()
     {
-        return isset($this->getUserAttributes()['email'])
-            ? $this->getUserAttributes()['email']
+        return isset($this->getUserAttributes()['emails'][0]['value'])
+            ? $this->getUserAttributes()['emails'][0]['value']
             : null;
     }
 

@@ -15,6 +15,7 @@ use dektrium\user\Finder;
 use dektrium\user\Mailer;
 use Yii;
 use yii\base\Model;
+use yii\helpers\ArrayHelper;
 
 /**
  * Model for collecting data on password recovery.
@@ -68,10 +69,11 @@ class RecoveryForm extends Model
     /** @inheritdoc */
     public function scenarios()
     {
-        return [
+        $scenarios = parent::scenarios();
+        return ArrayHelper::merge($scenarios, [
             'request' => ['email'],
             'reset'   => ['password'],
-        ];
+        ]);
     }
 
     /** @inheritdoc */

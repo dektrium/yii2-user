@@ -22,6 +22,7 @@ use yii\db\ActiveRecord;
 use yii\db\Query;
 use yii\web\Application as WebApplication;
 use yii\web\IdentityInterface;
+use yii\helpers\ArrayHelper;
 
 /**
  * User ActiveRecord model.
@@ -181,13 +182,14 @@ class User extends ActiveRecord implements IdentityInterface
     /** @inheritdoc */
     public function scenarios()
     {
-        return [
+        $scenarios = parent::scenarios();
+        return ArrayHelper::merge($scenarios, [
             'register' => ['username', 'email', 'password'],
             'connect'  => ['username', 'email'],
             'create'   => ['username', 'email', 'password'],
             'update'   => ['username', 'email', 'password'],
             'settings' => ['username', 'email', 'password'],
-        ];
+        ]);
     }
 
     /** @inheritdoc */

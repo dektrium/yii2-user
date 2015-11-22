@@ -196,6 +196,12 @@ class SecurityController extends Controller
     {
         $account = $this->finder->findAccount()->byClient($client)->one();
 
+        if (!$this->module->enableRegistration && ($account === null || $account->user === null)) {
+            Yii::$app->session->setFlash('danger', Yii::t('user', 'Registration on this website is disabled'));
+            $this->action->successUrl = Url::to(['/user/security/login']);
+            return;
+        }
+
         if ($account === null) {
             $account = Account::create($client);
         }

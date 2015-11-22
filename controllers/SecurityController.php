@@ -203,7 +203,9 @@ class SecurityController extends Controller
         }
 
         if ($account === null) {
-            $account = Account::create($client);
+            /** @var Account $account */
+            $accountObj = Yii::createObject(Account::className());
+            $account = $accountObj::create($client);
         }
 
         $event = $this->getAuthEvent($account, $client);

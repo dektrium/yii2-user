@@ -76,6 +76,9 @@ class User extends ActiveRecord implements IdentityInterface
 
     /** @var Profile|null */
     private $_profile;
+    
+    /** @var Account[] */
+    private $_account = null;
 
     /** @var string Default username regexp */
     public static $usernameRegexp = '/^[-a-zA-Z0-9_\.@]+$/';
@@ -132,17 +135,18 @@ class User extends ActiveRecord implements IdentityInterface
     /**
      * @return Account[] Connected accounts ($provider => $account)
      */
-    public function getAccounts()
+    public function getAccounts($forse = false)
     {
-        $connected = [];
-        $accounts  = $this->hasMany($this->module->modelMap['Account'], ['user_id' => 'id'])->all();
-
-        /** @var Account $account */
-        foreach ($accounts as $account) {
-            $connected[$account->provider] = $account;
+        if (is_null($this->_account) || $forse) {
+            $this->_account = [];
+            $accounts  = $this->hasMany($this->module->modelMap['Account'], ['user_id' => 'id'])->all();
+    
+            /** @var Account $account */
+            foreach ($accounts as $account) {
+                $this->_account[$account->provider] = $account;
+            }
         }
-
-        return $connected;
+        return $this->_account;
     }
 
     /** @inheritdoc */
@@ -156,7 +160,28 @@ class User extends ActiveRecord implements IdentityInterface
     {
         return $this->getAttribute('auth_key');
     }
+    
+    /**
+     * Get OpenAuth token ?need for API
+     * @param $account
+     * @return string|null
+     */
+    public function getTokenByAccount($account) {
 
+        if (!isset($this->accounts[$account])) {
+            return null;
+        }
+        return $this->accounts[$account]->token;
+    }
+    
+    /**
+     * Check enable social convection
+     * @return bool
+     */
+    public function hasAccount($provider) {
+        return (isset($this->accounts[$provider]));
+    }
+    
     /** @inheritdoc */
     public function attributeLabels()
     {

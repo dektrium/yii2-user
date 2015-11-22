@@ -205,12 +205,13 @@ class RegistrationController extends Controller
      */
     public function actionConfirm($id, $code)
     {
-        $user  = $this->finder->findUserById($id);
-        $event = $this->getUserEvent($user);
+        $user = $this->finder->findUserById($id);
 
         if ($user === null || $this->module->enableConfirmation == false) {
             throw new NotFoundHttpException();
         }
+
+        $event = $this->getUserEvent($user);
 
         $this->trigger(self::EVENT_BEFORE_CONFIRM, $event);
 

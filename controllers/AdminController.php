@@ -11,6 +11,7 @@
 
 namespace dektrium\user\controllers;
 
+use dektrium\user\filters\AccessRule;
 use dektrium\user\Finder;
 use dektrium\user\models\Profile;
 use dektrium\user\models\User;
@@ -153,13 +154,13 @@ class AdminController extends Controller
             ],
             'access' => [
                 'class' => AccessControl::className(),
+                'ruleConfig' => [
+                    'class' => AccessRule::className(),
+                ],
                 'rules' => [
                     [
                         'allow' => true,
-                        'roles' => ['@'],
-                        'matchCallback' => function () {
-                            return Yii::$app->user->identity->getIsAdmin();
-                        },
+                        'roles' => ['admin'],
                     ],
                 ],
             ],

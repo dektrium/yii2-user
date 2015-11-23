@@ -25,6 +25,7 @@ use yii\base\Model;
  */
 class RecoveryForm extends Model
 {
+    use ModuleTrait;
     /** @var string */
     public $email;
 
@@ -33,9 +34,6 @@ class RecoveryForm extends Model
 
     /** @var User */
     protected $user;
-
-    /** @var \dektrium\user\Module */
-    protected $module;
 
     /** @var Mailer */
     protected $mailer;
@@ -50,7 +48,6 @@ class RecoveryForm extends Model
      */
     public function __construct(Mailer $mailer, Finder $finder, $config = [])
     {
-        $this->module = Yii::$app->getModule('user');
         $this->mailer = $mailer;
         $this->finder = $finder;
         parent::__construct($config);

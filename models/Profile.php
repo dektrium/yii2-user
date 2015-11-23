@@ -11,6 +11,7 @@
 
 namespace dektrium\user\models;
 
+use dektrium\user\traits\ModuleTrait;
 use Yii;
 use yii\db\ActiveRecord;
 
@@ -31,14 +32,7 @@ use yii\db\ActiveRecord;
  */
 class Profile extends ActiveRecord
 {
-    /** @var \dektrium\user\Module */
-    protected $module;
-
-    /** @inheritdoc */
-    public function init()
-    {
-        $this->module = Yii::$app->getModule('user');
-    }
+    use ModuleTrait;
 
     /** @inheritdoc */
     public static function tableName()

@@ -26,6 +26,8 @@ use yii\base\Model;
  */
 class SettingsForm extends Model
 {
+    use ModuleTrait;
+
     /** @var string */
     public $email;
 
@@ -37,9 +39,6 @@ class SettingsForm extends Model
 
     /** @var string */
     public $current_password;
-
-    /** @var Module */
-    protected $module;
 
     /** @var Mailer */
     protected $mailer;
@@ -61,7 +60,6 @@ class SettingsForm extends Model
     public function __construct(Mailer $mailer, $config = [])
     {
         $this->mailer = $mailer;
-        $this->module = Yii::$app->getModule('user');
         $this->setAttributes([
             'username' => $this->user->username,
             'email'    => $this->user->unconfirmed_email ?: $this->user->email,

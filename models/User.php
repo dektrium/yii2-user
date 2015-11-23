@@ -15,6 +15,7 @@ use dektrium\user\Finder;
 use dektrium\user\helpers\Password;
 use dektrium\user\Mailer;
 use dektrium\user\Module;
+use dektrium\user\traits\ModuleTrait;
 use Yii;
 use yii\base\NotSupportedException;
 use yii\behaviors\TimestampBehavior;
@@ -49,11 +50,15 @@ use yii\web\IdentityInterface;
  * @property Profile   $profile
  *
  * Dependencies:
+ * @property-read Finder $finder
+ * @property-read Module $module
+ * @property-read Mailer $mailer
  *
  * @author Dmitry Erofeev <dmeroff@gmail.com>
  */
 class User extends ActiveRecord implements IdentityInterface
 {
+    use ModuleTrait;
     const BEFORE_CREATE   = 'beforeCreate';
     const AFTER_CREATE    = 'afterCreate';
     const BEFORE_REGISTER = 'beforeRegister';
@@ -72,16 +77,20 @@ class User extends ActiveRecord implements IdentityInterface
     /** @var string Default username regexp */
     public static $usernameRegexp = '/^[-a-zA-Z0-9_\.@]+$/';
 
-    protected function getModule() {
-        return Yii::$app->getModule('user');
-    }
-
+    /**
+     * @return Finder
+     * @throws \yii\base\InvalidConfigException
+     */
     protected function getFinder() {
-        Yii::$container->get(Finder::className());
+        return Yii::$container->get(Finder::className());
     }
 
+    /**
+     * @return Mailer
+     * @throws \yii\base\InvalidConfigException
+     */
     protected function getMailer() {
-        $this->mailer = Yii::$container->get(Mailer::className());
+        return Yii::$container->get(Mailer::className());
     }
 
     /**

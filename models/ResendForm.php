@@ -26,14 +26,12 @@ use yii\base\Model;
  */
 class ResendForm extends Model
 {
+    use ModuleTrait;
     /** @var string */
     public $email;
 
     /** @var User */
     private $_user;
-
-    /** @var \dektrium\user\Module */
-    protected $module;
 
     /** @var Mailer */
     protected $mailer;
@@ -48,7 +46,6 @@ class ResendForm extends Model
      */
     public function __construct(Mailer $mailer, Finder $finder, $config = [])
     {
-        $this->module = Yii::$app->getModule('user');
         $this->mailer = $mailer;
         $this->finder = $finder;
         parent::__construct($config);

@@ -119,6 +119,7 @@ class Account extends ActiveRecord
             'provider'   => $client->getId(),
             'client_id'  => $client->getUserAttributes()['id'],
             'data'       => json_encode($client->getUserAttributes()),
+            'token'      => $client->getAccessToken()->getToken(),
         ]);
 
         if ($client instanceof ClientInterface) {
@@ -178,6 +179,7 @@ class Account extends ActiveRecord
                 'provider'   => $client->getId(),
                 'client_id'  => $client->getUserAttributes()['id'],
                 'data'       => json_encode($client->getUserAttributes()),
+                'token'      => $client->getAccessToken()->getToken(),
             ]);
             $account->save(false);
         }

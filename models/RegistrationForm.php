@@ -11,7 +11,7 @@
 
 namespace dektrium\user\models;
 
-use dektrium\user\Module;
+use dektrium\user\traits\ModuleTrait;
 use Yii;
 use yii\base\Model;
 
@@ -22,6 +22,7 @@ use yii\base\Model;
  */
 class RegistrationForm extends Model
 {
+    use ModuleTrait;
     /**
      * @var string User email address
      */
@@ -36,19 +37,6 @@ class RegistrationForm extends Model
      * @var string Password
      */
     public $password;
-
-    /**
-     * @var Module
-     */
-    protected $module;
-
-    /**
-     * @inheritdoc
-     */
-    public function init()
-    {
-        $this->module = Yii::$app->getModule('user');
-    }
 
     /**
      * @inheritdoc

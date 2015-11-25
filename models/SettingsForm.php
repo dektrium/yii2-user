@@ -14,6 +14,7 @@ namespace dektrium\user\models;
 use dektrium\user\helpers\Password;
 use dektrium\user\Mailer;
 use dektrium\user\Module;
+use dektrium\user\traits\ModuleTrait;
 use Yii;
 use yii\base\Model;
 

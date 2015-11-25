@@ -17,6 +17,6 @@ trait ModuleTrait
      */
     public function getModule()
     {
-        return Yii::$app->getModule('user');
+        return \Yii::$app->getModule('user');
     }
 }

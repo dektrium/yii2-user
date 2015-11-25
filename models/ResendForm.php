@@ -13,6 +13,7 @@ namespace dektrium\user\models;
 
 use dektrium\user\Finder;
 use dektrium\user\Mailer;
+use dektrium\user\traits\ModuleTrait;
 use Yii;
 use yii\base\Model;
 

@@ -15,6 +15,7 @@ use dektrium\user\Finder;
 use dektrium\user\helpers\Password;
 use Yii;
 use yii\base\Model;
+use dektrium\user\traits\ModuleTrait;
 
 /**
  * LoginForm get user's login and password, validates them and logs the user in. If user has been blocked, it adds

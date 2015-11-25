@@ -16,7 +16,6 @@ use yii\authclient\Collection;
 use yii\base\BootstrapInterface;
 use yii\console\Application as ConsoleApplication;
 use yii\i18n\PhpMessageSource;
-use yii\web\GroupUrlRule;
 
 /**
  * Bootstrap class registers module and user application component. It also creates some url rules which will be applied
@@ -83,7 +82,10 @@ class Bootstrap implements BootstrapInterface
                     $configUrlRule['routePrefix'] = 'user';
                 }
 
-                $app->urlManager->addRules([new GroupUrlRule($configUrlRule)], false);
+                $configUrlRule['class'] = 'yii\web\GroupUrlRule';
+                $rule = Yii::createObject($configUrlRule);
+                
+                $app->urlManager->addRules([$rule], false);
 
                 if (!$app->has('authClientCollection')) {
                     $app->set('authClientCollection', [

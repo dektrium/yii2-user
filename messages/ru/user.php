@@ -120,7 +120,7 @@ return [
     'Registration ip' => 'Регистрационный IP',
     'Registration time' => 'Время регистрации',
     'Remember me next time' => 'Запомнить меня',
-    'Request new confirmation message' => 'Повторная отправка инструкций',
+    'Request new confirmation message' => 'Активация аккаунта (Повторная отправка письма с активацией)',
     'Reset your password' => 'Сбросить пароль',
     'Roles' => 'Роли',
     'Save' => 'Сохранить',

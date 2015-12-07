@@ -33,6 +33,9 @@ class UserSearch extends Model
     /** @var string */
     public $registration_ip;
 
+    /** @var  string */
+    public $corporate_email;
+
     /** @var Finder */
     protected $finder;
 
@@ -50,7 +53,7 @@ class UserSearch extends Model
     public function rules()
     {
         return [
-            'fieldsSafe' => [['username', 'email', 'registration_ip', 'created_at'], 'safe'],
+            'fieldsSafe' => [['username', 'email', 'registration_ip', 'created_at', 'corporate_email'], 'safe'],
             'createdDefault' => ['created_at', 'default', 'value' => null],
         ];
     }
@@ -63,6 +66,7 @@ class UserSearch extends Model
             'email'           => Yii::t('user', 'Email'),
             'created_at'      => Yii::t('user', 'Registration time'),
             'registration_ip' => Yii::t('user', 'Registration ip'),
+            'corporate_email' => Yii::t('user', 'Corporate email'),
         ];
     }
 

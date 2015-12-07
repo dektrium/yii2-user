@@ -15,7 +15,6 @@ use dektrium\user\Finder;
 use dektrium\user\helpers\Password;
 use dektrium\user\Mailer;
 use dektrium\user\Module;
-use dektrium\user\traits\ModuleTrait;
 use Yii;
 use yii\base\NotSupportedException;
 use yii\behaviors\TimestampBehavior;
@@ -23,7 +22,6 @@ use yii\db\ActiveRecord;
 use yii\db\Query;
 use yii\web\Application as WebApplication;
 use yii\web\IdentityInterface;
-use yii\helpers\ArrayHelper;
 
 /**
  * User ActiveRecord model.
@@ -50,16 +48,10 @@ use yii\helpers\ArrayHelper;
  * @property Account[] $accounts
  * @property Profile   $profile
  *
- * Dependencies:
- * @property-read Finder $finder
- * @property-read Module $module
- * @property-read Mailer $mailer
- *
  * @author Dmitry Erofeev <dmeroff@gmail.com>
  */
 class User extends ActiveRecord implements IdentityInterface
 {
-    use ModuleTrait;
     const BEFORE_CREATE   = 'beforeCreate';
     const AFTER_CREATE    = 'afterCreate';
     const BEFORE_REGISTER = 'beforeRegister';
@@ -72,26 +64,28 @@ class User extends ActiveRecord implements IdentityInterface
     /** @var string Plain password. Used for model validation. */
     public $password;
 
+    /** @var \dektrium\user\Module */
+    protected $module;
+
+    /** @var Mailer */
+    protected $mailer;
+
+    /** @var Finder */
+    protected $finder;
+
     /** @var Profile|null */
     private $_profile;
 
     /** @var string Default username regexp */
     public static $usernameRegexp = '/^[-a-zA-Z0-9_\.@]+$/';
 
-    /**
-     * @return Finder
-     * @throws \yii\base\InvalidConfigException
-     */
-    protected function getFinder() {
-        return Yii::$container->get(Finder::className());
-    }
-
-    /**
-     * @return Mailer
-     * @throws \yii\base\InvalidConfigException
-     */
-    protected function getMailer() {
-        return Yii::$container->get(Mailer::className());
+    /** @inheritdoc */
+    public function init()
+    {
+        $this->finder = Yii::$container->get(Finder::className());
+        $this->mailer = Yii::$container->get(Mailer::className());
+        $this->module = Yii::$app->getModule('user');
+        parent::init();
     }
 
     /**
@@ -173,6 +167,7 @@ class User extends ActiveRecord implements IdentityInterface
             'password'          => Yii::t('user', 'Password'),
             'created_at'        => Yii::t('user', 'Registration time'),
             'confirmed_at'      => Yii::t('user', 'Confirmation time'),
+            'corporate_email'   => Yii::t('user', 'Corporate email'),
         ];
     }
 
@@ -187,14 +182,13 @@ class User extends ActiveRecord implements IdentityInterface
     /** @inheritdoc */
     public function scenarios()
     {
-        $scenarios = parent::scenarios();
-        return ArrayHelper::merge($scenarios, [
-            'register' => ['username', 'email', 'password'],
+        return [
+            'register' => ['username', 'email', 'password', 'corporate_email'],
             'connect'  => ['username', 'email'],
-            'create'   => ['username', 'email', 'password'],
-            'update'   => ['username', 'email', 'password'],
-            'settings' => ['username', 'email', 'password'],
-        ]);
+            'create'   => ['username', 'email', 'password', 'corporate_email'],
+            'update'   => ['username', 'email', 'password', 'corporate_email'],
+            'settings' => ['username', 'email', 'password', 'corporate_email'],
+        ];
     }
 
     /** @inheritdoc */
@@ -218,6 +212,12 @@ class User extends ActiveRecord implements IdentityInterface
             // password rules
             'passwordRequired' => ['password', 'required', 'on' => ['register']],
             'passwordLength'   => ['password', 'string', 'min' => 6, 'on' => ['register', 'create']],
+
+            // corporate email rules
+            'corporate_emailRequired' => ['corporate_email', 'required', 'on' => ['register', 'connect', 'create', 'update']],
+            'corporate_emailPattern'  => ['corporate_email', 'email'],
+            'corporate_emailLength'   => ['corporate_email', 'string', 'max' => 255],
+            'corporate_emailTrim'     => ['corporate_email', 'trim'],
         ];
     }
 

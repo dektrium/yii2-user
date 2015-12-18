@@ -12,12 +12,19 @@
 namespace dektrium\user\controllers;
 
 use dektrium\user\Finder;
+use dektrium\user\models\Profile;
 use dektrium\user\models\User;
 use dektrium\user\models\UserSearch;
+use dektrium\user\Module;
+use dektrium\user\traits\EventTrait;
+use Yii;
+use yii\base\ExitException;
 use yii\base\Model;
-use yii\web\Controller;
+use yii\base\Module as Module2;
 use yii\filters\AccessControl;
 use yii\filters\VerbFilter;
+use yii\helpers\Url;
+use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\web\Response;
 use yii\widgets\ActiveForm;
@@ -25,19 +32,106 @@ use yii\widgets\ActiveForm;
 /**
  * AdminController allows you to administrate users.
  *
- * @property \dektrium\user\Module $module
+ * @property Module $module
+ *
  * @author Dmitry Erofeev <dmeroff@gmail.com
  */
 class AdminController extends Controller
 {
+    use EventTrait;
+
+    /**
+     * Event is triggered before creating new user.
+     * Triggered with \dektrium\user\events\UserEvent.
+     */
+    const EVENT_BEFORE_CREATE = 'beforeCreate';
+
+    /**
+     * Event is triggered after creating new user.
+     * Triggered with \dektrium\user\events\UserEvent.
+     */
+    const EVENT_AFTER_CREATE = 'afterCreate';
+
+    /**
+     * Event is triggered before updating existing user.
+     * Triggered with \dektrium\user\events\UserEvent.
+     */
+    const EVENT_BEFORE_UPDATE = 'beforeUpdate';
+
+    /**
+     * Event is triggered after updating existing user.
+     * Triggered with \dektrium\user\events\UserEvent.
+     */
+    const EVENT_AFTER_UPDATE = 'afterUpdate';
+
+    /**
+     * Event is triggered before updating existing user's profile.
+     * Triggered with \dektrium\user\events\UserEvent.
+     */
+    const EVENT_BEFORE_PROFILE_UPDATE = 'beforeProfileUpdate';
+
+    /**
+     * Event is triggered after updating existing user's profile.
+     * Triggered with \dektrium\user\events\UserEvent.
+     */
+    const EVENT_AFTER_PROFILE_UPDATE = 'afterProfileUpdate';
+
+    /**
+     * Event is triggered before confirming existing user.
+     * Triggered with \dektrium\user\events\UserEvent.
+     */
+    const EVENT_BEFORE_CONFIRM = 'beforeConfirm';
+
+    /**
+     * Event is triggered after confirming existing user.
+     * Triggered with \dektrium\user\events\UserEvent.
+     */
+    const EVENT_AFTER_CONFIRM = 'afterConfirm';
+
+    /**
+     * Event is triggered before deleting existing user.
+     * Triggered with \dektrium\user\events\UserEvent.
+     */
+    const EVENT_BEFORE_DELETE = 'beforeDelete';
+
+    /**
+     * Event is triggered after deleting existing user.
+     * Triggered with \dektrium\user\events\UserEvent.
+     */
+    const EVENT_AFTER_DELETE = 'afterDelete';
+
+    /**
+     * Event is triggered before blocking existing user.
+     * Triggered with \dektrium\user\events\UserEvent.
+     */
+    const EVENT_BEFORE_BLOCK = 'beforeBlock';
+
+    /**
+     * Event is triggered after blocking existing user.
+     * Triggered with \dektrium\user\events\UserEvent.
+     */
+    const EVENT_AFTER_BLOCK = 'afterBlock';
+
+    /**
+     * Event is triggered before unblocking existing user.
+     * Triggered with \dektrium\user\events\UserEvent.
+     */
+    const EVENT_BEFORE_UNBLOCK = 'beforeUnblock';
+
+    /**
+     * Event is triggered after unblocking existing user.
+     * Triggered with \dektrium\user\events\UserEvent.
+     */
+    const EVENT_AFTER_UNBLOCK = 'afterUnblock';
+
     /** @var Finder */
     protected $finder;
 
     /**
-     * @param string $id
-     * @param \yii\base\Module $module
-     * @param Finder $finder
-     * @param array $config
+     * @param string  $id
+     * @param Module2 $module
+     * @param Finder  $finder
+     * @param array   $config
      */
     public function __construct($id, $module, Finder $finder, $config = [])
     {
@@ -54,33 +148,34 @@ class AdminController extends Controller
                 'actions' => [
                     'delete'  => ['post'],
                     'confirm' => ['post'],
-                    'block'   => ['post']
+                    'block'   => ['post'],
                 ],
             ],
             'access' => [
                 'class' => AccessControl::className(),
                 'rules' => [
                     [
-                        'actions' => ['index', 'create', 'update', 'delete', 'block', 'confirm'],
                         'allow' => true,
                         'roles' => ['@'],
-                        'matchCallback' => function ($rule, $action) {
-                            return \Yii::$app->user->identity->getIsAdmin();
-                        }
+                        'matchCallback' => function () {
+                            return Yii::$app->user->identity->getIsAdmin();
+                        },
                     ],
-                ]
-            ]
+                ],
+            ],
         ];
     }
 
     /**
      * Lists all User models.
+     *
      * @return mixed
      */
     public function actionIndex()
     {
-        $searchModel  = \Yii::createObject(UserSearch::className());
-        $dataProvider = $searchModel->search($_GET);
+        Url::remember('', 'actions-redirect');
+        $searchModel  = Yii::createObject(UserSearch::className());
+        $dataProvider = $searchModel->search(Yii::$app->request->get());
 
         return $this->render('index', [
             'dataProvider' => $dataProvider,
@@ -91,115 +186,216 @@ class AdminController extends Controller
     /**
      * Creates a new User model.
      * If creation is successful, the browser will be redirected to the 'index' page.
+     *
      * @return mixed
      */
     public function actionCreate()
     {
         /** @var User $user */
-        $user = \Yii::createObject([
+        $user = Yii::createObject([
             'class'    => User::className(),
             'scenario' => 'create',
         ]);
+        $event = $this->getUserEvent($user);
 
         $this->performAjaxValidation($user);
 
-        if ($user->load(\Yii::$app->request->post()) && $user->create()) {
-            \Yii::$app->getSession()->setFlash('success', \Yii::t('user', 'User has been created'));
-            return $this->redirect(['index']);
+        $this->trigger(self::EVENT_BEFORE_CREATE, $event);
+        if ($user->load(Yii::$app->request->post()) && $user->create()) {
+            Yii::$app->getSession()->setFlash('success', Yii::t('user', 'User has been created'));
+            $this->trigger(self::EVENT_AFTER_CREATE, $event);
+            return $this->redirect(['update', 'id' => $user->id]);
         }
 
         return $this->render('create', [
-            'user' => $user
+            'user' => $user,
         ]);
     }
 
     /**
      * Updates an existing User model.
-     * If update is successful, the browser will be redirected to the 'index' page.
-     * @param  integer $id
+     *
+     * @param int $id
+     *
      * @return mixed
      */
     public function actionUpdate($id)
     {
+        Url::remember('', 'actions-redirect');
         $user = $this->findModel($id);
         $user->scenario = 'update';
-        $profile = $this->finder->findProfileById($id);
-        $r = \Yii::$app->request;
+        $event = $this->getUserEvent($user);
 
-        $this->performAjaxValidation([$user, $profile]);
+        $this->performAjaxValidation($user);
 
-        if ($user->load($r->post()) && $profile->load($r->post()) && $user->save() && $profile->save()) {
-            \Yii::$app->getSession()->setFlash('success', \Yii::t('user', 'User has been updated'));
+        $this->trigger(self::EVENT_BEFORE_UPDATE, $event);
+        if ($user->load(Yii::$app->request->post()) && $user->save()) {
+            Yii::$app->getSession()->setFlash('success', Yii::t('user', 'Account details have been updated'));
+            $this->trigger(self::EVENT_AFTER_UPDATE, $event);
             return $this->refresh();
         }
 
-        return $this->render('update', [
+        return $this->render('_account', [
+            'user' => $user,
+        ]);
+    }
+
+    /**
+     * Updates an existing profile.
+     *
+     * @param int $id
+     *
+     * @return mixed
+     */
+    public function actionUpdateProfile($id)
+    {
+        Url::remember('', 'actions-redirect');
+        $user    = $this->findModel($id);
+        $profile = $user->profile;
+        $event   = $this->getProfileEvent($profile);
+
+        if ($profile == null) {
+            $profile = Yii::createObject(Profile::className());
+            $profile->link('user', $user);
+        }
+
+        $this->performAjaxValidation($profile);
+
+        $this->trigger(self::EVENT_BEFORE_PROFILE_UPDATE, $event);
+
+        if ($profile->load(Yii::$app->request->post()) && $profile->save()) {
+            Yii::$app->getSession()->setFlash('success', Yii::t('user', 'Profile details have been updated'));
+            $this->trigger(self::EVENT_AFTER_PROFILE_UPDATE, $event);
+            return $this->refresh();
+        }
+
+        return $this->render('_profile', [
             'user'    => $user,
             'profile' => $profile,
-            'module'  => $this->module,
+        ]);
+    }
+
+    /**
+     * Shows information about user.
+     *
+     * @param int $id
+     *
+     * @return string
+     */
+    public function actionInfo($id)
+    {
+        Url::remember('', 'actions-redirect');
+        $user = $this->findModel($id);
+
+        return $this->render('_info', [
+            'user' => $user,
+        ]);
+    }
+
+    /**
+     * If "dektrium/yii2-rbac" extension is installed, this page displays form
+     * where user can assign multiple auth items to user.
+     *
+     * @param int $id
+     *
+     * @return string
+     * @throws NotFoundHttpException
+     */
+    public function actionAssignments($id)
+    {
+        if (!isset(Yii::$app->extensions['dektrium/yii2-rbac'])) {
+            throw new NotFoundHttpException();
+        }
+        Url::remember('', 'actions-redirect');
+        $user = $this->findModel($id);
+
+        return $this->render('_assignments', [
+            'user' => $user,
         ]);
     }
 
     /**
      * Confirms the User.
-     * @param integer $id
-     * @param string  $back
-     * @return \yii\web\Response
+     *
+     * @param int $id
+     *
+     * @return Response
      */
-    public function actionConfirm($id, $back = 'index')
+    public function actionConfirm($id)
     {
-        $this->findModel($id)->confirm();
-        \Yii::$app->getSession()->setFlash('success', \Yii::t('user', 'User has been confirmed'));
-        $url = $back == 'index' ? ['index'] : ['update', 'id' => $id];
-        return $this->redirect($url);
+        $model = $this->findModel($id);
+        $event = $this->getUserEvent($model);
+
+        $this->trigger(self::EVENT_BEFORE_CONFIRM, $event);
+        $model->confirm();
+        $this->trigger(self::EVENT_AFTER_CONFIRM, $event);
+
+        Yii::$app->getSession()->setFlash('success', Yii::t('user', 'User has been confirmed'));
+
+        return $this->redirect(Url::previous('actions-redirect'));
     }
 
     /**
      * Deletes an existing User model.
      * If deletion is successful, the browser will be redirected to the 'index' page.
-     * @param  integer $id
+     *
+     * @param int $id
+     *
      * @return mixed
      */
     public function actionDelete($id)
     {
-        if ($id == \Yii::$app->user->getId()) {
-            \Yii::$app->getSession()->setFlash('danger', \Yii::t('user', 'You can not remove your own account'));
+        if ($id == Yii::$app->user->getId()) {
+            Yii::$app->getSession()->setFlash('danger', Yii::t('user', 'You can not remove your own account'));
         } else {
-            $this->findModel($id)->delete();
-            \Yii::$app->getSession()->setFlash('success', \Yii::t('user', 'User has been deleted'));
+            $model = $this->findModel($id);
+            $event = $this->getUserEvent($model);
+            $this->trigger(self::EVENT_BEFORE_DELETE, $event);
+            $model->delete();
+            $this->trigger(self::EVENT_AFTER_DELETE, $event);
+            Yii::$app->getSession()->setFlash('success', Yii::t('user', 'User has been deleted'));
         }
+
         return $this->redirect(['index']);
     }
 
     /**
      * Blocks the user.
-     * @param  integer $id
-     * @param  string  $back
-     * @return \yii\web\Response
+     *
+     * @param int $id
+     *
+     * @return Response
      */
-    public function actionBlock($id, $back = 'index')
+    public function actionBlock($id)
     {
-        if ($id == \Yii::$app->user->getId()) {
-            \Yii::$app->getSession()->setFlash('danger', \Yii::t('user', 'You can not block your own account'));
+        if ($id == Yii::$app->user->getId()) {
+            Yii::$app->getSession()->setFlash('danger', Yii::t('user', 'You can not block your own account'));
         } else {
-            $user = $this->findModel($id);
+            $user  = $this->findModel($id);
+            $event = $this->getUserEvent($user);
             if ($user->getIsBlocked()) {
+                $this->trigger(self::EVENT_BEFORE_UNBLOCK, $event);
                 $user->unblock();
-                \Yii::$app->getSession()->setFlash('success', \Yii::t('user', 'User has been unblocked'));
+                $this->trigger(self::EVENT_AFTER_UNBLOCK, $event);
+                Yii::$app->getSession()->setFlash('success', Yii::t('user', 'User has been unblocked'));
             } else {
+                $this->trigger(self::EVENT_BEFORE_BLOCK, $event);
                 $user->block();
-                \Yii::$app->getSession()->setFlash('success', \Yii::t('user', 'User has been blocked'));
+                $this->trigger(self::EVENT_AFTER_BLOCK, $event);
+                Yii::$app->getSession()->setFlash('success', Yii::t('user', 'User has been blocked'));
             }
         }
-        $url = $back == 'index' ? ['index'] : ['update', 'id' => $id];
-        return $this->redirect($url);
+
+        return $this->redirect(Url::previous('actions-redirect'));
     }
 
     /**
      * Finds the User model based on its primary key value.
      * If the model is not found, a 404 HTTP exception will be thrown.
-     * @param  integer               $id
-     * @return User                  the loaded model
+     *
+     * @param int $id
+     *
+     * @return User the loaded model
      * @throws NotFoundHttpException if the model cannot be found
      */
     protected function findModel($id)
@@ -208,33 +404,24 @@ class AdminController extends Controller
         if ($user === null) {
             throw new NotFoundHttpException('The requested page does not exist');
         }
+
         return $user;
     }
 
     /**
      * Performs AJAX validation.
-     * @param array|Model $models
-     * @throws \yii\base\ExitException
+     *
+     * @param array|Model $model
+     *
+     * @throws ExitException
      */
-    protected function performAjaxValidation($models)
+    protected function performAjaxValidation($model)
     {
-        if (\Yii::$app->request->isAjax) {
-            if (is_array($models)) {
-                $result = [];
-                foreach ($models as $model) {
-                    if ($model->load(\Yii::$app->request->post())) {
-                        \Yii::$app->response->format = Response::FORMAT_JSON;
-                        $result = array_merge($result, ActiveForm::validate($model));
-                    }
-                }
-                echo json_encode($result);
-                \Yii::$app->end();
-            } else {
-                if ($models->load(\Yii::$app->request->post())) {
-                    \Yii::$app->response->format = Response::FORMAT_JSON;
-                    echo json_encode(ActiveForm::validate($models));
-                    \Yii::$app->end();
-                }
+        if (Yii::$app->request->isAjax && !Yii::$app->request->isPjax) {
+            if ($model->load(Yii::$app->request->post())) {
+                Yii::$app->response->format = Response::FORMAT_JSON;
+                echo json_encode(ActiveForm::validate($model));
+                Yii::$app->end();
             }
         }
     }

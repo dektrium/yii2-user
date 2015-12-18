@@ -11,6 +11,7 @@
 
 namespace dektrium\user\widgets;
 
+use Yii;
 use yii\authclient\ClientInterface;
 use yii\authclient\widgets\AuthChoice;
 use yii\authclient\widgets\AuthChoiceAsset;
@@ -37,9 +38,9 @@ class Connect extends AuthChoice
      */
     public function init()
     {
-        AuthChoiceAsset::register(\Yii::$app->view);
+        AuthChoiceAsset::register(Yii::$app->view);
         if ($this->popupMode) {
-            \Yii::$app->view->registerJs("\$('#" . $this->getId() . "').authchoice();");
+            Yii::$app->view->registerJs("\$('#" . $this->getId() . "').authchoice();");
         }
         $this->options['id'] = $this->getId();
         echo Html::beginTag('div', $this->options);
@@ -61,6 +62,7 @@ class Connect extends AuthChoice
      * Checks if provider already connected to user.
      *
      * @param ClientInterface $provider
+     *
      * @return bool
      */
     public function isConnected(ClientInterface $provider)

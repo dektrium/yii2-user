@@ -12,6 +12,7 @@
 namespace dektrium\user\commands;
 
 use dektrium\user\Finder;
+use Yii;
 use yii\console\Controller;
 use yii\helpers\Console;
 
@@ -28,10 +29,10 @@ class PasswordController extends Controller
     protected $finder;
 
     /**
-     * @param string $id
+     * @param string           $id
      * @param \yii\base\Module $module
-     * @param Finder $finder
-     * @param array $config
+     * @param Finder           $finder
+     * @param array            $config
      */
     public function __construct($id, $module, Finder $finder, $config = [])
     {
@@ -49,12 +50,12 @@ class PasswordController extends Controller
     {
         $user = $this->finder->findUserByUsernameOrEmail($search);
         if ($user === null) {
-            $this->stdout(\Yii::t('user', 'User is not found') . "\n", Console::FG_RED);
+            $this->stdout(Yii::t('user', 'User is not found') . "\n", Console::FG_RED);
         } else {
             if ($user->resetPassword($password)) {
-                $this->stdout(\Yii::t('user', 'Password has been changed') . "\n", Console::FG_GREEN);
+                $this->stdout(Yii::t('user', 'Password has been changed') . "\n", Console::FG_GREEN);
             } else {
-                $this->stdout(\Yii::t('user', 'Error occurred while changing password') . "\n", Console::FG_RED);
+                $this->stdout(Yii::t('user', 'Error occurred while changing password') . "\n", Console::FG_RED);
             }
         }
     }

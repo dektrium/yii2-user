@@ -9,8 +9,8 @@
  * file that was distributed with this source code.
  */
 
-use yii\db\Schema;
 use dektrium\user\migrations\Migration;
+use yii\db\Schema;
 
 /**
  * @author Dmitry Erofeev <dmeroff@gmail.com
@@ -24,7 +24,7 @@ class m140403_174025_create_account_table extends Migration
             'user_id'    => Schema::TYPE_INTEGER,
             'provider'   => Schema::TYPE_STRING . ' NOT NULL',
             'client_id'  => Schema::TYPE_STRING . ' NOT NULL',
-            'properties' => Schema::TYPE_TEXT
+            'properties' => Schema::TYPE_TEXT,
         ], $this->tableOptions);
 
         $this->createIndex('account_unique', '{{%account}}', ['provider', 'client_id'], true);

@@ -12,6 +12,7 @@
 namespace dektrium\user\commands;
 
 use dektrium\user\models\User;
+use Yii;
 use yii\console\Controller;
 use yii\helpers\Console;
 
@@ -35,21 +36,21 @@ class CreateController extends Controller
      */
     public function actionIndex($email, $username, $password = null)
     {
-        $user = \Yii::createObject([
+        $user = Yii::createObject([
             'class'    => User::className(),
             'scenario' => 'create',
             'email'    => $email,
             'username' => $username,
-            'password' => $password
+            'password' => $password,
         ]);
 
         if ($user->create()) {
-            $this->stdout(\Yii::t('user', 'User has been created') . "!\n", Console::FG_GREEN);
+            $this->stdout(Yii::t('user', 'User has been created') . "!\n", Console::FG_GREEN);
         } else {
-            $this->stdout(\Yii::t('user', 'Please fix following errors:') . "\n", Console::FG_RED);
+            $this->stdout(Yii::t('user', 'Please fix following errors:') . "\n", Console::FG_RED);
             foreach ($user->errors as $errors) {
                 foreach ($errors as $error) {
-                    $this->stdout(" - ".$error."\n", Console::FG_RED);
+                    $this->stdout(' - ' . $error . "\n", Console::FG_RED);
                 }
             }
         }

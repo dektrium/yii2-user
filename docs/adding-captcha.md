@@ -1,5 +1,4 @@
-How to add captcha to form
-==========================
+# How to add captcha to form
 
 Adding captcha to forms is pretty easy and can be done in three steps:
 
@@ -10,9 +9,7 @@ Adding captcha to forms is pretty easy and can be done in three steps:
 In this guide I would like to show you how to add captcha field in the registration form but you can add captcha
 to any form following this steps.
 
-1. Adding field and validation rules to model
----------------------------------------------
-
+## 1. Adding field and validation rules to model
 
 First of all you need to override Registration form as described in special guide. After this done you have to add
 public property named **captcha** and validation rules.
@@ -44,8 +41,7 @@ public property named **captcha** and validation rules.
     
 ```
 
-2. Adding widget to the view
-----------------------------
+## 2. Adding widget to the view
 
 Before doing this step you have to configure view application component as described in guide. After this done you have
 to create new file named `register.php` in `@app/views/user/registration`. Now you have to add widget to registration
@@ -84,7 +80,9 @@ form, just copy and paste following code into newly created view file.
 
                     <?= $form->field($model, 'password')->passwordInput() ?>
 
-                    <?= $form->field($model, 'captcha')->widget(Captcha::className()) ?>
+                    <?= $form->field($model, 'captcha')->widget(Captcha::className(), [
+                        'captchaAction' => ['/site/captcha']
+                    ]) ?>
 
                     <?= Html::submitButton(Yii::t('user', 'Sign up'), ['class' => 'btn btn-success btn-block']) ?>
 
@@ -100,8 +98,7 @@ form, just copy and paste following code into newly created view file.
 ```
 
 
-3. Adding action to the controller
-----------------------------------
+## 3. Adding action to the controller
 
 In order to make captcha work you have to add captcha action to `app\controllers\SiteController` Maybe it is already
 added because standard Yii2 application template adds it automatically.

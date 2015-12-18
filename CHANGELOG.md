@@ -1,6 +1,63 @@
 # CHANGELOG
 
-## 0.9.1 [1 January 2014]
+## 1.0.0-alpha [Work in progress]
+
+- `fix` Added check if profile model exists in Settings controller #497 (dmeroff)
+- `enh` Added event triggers to most of actions #411 (dmeroff)
+- `enh` Added LinkedIn client #496 (SamMousa)
+
+## 0.9.5 [27 September 2015]
+
+- `fix` Don't set mailer subject in bootstrap #451 (dmeroff)
+- `enh` Remove old user tokens with same type while creating new #340 (dmeroff)
+- `fix` Forbid ability to login via networks for blocked users #434 (dmeroff)
+- `fix` Fixed problems with url rules #351 (dmeroff)
+- `enh` Regenerate `auth_key` after blocking the user (dmeroff)
+- `enh` Improved registration process #236 (dmeroff)
+- `fix` Ensure user/index works without php-intl extension #370 (thyseus)
+- `fix` Fixed display of confirmation time #361 (pedros80)
+- `fix` Do not limit username length to 25 chars #369 (thyseus)
+
+## 0.9.4 [6 April 2015]
+
+- `enh` Added ability to override translations (dmeroff)
+- `enh` Improved authentication via social networks (dmeroff)
+- `enh` Added Latvian translation (uldisn)
+- `enh` Added redirect to index page when logged in user tries to access login page (thiagotalma)
+- `fix` Updated Italian translation (maxxer)
+- `enh` Added usage of `adminEmail` param as default sender name if set (thiagotalma)
+- `enh` Added link to registration page on login form (thiagotalma)
+- `enh` Improved username regexp (thiagotalma)
+- `fix` Updated translations for Portuguese language (invaderhd & thiagotalma & andredp)
+- `enh` Added integration with Yii2-rbac (dmeroff)
+- `enh` Improved admin views and controller (dmeroff)
+- `enh` Added datepicker in user grid view (dmeroff)
+
+## 0.9.3 [9 February 2015]
+
+- `fix` Fixed bug with inability to connect network account #275 (dmeroff)
+- `enh` Added turkish translation (veyselsahin)
+- `enh` Added lithuanian translation (vilkazz)
+- `fix` Fixed button css on profile settings page (sosojni)
+- `enh` Hidden recovery link when `enablePasswordRecovery` is false (marsuboss)
+- `fix` Fixed gravatar hash creation (nigelterry)
+- `fix` Fixed invalid redirection after changing account settings (WeeSee)
+- `fix` Updated messages to be more readable (jspaine)
+- `fix` Reverted initialization of `user` component (dmeroff)
+- `fix` Fixed bug on confirmation and recovery when invalid token was used (anders-akero)
+
+## 0.9.2 [14 January 2015]
+
+- `enh` Improved initialization of `user` application component (dmeroff)
+- `fix` Fixed encoding problem with plain text email messages (dmeroff)
+- `fix` Fixed migration (dmeroff)
+- `fix` Fixed overriding of mailer view files (dmeroff)
+- `fix` Fixed troubles with overriding user search model (dmeroff)
+- `fix` Fixed bug when model was defined as array in modelMap (dmeroff)
+- `fix` Removed ajax-request flood on login form (thiagotalma)
+- `enh` Added `th` translation (kongoon)
+
+## 0.9.1 [1 January 2015]
 
 - `fix` Fixed overriding of active record models (dmeroff)
 - `fix` Fixed pt-BR translation (thiagotalma)

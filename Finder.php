@@ -11,6 +11,9 @@
 
 namespace dektrium\user;
 
+use dektrium\user\models\query\AccountQuery;
+use dektrium\user\models\Token;
+use yii\authclient\ClientInterface;
 use yii\base\Object;
 use yii\db\ActiveQuery;
 
@@ -27,7 +30,7 @@ class Finder extends Object
     /** @var ActiveQuery */
     protected $tokenQuery;
 
-    /** @var ActiveQuery */
+    /** @var AccountQuery */
     protected $accountQuery;
 
     /** @var ActiveQuery */
@@ -84,7 +87,7 @@ class Finder extends Object
     }
 
     /** @param ActiveQuery $profileQuery */
-    public function setProfileQuery(ActiveQuery$profileQuery)
+    public function setProfileQuery(ActiveQuery $profileQuery)
     {
         $this->profileQuery = $profileQuery;
     }
@@ -92,7 +95,8 @@ class Finder extends Object
     /**
      * Finds a user by the given id.
      *
-     * @param  integer     $id User id to be used on search.
+     * @param int $id User id to be used on search.
+     *
      * @return models\User
      */
     public function findUserById($id)
@@ -103,7 +107,8 @@ class Finder extends Object
     /**
      * Finds a user by the given username.
      *
-     * @param  string      $username Username to be used on search.
+     * @param string $username Username to be used on search.
+     *
      * @return models\User
      */
     public function findUserByUsername($username)
@@ -114,7 +119,8 @@ class Finder extends Object
     /**
      * Finds a user by the given email.
      *
-     * @param  string      $email Email to be used on search.
+     * @param string $email Email to be used on search.
+     *
      * @return models\User
      */
     public function findUserByEmail($email)
@@ -125,7 +131,8 @@ class Finder extends Object
     /**
      * Finds a user by the given username or email.
      *
-     * @param  string      $usernameOrEmail Username or email to be used on search.
+     * @param string $usernameOrEmail Username or email to be used on search.
+     *
      * @return models\User
      */
     public function findUserByUsernameOrEmail($usernameOrEmail)
@@ -140,7 +147,8 @@ class Finder extends Object
     /**
      * Finds a user by the given condition.
      *
-     * @param  mixed               $condition Condition to be used on search.
+     * @param mixed $condition Condition to be used on search.
+     *
      * @return \yii\db\ActiveQuery
      */
     public function findUser($condition)
@@ -149,9 +157,18 @@ class Finder extends Object
     }
 
     /**
+     * @return AccountQuery
+     */
+    public function findAccount()
+    {
+        return $this->accountQuery;
+    }
+
+    /**
      * Finds an account by id.
      *
-     * @param integer $id
+     * @param int $id
+     *
      * @return models\Account|null
      */
     public function findAccountById($id)
@@ -160,23 +177,10 @@ class Finder extends Object
     }
 
     /**
-     * Finds an account by client id and provider name.
-     *
-     * @param string $provider
-     * @param string $clientId
-     * @return models\Account|null
-     */
-    public function findAccountByProviderAndClientId($provider, $clientId)
-    {
-        return $this->accountQuery->where([
-            'provider'  => $provider,
-            'client_id' => $clientId
-        ])->one();
-    }
-    /**
      * Finds a token by user id and code.
      *
-     * @param  mixed  $condition
+     * @param mixed $condition
+     *
      * @return ActiveQuery
      */
     public function findToken($condition)
@@ -185,9 +189,28 @@ class Finder extends Object
     }
 
     /**
+     * Finds a token by params.
+     *
+     * @param integer $userId
+     * @param string  $code
+     * @param integer $type
+     *
+     * @return Token
+     */
+    public function findTokenByParams($userId, $code, $type)
+    {
+        return $this->findToken([
+            'user_id' => $userId,
+            'code'    => $code,
+            'type'    => $type,
+        ])->one();
+    }
+
+    /**
      * Finds a profile by user id.
      *
-     * @param integer $id
+     * @param int $id
+     *
      * @return null|models\Profile
      */
     public function findProfileById($id)
@@ -196,9 +219,10 @@ class Finder extends Object
     }
 
     /**
-     * Finds a profile
+     * Finds a profile.
      *
-     * @param  mixed $condition
+     * @param mixed $condition
+     *
      * @return \yii\db\ActiveQuery
      */
     public function findProfile($condition)

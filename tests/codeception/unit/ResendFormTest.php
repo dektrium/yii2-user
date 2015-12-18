@@ -3,7 +3,7 @@
 namespace dektrium\user\tests;
 
 use dektrium\user\models\ResendForm;
-use tests\codeception\fixtures\UserFixture;
+use tests\codeception\_fixtures\UserFixture;
 use yii\codeception\TestCase;
 
 class ResendFormTest extends TestCase
@@ -16,7 +16,7 @@ class ResendFormTest extends TestCase
         return [
             'user' => [
                 'class' => UserFixture::className(),
-                'dataFile' => '@tests/codeception/fixtures/data/init_user.php'
+                'dataFile' => '@tests/codeception/_fixtures/data/init_user.php',
             ],
         ];
     }

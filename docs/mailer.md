@@ -1,5 +1,4 @@
-Mailer
-======
+# Mailer
 
 Yii2-user includes special component named Mailer, which is used to send emails in four different instances:
 
@@ -8,8 +7,7 @@ Yii2-user includes special component named Mailer, which is used to send emails 
 - Email change confirmation message
 - Recovery message
 
-Configuration
--------------
+## Configuration
 
 Mailer can be configured as followed:
 

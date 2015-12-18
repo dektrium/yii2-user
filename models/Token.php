@@ -11,6 +11,7 @@
 
 namespace dektrium\user\models;
 
+use Yii;
 use yii\db\ActiveRecord;
 use yii\helpers\Url;
 
@@ -40,7 +41,7 @@ class Token extends ActiveRecord
     /** @inheritdoc */
     public function init()
     {
-        $this->module = \Yii::$app->getModule('user');
+        $this->module = Yii::$app->getModule('user');
     }
 
     /**
@@ -68,7 +69,7 @@ class Token extends ActiveRecord
                 $route = '/user/settings/confirm';
                 break;
             default:
-                throw new \RuntimeException;
+                throw new \RuntimeException();
         }
 
         return Url::to([$route, 'id' => $this->user_id, 'code' => $this->code], true);
@@ -89,7 +90,7 @@ class Token extends ActiveRecord
                 $expirationTime = $this->module->recoverWithin;
                 break;
             default:
-                throw new \RuntimeException;
+                throw new \RuntimeException();
         }
 
         return ($this->created_at + $expirationTime) < time();
@@ -99,8 +100,9 @@ class Token extends ActiveRecord
     public function beforeSave($insert)
     {
         if ($insert) {
+            static::deleteAll(['user_id' => $this->user_id, 'type' => $this->type]);
             $this->setAttribute('created_at', time());
-            $this->setAttribute('code', \Yii::$app->security->generateRandomString());
+            $this->setAttribute('code', Yii::$app->security->generateRandomString());
         }
 
         return parent::beforeSave($insert);

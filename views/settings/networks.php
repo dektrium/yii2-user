@@ -12,7 +12,7 @@
 use dektrium\user\widgets\Connect;
 use yii\helpers\Html;
 
-/**
+/*
  * @var yii\web\View $this
  * @var yii\widgets\ActiveForm $form
  */
@@ -33,20 +33,23 @@ $this->params['breadcrumbs'][] = $this->title;
                 <?= Html::encode($this->title) ?>
             </div>
             <div class="panel-body">
+                <div class="alert alert-info">
+                    <p><?= Yii::t('user', 'You can connect multiple accounts to be able to log in using them') ?>.</p>
+                </div>
                 <?php $auth = Connect::begin([
-                    'baseAuthUrl' => ['/user/settings/connect'],
+                    'baseAuthUrl' => ['/user/security/auth'],
                     'accounts'    => $user->accounts,
                     'autoRender'  => false,
-                    'popupMode'   => false
+                    'popupMode'   => false,
                 ]) ?>
                 <table class="table">
                     <?php foreach ($auth->getClients() as $client): ?>
                         <tr>
-                            <td style="width: 32px">
+                            <td style="width: 32px; vertical-align: middle">
                                 <?= Html::tag('span', '', ['class' => 'auth-icon ' . $client->getName()]) ?>
                             </td>
-                            <td>
-                                <?= $client->getTitle() ?>
+                            <td style="vertical-align: middle">
+                                <strong><?= $client->getTitle() ?></strong>
                             </td>
                             <td style="width: 120px">
                                 <?= $auth->isConnected($client) ?
@@ -55,7 +58,7 @@ $this->params['breadcrumbs'][] = $this->title;
                                         'data-method' => 'post',
                                     ]) :
                                     Html::a(Yii::t('user', 'Connect'), $auth->createClientUrl($client), [
-                                        'class' => 'btn btn-success btn-block'
+                                        'class' => 'btn btn-success btn-block',
                                     ])
                                 ?>
                             </td>

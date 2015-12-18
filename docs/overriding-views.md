@@ -1,5 +1,4 @@
-Overriding views
-================
+# Overriding views
 
 When you start using Yii2-user you will probably find that you need to override the default views provided by the module.
 Although view names are not configurable, Yii2 provides a way to override views using themes. To get started you should
@@ -22,8 +21,7 @@ configure your view application component as follows:
 In the above `pathMap` means that every view in @dektrium/user/views will be first searched under `@app/views/user` and
 if a view exists in the theme directory it will be used instead of the original view.
 
-Example
--------
+## Example
 
 An example of overriding the registration page view is demonstrated below. First make sure you have configured view
 application component.
@@ -31,7 +29,7 @@ application component.
 In order to override the registration view file you should create `@app/views/user/registration/register.php`. Open it
 and paste in the following code:
 
-```
+```php
 <?php
 use yii\helpers\Html;
 use yii\widgets\ActiveForm;
@@ -77,5 +75,5 @@ $this->params['breadcrumbs'][] = $this->title;
 </div>
 ```
 
-Then open registration page and make sure that you see **'This view file has been overrided!'**. If you don't see it
+Then open registration page and make sure that you see **'This view file has been overriden!'**. If you don't see it
 make sure you have properly configured your view component and created view file in right location.

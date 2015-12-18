@@ -1,5 +1,6 @@
 <?php
 
+use dektrium\user\tests\FunctionalTester;
 use tests\codeception\_pages\ResendPage;
 
 $I = new FunctionalTester($scenario);
@@ -19,4 +20,4 @@ $I->see('This account has already been confirmed');
 $I->amGoingTo('try to resend token to unconfirmed user');
 $user = $I->getFixture('user')->getModel('unconfirmed');
 $page->resend($user->email);
-$I->see('A message sent to your email address. It contains a confirmation link that you must click to complete registration.');
+$I->see('A message has been sent to your email address. It contains a confirmation link that you must click to complete registration.');

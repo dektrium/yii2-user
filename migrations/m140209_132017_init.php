@@ -9,8 +9,8 @@
  * file that was distributed with this source code.
  */
 
-use yii\db\Schema;
 use dektrium\user\migrations\Migration;
+use yii\db\Schema;
 
 /**
  * @author Dmitry Erofeev <dmeroff@gmail.com
@@ -20,7 +20,7 @@ class m140209_132017_init extends Migration
     public function up()
     {
         $this->createTable('{{%user}}', [
-            'id'                   => Schema::TYPE_PK,
+            'id' => Schema::TYPE_PK,
             'username'             => Schema::TYPE_STRING . '(25) NOT NULL',
             'email'                => Schema::TYPE_STRING . '(255) NOT NULL',
             'password_hash'        => Schema::TYPE_STRING . '(60) NOT NULL',
@@ -52,7 +52,7 @@ class m140209_132017_init extends Migration
             'gravatar_id'    => Schema::TYPE_STRING . '(32)',
             'location'       => Schema::TYPE_STRING . '(255)',
             'website'        => Schema::TYPE_STRING . '(255)',
-            'bio'            => Schema::TYPE_TEXT
+            'bio'            => Schema::TYPE_TEXT,
         ], $this->tableOptions);
 
         $this->addForeignKey('fk_user_profile', '{{%profile}}', 'user_id', '{{%user}}', 'id', 'CASCADE', 'RESTRICT');

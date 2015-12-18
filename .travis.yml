@@ -1,17 +1,33 @@
 language: php
+
 php:
   - 5.6
   - 5.5
   - 5.4
+
+# environment variable used in test suite
+env: TEST_ENVIRONMENT=travis
+
+# faster builds on new travis setup not using sudo
+sudo: false
+
+# cache vendor dirs
+cache:
+  directories:
+    - vendor
+    - $HOME/.composer/cache
+
+# install dependencies
 install:
-  - composer self-update "1.0.0-alpha9"
-  - composer global require "fxp/composer-asset-plugin:1.0.0-beta4"
-  - composer install --prefer-dist --dev
-  - composer require --dev "codeception/codeception:2.0.*@dev"
+  - travis_retry composer self-update
+  - travis_retry composer global require "codeception/codeception:2.0.16"
+  - travis_retry composer global require "fxp/composer-asset-plugin:~1.0"
+  - travis_retry composer install --prefer-dist
+
 before_script:
-  - mysql -e 'create database dektrium_test;'
   - cd tests
-  - sed -i 's/\/..\/..\/..\/..\/..\//\/..\/..\//g' codeception/_bootstrap.php
-  - php codeception/bin/yii migrate/up --interactive=0
-  - ../vendor/bin/codecept build
-script: ../vendor/bin/codecept run
+  - mysql -e 'create database dektrium_test;'
+  - php codeception/_app/yii migrate/up --interactive=0
+  - ~/.composer/vendor/bin/codecept build
+
+script: ~/.composer/vendor/bin/codecept run

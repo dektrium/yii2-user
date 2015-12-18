@@ -12,10 +12,11 @@
 use yii\helpers\Html;
 use yii\widgets\ActiveForm;
 
-/**
+/*
  * @var $this  yii\web\View
  * @var $form  yii\widgets\ActiveForm
  * @var $model dektrium\user\models\SettingsForm
+ * @var $module dektrium\user\Module
  */
 
 $this->title = Yii::t('user', 'Account settings');
@@ -47,11 +48,13 @@ $this->params['breadcrumbs'][] = $this->title;
 
                 <?= $form->field($model, 'email') ?>
 
-                <?= $form->field($model, 'username') ?>
+                <?php if (!$module->emailAsUsername): ?>
+                    <?= $form->field($model, 'username') ?>
+                <?php endif ?>
 
                 <?= $form->field($model, 'new_password')->passwordInput() ?>
 
-                <hr/>
+                <hr />
 
                 <?= $form->field($model, 'current_password')->passwordInput() ?>
 

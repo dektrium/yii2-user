@@ -8,11 +8,11 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
- 
+
 use yii\db\Schema;
 use yii\db\Migration;
 
-class m151218_234654_add_new_field_to_profile extends Migration
+class m151218_234654_add_timezone_to_profile extends Migration
 {
     public function up()
     {

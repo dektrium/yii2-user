@@ -11,7 +11,6 @@
 
 namespace dektrium\user\models;
 
-use dektrium\user\traits\ModuleTrait;
 use Yii;
 use yii\db\ActiveRecord;
 
@@ -26,13 +25,21 @@ use yii\db\ActiveRecord;
  * @property string  $location
  * @property string  $website
  * @property string  $bio
+ * @property string  $timezone
  * @property User    $user
  *
  * @author Dmitry Erofeev <dmeroff@gmail.com
  */
 class Profile extends ActiveRecord
 {
-    use ModuleTrait;
+    /** @var \dektrium\user\Module */
+    protected $module;
+
+    /** @inheritdoc */
+    public function init()
+    {
+        $this->module = Yii::$app->getModule('user');
+    }
 
     /** @inheritdoc */
     public static function tableName()
@@ -47,6 +54,7 @@ class Profile extends ActiveRecord
     {
         return [
             'bioString' => ['bio', 'string'],
+            'profileString' => ['timezone', 'string', 'max' => 255],
             'publicEmailPattern' => ['public_email', 'email'],
             'gravatarEmailPattern' => ['gravatar_email', 'email'],
             'websiteUrl' => ['website', 'url'],
@@ -55,6 +63,7 @@ class Profile extends ActiveRecord
             'gravatarEmailLength' => ['gravatar_email', 'string', 'max' => 255],
             'locationLength' => ['location', 'string', 'max' => 255],
             'websiteLength' => ['website', 'string', 'max' => 255],
+
         ];
     }
 
@@ -68,6 +77,7 @@ class Profile extends ActiveRecord
             'location'       => Yii::t('user', 'Location'),
             'website'        => Yii::t('user', 'Website'),
             'bio'            => Yii::t('user', 'Bio'),
+            'timezone'       => Yii::t('user', 'Time zone'),
         ];
     }
 

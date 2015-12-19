@@ -241,6 +241,10 @@ class User extends ActiveRecord implements IdentityInterface
         $this->confirmed_at = time();
         $this->password = $this->password == null ? Password::generate(8) : $this->password;
 
+        if (empty($this->timezone) {
+            $this->timezone = Yii::$app->timezone;
+        }
+
         $this->trigger(self::BEFORE_CREATE);
 
         if (!$this->save()) {

@@ -12,9 +12,11 @@
 namespace dektrium\user\controllers;
 
 use dektrium\user\Finder;
+use dektrium\user\models\Profile;
 use dektrium\user\models\SettingsForm;
 use dektrium\user\Module;
 use dektrium\user\traits\AjaxValidationTrait;
+use dektrium\user\traits\EventTrait;
 use Yii;
 use yii\filters\AccessControl;
 use yii\filters\VerbFilter;
@@ -32,6 +34,55 @@ use yii\web\NotFoundHttpException;
 class SettingsController extends Controller
 {
     use AjaxValidationTrait;
+    use EventTrait;
+
+    /**
+     * Event is triggered before updating user's profile.
+     * Triggered with \dektrium\user\events\UserEvent.
+     */
+    const EVENT_BEFORE_PROFILE_UPDATE = 'beforeProfileUpdate';
+
+    /**
+     * Event is triggered after updating user's profile.
+     * Triggered with \dektrium\user\events\UserEvent.
+     */
+    const EVENT_AFTER_PROFILE_UPDATE = 'afterProfileUpdate';
+
+    /**
+     * Event is triggered before updating user's account settings.
+     * Triggered with \dektrium\user\events\FormEvent.
+     */
+    const EVENT_BEFORE_ACCOUNT_UPDATE = 'beforeAccountUpdate';
+
+    /**
+     * Event is triggered after updating user's account settings.
+     * Triggered with \dektrium\user\events\FormEvent.
+     */
+    const EVENT_AFTER_ACCOUNT_UPDATE = 'afterAccountUpdate';
+
+    /**
+     * Event is triggered before changing users' email address.
+     * Triggered with \dektrium\user\events\UserEvent.
+     */
+    const EVENT_BEFORE_CONFIRM = 'beforeConfirm';
+
+    /**
+     * Event is triggered after changing users' email address.
+     * Triggered with \dektrium\user\events\UserEvent.
+     */
+    const EVENT_AFTER_CONFIRM = 'afterConfirm';
+
+    /**
+     * Event is triggered before disconnecting social account from user.
+     * Triggered with \dektrium\user\events\ConnectEvent.
+     */
+    const EVENT_BEFORE_DISCONNECT = 'beforeDisconnect';
+
+    /**
+     * Event is triggered after disconnecting social account from user.
+     * Triggered with \dektrium\user\events\ConnectEvent.
+     */
+    const EVENT_AFTER_DISCONNECT = 'afterDisconnect';
 
     /** @inheritdoc */
     public $defaultAction = 'profile';
@@ -83,11 +134,19 @@ class SettingsController extends Controller
     {
         $model = $this->finder->findProfileById(Yii::$app->user->identity->getId());
 
+        if ($model == null) {
+            $model = Yii::createObject(Profile::className());
+            $model->link('user', Yii::$app->user->identity);
+        }
+
+        $event = $this->getProfileEvent($model);
+
         $this->performAjaxValidation($model);
 
+        $this->trigger(self::EVENT_BEFORE_PROFILE_UPDATE, $event);
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             Yii::$app->getSession()->setFlash('success', Yii::t('user', 'Your profile has been updated'));
-
+            $this->trigger(self::EVENT_AFTER_PROFILE_UPDATE, $event);
             return $this->refresh();
         }
 
@@ -105,12 +164,14 @@ class SettingsController extends Controller
     {
         /** @var SettingsForm $model */
         $model = Yii::createObject(SettingsForm::className());
+        $event = $this->getFormEvent($model);
 
         $this->performAjaxValidation($model);
 
+        $this->trigger(self::EVENT_BEFORE_ACCOUNT_UPDATE, $event);
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             Yii::$app->session->setFlash('success', Yii::t('user', 'Your account details have been updated'));
-
+            $this->trigger(self::EVENT_AFTER_ACCOUNT_UPDATE, $event);
             return $this->refresh();
         }
 
@@ -120,7 +181,7 @@ class SettingsController extends Controller
     }
 
     /**
-     * Attempts changing user's password.
+     * Attempts changing user's email address.
      *
      * @param int    $id
      * @param string $code
@@ -136,7 +197,11 @@ class SettingsController extends Controller
             throw new NotFoundHttpException();
         }
 
+        $event = $this->getUserEvent($user);
+
+        $this->trigger(self::EVENT_BEFORE_CONFIRM, $event);
         $user->attemptEmailChange($code);
+        $this->trigger(self::EVENT_AFTER_CONFIRM, $event);
 
         return $this->redirect(['account']);
     }
@@ -172,7 +237,12 @@ class SettingsController extends Controller
         if ($account->user_id != Yii::$app->user->id) {
             throw new ForbiddenHttpException();
         }
+
+        $event = $this->getConnectEvent($account, $account->user);
+
+        $this->trigger(self::EVENT_BEFORE_DISCONNECT, $event);
         $account->delete();
+        $this->trigger(self::EVENT_AFTER_DISCONNECT, $event);
 
         return $this->redirect(['networks']);
     }

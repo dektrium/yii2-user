@@ -17,6 +17,8 @@
  * NOTE: this file must be saved in UTF-8 encoding.
  */
 return [
+    'In order to finish your registration, we need you to enter following fields' => 'Täytä seuraavat tiedot viimeistelläksesi rekisteröityminen',
+    'Your account has been blocked.' => 'Tilisi on estetty.',
     '(not set)' => '(ei asetettu)',
     'A confirmation message has been sent to your new email address' => 'Uuteen sähköpostiisi on lähetetty vahvistusviesti',
     'A message has been sent to your email address. It contains a confirmation link that you must click to complete registration.' => 'Sähköpostiisi on lähetetty vahvistusviesti. Klikkaa viestissä olevaa linkkiä viimeistelläksesi rekisteröityminen.',
@@ -78,7 +80,6 @@ return [
     'If you did not make this request you can ignore this email' => 'Jos et tehnyt tätä pyyntöä, sinun ei tarvitse huomioida tätä sähköpostia',
     'In order to complete your registration, please click the link below' => 'Klikkaa alla olevaa linkkiä viimeistelläksesi rekisteröitymisesi',
     'In order to complete your request, please click the link below' => 'Klikkaa alla olevaa linkkiä viimeistelläksesi pyyntösi',
-    'In order to finish your registration, we need you to enter your email address' => 'Anna sähköpostiosoitteesi viimeistelläksesi rekisteröityminen',
     'Information' => 'Tiedot',
     'Invalid login or password' => 'Virheellinen käyttäjätunnus tai salasana',
     'Invalid or expired link' => 'Virheellinen tai vanhentunut linkki',
@@ -151,7 +152,6 @@ return [
     'You can connect multiple accounts to be able to log in using them' => 'Voit yhdistää useita tilejä, joilla voidaan sisäänkirjautua',
     'You can not block your own account' => 'Et voi estää omaa tiliäsi',
     'You can not remove your own account' => 'Et voi poistaa omaa tiliäsi',
-    'You can now log in with the following credentials:' => 'Voit nyt kirjautua sisään käyttämällä seuraavia tunnistetietoja:',
     'You need to confirm your email address' => 'Sinun täytyy vahvistaa sähköpostiosoitteesi',
     'Your account details have been updated' => 'Tilisi tiedot on päivitetty',
     'Your account has been blocked' => 'Tilisi on estetty',

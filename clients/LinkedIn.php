@@ -11,18 +11,19 @@
 
 namespace dektrium\user\clients;
 
-use yii\authclient\clients\GoogleOAuth as BaseGoogle;
+use dektrium\user\clients\ClientInterface;
+use yii\authclient\clients\LinkedIn as BaseLinkedIn;
 
-/**
- * @author Dmitry Erofeev <dmeroff@gmail.com>
+/*
+ * @author Sam Mousa <sam@mousa.nl>
  */
-class Google extends BaseGoogle implements ClientInterface
+class LinkedIn extends BaseLinkedIn implements ClientInterface
 {
     /** @inheritdoc */
     public function getEmail()
     {
-        return isset($this->getUserAttributes()['emails'][0]['value'])
-            ? $this->getUserAttributes()['emails'][0]['value']
+        return isset($this->getUserAttributes()['email-address'])
+            ? $this->getUserAttributes()['email-address']
             : null;
     }
 

@@ -15,6 +15,7 @@ use dektrium\user\clients\ClientInterface;
 use dektrium\user\Finder;
 use dektrium\user\models\query\AccountQuery;
 use dektrium\user\Module;
+use dektrium\user\traits\ModuleTrait;
 use Yii;
 use yii\authclient\ClientInterface as BaseClientInterface;
 use yii\db\ActiveRecord;
@@ -38,20 +39,13 @@ use yii\helpers\Url;
  */
 class Account extends ActiveRecord
 {
-    /** @var Module */
-    protected $module;
+    use ModuleTrait;
 
     /** @var Finder */
     protected static $finder;
 
     /** @var */
     private $_data;
-
-    /** @inheritdoc */
-    public function init()
-    {
-        $this->module = Yii::$app->getModule('user');
-    }
 
     /** @inheritdoc */
     public static function tableName()

@@ -2,7 +2,7 @@
 
 This page provides a list of common problems and the ways of solving them.
 
-### After logging in I'm redirected back without any sign of of being logged in
+### After logging in I'm redirected back without any sign of being logged in
 
 You probably haven't removed `user` from component section of your application.
 

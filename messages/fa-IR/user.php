@@ -36,7 +36,7 @@ return [
     'Awesome, almost there. Now you need to click the confirmation link sent to your new email address' => 'عالیه ، تقریبا تموم شده. حالا فقط باید بر روی ایمیل فعال سازی که به ایمیل جدید شما ارسال شده کلیک کنید',
     'Awesome, almost there. Now you need to click the confirmation link sent to your old email address' => 'عالیه ، تقریبا تموم شده. حالا فقط باید بر روی ایمیل فعال سازی که به ایمیل قدیمی شما ارسال شده کلیک کنید',
     'Blocked at {0, date, MMMM dd, YYYY HH:mm}' => 'مسدود شده در تاریخ {0, date, MMMM dd, YYYY HH:mm}',
-    'Complete password reset on {0}' => 'بازنشانی رمز عبور در {0} به اتمام رسید',
+    'Complete password reset on {0}' => 'بازیابی  رمز عبور در {0} را به اتمام برسانید',
     'Confirm account on {0}' => 'حساب کاربری در {0} تایید شد',
     'Confirm email change on {0}' => 'ایمیل تاییدیه در {0} تغییر کرد',
     'Confirmation status' => 'وضعیت تایید',

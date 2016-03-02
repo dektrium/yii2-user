@@ -22,7 +22,7 @@ class m140209_132017_init extends Migration
         $this->createTable('{{%user}}', [
             'id'                   => Schema::TYPE_PK,
             'username'             => Schema::TYPE_STRING . '(25) NOT NULL',
-            'email'                => Schema::TYPE_STRING . '(255) NOT NULL',
+            'email'                => Schema::TYPE_STRING . '(150) NOT NULL',
             'password_hash'        => Schema::TYPE_STRING . '(60) NOT NULL',
             'auth_key'             => Schema::TYPE_STRING . '(32) NOT NULL',
             'confirmation_token'   => Schema::TYPE_STRING . '(32)',

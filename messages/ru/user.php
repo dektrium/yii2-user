@@ -84,7 +84,7 @@ return [
     'Gravatar email' => 'Gravatar email',
     'Hello' => 'Здравствуйте',
     'If you already registered, sign in and connect this account on settings page' => 'Если вы уже зарегистрированы, войдите и подключите аккаунт в настройках',
-    'If you cannot click the link, please try pasting the text into your browser' => 'Если вы не можете нажать на ссылку, скопируйте ее и вставте в адресную строку вашего браузера',
+    'If you cannot click the link, please try pasting the text into your browser' => 'Если вы не можете нажать на ссылку, скопируйте ее и вставьте в адресную строку вашего браузера',
     'If you did not make this request you can ignore this email' => 'P.S. Если вы получили это сообщение по ошибке, просто удалите его',
     'In order to complete your registration, please click the link below' => 'Чтобы активировать ваш аккаунт, пожалуйста, нажмите на ссылку ниже',
     'In order to complete your request, please click the link below' => 'Чтобы завершить запрос, нажмите на ссылку ниже',

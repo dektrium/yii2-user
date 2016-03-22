@@ -7,6 +7,7 @@ return [
         'ca',
         'da',
         'de',
+        'de-DU',
         'es',
         'fa-IR',
         'fi',

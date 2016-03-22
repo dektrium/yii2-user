@@ -25,6 +25,7 @@ Yii2-user documentation is licensed under the [CC BY 4.0](http://creativecommons
 - [User management](user-management.md)
 - [Authentication via social networks](social-auth.md)
 - [Mailer](mailer.md)
+- [Data model](data-model.md)
 
 ## RBAC
 

@@ -68,6 +68,9 @@ class Module extends BaseModule
 
     /** @var array An array of administrator's usernames. */
     public $admins = [];
+	
+	/** @var string The Administrator permission name. */
+    public $adminPermission;
 
     /** @var array Mailer configuration */
     public $mailer = [];

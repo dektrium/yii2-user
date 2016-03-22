@@ -88,8 +88,18 @@ time user have to request new recovery message.
 #### admins (Type: `array`, Default value: `[]`)
 
 Yii2-user has special admin pages where you can manager registered users or
-create new user accounts. You need to specify username of users that will be
-able to access those pages.
+create new user accounts. You can specify the username of users that will be
+able to access those pages. The most permissive of `admins` and `adminPermission`
+will determine access.
+
+---
+
+#### adminPermission (Type: `string`, Default value: `null`)
+
+Yii2-user has special admin pages where you can manager registered users or
+create new user accounts. You can specify the existing RBAC permission that will
+allow a user to be able to access those pages. The most permissive of `admins`
+and `adminPermission` will determine access.
 
 ---
 

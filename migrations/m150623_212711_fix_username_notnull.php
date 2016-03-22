@@ -25,6 +25,10 @@ class m150623_212711_fix_username_notnull extends Migration
 
     public function down()
     {
-        $this->alterColumn('{{%user}}', 'username', Schema::TYPE_STRING . '(255)');
+        if(Yii::$app->db->driverName == "pgsql"){
+            $this->alterColumn('{{%user}}', 'username', 'DROP NOT NULL');
+        }else{
+            $this->alterColumn('{{%user}}', 'username', Schema::TYPE_STRING . '(255)');
+        }
     }
 }

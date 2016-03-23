@@ -162,7 +162,7 @@ return [
     'Your account has been blocked' => 'Ваш аккаунт был блокирован',
     'Your account has been connected' => 'Аккаунт был успешно подключен',
     'Your account has been created' => 'Ваш аккаунт был создан',
-    'Your account on {0} has been created' => 'Ваш аккаунт на сайте "{0}" был успешно создан и мы сгенерировали пароль для вас',
+    'Your account on {0} has been created' => 'Ваш аккаунт на сайте "{0}" был успешно создан',
     'Your confirmation token is invalid or expired' => 'Ваша ссылка устарела или является ошибочной',
     'Your email address has been changed' => 'Ваш email был успешно изменен',
     'Your password has been changed successfully.' => 'Ваш пароль был успешно изменен.',

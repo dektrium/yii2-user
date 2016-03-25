@@ -115,9 +115,18 @@ class RecoveryForm extends Model
                 'user_id' => $this->user->id,
                 'type'    => Token::TYPE_RECOVERY,
             ]);
-            $token->save(false);
-            $this->mailer->sendRecoveryMessage($this->user, $token);
-            Yii::$app->session->setFlash('info', Yii::t('user', 'An email has been sent with instructions for resetting your password'));
+
+            if (!$token->save(false)) {
+                return false;
+            }
+
+            if (!$this->mailer->sendRecoveryMessage($this->user, $token)) {
+                return false;
+            }
+
+            Yii::$app->session->setFlash('info',
+                Yii::t('user', 'An email has been sent with instructions for resetting your password')
+            );
 
             return true;
         }

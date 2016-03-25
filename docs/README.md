@@ -2,7 +2,7 @@
 
 Yii2-user documentation is licensed under the [CC BY 4.0](http://creativecommons.org/licenses/by/4.0/).
 
-© [Dektrium project](http://github.com/dektrium/) 2013 - 2015
+© [Dektrium project](http://github.com/dektrium/) 2013 - 2016
 
 ## Getting Started
 
@@ -12,6 +12,7 @@ Yii2-user documentation is licensed under the [CC BY 4.0](http://creativecommons
 - [Troubleshooting](troubleshooting.md)
 - [Usage with Yii2 advanced template](usage-with-advanced-template.md)
 - [Console commands](console.md)
+- [F.A.Q.](faq.md)
 
 ## Overriding
 

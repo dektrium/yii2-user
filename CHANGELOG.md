@@ -1,6 +1,6 @@
 # CHANGELOG
 
-## 1.0.0-alpha [Work in progress]
+## 0.9.6 [Work in progress]
 
 - `enh` Support for custom `admin` role via access control rule out of the box #510 (dmeroff)
 - `fix` Removed ability to register a new account via social network when registration is disabled #512 (dmeroff)

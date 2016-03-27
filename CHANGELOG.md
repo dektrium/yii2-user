@@ -2,6 +2,10 @@
 
 ## 0.9.6 [Work in progress]
 
+- `fix` Fixed translations sourceLanguage (thezilla-)
+- `enh` Added ability to grant access to admin part via roles (Talwoasc)
+- `fix` Fixed postgresql migrations (kfreiman, drxwat)
+- `enh` Improved login widget (dmeroff)
 - `enh` Support for custom `admin` role via access control rule out of the box #510 (dmeroff)
 - `fix` Removed ability to register a new account via social network when registration is disabled #512 (dmeroff)
 - `fix` Added check if profile model exists in Settings controller #497 (dmeroff)

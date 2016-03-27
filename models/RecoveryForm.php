@@ -91,8 +91,11 @@ class RecoveryForm extends Model
                 'email',
                 function ($attribute) {
                     $this->user = $this->finder->findUserByEmail($this->email);
-                    if ($this->user !== null && $this->module->enableConfirmation && !$this->user->getIsConfirmed()) {
+                    if ($this->user !== null && $this->module->enableConfirmation && !$this->user->isConfirmed) {
                         $this->addError($attribute, Yii::t('user', 'You need to confirm your email address'));
+                    }
+                    if ($this->user->isBlocked) {
+                        $this->addError($attribute, Yii::t('user', 'Your account has been blocked'));
                     }
                 }
             ],

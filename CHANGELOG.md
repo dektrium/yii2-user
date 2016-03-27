@@ -1,6 +1,6 @@
 # CHANGELOG
 
-## 0.9.6 [Work in progress]
+## 0.9.6 [27 March 2016]
 
 - `enh` Added new method to Profile model to get avatar url (dmeroff)
 - `fix` Fixed translations sourceLanguage (thezilla-)

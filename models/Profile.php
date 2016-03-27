@@ -12,7 +12,6 @@
 namespace dektrium\user\models;
 
 use dektrium\user\traits\ModuleTrait;
-use Yii;
 use yii\db\ActiveRecord;
 
 /**
@@ -34,55 +33,16 @@ class Profile extends ActiveRecord
 {
     use ModuleTrait;
 
-    /** @inheritdoc */
-    public static function tableName()
-    {
-        return '{{%profile}}';
-    }
-
     /**
-     * @inheritdoc
+     * Returns avatar url or null if avatar is not set.
+     * @param  int $size
+     * @return string|null
      */
-    public function rules()
+    public function getAvatarUrl($size = 200)
     {
-        return [
-            'bioString' => ['bio', 'string'],
-            'publicEmailPattern' => ['public_email', 'email'],
-            'gravatarEmailPattern' => ['gravatar_email', 'email'],
-            'websiteUrl' => ['website', 'url'],
-            'nameLength' => ['name', 'string', 'max' => 255],
-            'publicEmailLength' => ['public_email', 'string', 'max' => 255],
-            'gravatarEmailLength' => ['gravatar_email', 'string', 'max' => 255],
-            'locationLength' => ['location', 'string', 'max' => 255],
-            'websiteLength' => ['website', 'string', 'max' => 255],
-        ];
-    }
+        $protocol = \Yii::$app->request->isSecureConnection ? 'https' : 'http';
 
-    /** @inheritdoc */
-    public function attributeLabels()
-    {
-        return [
-            'name'           => Yii::t('user', 'Name'),
-            'public_email'   => Yii::t('user', 'Email (public)'),
-            'gravatar_email' => Yii::t('user', 'Gravatar email'),
-            'location'       => Yii::t('user', 'Location'),
-            'website'        => Yii::t('user', 'Website'),
-            'bio'            => Yii::t('user', 'Bio'),
-        ];
-    }
-
-    /** @inheritdoc */
-    public function beforeSave($insert)
-    {
-        if (parent::beforeSave($insert)) {
-            if ($this->isAttributeChanged('gravatar_email')) {
-                $this->setAttribute('gravatar_id', md5(strtolower($this->getAttribute('gravatar_email'))));
-            }
-
-            return true;
-        }
-
-        return false;
+        return $protocol . '://gravatar.com/avatar/' . $this->gravatar_id . '?s=' . $size;
     }
 
     /**
@@ -91,5 +51,58 @@ class Profile extends ActiveRecord
     public function getUser()
     {
         return $this->hasOne($this->module->modelMap['User'], ['id' => 'user_id']);
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function rules()
+    {
+        return [
+            'bioString'            => ['bio', 'string'],
+            'publicEmailPattern'   => ['public_email', 'email'],
+            'gravatarEmailPattern' => ['gravatar_email', 'email'],
+            'websiteUrl'           => ['website', 'url'],
+            'nameLength'           => ['name', 'string', 'max' => 255],
+            'publicEmailLength'    => ['public_email', 'string', 'max' => 255],
+            'gravatarEmailLength'  => ['gravatar_email', 'string', 'max' => 255],
+            'locationLength'       => ['location', 'string', 'max' => 255],
+            'websiteLength'        => ['website', 'string', 'max' => 255],
+        ];
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function attributeLabels()
+    {
+        return [
+            'name'           => \Yii::t('user', 'Name'),
+            'public_email'   => \Yii::t('user', 'Email (public)'),
+            'gravatar_email' => \Yii::t('user', 'Gravatar email'),
+            'location'       => \Yii::t('user', 'Location'),
+            'website'        => \Yii::t('user', 'Website'),
+            'bio'            => \Yii::t('user', 'Bio'),
+        ];
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function beforeSave($insert)
+    {
+        if ($this->isAttributeChanged('gravatar_email')) {
+            $this->setAttribute('gravatar_id', md5(strtolower(trim($this->getAttribute('gravatar_email')))));
+        }
+
+        return parent::beforeSave($insert);
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public static function tableName()
+    {
+        return '{{%profile}}';
     }
 }

@@ -23,7 +23,10 @@ $this->params['breadcrumbs'][] = $this->title;
     <div class="col-xs-12 col-sm-6 col-md-6">
         <div class="row">
             <div class="col-sm-6 col-md-4">
-                <img src="http://gravatar.com/avatar/<?= $profile->gravatar_id ?>?s=230" alt="" class="img-rounded img-responsive" />
+                <?= Html::img($profile->getAvatarUrl(230), [
+                    'class' => 'img-rounded img-responsive',
+                    'alt'   => $profile->user->username,
+                ]) ?>
             </div>
             <div class="col-sm-6 col-md-8">
                 <h4><?= $this->title ?></h4>

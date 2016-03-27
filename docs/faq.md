@@ -17,3 +17,11 @@ You can change controller's layout using `controllerMap` module's property:
     ],
 ],
 ```
+
+## How to get user's avatar url?
+
+```php
+\Yii::$app->user->identity->profile->getAvatarUrl();
+// or you can specify size of avatar
+\Yii::$app->user->identity->profile->getAvatarUrl(150);
+```

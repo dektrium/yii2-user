@@ -2,6 +2,7 @@
 
 ## 0.9.6 [Work in progress]
 
+- `enh` Added new method to Profile model to get avatar url (dmeroff)
 - `fix` Fixed translations sourceLanguage (thezilla-)
 - `enh` Added ability to grant access to admin part via roles (Talwoasc)
 - `fix` Fixed postgresql migrations (kfreiman, drxwat)

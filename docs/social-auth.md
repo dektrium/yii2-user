@@ -141,3 +141,35 @@ The following config allows to log in using 3 networks (Twitter, Facebook and Go
     ],
 ],
 ```
+
+## How to access social network attributes
+
+You can fill user's profile with data provided by social network, here is quick example of how to fill profile name
+with the name provided via facebook:
+
+```php
+// plase this code somewhere in your config files (bootstrap.php in case of using advanced app template, web.php in case
+// of using basic app template
+
+use dektrium\user\controllers\SecurityController; 
+
+Event::on(SecurityController::class, SecurityController::EVENT_AFTER_AUTHENTICATE, function (AuthEvent $e) {
+    // if user account was not created we should not continue
+    if ($e->account->user === null) {
+        return;
+    }
+
+    // we are using switch here, because all networks provide different sets of data
+    switch ($e->client->getName()) {
+        case 'facebook':
+            $e->account->user->profile->updateAttributes([
+                'name' => $e->client->getUserAttributes()['name'],
+            ]);
+        case 'vkontakte':
+            // some different logic
+    }
+    
+    // after saving all user attributes will be stored under account model
+    // Yii::$app->identity->user->accounts['facebook']->decodedData
+});
+```

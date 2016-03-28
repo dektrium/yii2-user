@@ -117,8 +117,13 @@ class SettingsController extends Controller
                 'rules' => [
                     [
                         'allow'   => true,
-                        'actions' => ['profile', 'account', 'confirm', 'networks', 'disconnect'],
+                        'actions' => ['profile', 'account', 'networks', 'disconnect'],
                         'roles'   => ['@'],
+                    ],
+                    [
+                        'allow'   => true,
+                        'actions' => ['confirm'],
+                        'roles'   => ['?', '@'],
                     ],
                 ],
             ],

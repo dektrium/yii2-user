@@ -118,7 +118,7 @@ class LoginForm extends Model
     public function beforeValidate()
     {
         if (parent::beforeValidate()) {
-            $this->user = $this->finder->findUserByUsernameOrEmail($this->login);
+            $this->user = $this->finder->findUserByUsernameOrEmail(trim($this->login));
 
             return true;
         } else {

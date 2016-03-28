@@ -98,6 +98,7 @@ class Bootstrap implements BootstrapInterface
                 $app->get('i18n')->translations['user*'] = [
                     'class'    => PhpMessageSource::className(),
                     'basePath' => __DIR__ . '/messages',
+                    'sourceLanguage' => 'en-US'
                 ];
             }
 

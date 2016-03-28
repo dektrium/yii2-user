@@ -91,8 +91,11 @@ class RecoveryForm extends Model
                 'email',
                 function ($attribute) {
                     $this->user = $this->finder->findUserByEmail($this->email);
-                    if ($this->user !== null && $this->module->enableConfirmation && !$this->user->getIsConfirmed()) {
+                    if ($this->user !== null && $this->module->enableConfirmation && !$this->user->isConfirmed) {
                         $this->addError($attribute, Yii::t('user', 'You need to confirm your email address'));
+                    }
+                    if ($this->user->isBlocked) {
+                        $this->addError($attribute, Yii::t('user', 'Your account has been blocked'));
                     }
                 }
             ],
@@ -115,9 +118,18 @@ class RecoveryForm extends Model
                 'user_id' => $this->user->id,
                 'type'    => Token::TYPE_RECOVERY,
             ]);
-            $token->save(false);
-            $this->mailer->sendRecoveryMessage($this->user, $token);
-            Yii::$app->session->setFlash('info', Yii::t('user', 'An email has been sent with instructions for resetting your password'));
+
+            if (!$token->save(false)) {
+                return false;
+            }
+
+            if (!$this->mailer->sendRecoveryMessage($this->user, $token)) {
+                return false;
+            }
+
+            Yii::$app->session->setFlash('info',
+                Yii::t('user', 'An email has been sent with instructions for resetting your password')
+            );
 
             return true;
         }

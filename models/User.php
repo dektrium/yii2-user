@@ -241,8 +241,6 @@ class User extends ActiveRecord implements IdentityInterface
         $this->confirmed_at = time();
         $this->password = $this->password == null ? Password::generate(8) : $this->password;
 
-
-
         $this->trigger(self::BEFORE_CREATE);
 
         if (!$this->save()) {

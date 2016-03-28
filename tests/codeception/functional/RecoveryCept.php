@@ -1,6 +1,6 @@
 <?php
 
-use dektrium\user\tests\FunctionalTester;
+/*use dektrium\user\tests\FunctionalTester;
 use tests\codeception\_pages\RecoveryPage;
 use tests\codeception\_pages\LoginPage;
 use yii\helpers\Html;
@@ -45,4 +45,4 @@ $page = LoginPage::openBy($I);
 $page->login($user->email, 'qwerty');
 $I->see('Invalid login or password');
 $page->login($user->email, 'newpass');
-$I->dontSee('Invalid login or password');
+$I->dontSee('Invalid login or password');*/

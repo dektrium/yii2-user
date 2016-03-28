@@ -39,7 +39,7 @@ class Profile extends ActiveRecord
     /** @inheritdoc */
     public function init()
     {
-        $this->module = Yii::$app->getModule('user');
+        $this->module = \Yii::$app->getModule('user');
     }
 
     /**
@@ -109,7 +109,31 @@ class Profile extends ActiveRecord
             $this->addError($attribute, \Yii::t('user', 'Time zone is not valid'));
         }
     }
-
+    
+    /**
+     * Get the user's time zone.
+     * Defaults to the application timezone if not specified by the user.
+     * @return \DateTimeZone
+     */
+    public function getTimeZone()
+    {
+        try {
+            return new \DateTimeZone($this->timezone);
+        } catch(\Exception $e) {
+            // Default to application time zone if the user hasn't set their time zone
+            return new \DateTimeZone(\Yii::app()->timeZone);
+        }
+    }
+    
+    /**
+     * Set the user's time zone.
+     * @param \DateTimeZone $timezone the timezone to save to the user's profile
+     */
+    public function setTimeZone(\DateTimeZone $timeZone)
+    {
+        $this->setAttribute('timezone', $timeZone->getName());
+    }
+    
     /**
      * @inheritdoc
      */

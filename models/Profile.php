@@ -70,7 +70,7 @@ class Profile extends ActiveRecord
     {
         return [
             'bioString'            => ['bio', 'string'],
-            'profileString'        => ['timezone', 'string', 'max' => 255],
+            'timeZoneValidation'   => ['timezone', 'string', 'max' => 40],
             'publicEmailPattern'   => ['public_email', 'email'],
             'gravatarEmailPattern' => ['gravatar_email', 'email'],
             'websiteUrl'           => ['website', 'url'],

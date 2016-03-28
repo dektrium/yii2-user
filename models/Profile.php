@@ -70,7 +70,7 @@ class Profile extends ActiveRecord
     {
         return [
             'bioString'            => ['bio', 'string'],
-            'timeZoneValidation'   => ['timezone', 'string', 'max' => 40],
+            'timeZoneValidation'   => ['timezone', 'validateTimeZone'],
             'publicEmailPattern'   => ['public_email', 'email'],
             'gravatarEmailPattern' => ['gravatar_email', 'email'],
             'websiteUrl'           => ['website', 'url'],
@@ -97,6 +97,15 @@ class Profile extends ActiveRecord
             'timezone'       => Yii::t('user', 'Time zone'),
         ];
     }
+    
+    public function validateTimeZone($attribute, $params)
+    {
+        try{
+            new DateTimeZone($this->$attribute);
+        } catch(Exception $e){
+            $this->addError($attribute, 'Time zone does not exist');
+        }
+    }
 
     /**
      * @inheritdoc
@@ -117,4 +126,6 @@ class Profile extends ActiveRecord
     {
         return '{{%profile}}';
     }
+    
+    
 }

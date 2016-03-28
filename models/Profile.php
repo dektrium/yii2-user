@@ -12,7 +12,6 @@
 namespace dektrium\user\models;
 
 use dektrium\user\traits\ModuleTrait;
-use Yii;
 use yii\db\ActiveRecord;
 
 /**
@@ -94,14 +93,14 @@ class Profile extends ActiveRecord
             'location'       => \Yii::t('user', 'Location'),
             'website'        => \Yii::t('user', 'Website'),
             'bio'            => \Yii::t('user', 'Bio'),
-            'timezone'       => Yii::t('user', 'Time zone'),
+            'timezone'       => \Yii::t('user', 'Time zone'),
         ];
     }
     
     public function validateTimeZone($attribute, $params)
     {
         if (!in_array($this->$attribute, timezone_identifiers_list())) {
-            $this->addError($attribute, 'Time zone is not a valid time zone');
+            $this->addError($attribute, \Yii::t('user', 'Time zone is not valid');
         }
     }
 

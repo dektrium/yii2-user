@@ -16,7 +16,7 @@ class m151218_234654_add_timezone_to_profile extends Migration
 {
     public function up()
     {
-        $this->addColumn('{{%profile}}', 'timezone', Schema::TYPE_STRING . (255));
+        $this->addColumn('{{%profile}}', 'timezone', Schema::TYPE_STRING . '(255)');
     }
 
     public function down()

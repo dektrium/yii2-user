@@ -100,10 +100,8 @@ class Profile extends ActiveRecord
     
     public function validateTimeZone($attribute, $params)
     {
-        try{
-            new DateTimeZone($this->$attribute);
-        } catch(Exception $e){
-            $this->addError($attribute, 'Time zone does not exist');
+        if (!in_array($this->$attribute, timezone_identifiers_list())) {
+            $this->addError($attribute, 'Time zone is not a valid time zone');
         }
     }
 

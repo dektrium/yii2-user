@@ -12,6 +12,7 @@
 namespace dektrium\user\models;
 
 use dektrium\user\traits\ModuleTrait;
+use Yii;
 use yii\db\ActiveRecord;
 
 /**
@@ -69,7 +70,7 @@ class Profile extends ActiveRecord
     {
         return [
             'bioString'            => ['bio', 'string'],
-            'profileString' => ['timezone', 'string', 'max' => 255],
+            'profileString'        => ['timezone', 'string', 'max' => 255],
             'publicEmailPattern'   => ['public_email', 'email'],
             'gravatarEmailPattern' => ['gravatar_email', 'email'],
             'websiteUrl'           => ['website', 'url'],

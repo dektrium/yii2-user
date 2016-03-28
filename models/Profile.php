@@ -97,10 +97,16 @@ class Profile extends ActiveRecord
         ];
     }
     
+    /**
+     * Validates the timezone attribute.
+     * Adds an error when the specified time zone doesn't exist.
+     * @param string $attribute the attribute being validated
+     * @param array $params values for the placeholders in the error message
+     */
     public function validateTimeZone($attribute, $params)
     {
         if (!in_array($this->$attribute, timezone_identifiers_list())) {
-            $this->addError($attribute, \Yii::t('user', 'Time zone is not valid');
+            $this->addError($attribute, \Yii::t('user', 'Time zone is not valid'));
         }
     }
 

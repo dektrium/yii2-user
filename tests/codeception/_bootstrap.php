@@ -13,7 +13,7 @@ $kernel->init([
     'debug'        => true,
     'includePaths' => [__DIR__.'/../../', VENDOR_DIR],
     'excludePaths' => [__DIR__],
-    'cacheDir'     => '/tmp/yii2-user/aop',
+    'cacheDir'     => __DIR__ . '/_app/runtime/aop',
 ]);
 $kernel->loadFile(VENDOR_DIR.'/yiisoft/yii2/Yii.php');
 

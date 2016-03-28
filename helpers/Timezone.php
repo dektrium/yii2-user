@@ -25,17 +25,17 @@ class Timezone
      * @return array
      */
     public static function getAll() {
-        $timezones = [];
-        $time_zones = $timezone_identifiers = \DateTimeZone::listIdentifiers();
+        $timeZones = [];
+        $timeZoneIdentifiers = \DateTimeZone::listIdentifiers();
 
-        foreach ($time_zones as $time_zone) {
-            $date = new \DateTime('now', new \DateTimeZone($time_zone));
-            $offset_in_hours = $date->getOffset() / 60 / 60;
-            $timezones[] = ['timezone' => $time_zone, 'name' => "{$time_zone} (UTC " . ($offset_in_hours > 0 ? '+' : '') . "{$offset_in_hours})", 'offset' => $offset_in_hours];
+        foreach ($timeZoneIdentifiers as $timeZone) {
+            $date = new \DateTime('now', new \DateTimeZone($timeZone));
+            $offset = $date->getOffset() / 60 / 60;
+            $timeZones[] = ['timezone' => $timeZone, 'name' => "{$timeZone} (UTC " . ($offset > 0 ? '+' : '') . "{$offset})", 'offset' => $offset];
         }
 
-        \yii\helpers\ArrayHelper::multisort($timezones, 'offset', SORT_DESC, SORT_NUMERIC);
+        \yii\helpers\ArrayHelper::multisort($timeZones, 'offset', SORT_DESC, SORT_NUMERIC);
 
-        return $timezones;
+        return $timeZones;
     }
 }

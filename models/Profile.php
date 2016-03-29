@@ -135,6 +135,16 @@ class Profile extends ActiveRecord
     }
     
     /**
+     * Converts DateTime to user's local time
+     * @param \DateTime the datetime to convert
+     * @return \DateTime
+     */
+    public function toLocalTime(\DateTime $dateTime)
+    {
+        return $dateTime->setTimezone($this->getTimeZone());
+    }
+    
+    /**
      * @inheritdoc
      */
     public function beforeSave($insert)

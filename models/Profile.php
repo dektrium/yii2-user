@@ -139,8 +139,12 @@ class Profile extends ActiveRecord
      * @param \DateTime the datetime to convert
      * @return \DateTime
      */
-    public function toLocalTime(\DateTime $dateTime)
+    public function toLocalTime(\DateTime $dateTime = null)
     {
+        if ($dateTime === null) {
+            $dateTime = new \DateTime();
+        }
+        
         return $dateTime->setTimezone($this->getTimeZone());
     }
     

@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 1.0.0-alpha [Work In Progress]
+
+- `enh` Added ability for users to set their timezones #581, #164 (yarrgh)
+
 ## 0.9.6 [27 March 2016]
 
 - `enh` Added new method to Profile model to get avatar url (dmeroff)

@@ -253,12 +253,12 @@ class AdminController extends Controller
         Url::remember('', 'actions-redirect');
         $user    = $this->findModel($id);
         $profile = $user->profile;
-        $event   = $this->getProfileEvent($profile);
 
         if ($profile == null) {
             $profile = Yii::createObject(Profile::className());
             $profile->link('user', $user);
         }
+        $event   = $this->getProfileEvent($profile);
 
         $this->performAjaxValidation($profile);
 

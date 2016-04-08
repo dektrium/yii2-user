@@ -146,6 +146,14 @@ class RegistrationController extends Controller
             ]);
         }
 
+        if ($model->hasErrors()) {
+            foreach ($model->getErrors() as $fieldName => $errors) {
+                foreach ($errors as $error) {
+                    Yii::$app->getSession()->setFlash('danger', $error);
+                }
+            }
+        }
+
         return $this->render('register', [
             'model'  => $model,
             'module' => $this->module,

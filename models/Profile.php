@@ -49,9 +49,7 @@ class Profile extends ActiveRecord
      */
     public function getAvatarUrl($size = 200)
     {
-        $protocol = \Yii::$app->request->isSecureConnection ? 'https' : 'http';
-
-        return $protocol . '://gravatar.com/avatar/' . $this->gravatar_id . '?s=' . $size;
+        return '//gravatar.com/avatar/' . $this->gravatar_id . '?s=' . $size;
     }
 
     /**

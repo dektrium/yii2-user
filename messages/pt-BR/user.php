@@ -87,7 +87,7 @@ return [
     'In order to complete your registration, please click the link below' => 'Para completar o seu registo, por favor clique no link abaixo',
     'In order to complete your request, please click the link below' => 'Para completar sua requisição, por favor clique no link abaixo',
     'Information' => 'Informação',
-    'Invalid login or password' => 'Usuário ou senha incorretas',
+    'Invalid login or password' => 'Usuário ou senha incorretos',
     'Invalid or expired link' => 'Link inválido ou já expirou',
     'Joined on {0, date}' => 'Cadastrado em {0, date}',
     'Location' => 'Localização',

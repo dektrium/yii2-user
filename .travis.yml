@@ -1,9 +1,9 @@
 language: php
 
 php:
-  - 5.6
-  - 5.5
   - 5.4
+  - 5.5
+  - 5.6
 
 # environment variable used in test suite
 env: TEST_ENVIRONMENT=travis
@@ -19,15 +19,17 @@ cache:
 
 # install dependencies
 install:
-  - travis_retry composer self-update
-  - travis_retry composer global require "codeception/codeception:2.0.16"
+  - travis_retry composer self-update && composer --version
   - travis_retry composer global require "fxp/composer-asset-plugin:~1.0"
-  - travis_retry composer install --prefer-dist
+  - export PATH="$HOME/.composer/vendor/bin:$PATH"
+  - travis_retry composer install --prefer-dist --no-interaction
+# codeception
+  - travis_retry composer global require "codeception/codeception:~2.0" "codeception/specify:*" "codeception/verify:*"
 
 before_script:
   - cd tests
   - mysql -e 'create database dektrium_test;'
   - php codeception/_app/yii migrate/up --interactive=0
-  - ~/.composer/vendor/bin/codecept build
+  - codecept build
 
-script: ~/.composer/vendor/bin/codecept run
+script: codecept run

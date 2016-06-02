@@ -406,12 +406,13 @@ class User extends ActiveRecord implements IdentityInterface
 
     /**
      * Generates new username based on email address, or creates new username
-     * like "user1".
+     * like "emailuser1".
      */
     public function generateUsername()
     {
         // try to use name part of email
-        $this->username = explode('@', $this->email)[0];
+        $username = explode('@', $this->email)[0];
+        $this->username = $username;
         if ($this->validate(['username'])) {
             return $this->username;
         }
@@ -423,7 +424,7 @@ class User extends ActiveRecord implements IdentityInterface
                 ->select('MAX(id) as id')
                 ->one();
 
-            $this->username = 'user' . ++$row['id'];
+            $this->username = $username . ++$row['id'];
         }
 
         return $this->username;

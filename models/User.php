@@ -417,6 +417,13 @@ class User extends ActiveRecord implements IdentityInterface
             return $this->username;
         }
 
+        // valid email addresses are less restricitve than our
+        // valid username regexp so fallback to 'user123' if needed:
+        if (!preg_match(self::$usernameRegexp, $username)) {
+            $username = 'user';
+        }
+        $this->username = $username;
+
         // generate username like "user1", "user2", etc...
         while (!$this->validate(['username'])) {
             $row = (new Query())

@@ -86,7 +86,7 @@ class Module extends BaseModule
     public $urlPrefix = 'user';
 
     /** @var string Displaying the password in the welcome message. */
-    public $enablePasswordInWelcomeMessage = 'false';
+    public $enablePasswordInWelcomeMessage = 'true';
     
     /** @var array The rules to be used in URL management. */
     public $urlRules = [

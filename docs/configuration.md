@@ -51,6 +51,12 @@ passwords.
 
 ---
 
+#### enablePasswordInWelcomeMessage (Type: `string`, Default value: `true`)
+
+If this option is to `true`, users will receive their password in the welcome message.
+
+---
+
 #### emailChangeStrategy (Type: `integer`, Default value: `\dektrium\user\Module::STRATEGY_DEFAULT`)
 
 When user tries change his password, there are three ways how this change will

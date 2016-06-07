@@ -9,6 +9,8 @@
  * file that was distributed with this source code.
  */
 
+use yii\bootstrap\Alert;
+
 /**
  * @var dektrium\user\Module $module
  */
@@ -19,9 +21,7 @@
         <div class="col-xs-12">
             <?php foreach (Yii::$app->session->getAllFlashes() as $type => $message): ?>
                 <?php if (in_array($type, ['success', 'danger', 'warning', 'info'])): ?>
-                    <div class="alert alert-<?= $type ?>">
-                        <?= $message ?>
-                    </div>
+                    <?= Alert::widget(['options' => ['class' => 'alert-'.$type], 'body' => $message]) ?>
                 <?php endif ?>
             <?php endforeach ?>
         </div>

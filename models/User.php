@@ -247,7 +247,7 @@ class User extends ActiveRecord implements IdentityInterface
             return false;
         }
 
-        $this->mailer->sendWelcomeMessage($this, null, true);
+        $this->mailer->sendWelcomeMessage($this, null, $this->module->enablePasswordInWelcomeMessage);
         $this->trigger(self::AFTER_CREATE);
 
         return true;
@@ -280,7 +280,7 @@ class User extends ActiveRecord implements IdentityInterface
             $token->link('user', $this);
         }
 
-        $this->mailer->sendWelcomeMessage($this, isset($token) ? $token : null);
+        $this->mailer->sendWelcomeMessage($this, isset($token) ? $token : null, $this->module->enablePasswordInWelcomeMessage);
         $this->trigger(self::AFTER_REGISTER);
 
         return true;

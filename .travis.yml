@@ -18,6 +18,8 @@ cache:
     - vendor
     - $HOME/.composer/cache
 
+before_install: phpenv config-rm xdebug.ini
+
 # install dependencies
 install:
   - travis_retry composer self-update

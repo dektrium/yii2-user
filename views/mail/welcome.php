@@ -43,6 +43,12 @@ use yii\helpers\Html;
 </p>
 <?php endif ?>
 
+<?php if ($module->enableActivationByAdminIsRequired): ?>
+<p style="font-family: 'Helvetica Neue', 'Helvetica', Helvetica, Arial, sans-serif; font-size: 14px; line-height: 1.6; font-weight: normal; margin: 0 0 10px; padding: 0;">
+    <?= Yii::t('user', 'An Administrator needs to activate your account. You\'ll receive an email when your account has been activated') ?>.
+</p>
+<?php endif ?>
+
 <p style="font-family: 'Helvetica Neue', 'Helvetica', Helvetica, Arial, sans-serif; font-size: 14px; line-height: 1.6; font-weight: normal; margin: 0 0 10px; padding: 0;">
     <?= Yii::t('user', 'If you did not make this request you can ignore this email') ?>.
 </p>

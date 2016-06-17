@@ -29,4 +29,8 @@
 <?= Yii::t('user', 'If you cannot click the link, please try pasting the text into your browser') ?>.
 <?php endif ?>
 
+<?php if ($module->enableActivationByAdminIsRequired): ?>
+<?= Yii::t('user', 'An Administrator needs to activate your account. You\'ll receive an email when your account has been activated') ?>.
+<?php endif ?>
+
 <?= Yii::t('user', 'If you did not make this request you can ignore this email') ?>.

@@ -71,7 +71,10 @@ class LoginForm extends Model
             'passwordValidate' => [
                 'password',
                 function ($attribute) {
-                    if ($this->user === null || !Password::validate($this->password, $this->user->password_hash)) {
+                    if ($this->user === null
+                        || !Password::validate($this->password, $this->user->password_hash)
+                        || ($this->module->enableActivationByAdminIsRequired && !$this->user->getIsActivatedByAdmin())
+                        ) {
                         $this->addError($attribute, Yii::t('user', 'Invalid login or password'));
                     }
                 }
@@ -85,8 +88,16 @@ class LoginForm extends Model
                         if ($confirmationRequired && !$this->user->getIsConfirmed()) {
                             $this->addError($attribute, Yii::t('user', 'You need to confirm your email address'));
                         }
+
                         if ($this->user->getIsBlocked()) {
                             $this->addError($attribute, Yii::t('user', 'Your account has been blocked'));
+                        }
+
+                        if ($this->module->enableActivationByAdminIsRequired && !$this->user->getIsActivatedByAdmin()) {
+                            $this->addError(
+                                $attribute,
+                                Yii::t('user', 'Your account has not yet been activated by an administrator')
+                            );
                         }
                     }
                 }

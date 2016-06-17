@@ -4,6 +4,13 @@ All available configuration options are listed below with their default values.
 
 ---
 
+#### enableActivationByAdminIsRequired (Type: `boolean`, Default value: `false`)
+
+If this option is set to `true`, new registered users need to get activated by an administrator.
+After activation an information email will be sent to the user that his account has been activated.
+
+---
+
 #### enableFlashMessages (Type: `boolean`, Default value: `true`)
 
 If this option is set to `true`, module will show flash messages using

@@ -22,7 +22,7 @@ use dektrium\rbac\widgets\Assignments;
 
 <?= yii\bootstrap\Alert::widget([
     'options' => [
-        'class' => 'alert-info',
+        'class' => 'alert-info alert-dismissible',
     ],
     'body' => Yii::t('user', 'You can assign multiple roles or permissions to user by using the form below'),
 ]) ?>

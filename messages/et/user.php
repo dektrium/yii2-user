@@ -218,5 +218,5 @@ return [
     'You need to confirm your email address' =>'Sa pead oma e-posti aadressi kinnitama',
     'Your account has been blocked' =>'Sinu konto on blokeeritud',
     'Your account has been created' =>'Sinu konto on loodud',
-    '{0, date, MMMM dd, YYYY HH:mm}' =>'{0, aeg, MMMM dd, YYYY HH:mm}',
+    '{0, date, MMMM dd, YYYY HH:mm}' =>'{0, date, MMMM dd, YYYY HH:mm}',
 ];

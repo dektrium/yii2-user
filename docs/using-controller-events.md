@@ -24,3 +24,18 @@ message on a blank page:
     ],
 ],
 ```
+
+### Alternative: Class based-events
+
+You can also assign events on class-level.
+
+```
+\yii\base\Event::on(
+    \dektrium\user\controllers\RegistrationController::className(),
+    \dektrium\user\controllers\RegistrationController::EVENT_AFTER_CONFIRM,
+    function () {        
+        Yii::info('Assigning default roles to user...');
+        // implement role assignment(s)
+    }
+);
+```

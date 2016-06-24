@@ -424,15 +424,12 @@ class User extends ActiveRecord implements IdentityInterface
         }
         $this->username = $username;
 
-        // generate username like "user1", "user2", etc...
-        while (!$this->validate(['username'])) {
-            $row = (new Query())
-                ->from('{{%user}}')
-                ->select('MAX(id) as id')
-                ->one();
+        $max = $this->finder->userQuery->max('id');
 
-            $this->username = $username . ++$row['id'];
-        }
+        // generate username like "user1", "user2", etc...
+        do {
+            $this->username = $username . ++$max;
+        } while (!$this->validate(['username']));
 
         return $this->username;
     }

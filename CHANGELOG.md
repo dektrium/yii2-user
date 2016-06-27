@@ -2,6 +2,7 @@
 
 ## 1.0.0-alpha [Work In Progress]
 
+- `enh` Refactored ajax validation trait #648 (dmeroff)
 - `enh` Added ability for users to set their timezones #581, #164 (yarrgh)
 
 ## 0.9.6 [27 March 2016]

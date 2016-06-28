@@ -2,6 +2,8 @@
 
 ## 1.0.0-alpha [Work In Progress]
 
+- `enh` Added option to allow users to remove their accounts #593 (dmeroff)
+- `enh` Jui datepicker dependency has been removed #705 (dmeroff) 
 - `enh` Refactored ajax validation trait #648 (dmeroff)
 - `enh` Added ability for users to set their timezones #581, #164 (yarrgh)
 

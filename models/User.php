@@ -72,6 +72,9 @@ class User extends ActiveRecord implements IdentityInterface
     /** @var string Plain password. Used for model validation. */
     public $password;
 
+    /** @var bool If the welcome email will be sent. */
+    public $send_welcome = true;
+
     /** @var Profile|null */
     private $_profile;
 
@@ -171,6 +174,7 @@ class User extends ActiveRecord implements IdentityInterface
             'registration_ip'   => Yii::t('user', 'Registration ip'),
             'unconfirmed_email' => Yii::t('user', 'New email'),
             'password'          => Yii::t('user', 'Password'),
+            'send_welcome'      => Yii::t('user', 'Send welcome mail'),
             'created_at'        => Yii::t('user', 'Registration time'),
             'confirmed_at'      => Yii::t('user', 'Confirmation time'),
         ];
@@ -218,6 +222,9 @@ class User extends ActiveRecord implements IdentityInterface
             // password rules
             'passwordRequired' => ['password', 'required', 'on' => ['register']],
             'passwordLength'   => ['password', 'string', 'min' => 6, 'on' => ['register', 'create']],
+
+            // general rules
+            'sendWelcomeMail' => ['send_welcome', 'boolean', 'on' => ['create']],
         ];
     }
 
@@ -247,7 +254,10 @@ class User extends ActiveRecord implements IdentityInterface
             return false;
         }
 
-        $this->mailer->sendWelcomeMessage($this, null, true);
+        if ($this->send_welcome) {
+            $this->mailer->sendWelcomeMessage($this, null, true);
+        }
+
         $this->trigger(self::AFTER_CREATE);
 
         return true;

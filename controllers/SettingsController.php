@@ -17,7 +17,6 @@ use dektrium\user\models\SettingsForm;
 use dektrium\user\Module;
 use dektrium\user\traits\AjaxValidationTrait;
 use dektrium\user\traits\EventTrait;
-use Yii;
 use yii\filters\AccessControl;
 use yii\filters\VerbFilter;
 use yii\web\Controller;
@@ -137,11 +136,11 @@ class SettingsController extends Controller
      */
     public function actionProfile()
     {
-        $model = $this->finder->findProfileById(Yii::$app->user->identity->getId());
+        $model = $this->finder->findProfileById(\Yii::$app->user->identity->getId());
 
         if ($model == null) {
-            $model = Yii::createObject(Profile::className());
-            $model->link('user', Yii::$app->user->identity);
+            $model = \Yii::createObject(Profile::className());
+            $model->link('user', \Yii::$app->user->identity);
         }
 
         $event = $this->getProfileEvent($model);
@@ -149,8 +148,8 @@ class SettingsController extends Controller
         $this->performAjaxValidation($model);
 
         $this->trigger(self::EVENT_BEFORE_PROFILE_UPDATE, $event);
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            Yii::$app->getSession()->setFlash('success', Yii::t('user', 'Your profile has been updated'));
+        if ($model->load(\Yii::$app->request->post()) && $model->save()) {
+            \Yii::$app->getSession()->setFlash('success', \Yii::t('user', 'Your profile has been updated'));
             $this->trigger(self::EVENT_AFTER_PROFILE_UPDATE, $event);
             return $this->refresh();
         }
@@ -168,14 +167,14 @@ class SettingsController extends Controller
     public function actionAccount()
     {
         /** @var SettingsForm $model */
-        $model = Yii::createObject(SettingsForm::className());
+        $model = \Yii::createObject(SettingsForm::className());
         $event = $this->getFormEvent($model);
 
         $this->performAjaxValidation($model);
 
         $this->trigger(self::EVENT_BEFORE_ACCOUNT_UPDATE, $event);
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            Yii::$app->session->setFlash('success', Yii::t('user', 'Your account details have been updated'));
+        if ($model->load(\Yii::$app->request->post()) && $model->save()) {
+            \Yii::$app->session->setFlash('success', \Yii::t('user', 'Your account details have been updated'));
             $this->trigger(self::EVENT_AFTER_ACCOUNT_UPDATE, $event);
             return $this->refresh();
         }
@@ -219,7 +218,7 @@ class SettingsController extends Controller
     public function actionNetworks()
     {
         return $this->render('networks', [
-            'user' => Yii::$app->user->identity,
+            'user' => \Yii::$app->user->identity,
         ]);
     }
 
@@ -239,7 +238,7 @@ class SettingsController extends Controller
         if ($account === null) {
             throw new NotFoundHttpException();
         }
-        if ($account->user_id != Yii::$app->user->id) {
+        if ($account->user_id != \Yii::$app->user->id) {
             throw new ForbiddenHttpException();
         }
 

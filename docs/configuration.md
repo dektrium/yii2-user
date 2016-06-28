@@ -51,6 +51,12 @@ passwords.
 
 ---
 
+#### enableAccountDelete (Type: `boolean`, Default value: `false`)
+
+If this option is to `true`, users will be able to completely delete their accounts.
+
+---
+
 #### emailChangeStrategy (Type: `integer`, Default value: `\dektrium\user\Module::STRATEGY_DEFAULT`)
 
 When user tries change his password, there are three ways how this change will

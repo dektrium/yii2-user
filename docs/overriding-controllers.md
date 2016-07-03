@@ -3,6 +3,10 @@
 The default Yii2-user controllers provide a lot of functionality that is sufficient for general use cases. But sometimes
 you may need to extend that functionality and add some logic that suits your needs.
 
+> **NOTE:** Overriding the controller requires to duplicate all the logic of the action. Most of the time, it is easier to use
+> [the events](using-controller-events.md) to implement the functionality. Replacing the whole controller should be considered
+> as the last solution when nothing else is possible.
+
 ## Step 1: Create new controller
 
 First of all you should create new controller under your own namespace (it is recommended to use `app\controllers\user`)

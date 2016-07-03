@@ -34,6 +34,7 @@ Here is the list of clients supported by the module:
 - [Github](#github)
 - [VKontakte](#vkontakte)
 - [Yandex](#yandex)
+- [LinkedIn](#linkedin)
 
 ### Facebook
 
@@ -114,6 +115,23 @@ Here is the list of clients supported by the module:
     'clientSecret' => 'CLIENT_SECRET'
 ],
 ```
+
+### LinkedIn
+
+- You can register new application and get secret keys [here](https://www.linkedin.com/developer/apps/new?)
+
+```php
+'yandex' => [
+    'class'        => 'dektrium\user\clients\LinkedIn',
+    'clientId'     => 'CLIENT_ID',
+    'clientSecret' => 'CLIENT_SECRET'
+],
+```
+
+### Other networks
+
+Yii2-user also supports all social networks provied by [Yii2-authclient](https://github.com/yiisoft/yii2-authclient) extension.
+However it does not support registration without entering email and username after authenticating via network.
 
 ## Configuration example
 

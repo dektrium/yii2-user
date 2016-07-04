@@ -2,10 +2,11 @@
 
 ## 1.0.0-alpha [Work In Progress]
 
-- `enh` Added option to allow users to remove their accounts #593 (dmeroff)
-- `enh` Jui datepicker dependency has been removed #705 (dmeroff) 
-- `enh` Refactored ajax validation trait #648 (dmeroff)
-- `enh` Added ability for users to set their timezones #581, #164 (yarrgh)
+- Enh #378: Added events before and after confirmation (dmeroff)
+- Enh #593: Added option to allow users to remove their accounts (dmeroff)
+- Enh #705: Jui datepicker dependency has been removed (dmeroff) 
+- Enh #648: Refactored ajax validation trait (dmeroff)
+- Enh #581, #164: Added ability for users to set their timezones (yarrgh)
 
 ## 0.9.6 [27 March 2016]
 

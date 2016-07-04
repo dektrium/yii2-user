@@ -13,4 +13,3 @@ if (file_exists(__DIR__ . '/db.local.php')) {
 }
 
 return $db;
-

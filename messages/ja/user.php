@@ -167,4 +167,3 @@ return [
     'Your profile has been updated' => 'プロフィールが更新されました',
     '{0, date, MMMM dd, YYYY HH:mm}' => '',
 ];
-

@@ -29,4 +29,4 @@ use dektrium\rbac\widgets\Assignments;
 
 <?= Assignments::widget(['userId' => $user->id]) ?>
 
-<?php $this->endContent()
+<?php $this->endContent();

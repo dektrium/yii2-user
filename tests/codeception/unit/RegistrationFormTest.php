@@ -35,7 +35,13 @@ class RegistrationFormTest extends TestCase
         $this->model = new RegistrationForm();
 
         verify('username is required', $this->model->validate(['username']))->false();
-        $toolongstring = function() { $string = ''; for($i = 0; $i <= 256; $i++) $string .= 'X'; return $string; };
+        $toolongstring = function () {
+            $string = '';
+            for ($i = 0; $i <= 256; $i++) {
+                $string .= 'X';
+            }
+            return $string;
+        };
         $this->model->username = $toolongstring();
         verify('username is too long', $this->model->validate(['username']))->false();
         $this->model->username = '!@# абв';

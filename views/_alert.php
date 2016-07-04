@@ -29,4 +29,4 @@ use yii\bootstrap\Alert;
             <?php endforeach ?>
         </div>
     </div>
-<?php endif
+<?php endif;

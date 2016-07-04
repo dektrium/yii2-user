@@ -22,7 +22,7 @@ use yii\helpers\Html;
 
 ?>
 
-<?php if (Yii::$app->user->isGuest): ?>
+<?php if (Yii::$app->user->isGuest) : ?>
     <?php $form = ActiveForm::begin([
         'id'                     => 'login-widget-form',
         'action'                 => Url::to(['/user/security/login']),
@@ -42,9 +42,9 @@ use yii\helpers\Html;
     <?= Html::submitButton(Yii::t('user', 'Sign in'), ['class' => 'btn btn-primary btn-block']) ?>
 
     <?php ActiveForm::end(); ?>
-<?php else: ?>
+<?php else : ?>
     <?= Html::a(Yii::t('user', 'Logout'), ['/user/security/logout'], [
         'class'       => 'btn btn-danger btn-block',
         'data-method' => 'post'
     ]) ?>
-<?php endif ?>
+<?php endif

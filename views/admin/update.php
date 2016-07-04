@@ -14,9 +14,9 @@ use yii\bootstrap\Nav;
 use yii\web\View;
 
 /**
- * @var View 	$this
- * @var User 	$user
- * @var string 	$content
+ * @var View    $this
+ * @var User    $user
+ * @var string  $content
  */
 
 $this->title = Yii::t('user', 'Update user account');
@@ -40,8 +40,14 @@ $this->params['breadcrumbs'][] = $this->title;
                         'class' => 'nav-pills nav-stacked',
                     ],
                     'items' => [
-                        ['label' => Yii::t('user', 'Account details'), 'url' => ['/user/admin/update', 'id' => $user->id]],
-                        ['label' => Yii::t('user', 'Profile details'), 'url' => ['/user/admin/update-profile', 'id' => $user->id]],
+                        [
+                            'label' => Yii::t('user', 'Account details'),
+                            'url' => ['/user/admin/update', 'id' => $user->id]
+                        ],
+                        [
+                            'label' => Yii::t('user', 'Profile details'),
+                            'url' => ['/user/admin/update-profile', 'id' => $user->id]
+                        ],
                         ['label' => Yii::t('user', 'Information'), 'url' => ['/user/admin/info', 'id' => $user->id]],
                         [
                             'label' => Yii::t('user', 'Assignments'),

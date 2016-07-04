@@ -35,9 +35,9 @@ $this->params['breadcrumbs'][] = $this->title;
 <?php Pjax::begin() ?>
 
 <?= GridView::widget([
-    'dataProvider' 	=> $dataProvider,
-    'filterModel'  	=> $searchModel,
-    'layout'  		=> "{items}\n{pager}",
+    'dataProvider'  =>  $dataProvider,
+    'filterModel'   =>  $searchModel,
+    'layout'        =>  "{items}\n{pager}",
     'columns' => [
         'username',
         'email:email',
@@ -64,7 +64,9 @@ $this->params['breadcrumbs'][] = $this->title;
             'header' => Yii::t('user', 'Confirmation'),
             'value' => function ($model) {
                 if ($model->isConfirmed) {
-                    return '<div class="text-center"><span class="text-success">' . Yii::t('user', 'Confirmed') . '</span></div>';
+                    return '<div class="text-center">
+                                <span class="text-success">' . Yii::t('user', 'Confirmed') . '</span>
+                            </div>';
                 } else {
                     return Html::a(Yii::t('user', 'Confirm'), ['confirm', 'id' => $model->id], [
                         'class' => 'btn btn-xs btn-success btn-block',
@@ -102,4 +104,4 @@ $this->params['breadcrumbs'][] = $this->title;
     ],
 ]); ?>
 
-<?php Pjax::end() ?>
+<?php Pjax::end()

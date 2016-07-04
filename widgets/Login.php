@@ -16,7 +16,7 @@ use yii\base\Widget;
 
 /**
  * Login for widget.
- * 
+ *
  * @author Dmitry Erofeev <dmeroff@gmail.com>
  */
 class Login extends Widget

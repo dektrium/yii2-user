@@ -10,6 +10,7 @@
  */
 
 namespace dektrium\user\models;
+
 use dektrium\user\traits\ModuleTrait;
 use Yii;
 use yii\db\ActiveRecord;

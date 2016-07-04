@@ -13,10 +13,10 @@ use yii\helpers\Html;
 use yii\widgets\ActiveForm;
 
 /**
- * @var yii\web\View $this
- * @var yii\widgets\ActiveForm $form
- * @var dektrium\user\models\User $model
- * @var dektrium\user\models\Account $account
+ * @var yii\web\View                    $this
+ * @var yii\widgets\ActiveForm          $form
+ * @var dektrium\user\models\User       $model
+ * @var dektrium\user\models\Account    $account
  */
 
 $this->title = Yii::t('user', 'Sign in');
@@ -31,7 +31,10 @@ $this->params['breadcrumbs'][] = $this->title;
             <div class="panel-body">
                 <div class="alert alert-info">
                     <p>
-                        <?= Yii::t('user', 'In order to finish your registration, we need you to enter following fields') ?>:
+                        <?= Yii::t(
+                            'user',
+                            'In order to finish your registration, we need you to enter following fields'
+                        ) ?>:
                     </p>
                 </div>
                 <?php $form = ActiveForm::begin([
@@ -48,7 +51,13 @@ $this->params['breadcrumbs'][] = $this->title;
             </div>
         </div>
         <p class="text-center">
-            <?= Html::a(Yii::t('user', 'If you already registered, sign in and connect this account on settings page'), ['/user/settings/networks']) ?>.
+            <?= Html::a(
+                Yii::t(
+                    'user',
+                    'If you already registered, sign in and connect this account on settings page'
+                ),
+                ['/user/settings/networks']
+            ) ?>.
         </p>
     </div>
 </div>

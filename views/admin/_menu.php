@@ -53,4 +53,4 @@ use yii\bootstrap\Nav;
             ],
         ],
     ],
-]) ?>
+])

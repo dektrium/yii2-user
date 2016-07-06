@@ -2,6 +2,7 @@
 
 ## 1.0.0-alpha [Work In Progress]
 
+- Fix: Max password length set to 72 chars (dmeroff)
 - Enh #378: Added events before and after confirmation (dmeroff)
 - Enh #593: Added option to allow users to remove their accounts (dmeroff)
 - Enh #705: Jui datepicker dependency has been removed (dmeroff) 

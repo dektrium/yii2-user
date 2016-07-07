@@ -55,4 +55,4 @@
     </tr>
 </table>
 
-<?php $this->endContent();
+<?php $this->endContent() ?>

@@ -49,4 +49,4 @@ use yii\helpers\Html;
 
 <?php ActiveForm::end(); ?>
 
-<?php $this->endContent();
+<?php $this->endContent() ?>

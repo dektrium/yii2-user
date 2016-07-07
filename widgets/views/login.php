@@ -47,4 +47,4 @@ use yii\helpers\Html;
         'class'       => 'btn btn-danger btn-block',
         'data-method' => 'post'
     ]) ?>
-<?php endif;
+<?php endif ?>

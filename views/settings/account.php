@@ -65,7 +65,7 @@ $this->params['breadcrumbs'][] = $this->title;
             </div>
         </div>
 
-        <?php if ($model->module->enableAccountDelete) : ?>
+        <?php if ($model->module->enableAccountDelete): ?>
             <div class="panel panel-danger">
                 <div class="panel-heading">
                     <h3 class="panel-title"><?= Yii::t('user', 'Delete account') ?></h3>

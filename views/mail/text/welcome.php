@@ -16,12 +16,12 @@
 <?= Yii::t('user', 'Hello') ?>,
 
 <?= Yii::t('user', 'Your account on {0} has been created', Yii::$app->name) ?>.
-<?php if ($module->enableGeneratingPassword) : ?>
+<?php if ($module->enableGeneratingPassword): ?>
 <?= Yii::t('user', 'We have generated a password for you') ?>:
 <?= $user->password ?>
 <?php endif ?>
 
-<?php if ($token !== null) : ?>
+<?php if ($token !== null): ?>
 <?= Yii::t('user', 'In order to complete your registration, please click the link below') ?>.
 
 <?= $token->url ?>

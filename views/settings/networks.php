@@ -43,7 +43,7 @@ $this->params['breadcrumbs'][] = $this->title;
                     'popupMode'   => false,
                 ]) ?>
                 <table class="table">
-                    <?php foreach ($auth->getClients() as $client) : ?>
+                    <?php foreach ($auth->getClients() as $client): ?>
                         <tr>
                             <td style="width: 32px; vertical-align: middle">
                                 <?= Html::tag('span', '', ['class' => 'auth-icon ' . $client->getName()]) ?>

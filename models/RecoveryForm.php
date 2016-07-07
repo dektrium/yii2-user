@@ -100,7 +100,7 @@ class RecoveryForm extends Model
                 }
             ],
             'passwordRequired' => ['password', 'required'],
-            'passwordLength' => ['password', 'string', 'min' => 6],
+            'passwordLength' => ['password', 'string', 'max' => 72, 'min' => 6],
         ];
     }
 

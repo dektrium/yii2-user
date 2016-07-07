@@ -50,6 +50,9 @@ class Module extends BaseModule
 
     /** @var bool Whether to enable password recovery. */
     public $enablePasswordRecovery = true;
+    
+    /** @var bool Whether user can remove his account */
+    public $enableAccountDelete = false;
 
     /** @var int Email changing strategy. */
     public $emailChangeStrategy = self::STRATEGY_DEFAULT;

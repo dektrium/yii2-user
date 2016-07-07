@@ -13,7 +13,6 @@ use dektrium\user\models\UserSearch;
 use yii\data\ActiveDataProvider;
 use yii\grid\GridView;
 use yii\helpers\Html;
-use yii\jui\DatePicker;
 use yii\web\View;
 use yii\widgets\Pjax;
 
@@ -60,14 +59,6 @@ $this->params['breadcrumbs'][] = $this->title;
                     return date('Y-m-d G:i:s', $model->created_at);
                 }
             },
-            'filter' => DatePicker::widget([
-                'model'      => $searchModel,
-                'attribute'  => 'created_at',
-                'dateFormat' => 'php:Y-m-d',
-                'options' => [
-                    'class' => 'form-control',
-                ],
-            ]),
         ],
         [
             'header' => Yii::t('user', 'Confirmation'),

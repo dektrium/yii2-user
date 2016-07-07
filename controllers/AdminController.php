@@ -18,7 +18,6 @@ use dektrium\user\models\User;
 use dektrium\user\models\UserSearch;
 use dektrium\user\Module;
 use dektrium\user\traits\EventTrait;
-use Yii;
 use yii\base\ExitException;
 use yii\base\Model;
 use yii\base\Module as Module2;
@@ -175,8 +174,8 @@ class AdminController extends Controller
     public function actionIndex()
     {
         Url::remember('', 'actions-redirect');
-        $searchModel  = Yii::createObject(UserSearch::className());
-        $dataProvider = $searchModel->search(Yii::$app->request->get());
+        $searchModel  = \Yii::createObject(UserSearch::className());
+        $dataProvider = $searchModel->search(\Yii::$app->request->get());
 
         return $this->render('index', [
             'dataProvider' => $dataProvider,
@@ -193,7 +192,7 @@ class AdminController extends Controller
     public function actionCreate()
     {
         /** @var User $user */
-        $user = Yii::createObject([
+        $user = \Yii::createObject([
             'class'    => User::className(),
             'scenario' => 'create',
         ]);
@@ -202,8 +201,8 @@ class AdminController extends Controller
         $this->performAjaxValidation($user);
 
         $this->trigger(self::EVENT_BEFORE_CREATE, $event);
-        if ($user->load(Yii::$app->request->post()) && $user->create()) {
-            Yii::$app->getSession()->setFlash('success', Yii::t('user', 'User has been created'));
+        if ($user->load(\Yii::$app->request->post()) && $user->create()) {
+            \Yii::$app->getSession()->setFlash('success', \Yii::t('user', 'User has been created'));
             $this->trigger(self::EVENT_AFTER_CREATE, $event);
             return $this->redirect(['update', 'id' => $user->id]);
         }
@@ -230,8 +229,8 @@ class AdminController extends Controller
         $this->performAjaxValidation($user);
 
         $this->trigger(self::EVENT_BEFORE_UPDATE, $event);
-        if ($user->load(Yii::$app->request->post()) && $user->save()) {
-            Yii::$app->getSession()->setFlash('success', Yii::t('user', 'Account details have been updated'));
+        if ($user->load(\Yii::$app->request->post()) && $user->save()) {
+            \Yii::$app->getSession()->setFlash('success', \Yii::t('user', 'Account details have been updated'));
             $this->trigger(self::EVENT_AFTER_UPDATE, $event);
             return $this->refresh();
         }
@@ -255,7 +254,7 @@ class AdminController extends Controller
         $profile = $user->profile;
 
         if ($profile == null) {
-            $profile = Yii::createObject(Profile::className());
+            $profile = \Yii::createObject(Profile::className());
             $profile->link('user', $user);
         }
         $event   = $this->getProfileEvent($profile);
@@ -264,8 +263,8 @@ class AdminController extends Controller
 
         $this->trigger(self::EVENT_BEFORE_PROFILE_UPDATE, $event);
 
-        if ($profile->load(Yii::$app->request->post()) && $profile->save()) {
-            Yii::$app->getSession()->setFlash('success', Yii::t('user', 'Profile details have been updated'));
+        if ($profile->load(\Yii::$app->request->post()) && $profile->save()) {
+            \Yii::$app->getSession()->setFlash('success', \Yii::t('user', 'Profile details have been updated'));
             $this->trigger(self::EVENT_AFTER_PROFILE_UPDATE, $event);
             return $this->refresh();
         }
@@ -304,7 +303,7 @@ class AdminController extends Controller
      */
     public function actionAssignments($id)
     {
-        if (!isset(Yii::$app->extensions['dektrium/yii2-rbac'])) {
+        if (!isset(\Yii::$app->extensions['dektrium/yii2-rbac'])) {
             throw new NotFoundHttpException();
         }
         Url::remember('', 'actions-redirect');
@@ -331,7 +330,7 @@ class AdminController extends Controller
         $model->confirm();
         $this->trigger(self::EVENT_AFTER_CONFIRM, $event);
 
-        Yii::$app->getSession()->setFlash('success', Yii::t('user', 'User has been confirmed'));
+        \Yii::$app->getSession()->setFlash('success', \Yii::t('user', 'User has been confirmed'));
 
         return $this->redirect(Url::previous('actions-redirect'));
     }
@@ -346,15 +345,15 @@ class AdminController extends Controller
      */
     public function actionDelete($id)
     {
-        if ($id == Yii::$app->user->getId()) {
-            Yii::$app->getSession()->setFlash('danger', Yii::t('user', 'You can not remove your own account'));
+        if ($id == \Yii::$app->user->getId()) {
+            \Yii::$app->getSession()->setFlash('danger', \Yii::t('user', 'You can not remove your own account'));
         } else {
             $model = $this->findModel($id);
             $event = $this->getUserEvent($model);
             $this->trigger(self::EVENT_BEFORE_DELETE, $event);
             $model->delete();
             $this->trigger(self::EVENT_AFTER_DELETE, $event);
-            Yii::$app->getSession()->setFlash('success', Yii::t('user', 'User has been deleted'));
+            \Yii::$app->getSession()->setFlash('success', \Yii::t('user', 'User has been deleted'));
         }
 
         return $this->redirect(['index']);
@@ -369,8 +368,8 @@ class AdminController extends Controller
      */
     public function actionBlock($id)
     {
-        if ($id == Yii::$app->user->getId()) {
-            Yii::$app->getSession()->setFlash('danger', Yii::t('user', 'You can not block your own account'));
+        if ($id == \Yii::$app->user->getId()) {
+            \Yii::$app->getSession()->setFlash('danger', \Yii::t('user', 'You can not block your own account'));
         } else {
             $user  = $this->findModel($id);
             $event = $this->getUserEvent($user);
@@ -378,12 +377,12 @@ class AdminController extends Controller
                 $this->trigger(self::EVENT_BEFORE_UNBLOCK, $event);
                 $user->unblock();
                 $this->trigger(self::EVENT_AFTER_UNBLOCK, $event);
-                Yii::$app->getSession()->setFlash('success', Yii::t('user', 'User has been unblocked'));
+                \Yii::$app->getSession()->setFlash('success', \Yii::t('user', 'User has been unblocked'));
             } else {
                 $this->trigger(self::EVENT_BEFORE_BLOCK, $event);
                 $user->block();
                 $this->trigger(self::EVENT_AFTER_BLOCK, $event);
-                Yii::$app->getSession()->setFlash('success', Yii::t('user', 'User has been blocked'));
+                \Yii::$app->getSession()->setFlash('success', \Yii::t('user', 'User has been blocked'));
             }
         }
 
@@ -418,11 +417,11 @@ class AdminController extends Controller
      */
     protected function performAjaxValidation($model)
     {
-        if (Yii::$app->request->isAjax && !Yii::$app->request->isPjax) {
-            if ($model->load(Yii::$app->request->post())) {
-                Yii::$app->response->format = Response::FORMAT_JSON;
+        if (\Yii::$app->request->isAjax && !\Yii::$app->request->isPjax) {
+            if ($model->load(\Yii::$app->request->post())) {
+                \Yii::$app->response->format = Response::FORMAT_JSON;
                 echo json_encode(ActiveForm::validate($model));
-                Yii::$app->end();
+                \Yii::$app->end();
             }
         }
     }

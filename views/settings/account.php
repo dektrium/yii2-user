@@ -12,7 +12,7 @@
 use yii\helpers\Html;
 use yii\widgets\ActiveForm;
 
-/*
+/**
  * @var $this  yii\web\View
  * @var $form  yii\widgets\ActiveForm
  * @var $model dektrium\user\models\SettingsForm
@@ -31,7 +31,7 @@ $this->params['breadcrumbs'][] = $this->title;
     <div class="col-md-9">
         <div class="panel panel-default">
             <div class="panel-heading">
-                <?= Html::encode($this->title) ?>
+                <h3 class="panel-title"><?= Html::encode($this->title) ?></h3>
             </div>
             <div class="panel-body">
                 <?php $form = ActiveForm::begin([
@@ -64,5 +64,25 @@ $this->params['breadcrumbs'][] = $this->title;
                 <?php ActiveForm::end(); ?>
             </div>
         </div>
+
+        <?php if ($model->module->enableAccountDelete): ?>
+            <div class="panel panel-danger">
+                <div class="panel-heading">
+                    <h3 class="panel-title"><?= Yii::t('user', 'Delete account') ?></h3>
+                </div>
+                <div class="panel-body">
+                    <p>
+                        <?= Yii::t('user', 'Once you delete your account, there is no going back') ?>.
+                        <?= Yii::t('user', 'It will be deleted forever') ?>.
+                        <?= Yii::t('user', 'Please be certain') ?>.
+                    </p>
+                    <?= Html::a(Yii::t('user', 'Delete account'), ['delete'], [
+                        'class'        => 'btn btn-danger',
+                        'data-method'  => 'post',
+                        'data-confirm' => Yii::t('user', 'Are you sure? There is no going back'),
+                    ]) ?>
+                </div>
+            </div>
+        <?php endif ?>
     </div>
 </div>

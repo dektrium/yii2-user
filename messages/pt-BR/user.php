@@ -160,7 +160,7 @@ return [
     'Your account has been blocked' => 'A sua conta foi bloqueada',
     'Your account has been connected' => 'Sua conta foi conectada com sucesso',
     'Your account has been created' => 'A sua conta foi criada',
-    'Your account on {0} has been created' => 'A sua conta em {0} foi criada com sucesso e uma senha foi gerada para você',
+    'Your account on {0} has been created' => 'A sua conta em {0} foi criada',
     'Your confirmation token is invalid or expired' => 'O token de confirmação é inválido ou expirou',
     'Your email address has been changed' => 'Seu e-mail foi alterado com sucesso',
     'Your password has been changed successfully.' => 'Sua senha foi alterada com sucesso.',

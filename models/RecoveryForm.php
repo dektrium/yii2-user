@@ -127,7 +127,8 @@ class RecoveryForm extends Model
                 return false;
             }
 
-            Yii::$app->session->setFlash('info',
+            Yii::$app->session->setFlash(
+                'info',
                 Yii::t('user', 'An email has been sent with instructions for resetting your password')
             );
 
@@ -154,7 +155,10 @@ class RecoveryForm extends Model
             Yii::$app->session->setFlash('success', Yii::t('user', 'Your password has been changed successfully.'));
             $token->delete();
         } else {
-            Yii::$app->session->setFlash('danger', Yii::t('user', 'An error occurred and your password has not been changed. Please try again later.'));
+            Yii::$app->session->setFlash(
+                'danger',
+                Yii::t('user', 'An error occurred and your password has not been changed. Please try again later.')
+            );
         }
 
         return true;

@@ -154,7 +154,10 @@ class RecoveryController extends Controller
 
         if ($token === null || $token->isExpired || $token->user === null) {
             $this->trigger(self::EVENT_AFTER_TOKEN_VALIDATE, $event);
-            \Yii::$app->session->setFlash('danger', \Yii::t('user', 'Recovery link is invalid or expired. Please try requesting a new one.'));
+            \Yii::$app->session->setFlash(
+                'danger',
+                \Yii::t('user', 'Recovery link is invalid or expired. Please try requesting a new one.')
+            );
             return $this->render('/message', [
                 'title'  => \Yii::t('user', 'Invalid or expired link'),
                 'module' => $this->module,

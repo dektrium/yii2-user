@@ -113,7 +113,8 @@ class RegistrationController extends Controller
 
     /**
      * Displays the registration page.
-     * After successful registration if enableConfirmation is enabled shows info message otherwise redirects to home page.
+     * After successful registration if enableConfirmation is enabled shows info message otherwise
+     * redirects to home page.
      *
      * @return string
      * @throws \yii\web\HttpException
@@ -133,7 +134,6 @@ class RegistrationController extends Controller
         $this->performAjaxValidation($model);
 
         if ($model->load(\Yii::$app->request->post()) && $model->register()) {
-
             $this->trigger(self::EVENT_AFTER_REGISTER, $event);
 
             return $this->render('/message', [
@@ -242,7 +242,6 @@ class RegistrationController extends Controller
         $this->performAjaxValidation($model);
 
         if ($model->load(\Yii::$app->request->post()) && $model->resend()) {
-
             $this->trigger(self::EVENT_AFTER_RESEND, $event);
 
             return $this->render('/message', [

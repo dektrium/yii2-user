@@ -142,7 +142,8 @@ class Mailer extends Component
      */
     public function sendWelcomeMessage(User $user, Token $token = null, $showPassword = false)
     {
-        return $this->sendMessage($user->email,
+        return $this->sendMessage(
+            $user->email,
             $this->getWelcomeSubject(),
             'welcome',
             ['user' => $user, 'token' => $token, 'module' => $this->module, 'showPassword' => $showPassword]
@@ -159,7 +160,8 @@ class Mailer extends Component
      */
     public function sendConfirmationMessage(User $user, Token $token)
     {
-        return $this->sendMessage($user->email,
+        return $this->sendMessage(
+            $user->email,
             $this->getConfirmationSubject(),
             'confirmation',
             ['user' => $user, 'token' => $token]
@@ -182,7 +184,8 @@ class Mailer extends Component
             $email = $user->email;
         }
 
-        return $this->sendMessage($email,
+        return $this->sendMessage(
+            $email,
             $this->getReconfirmationSubject(),
             'reconfirmation',
             ['user' => $user, 'token' => $token]
@@ -199,7 +202,8 @@ class Mailer extends Component
      */
     public function sendRecoveryMessage(User $user, Token $token)
     {
-        return $this->sendMessage($user->email,
+        return $this->sendMessage(
+            $user->email,
             $this->getRecoverySubject(),
             'recovery',
             ['user' => $user, 'token' => $token]
@@ -222,7 +226,9 @@ class Mailer extends Component
         $mailer->getView()->theme = Yii::$app->view->theme;
 
         if ($this->sender === null) {
-            $this->sender = isset(Yii::$app->params['adminEmail']) ? Yii::$app->params['adminEmail'] : 'no-reply@example.com';
+            $this->sender = isset(Yii::$app->params['adminEmail']) ?
+                Yii::$app->params['adminEmail']
+                : 'no-reply@example.com';
         }
 
         return $mailer->compose(['html' => $view, 'text' => 'text/' . $view], $params)

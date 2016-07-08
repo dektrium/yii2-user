@@ -50,7 +50,7 @@ class Module extends BaseModule
 
     /** @var bool Whether to enable password recovery. */
     public $enablePasswordRecovery = true;
-    
+
     /** @var bool Whether user can remove his account */
     public $enableAccountDelete = false;
 
@@ -71,8 +71,8 @@ class Module extends BaseModule
 
     /** @var array An array of administrator's usernames. */
     public $admins = [];
-	
-	/** @var string The Administrator permission name. */
+
+    /** @var string The Administrator permission name. */
     public $adminPermission;
 
     /** @var array Mailer configuration */

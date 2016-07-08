@@ -2,11 +2,11 @@
 
 /**
  * Messages for the Language de-DU
- * 
+ *
  * This language is to cover the german "Du" als informal variant
  * of the strict and polite "Sie". Used mainly to address younger
  * people. Facebook also uses the german "Du" address.
- * 
+ *
  * The language is selected in Yii2 by using "de-DU" als language.
  *
  * NOTE: this file must be saved in UTF-8 encoding.
@@ -77,7 +77,7 @@ return [
     'Your confirmation token is invalid or expired' => 'Dein Bestätigungscode ist falsch oder abgelaufen',
     'Your email address has been changed' => 'Deine E-Mail Adresse wurde geändert.',
     'Your password has been changed successfully.' => 'Dein Passwort wurde erfolgreich geändert.',
-    'Your profile has been updated' => 'Dein Profil wurde gespeichert',   
+    'Your profile has been updated' => 'Dein Profil wurde gespeichert',
     '(not set)' => '(undefiniert)',
     'A password will be generated automatically if not provided' => 'Ein Passwort wird automatisch erzeugt, wenn keines angegeben wurde.',
     'Already registered? Sign in!' => 'Bereits registriert? Melde Dich an!',
@@ -162,4 +162,3 @@ return [
     'Your account has been created' => 'Dein Zugang wurde erstellt',
     '{0, date, MMMM dd, YYYY HH:mm}' => '{0, date, dd MMMM, YYYY HH:mm}',
 ];
-

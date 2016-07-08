@@ -155,7 +155,10 @@ class Account extends ActiveRecord
             $account->link('user', \Yii::$app->user->identity);
             \Yii::$app->session->setFlash('success', \Yii::t('user', 'Your account has been connected'));
         } else {
-            \Yii::$app->session->setFlash('danger', \Yii::t('user', 'This account has already been connected to another user'));
+            \Yii::$app->session->setFlash(
+                'danger',
+                \Yii::t('user', 'This account has already been connected to another user')
+            );
         }
     }
 

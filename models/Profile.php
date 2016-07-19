@@ -94,7 +94,7 @@ class Profile extends ActiveRecord
             'timezone'       => \Yii::t('user', 'Time zone'),
         ];
     }
-    
+
     /**
      * Validates the timezone attribute.
      * Adds an error when the specified time zone doesn't exist.
@@ -107,7 +107,7 @@ class Profile extends ActiveRecord
             $this->addError($attribute, \Yii::t('user', 'Time zone is not valid'));
         }
     }
-    
+
     /**
      * Get the user's time zone.
      * Defaults to the application timezone if not specified by the user.
@@ -117,12 +117,12 @@ class Profile extends ActiveRecord
     {
         try {
             return new \DateTimeZone($this->timezone);
-        } catch(\Exception $e) {
+        } catch (\Exception $e) {
             // Default to application time zone if the user hasn't set their time zone
             return new \DateTimeZone(\Yii::$app->timeZone);
         }
     }
-    
+
     /**
      * Set the user's time zone.
      * @param \DateTimeZone $timezone the timezone to save to the user's profile
@@ -131,7 +131,7 @@ class Profile extends ActiveRecord
     {
         $this->setAttribute('timezone', $timeZone->getName());
     }
-    
+
     /**
      * Converts DateTime to user's local time
      * @param \DateTime the datetime to convert
@@ -142,10 +142,10 @@ class Profile extends ActiveRecord
         if ($dateTime === null) {
             $dateTime = new \DateTime();
         }
-        
+
         return $dateTime->setTimezone($this->getTimeZone());
     }
-    
+
     /**
      * @inheritdoc
      */
@@ -165,6 +165,4 @@ class Profile extends ActiveRecord
     {
         return '{{%profile}}';
     }
-    
-    
 }

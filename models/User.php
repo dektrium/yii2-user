@@ -83,7 +83,8 @@ class User extends ActiveRecord implements IdentityInterface
      * @return Finder
      * @throws \yii\base\InvalidConfigException
      */
-    protected function getFinder() {
+    protected function getFinder()
+    {
         return \Yii::$container->get(Finder::className());
     }
 
@@ -91,7 +92,8 @@ class User extends ActiveRecord implements IdentityInterface
      * @return Mailer
      * @throws \yii\base\InvalidConfigException
      */
-    protected function getMailer() {
+    protected function getMailer()
+    {
         return \Yii::$container->get(Mailer::className());
     }
 
@@ -116,7 +118,10 @@ class User extends ActiveRecord implements IdentityInterface
      */
     public function getIsAdmin()
     {
-        return (\Yii::$app->getAuthManager() && $this->module->adminPermission  ? \Yii::$app->user->can($this->module->adminPermission) : false) || in_array($this->username, $this->module->admins);
+        return
+            (\Yii::$app->getAuthManager() && $this->module->adminPermission ?
+                \Yii::$app->user->can($this->module->adminPermission) : false)
+            || in_array($this->username, $this->module->admins);
     }
 
     /**
@@ -206,14 +211,22 @@ class User extends ActiveRecord implements IdentityInterface
             'usernameRequired' => ['username', 'required', 'on' => ['register', 'create', 'connect', 'update']],
             'usernameMatch'    => ['username', 'match', 'pattern' => static::$usernameRegexp],
             'usernameLength'   => ['username', 'string', 'min' => 3, 'max' => 255],
-            'usernameUnique'   => ['username', 'unique', 'message' => \Yii::t('user', 'This username has already been taken')],
+            'usernameUnique'   => [
+                'username',
+                'unique',
+                'message' => \Yii::t('user', 'This username has already been taken')
+            ],
             'usernameTrim'     => ['username', 'trim'],
 
             // email rules
             'emailRequired' => ['email', 'required', 'on' => ['register', 'connect', 'create', 'update']],
             'emailPattern'  => ['email', 'email'],
             'emailLength'   => ['email', 'string', 'max' => 255],
-            'emailUnique'   => ['email', 'unique', 'message' => \Yii::t('user', 'This email address has already been taken')],
+            'emailUnique'   => [
+                'email',
+                'unique',
+                'message' => \Yii::t('user', 'This email address has already been taken')
+            ],
             'emailTrim'     => ['email', 'trim'],
 
             // password rules
@@ -368,15 +381,28 @@ class User extends ActiveRecord implements IdentityInterface
                     switch ($token->type) {
                         case Token::TYPE_CONFIRM_NEW_EMAIL:
                             $this->flags |= self::NEW_EMAIL_CONFIRMED;
-                            \Yii::$app->session->setFlash('success', \Yii::t('user', 'Awesome, almost there. Now you need to click the confirmation link sent to your old email address'));
+                            \Yii::$app->session->setFlash(
+                                'success',
+                                \Yii::t(
+                                    'user',
+                                    'Awesome, almost there. Now you need to click the confirmation link sent to your old email address'
+                                )
+                            );
                             break;
                         case Token::TYPE_CONFIRM_OLD_EMAIL:
                             $this->flags |= self::OLD_EMAIL_CONFIRMED;
-                            \Yii::$app->session->setFlash('success', \Yii::t('user', 'Awesome, almost there. Now you need to click the confirmation link sent to your new email address'));
+                            \Yii::$app->session->setFlash(
+                                'success',
+                                \Yii::t(
+                                    'user',
+                                    'Awesome, almost there. Now you need to click the confirmation link sent to your new email address'
+                                )
+                            );
                             break;
                     }
                 }
-                if ($this->module->emailChangeStrategy == Module::STRATEGY_DEFAULT || ($this->flags & self::NEW_EMAIL_CONFIRMED && $this->flags & self::OLD_EMAIL_CONFIRMED)) {
+                if ($this->module->emailChangeStrategy == Module::STRATEGY_DEFAULT
+                    || ($this->flags & self::NEW_EMAIL_CONFIRMED && $this->flags & self::OLD_EMAIL_CONFIRMED)) {
                     $this->email = $this->unconfirmed_email;
                     $this->unconfirmed_email = null;
                     \Yii::$app->session->setFlash('success', \Yii::t('user', 'Your email address has been changed'));

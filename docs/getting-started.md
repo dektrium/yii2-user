@@ -19,7 +19,7 @@ composer require "dektrium/yii2-user:0.9.*@dev"
 
 > **NOTE:** Make sure that you don't have `user` component configuration in your config files.
 
-Add following lines to your main configuration file:
+Add following lines to your main and console configuration file:
 
 ```php
 'modules' => [
@@ -37,6 +37,12 @@ and run the following command:
 
 ```bash
 $ php yii migrate/up --migrationPath=@vendor/dektrium/yii2-user/migrations
+```
+
+### 4. (optional) Set initial administrator account 'admin' with password 'administrator':
+
+```bash
+./yii user/create webmaster@examaple.com admin administrator
 ```
 
 ## Where do I go now?

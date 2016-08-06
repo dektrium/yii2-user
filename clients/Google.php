@@ -11,7 +11,7 @@
 
 namespace dektrium\user\clients;
 
-use yii\authclient\clients\GoogleOAuth as BaseGoogle;
+use yii\authclient\clients\Google as BaseGoogle;
 
 /**
  * @author Dmitry Erofeev <dmeroff@gmail.com>
@@ -23,6 +23,13 @@ class Google extends BaseGoogle implements ClientInterface
     {
         return isset($this->getUserAttributes()['emails'][0]['value'])
             ? $this->getUserAttributes()['emails'][0]['value']
+            : null;
+    }
+
+    public function getImage()
+    {
+        return isset($this->getUserAttributes()['image'][0]['url'])
+            ? $this->getUserAttributes()['image'][0]['url']
             : null;
     }
 

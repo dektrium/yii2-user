@@ -11,7 +11,7 @@
 
 namespace dektrium\user\clients;
 
-use yii\authclient\clients\GoogleOAuth as BaseGoogle;
+use yii\authclient\clients\Google as BaseGoogle;
 
 /**
  * @author Dmitry Erofeev <dmeroff@gmail.com>

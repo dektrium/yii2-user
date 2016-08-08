@@ -29,7 +29,7 @@ message on a blank page:
 
 You can also assign events on class-level.
 
-```
+```php
 \yii\base\Event::on(
     \dektrium\user\controllers\RegistrationController::className(),
     \dektrium\user\controllers\RegistrationController::EVENT_AFTER_CONFIRM,

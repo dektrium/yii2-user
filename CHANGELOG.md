@@ -1,6 +1,6 @@
 # CHANGELOG
 
-## 1.0.0-alpha1 [09 March 2016]
+## 0.9.7 [09 March 2016]
 
 - Enh: Updated Yii2-authclient required version to 2.1.0 (dmeroff)
 - Fix: Max password length set to 72 chars (dmeroff)

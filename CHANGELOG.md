@@ -1,7 +1,8 @@
 # CHANGELOG
 
-## 1.0.0-alpha [Work In Progress]
+## 1.0.0-alpha1 [09 March 2016]
 
+- Enh: Updated Yii2-authclient required version to 2.1.0 (dmeroff)
 - Fix: Max password length set to 72 chars (dmeroff)
 - Enh #378: Added events before and after confirmation (dmeroff)
 - Enh #593: Added option to allow users to remove their accounts (dmeroff)

@@ -31,7 +31,7 @@ class RecoveryFormTest extends TestCase
 
         $form = Yii::createObject([
             'class'    => RecoveryForm::className(),
-            'scenario' => 'request',
+            'scenario' => RecoveryForm::SCENARIO_REQUEST,
         ]);
 
         $this->specify('form is not valid when email is empty', function () use ($form) {
@@ -85,7 +85,7 @@ class RecoveryFormTest extends TestCase
     {
         $form = Yii::createObject([
             'class'    => RecoveryForm::className(),
-            'scenario' => 'reset',
+            'scenario' => RecoveryForm::SCENARIO_RESET,
         ]);
 
         $this->specify('password is required', function () use ($form) {

@@ -111,7 +111,7 @@ class RecoveryController extends Controller
         /** @var RecoveryForm $model */
         $model = \Yii::createObject([
             'class'    => RecoveryForm::className(),
-            'scenario' => 'request',
+            'scenario' => RecoveryForm::SCENARIO_REQUEST,
         ]);
         $event = $this->getFormEvent($model);
 
@@ -167,7 +167,7 @@ class RecoveryController extends Controller
         /** @var RecoveryForm $model */
         $model = \Yii::createObject([
             'class'    => RecoveryForm::className(),
-            'scenario' => 'reset',
+            'scenario' => RecoveryForm::SCENARIO_RESET,
         ]);
         $event->setForm($model);
 

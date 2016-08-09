@@ -2,6 +2,7 @@
 
 ## 0.9.9 [Work in progress]
 
+- Enh #725: Removed message that user is not registered in Recovery and Resend forms (dmeroff)
 - Fix #747: Fixed reverting migrations on PostgreSQL (dmeroff)
 
 ## 0.9.8 [09 August 2016]

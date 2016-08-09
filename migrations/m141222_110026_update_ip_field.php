@@ -50,7 +50,12 @@ class m141222_110026_update_ip_field extends Migration
                     'registration_ip' => ip2long($user['ip'])
                 ], 'id = ' . $user['id'])->execute();
             }
-            $this->alterColumn('{{%user}}', 'registration_ip', Schema::TYPE_BIGINT);
+            if ($this->db->driverName == 'pgsql') {
+                $this->alterColumn('{{%user}}', 'registration_ip', Schema::TYPE_BIGINT . ' USING registration_ip::bigint');
+            } else {
+                $this->alterColumn('{{%user}}', 'registration_ip', Schema::TYPE_BIGINT);
+            }
+
             $transaction->commit();
         } catch (Exception $e) {
             $transaction->rollBack();

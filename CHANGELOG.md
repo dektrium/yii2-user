@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 0.9.9 [Work in progress]
+
+- Fix #747: Fixed reverting migrations on PostgreSQL (dmeroff)
+
 ## 0.9.8 [09 August 2016]
 
 - Fix: Fixed Yandex auth client (dmeroff)

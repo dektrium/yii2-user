@@ -25,9 +25,8 @@
     },
     "require-dev": {
         "yiisoft/yii2-codeception": "^2.0.0",
-        "codeception/specify": "*",
-        "codeception/verify": "*",
-        "codeception/aspect-mock": "*"
+        "codeception/specify": "^0.4.3",
+        "codeception/verify": "^0.3.1"
     },
     "autoload": {
         "psr-4": {
@@ -35,10 +34,6 @@
         }
     },
     "extra": {
-        "bootstrap": "dektrium\\user\\Bootstrap",
-        "asset-installer-paths": {
-            "npm-asset-library": "vendor/npm",
-            "bower-asset-library": "vendor/bower"
-        }
+        "bootstrap": "dektrium\\user\\Bootstrap"
     }
 }

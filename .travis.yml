@@ -1,6 +1,8 @@
 language: php
 
 php:
+  - 7.0
+  - 5.6
   - 5.5
   - 5.4
 
@@ -19,14 +21,13 @@ cache:
 # install dependencies
 install:
   - travis_retry composer self-update
-  - travis_retry composer global require "codeception/codeception:2.0.16"
+  - travis_retry composer global require "composer global require codeception/codeception:2.2.x@dev"
   - travis_retry composer global require "fxp/composer-asset-plugin:~1.1.0"
   - travis_retry composer install --prefer-dist
 
 before_script:
-  - cd tests
   - mysql -e 'create database dektrium_test;'
-  - php codeception/_app/yii migrate/up --interactive=0
+  - php tests/_app/yii.php migrate --migrationPath=@dektrium/user/migrations --interactive=0
   - ~/.composer/vendor/bin/codecept build
 
 script: ~/.composer/vendor/bin/codecept run

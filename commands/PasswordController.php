@@ -12,6 +12,7 @@
 namespace dektrium\user\commands;
 
 use dektrium\user\Finder;
+use dektrium\user\models\User;
 use Yii;
 use yii\console\Controller;
 use yii\helpers\Console;
@@ -48,7 +49,10 @@ class PasswordController extends Controller
      */
     public function actionIndex($search, $password)
     {
-        $user = $this->finder->findUserByUsernameOrEmail($search);
+        /** @var User $user */
+        $user = \Yii::createObject(User::className());
+        $user = $user::find()->byEmailOrUsername($search)->one();
+
         if ($user === null) {
             $this->stdout(Yii::t('user', 'User is not found') . "\n", Console::FG_RED);
         } else {

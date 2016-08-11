@@ -193,7 +193,9 @@ class SecurityController extends Controller
      */
     public function authenticate(ClientInterface $client)
     {
-        $account = $this->finder->findAccount()->byClient($client)->one();
+        /** @var Account $account */
+        $account = \Yii::createObject(Account::className());
+        $account = $account::find()->byClient($client)->one();
 
         if (!$this->module->enableRegistration && ($account === null || $account->user === null)) {
             \Yii::$app->session->setFlash('danger', \Yii::t('user', 'Registration on this website is disabled'));

@@ -400,12 +400,15 @@ class AdminController extends Controller
      */
     protected function findModel($id)
     {
-        $user = $this->finder->findUserById($id);
-        if ($user === null) {
-            throw new NotFoundHttpException('The requested page does not exist');
+        /** @var User $user */
+        $user = \Yii::createObject(User::className());
+        $user = $user::findOne($id);
+
+        if ($user instanceof User) {
+            return $user;
         }
 
-        return $user;
+        throw new NotFoundHttpException(\Yii::t('user', 'The requested page does not exist'));
     }
 
     /**

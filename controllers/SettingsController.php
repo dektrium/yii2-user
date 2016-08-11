@@ -12,6 +12,7 @@
 namespace dektrium\user\controllers;
 
 use dektrium\user\Finder;
+use dektrium\user\models\Account;
 use dektrium\user\models\Profile;
 use dektrium\user\models\SettingsForm;
 use dektrium\user\models\User;
@@ -150,11 +151,13 @@ class SettingsController extends Controller
      */
     public function actionProfile()
     {
-        $model = $this->finder->findProfileById(\Yii::$app->user->identity->getId());
+        /** @var User $user */
+        $user = \Yii::$app->user->identity;
+        $model = $user->profile;
 
         if ($model == null) {
             $model = \Yii::createObject(Profile::className());
-            $model->link('user', \Yii::$app->user->identity);
+            $model->link('user', $user);
         }
 
         $event = $this->getProfileEvent($model);
@@ -209,7 +212,9 @@ class SettingsController extends Controller
      */
     public function actionConfirm($id, $code)
     {
-        $user = $this->finder->findUserById($id);
+        /** @var User $user */
+        $user = \Yii::createObject(User::className());
+        $user = $user::findOne($id);
 
         if ($user === null || $this->module->emailChangeStrategy == Module::STRATEGY_INSECURE) {
             throw new NotFoundHttpException();
@@ -247,13 +252,12 @@ class SettingsController extends Controller
      */
     public function actionDisconnect($id)
     {
-        $account = $this->finder->findAccount()->byId($id)->one();
+        /** @var Account $account */
+        $account = \Yii::createObject(Account::className());
+        $account = $account::findOne($id);
 
-        if ($account === null) {
+        if ($account === null || $account->user_id != \Yii::$app->user->id) {
             throw new NotFoundHttpException();
-        }
-        if ($account->user_id != \Yii::$app->user->id) {
-            throw new ForbiddenHttpException();
         }
 
         $event = $this->getConnectEvent($account, $account->user);

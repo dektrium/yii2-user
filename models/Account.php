@@ -172,7 +172,9 @@ class Account extends ActiveRecord
      */
     protected static function fetchAccount(BaseClientInterface $client)
     {
-        $account = static::getFinder()->findAccount()->byClient($client)->one();
+        /** @var Account $account */
+        $account = \Yii::createObject(Account::className());
+        $account = $account::find()->byClient($client)->one();
 
         if (null === $account) {
             $account = \Yii::createObject([
@@ -196,7 +198,9 @@ class Account extends ActiveRecord
      */
     protected static function fetchUser(Account $account)
     {
-        $user = static::getFinder()->findUserByEmail($account->email);
+        /** @var User $user */
+        $user = \Yii::createObject(User::className());
+        $user = $user::find()->byEmail($account->email)->one();
 
         if (null !== $user) {
             return $user;

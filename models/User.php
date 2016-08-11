@@ -330,7 +330,9 @@ class User extends ActiveRecord implements IdentityInterface
      */
     public function attemptConfirmation($code)
     {
-        $token = $this->finder->findTokenByParams($this->id, $code, Token::TYPE_CONFIRMATION);
+        /** @var Token $token */
+        $token = \Yii::createObject(Token::className());
+        $token = $token::find()->byUserId($this->id)->byCode($code)->byType(Token::TYPE_CONFIRMATION)->one();
 
         if ($token instanceof Token && !$token->isExpired) {
             $token->delete();
@@ -363,12 +365,13 @@ class User extends ActiveRecord implements IdentityInterface
     public function attemptEmailChange($code)
     {
         // TODO refactor method
-
         /** @var Token $token */
-        $token = $this->finder->findToken([
-            'user_id' => $this->id,
-            'code'    => $code,
-        ])->andWhere(['in', 'type', [Token::TYPE_CONFIRM_NEW_EMAIL, Token::TYPE_CONFIRM_OLD_EMAIL]])->one();
+        $token = \Yii::createObject(Token::className());
+        $token = $token::find()
+            ->byUserId($this->id)
+            ->byCode($code)
+            ->byType([Token::TYPE_CONFIRM_NEW_EMAIL, Token::TYPE_CONFIRM_OLD_EMAIL])
+            ->one();
 
         if (empty($this->unconfirmed_email) || $token === null || $token->isExpired) {
             \Yii::$app->session->setFlash('danger', \Yii::t('user', 'Your confirmation token is invalid or expired'));
@@ -377,7 +380,7 @@ class User extends ActiveRecord implements IdentityInterface
 
             if (empty($this->unconfirmed_email)) {
                 \Yii::$app->session->setFlash('danger', \Yii::t('user', 'An error occurred processing your request'));
-            } elseif ($this->finder->findUser(['email' => $this->unconfirmed_email])->exists() == false) {
+            } elseif (static::find()->byEmail($this->unconfirmed_email)->exists() == false) {
                 if ($this->module->emailChangeStrategy == Module::STRATEGY_SECURE) {
                     switch ($token->type) {
                         case Token::TYPE_CONFIRM_NEW_EMAIL:

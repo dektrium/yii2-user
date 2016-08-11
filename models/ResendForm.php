@@ -90,7 +90,9 @@ class ResendForm extends Model
             return false;
         }
 
-        $user = $this->finder->findUserByEmail($this->email);
+        /** @var User $user */
+        $user = \Yii::createObject(User::className());
+        $user = $user::find()->byEmail($this->email)->one();
 
         if ($user instanceof User && !$user->isConfirmed) {
             /** @var Token $token */

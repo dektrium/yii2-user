@@ -119,7 +119,9 @@ class LoginForm extends Model
     public function beforeValidate()
     {
         if (parent::beforeValidate()) {
-            $this->user = $this->finder->findUserByUsernameOrEmail(trim($this->login));
+            /** @var User $user */
+            $user = \Yii::createObject(User::className());
+            $this->user = $user::find()->byEmailOrUsername($this->login)->one();
 
             return true;
         } else {

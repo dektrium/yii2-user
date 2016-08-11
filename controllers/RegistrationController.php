@@ -12,6 +12,7 @@
 namespace dektrium\user\controllers;
 
 use dektrium\user\Finder;
+use dektrium\user\models\Account;
 use dektrium\user\models\RegistrationForm;
 use dektrium\user\models\ResendForm;
 use dektrium\user\models\User;
@@ -158,7 +159,9 @@ class RegistrationController extends Controller
      */
     public function actionConnect($code)
     {
-        $account = $this->finder->findAccount()->byCode($code)->one();
+        /** @var Account $account */
+        $account = \Yii::createObject(Account::className());
+        $account = $account::find()->byCode($code)->one();
 
         if ($account === null || $account->getIsConnected()) {
             throw new NotFoundHttpException();
@@ -201,7 +204,9 @@ class RegistrationController extends Controller
      */
     public function actionConfirm($id, $code)
     {
-        $user = $this->finder->findUserById($id);
+        /** @var User $user */
+        $user = \Yii::createObject(User::className());
+        $user = $user::findOne($id);
 
         if ($user === null || $this->module->enableConfirmation == false) {
             throw new NotFoundHttpException();

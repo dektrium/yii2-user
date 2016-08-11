@@ -147,7 +147,8 @@ class RecoveryController extends Controller
         }
 
         /** @var Token $token */
-        $token = $this->finder->findToken(['user_id' => $id, 'code' => $code, 'type' => Token::TYPE_RECOVERY])->one();
+        $token = \Yii::createObject(Token::className());
+        $token = $token::find()->byUserId($id)->byCode($code)->byType(Token::TYPE_RECOVERY)->one();
         $event = $this->getResetPasswordEvent($token);
 
         $this->trigger(self::EVENT_BEFORE_TOKEN_VALIDATE, $event);

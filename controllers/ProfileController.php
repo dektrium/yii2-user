@@ -12,6 +12,7 @@
 namespace dektrium\user\controllers;
 
 use dektrium\user\Finder;
+use dektrium\user\models\User;
 use yii\filters\AccessControl;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
@@ -74,14 +75,16 @@ class ProfileController extends Controller
      */
     public function actionShow($id)
     {
-        $profile = $this->finder->findProfileById($id);
+        /** @var User $user */
+        $user = \Yii::createObject(User::className());
+        $user = $user::findOne($id);
 
-        if ($profile === null) {
+        if ($user === null || $user->profile === null) {
             throw new NotFoundHttpException();
         }
 
         return $this->render('show', [
-            'profile' => $profile,
+            'profile' => $user->profile,
         ]);
     }
 }

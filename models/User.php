@@ -14,6 +14,7 @@ namespace dektrium\user\models;
 use dektrium\user\Finder;
 use dektrium\user\helpers\Password;
 use dektrium\user\Mailer;
+use dektrium\user\models\query\UserQuery;
 use dektrium\user\Module;
 use dektrium\user\traits\ModuleTrait;
 use yii\base\NotSupportedException;
@@ -529,5 +530,13 @@ class User extends ActiveRecord implements IdentityInterface
     public static function findIdentityByAccessToken($token, $type = null)
     {
         throw new NotSupportedException('Method "' . __CLASS__ . '::' . __METHOD__ . '" is not implemented.');
+    }
+
+    /**
+     * @return UserQuery|object
+     */
+    public static function find()
+    {
+        return \Yii::createObject(UserQuery::className(), [get_called_class()]);
     }
 }

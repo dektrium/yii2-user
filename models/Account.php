@@ -103,7 +103,7 @@ class Account extends ActiveRecord
     }
 
     /**
-     * @return AccountQuery
+     * @return AccountQuery|object
      */
     public static function find()
     {

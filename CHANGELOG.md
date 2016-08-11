@@ -2,6 +2,7 @@
 
 ## 0.9.9 [Work in progress]
 
+- Enh #649: Updated test suite to codeception 2.2 (dmeroff)
 - Enh #725: Removed message that user is not registered in Recovery and Resend forms (dmeroff)
 - Fix #747: Fixed reverting migrations on PostgreSQL (dmeroff)
 

@@ -16,8 +16,6 @@ use yii\base\Module as BaseModule;
 /**
  * This is the main module class for the Yii2-user.
  *
- * @property array $modelMap
- *
  * @author Dmitry Erofeev <dmeroff@gmail.com>
  */
 class Module extends BaseModule
@@ -77,9 +75,6 @@ class Module extends BaseModule
 
     /** @var array Mailer configuration */
     public $mailer = [];
-
-    /** @var array Model map */
-    public $modelMap = [];
 
     /**
      * @var string The prefix for user module URL.

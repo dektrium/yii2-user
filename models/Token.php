@@ -44,7 +44,7 @@ class Token extends ActiveRecord
      */
     public function getUser()
     {
-        return $this->hasOne($this->module->modelMap['User'], ['id' => 'user_id']);
+        return $this->hasOne(get_class(Yii::createObject(User::className())), ['id' => 'user_id']);
     }
 
     /**

@@ -130,7 +130,7 @@ class User extends ActiveRecord implements IdentityInterface
      */
     public function getProfile()
     {
-        return $this->hasOne($this->module->modelMap['Profile'], ['user_id' => 'id']);
+        return $this->hasOne(get_class(\Yii::createObject(Profile::className())), ['user_id' => 'id']);
     }
 
     /**
@@ -147,7 +147,7 @@ class User extends ActiveRecord implements IdentityInterface
     public function getAccounts()
     {
         $connected = [];
-        $accounts  = $this->hasMany($this->module->modelMap['Account'], ['user_id' => 'id'])->all();
+        $accounts  = $this->hasMany(get_class(\Yii::createObject(Account::className())), ['user_id' => 'id'])->all();
 
         /** @var Account $account */
         foreach ($accounts as $account) {

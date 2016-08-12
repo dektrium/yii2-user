@@ -43,7 +43,7 @@ class RegistrationForm extends Model
      */
     public function rules()
     {
-        $user = $this->module->modelMap['User'];
+        $user = get_class(\Yii::createObject(User::className()));
 
         return [
             // username rules

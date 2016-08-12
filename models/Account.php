@@ -12,7 +12,6 @@
 namespace dektrium\user\models;
 
 use dektrium\user\clients\ClientInterface;
-use dektrium\user\Finder;
 use dektrium\user\models\query\AccountQuery;
 use dektrium\user\traits\ModuleTrait;
 use yii\authclient\ClientInterface as BaseClientInterface;
@@ -40,9 +39,6 @@ class Account extends ActiveRecord
 {
     use ModuleTrait;
 
-    /** @var Finder */
-    protected static $finder;
-
     /** @var */
     private $_data;
 
@@ -53,11 +49,11 @@ class Account extends ActiveRecord
     }
 
     /**
-     * @return User
+     * @return \yii\db\ActiveQuery
      */
     public function getUser()
     {
-        return $this->hasOne($this->module->modelMap['User'], ['id' => 'user_id']);
+        return $this->hasOne(get_class(\Yii::createObject(User::className())), ['id' => 'user_id']);
     }
 
     /**
@@ -103,7 +99,7 @@ class Account extends ActiveRecord
     }
 
     /**
-     * @return AccountQuery
+     * @return AccountQuery|object
      */
     public static function find()
     {
@@ -172,7 +168,9 @@ class Account extends ActiveRecord
      */
     protected static function fetchAccount(BaseClientInterface $client)
     {
-        $account = static::getFinder()->findAccount()->byClient($client)->one();
+        /** @var Account $account */
+        $account = \Yii::createObject(Account::className());
+        $account = $account::find()->byClient($client)->one();
 
         if (null === $account) {
             $account = \Yii::createObject([
@@ -196,7 +194,9 @@ class Account extends ActiveRecord
      */
     protected static function fetchUser(Account $account)
     {
-        $user = static::getFinder()->findUserByEmail($account->email);
+        /** @var User $user */
+        $user = \Yii::createObject(User::className());
+        $user = $user::find()->byEmail($account->email)->one();
 
         if (null !== $user) {
             return $user;
@@ -218,17 +218,5 @@ class Account extends ActiveRecord
         }
 
         return $user->create() ? $user : false;
-    }
-
-    /**
-     * @return Finder
-     */
-    protected static function getFinder()
-    {
-        if (static::$finder === null) {
-            static::$finder = \Yii::$container->get(Finder::className());
-        }
-
-        return static::$finder;
     }
 }

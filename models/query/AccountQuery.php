@@ -16,9 +16,6 @@ use yii\authclient\ClientInterface;
 use yii\db\ActiveQuery;
 
 /**
- * @method Account|null one($db = null)
- * @method Account[]    all($db = null)
- *
  * @author Dmitry Erofeev <dmeroff@gmail.com>
  */
 class AccountQuery extends ActiveQuery
@@ -64,5 +61,23 @@ class AccountQuery extends ActiveQuery
             'provider'  => $client->getId(),
             'client_id' => $client->getUserAttributes()['id'],
         ]);
+    }
+
+    /**
+     * @inheritdoc
+     * @return Account[]|array
+     */
+    public function all($db = null)
+    {
+        return parent::all($db);
+    }
+
+    /**
+     * @inheritdoc
+     * @return Account|array|null
+     */
+    public function one($db = null)
+    {
+        return parent::one($db);
     }
 }

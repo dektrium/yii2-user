@@ -12,7 +12,6 @@
 namespace dektrium\user\controllers;
 
 use dektrium\user\filters\AccessRule;
-use dektrium\user\Finder;
 use dektrium\user\models\Profile;
 use dektrium\user\models\User;
 use dektrium\user\models\UserSearch;
@@ -20,7 +19,6 @@ use dektrium\user\Module;
 use dektrium\user\traits\EventTrait;
 use yii\base\ExitException;
 use yii\base\Model;
-use yii\base\Module as Module2;
 use yii\filters\AccessControl;
 use yii\filters\VerbFilter;
 use yii\helpers\Url;
@@ -123,21 +121,6 @@ class AdminController extends Controller
      * Triggered with \dektrium\user\events\UserEvent.
      */
     const EVENT_AFTER_UNBLOCK = 'afterUnblock';
-
-    /** @var Finder */
-    protected $finder;
-
-    /**
-     * @param string  $id
-     * @param Module2 $module
-     * @param Finder  $finder
-     * @param array   $config
-     */
-    public function __construct($id, $module, Finder $finder, $config = [])
-    {
-        $this->finder = $finder;
-        parent::__construct($id, $module, $config);
-    }
 
     /** @inheritdoc */
     public function behaviors()
@@ -400,12 +383,15 @@ class AdminController extends Controller
      */
     protected function findModel($id)
     {
-        $user = $this->finder->findUserById($id);
-        if ($user === null) {
-            throw new NotFoundHttpException('The requested page does not exist');
+        /** @var User $user */
+        $user = \Yii::createObject(User::className());
+        $user = $user::findOne($id);
+
+        if ($user instanceof User) {
+            return $user;
         }
 
-        return $user;
+        throw new NotFoundHttpException(\Yii::t('user', 'The requested page does not exist'));
     }
 
     /**

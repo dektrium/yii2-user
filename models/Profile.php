@@ -53,11 +53,11 @@ class Profile extends ActiveRecord
     }
 
     /**
-     * @return \yii\db\ActiveQueryInterface
+     * @return \yii\db\ActiveQuery
      */
     public function getUser()
     {
-        return $this->hasOne($this->module->modelMap['User'], ['id' => 'user_id']);
+        return $this->hasOne(get_class(\Yii::createObject(User::className())), ['id' => 'user_id']);
     }
 
     /**

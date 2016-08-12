@@ -11,7 +11,6 @@
 
 namespace dektrium\user\controllers;
 
-use dektrium\user\Finder;
 use dektrium\user\models\RecoveryForm;
 use dektrium\user\models\Token;
 use dektrium\user\traits\AjaxValidationTrait;
@@ -67,21 +66,6 @@ class RecoveryController extends Controller
      * Triggered with \dektrium\user\events\ResetPasswordEvent.
      */
     const EVENT_AFTER_RESET = 'afterReset';
-
-    /** @var Finder */
-    protected $finder;
-
-    /**
-     * @param string           $id
-     * @param \yii\base\Module $module
-     * @param Finder           $finder
-     * @param array            $config
-     */
-    public function __construct($id, $module, Finder $finder, $config = [])
-    {
-        $this->finder = $finder;
-        parent::__construct($id, $module, $config);
-    }
 
     /** @inheritdoc */
     public function behaviors()
@@ -147,7 +131,8 @@ class RecoveryController extends Controller
         }
 
         /** @var Token $token */
-        $token = $this->finder->findToken(['user_id' => $id, 'code' => $code, 'type' => Token::TYPE_RECOVERY])->one();
+        $token = \Yii::createObject(Token::className());
+        $token = $token::find()->byUserId($id)->byCode($code)->byType(Token::TYPE_RECOVERY)->one();
         $event = $this->getResetPasswordEvent($token);
 
         $this->trigger(self::EVENT_BEFORE_TOKEN_VALIDATE, $event);

@@ -11,9 +11,9 @@
 
 namespace dektrium\user\models;
 
-use dektrium\user\Finder;
 use dektrium\user\helpers\Password;
 use dektrium\user\Mailer;
+use dektrium\user\models\query\UserQuery;
 use dektrium\user\Module;
 use dektrium\user\traits\ModuleTrait;
 use yii\base\NotSupportedException;
@@ -49,7 +49,6 @@ use yii\helpers\ArrayHelper;
  * @property Profile   $profile
  *
  * Dependencies:
- * @property-read Finder $finder
  * @property-read Module $module
  * @property-read Mailer $mailer
  *
@@ -78,15 +77,6 @@ class User extends ActiveRecord implements IdentityInterface
 
     /** @var string Default username regexp */
     public static $usernameRegexp = '/^[-a-zA-Z0-9_\.@]+$/';
-
-    /**
-     * @return Finder
-     * @throws \yii\base\InvalidConfigException
-     */
-    protected function getFinder()
-    {
-        return \Yii::$container->get(Finder::className());
-    }
 
     /**
      * @return Mailer
@@ -129,7 +119,7 @@ class User extends ActiveRecord implements IdentityInterface
      */
     public function getProfile()
     {
-        return $this->hasOne($this->module->modelMap['Profile'], ['user_id' => 'id']);
+        return $this->hasOne(get_class(\Yii::createObject(Profile::className())), ['user_id' => 'id']);
     }
 
     /**
@@ -146,7 +136,7 @@ class User extends ActiveRecord implements IdentityInterface
     public function getAccounts()
     {
         $connected = [];
-        $accounts  = $this->hasMany($this->module->modelMap['Account'], ['user_id' => 'id'])->all();
+        $accounts  = $this->hasMany(get_class(\Yii::createObject(Account::className())), ['user_id' => 'id'])->all();
 
         /** @var Account $account */
         foreach ($accounts as $account) {
@@ -329,7 +319,9 @@ class User extends ActiveRecord implements IdentityInterface
      */
     public function attemptConfirmation($code)
     {
-        $token = $this->finder->findTokenByParams($this->id, $code, Token::TYPE_CONFIRMATION);
+        /** @var Token $token */
+        $token = \Yii::createObject(Token::className());
+        $token = $token::find()->byUserId($this->id)->byCode($code)->byType(Token::TYPE_CONFIRMATION)->one();
 
         if ($token instanceof Token && !$token->isExpired) {
             $token->delete();
@@ -362,12 +354,13 @@ class User extends ActiveRecord implements IdentityInterface
     public function attemptEmailChange($code)
     {
         // TODO refactor method
-
         /** @var Token $token */
-        $token = $this->finder->findToken([
-            'user_id' => $this->id,
-            'code'    => $code,
-        ])->andWhere(['in', 'type', [Token::TYPE_CONFIRM_NEW_EMAIL, Token::TYPE_CONFIRM_OLD_EMAIL]])->one();
+        $token = \Yii::createObject(Token::className());
+        $token = $token::find()
+            ->byUserId($this->id)
+            ->byCode($code)
+            ->byType([Token::TYPE_CONFIRM_NEW_EMAIL, Token::TYPE_CONFIRM_OLD_EMAIL])
+            ->one();
 
         if (empty($this->unconfirmed_email) || $token === null || $token->isExpired) {
             \Yii::$app->session->setFlash('danger', \Yii::t('user', 'Your confirmation token is invalid or expired'));
@@ -376,7 +369,7 @@ class User extends ActiveRecord implements IdentityInterface
 
             if (empty($this->unconfirmed_email)) {
                 \Yii::$app->session->setFlash('danger', \Yii::t('user', 'An error occurred processing your request'));
-            } elseif ($this->finder->findUser(['email' => $this->unconfirmed_email])->exists() == false) {
+            } elseif (static::find()->byEmail($this->unconfirmed_email)->exists() == false) {
                 if ($this->module->emailChangeStrategy == Module::STRATEGY_SECURE) {
                     switch ($token->type) {
                         case Token::TYPE_CONFIRM_NEW_EMAIL:
@@ -474,7 +467,7 @@ class User extends ActiveRecord implements IdentityInterface
         }
         $this->username = $username;
 
-        $max = $this->finder->userQuery->max('id');
+        $max = static::find()->max('id');
 
         // generate username like "user1", "user2", etc...
         do {
@@ -529,5 +522,13 @@ class User extends ActiveRecord implements IdentityInterface
     public static function findIdentityByAccessToken($token, $type = null)
     {
         throw new NotSupportedException('Method "' . __CLASS__ . '::' . __METHOD__ . '" is not implemented.');
+    }
+
+    /**
+     * @return UserQuery|object
+     */
+    public static function find()
+    {
+        return \Yii::createObject(UserQuery::className(), [get_called_class()]);
     }
 }

@@ -11,6 +11,7 @@
 
 namespace dektrium\user\models;
 
+use dektrium\user\models\query\TokenQuery;
 use dektrium\user\traits\ModuleTrait;
 use Yii;
 use yii\db\ActiveRecord;
@@ -43,7 +44,7 @@ class Token extends ActiveRecord
      */
     public function getUser()
     {
-        return $this->hasOne($this->module->modelMap['User'], ['id' => 'user_id']);
+        return $this->hasOne(get_class(Yii::createObject(User::className())), ['id' => 'user_id']);
     }
 
     /**
@@ -112,5 +113,13 @@ class Token extends ActiveRecord
     public static function primaryKey()
     {
         return ['user_id', 'code', 'type'];
+    }
+
+    /**
+     * @return TokenQuery|object
+     */
+    public static function find()
+    {
+        return \Yii::createObject(TokenQuery::className(), [get_called_class()]);
     }
 }

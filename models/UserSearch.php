@@ -73,7 +73,9 @@ class UserSearch extends Model
      */
     public function search($params)
     {
-        $query = $this->finder->getUserQuery();
+        /** @var User $user */
+        $user = Yii::createObject(User::className());
+        $query = $user::find();
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query,

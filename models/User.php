@@ -478,7 +478,7 @@ class User extends ActiveRecord implements IdentityInterface
         }
         $this->username = $username;
 
-        $max = $this->finder->userQuery->max('id');
+        $max = static::find()->max('id');
 
         // generate username like "user1", "user2", etc...
         do {

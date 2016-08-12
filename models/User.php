@@ -11,7 +11,6 @@
 
 namespace dektrium\user\models;
 
-use dektrium\user\Finder;
 use dektrium\user\helpers\Password;
 use dektrium\user\Mailer;
 use dektrium\user\models\query\UserQuery;
@@ -50,7 +49,6 @@ use yii\helpers\ArrayHelper;
  * @property Profile   $profile
  *
  * Dependencies:
- * @property-read Finder $finder
  * @property-read Module $module
  * @property-read Mailer $mailer
  *
@@ -79,15 +77,6 @@ class User extends ActiveRecord implements IdentityInterface
 
     /** @var string Default username regexp */
     public static $usernameRegexp = '/^[-a-zA-Z0-9_\.@]+$/';
-
-    /**
-     * @return Finder
-     * @throws \yii\base\InvalidConfigException
-     */
-    protected function getFinder()
-    {
-        return \Yii::$container->get(Finder::className());
-    }
 
     /**
      * @return Mailer

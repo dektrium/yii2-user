@@ -11,7 +11,6 @@
 
 namespace dektrium\user\models;
 
-use dektrium\user\Finder;
 use Yii;
 use yii\base\Model;
 use yii\data\ActiveDataProvider;
@@ -32,19 +31,6 @@ class UserSearch extends Model
 
     /** @var string */
     public $registration_ip;
-
-    /** @var Finder */
-    protected $finder;
-
-    /**
-     * @param Finder $finder
-     * @param array  $config
-     */
-    public function __construct(Finder $finder, $config = [])
-    {
-        $this->finder = $finder;
-        parent::__construct($config);
-    }
 
     /** @inheritdoc */
     public function rules()

@@ -11,7 +11,6 @@
 
 namespace dektrium\user\commands;
 
-use dektrium\user\Finder;
 use dektrium\user\models\User;
 use Yii;
 use yii\console\Controller;
@@ -26,21 +25,6 @@ use yii\helpers\Console;
  */
 class PasswordController extends Controller
 {
-    /** @var Finder */
-    protected $finder;
-
-    /**
-     * @param string           $id
-     * @param \yii\base\Module $module
-     * @param Finder           $finder
-     * @param array            $config
-     */
-    public function __construct($id, $module, Finder $finder, $config = [])
-    {
-        $this->finder = $finder;
-        parent::__construct($id, $module, $config);
-    }
-
     /**
      * Updates user's password to given.
      *

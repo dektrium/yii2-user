@@ -11,7 +11,6 @@
 
 namespace dektrium\user\controllers;
 
-use dektrium\user\Finder;
 use dektrium\user\models\Account;
 use dektrium\user\models\Profile;
 use dektrium\user\models\SettingsForm;
@@ -22,7 +21,6 @@ use dektrium\user\traits\EventTrait;
 use yii\filters\AccessControl;
 use yii\filters\VerbFilter;
 use yii\web\Controller;
-use yii\web\ForbiddenHttpException;
 use yii\web\NotFoundHttpException;
 
 /**
@@ -99,21 +97,6 @@ class SettingsController extends Controller
 
     /** @inheritdoc */
     public $defaultAction = 'profile';
-
-    /** @var Finder */
-    protected $finder;
-
-    /**
-     * @param string           $id
-     * @param \yii\base\Module $module
-     * @param Finder           $finder
-     * @param array            $config
-     */
-    public function __construct($id, $module, Finder $finder, $config = [])
-    {
-        $this->finder = $finder;
-        parent::__construct($id, $module, $config);
-    }
 
     /** @inheritdoc */
     public function behaviors()

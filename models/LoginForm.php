@@ -11,7 +11,6 @@
 
 namespace dektrium\user\models;
 
-use dektrium\user\Finder;
 use dektrium\user\helpers\Password;
 use Yii;
 use yii\base\Model;
@@ -38,19 +37,6 @@ class LoginForm extends Model
 
     /** @var \dektrium\user\models\User */
     protected $user;
-
-    /** @var Finder */
-    protected $finder;
-
-    /**
-     * @param Finder $finder
-     * @param array  $config
-     */
-    public function __construct(Finder $finder, $config = [])
-    {
-        $this->finder = $finder;
-        parent::__construct($config);
-    }
 
     /** @inheritdoc */
     public function attributeLabels()

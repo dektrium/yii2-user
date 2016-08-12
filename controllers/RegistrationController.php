@@ -11,7 +11,6 @@
 
 namespace dektrium\user\controllers;
 
-use dektrium\user\Finder;
 use dektrium\user\models\Account;
 use dektrium\user\models\RegistrationForm;
 use dektrium\user\models\ResendForm;
@@ -82,21 +81,6 @@ class RegistrationController extends Controller
      * Triggered with \dektrium\user\events\FormEvent.
      */
     const EVENT_AFTER_RESEND = 'afterResend';
-
-    /** @var Finder */
-    protected $finder;
-
-    /**
-     * @param string           $id
-     * @param \yii\base\Module $module
-     * @param Finder           $finder
-     * @param array            $config
-     */
-    public function __construct($id, $module, Finder $finder, $config = [])
-    {
-        $this->finder = $finder;
-        parent::__construct($id, $module, $config);
-    }
 
     /** @inheritdoc */
     public function behaviors()

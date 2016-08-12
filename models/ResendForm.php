@@ -11,7 +11,6 @@
 
 namespace dektrium\user\models;
 
-use dektrium\user\Finder;
 use dektrium\user\Mailer;
 use yii\base\Model;
 
@@ -34,19 +33,12 @@ class ResendForm extends Model
     protected $mailer;
 
     /**
-     * @var Finder
-     */
-    protected $finder;
-
-    /**
      * @param Mailer $mailer
-     * @param Finder $finder
      * @param array  $config
      */
-    public function __construct(Mailer $mailer, Finder $finder, $config = [])
+    public function __construct(Mailer $mailer, $config = [])
     {
         $this->mailer = $mailer;
-        $this->finder = $finder;
         parent::__construct($config);
     }
 

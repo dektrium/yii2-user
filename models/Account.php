@@ -12,7 +12,6 @@
 namespace dektrium\user\models;
 
 use dektrium\user\clients\ClientInterface;
-use dektrium\user\Finder;
 use dektrium\user\models\query\AccountQuery;
 use dektrium\user\traits\ModuleTrait;
 use yii\authclient\ClientInterface as BaseClientInterface;
@@ -39,9 +38,6 @@ use yii\helpers\Url;
 class Account extends ActiveRecord
 {
     use ModuleTrait;
-
-    /** @var Finder */
-    protected static $finder;
 
     /** @var */
     private $_data;
@@ -222,17 +218,5 @@ class Account extends ActiveRecord
         }
 
         return $user->create() ? $user : false;
-    }
-
-    /**
-     * @return Finder
-     */
-    protected static function getFinder()
-    {
-        if (static::$finder === null) {
-            static::$finder = \Yii::$container->get(Finder::className());
-        }
-
-        return static::$finder;
     }
 }

@@ -61,7 +61,7 @@ class UserQuery extends ActiveQuery
 
     /**
      * @param  bool $confirmed
-     * @return $this
+     * @return UserQuery
      */
     public function confirmed($confirmed = true)
     {
@@ -72,7 +72,7 @@ class UserQuery extends ActiveQuery
 
     /**
      * @param  bool $blocked
-     * @return $this
+     * @return UserQuery
      */
     public function blocked($blocked = true)
     {

@@ -11,7 +11,6 @@
 
 namespace dektrium\user\controllers;
 
-use dektrium\user\Finder;
 use dektrium\user\models\User;
 use yii\filters\AccessControl;
 use yii\web\Controller;
@@ -26,21 +25,6 @@ use yii\web\NotFoundHttpException;
  */
 class ProfileController extends Controller
 {
-    /** @var Finder */
-    protected $finder;
-
-    /**
-     * @param string           $id
-     * @param \yii\base\Module $module
-     * @param Finder           $finder
-     * @param array            $config
-     */
-    public function __construct($id, $module, Finder $finder, $config = [])
-    {
-        $this->finder = $finder;
-        parent::__construct($id, $module, $config);
-    }
-
     /** @inheritdoc */
     public function behaviors()
     {

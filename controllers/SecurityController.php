@@ -11,7 +11,6 @@
 
 namespace dektrium\user\controllers;
 
-use dektrium\user\Finder;
 use dektrium\user\models\Account;
 use dektrium\user\models\LoginForm;
 use dektrium\user\models\User;
@@ -85,22 +84,6 @@ class SecurityController extends Controller
      * Triggered with \dektrium\user\events\AuthEvent.
      */
     const EVENT_AFTER_CONNECT = 'afterConnect';
-
-
-    /** @var Finder */
-    protected $finder;
-
-    /**
-     * @param string $id
-     * @param Module $module
-     * @param Finder $finder
-     * @param array  $config
-     */
-    public function __construct($id, $module, Finder $finder, $config = [])
-    {
-        $this->finder = $finder;
-        parent::__construct($id, $module, $config);
-    }
 
     /** @inheritdoc */
     public function behaviors()

@@ -21,8 +21,6 @@ $this->title = Yii::t('user', 'Profile settings');
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 
-<?= $this->render('/_alert', ['module' => Yii::$app->getModule('user')]) ?>
-
 <div class="row">
     <div class="col-md-3">
         <?= $this->render('_menu') ?>

@@ -104,10 +104,7 @@ class RecoveryController extends Controller
 
         if ($model->load(\Yii::$app->request->post()) && $model->sendRecoveryMessage()) {
             $this->trigger(self::EVENT_AFTER_REQUEST, $event);
-            return $this->render('/message', [
-                'title'  => \Yii::t('user', 'Recovery message sent'),
-                'module' => $this->module,
-            ]);
+            return $this->redirect(['/user/security/login']);
         }
 
         return $this->render('request', [
@@ -143,10 +140,7 @@ class RecoveryController extends Controller
                 'danger',
                 \Yii::t('user', 'Recovery link is invalid or expired. Please try requesting a new one.')
             );
-            return $this->render('/message', [
-                'title'  => \Yii::t('user', 'Invalid or expired link'),
-                'module' => $this->module,
-            ]);
+            return $this->redirect(['/user/security/login']);
         }
 
         /** @var RecoveryForm $model */
@@ -161,10 +155,7 @@ class RecoveryController extends Controller
 
         if ($model->load(\Yii::$app->getRequest()->post()) && $model->resetPassword($token)) {
             $this->trigger(self::EVENT_AFTER_RESET, $event);
-            return $this->render('/message', [
-                'title'  => \Yii::t('user', 'Password has been changed'),
-                'module' => $this->module,
-            ]);
+            return $this->redirect(['/user/security/login']);
         }
 
         return $this->render('reset', [

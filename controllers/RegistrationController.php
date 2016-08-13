@@ -120,11 +120,7 @@ class RegistrationController extends Controller
 
         if ($model->load(\Yii::$app->request->post()) && $model->register()) {
             $this->trigger(self::EVENT_AFTER_REGISTER, $event);
-
-            return $this->render('/message', [
-                'title'  => \Yii::t('user', 'Your account has been created'),
-                'module' => $this->module,
-            ]);
+            return $this->redirect(['/user/security/login']);
         }
 
         return $this->render('register', [
@@ -204,10 +200,7 @@ class RegistrationController extends Controller
 
         $this->trigger(self::EVENT_AFTER_CONFIRM, $event);
 
-        return $this->render('/message', [
-            'title'  => \Yii::t('user', 'Account confirmation'),
-            'module' => $this->module,
-        ]);
+        return $this->goHome();
     }
 
     /**
@@ -232,11 +225,7 @@ class RegistrationController extends Controller
 
         if ($model->load(\Yii::$app->request->post()) && $model->resend()) {
             $this->trigger(self::EVENT_AFTER_RESEND, $event);
-
-            return $this->render('/message', [
-                'title'  => \Yii::t('user', 'A new confirmation link has been sent'),
-                'module' => $this->module,
-            ]);
+            return $this->redirect(['/user/security/login']);
         }
 
         return $this->render('resend', [

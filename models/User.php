@@ -158,6 +158,15 @@ class User extends ActiveRecord implements IdentityInterface
         return $this->getAttribute('auth_key');
     }
 
+    /**
+     * Generates password hash and sets it to password_hash attribute.
+     * @param string $password
+     */
+    public function setPassword($password)
+    {
+        $this->password_hash = \Yii::$app->security->generatePasswordHash($password);
+    }
+
     /** @inheritdoc */
     public function attributeLabels()
     {
@@ -425,7 +434,19 @@ class User extends ActiveRecord implements IdentityInterface
      */
     public function resetPassword($password)
     {
-        return (bool)$this->updateAttributes(['password_hash' => Password::hash($password)]);
+        $this->setPassword($password);
+        return $this->save(false, ['password_hash']);
+    }
+
+    /**
+     * Validates users password.
+     *
+     * @param  string $password
+     * @return bool
+     */
+    public function validatePassword($password)
+    {
+        return \Yii::$app->security->validatePassword($password, $this->password_hash);
     }
 
     /**
@@ -488,7 +509,7 @@ class User extends ActiveRecord implements IdentityInterface
         }
 
         if (!empty($this->password)) {
-            $this->setAttribute('password_hash', Password::hash($this->password));
+            $this->setPassword($this->password);
         }
 
         return parent::beforeSave($insert);

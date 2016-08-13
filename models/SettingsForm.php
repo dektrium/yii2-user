@@ -85,7 +85,7 @@ class SettingsForm extends Model
             'newPasswordLength' => ['new_password', 'string', 'max' => 72, 'min' => 6],
             'currentPasswordRequired' => ['current_password', 'required'],
             'currentPasswordValidate' => ['current_password', function ($attr) {
-                if (!Password::validate($this->$attr, $this->user->password_hash)) {
+                if (!$this->user->validatePassword($this->$attr)) {
                     $this->addError($attr, Yii::t('user', 'Current password is not valid'));
                 }
             }],

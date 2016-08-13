@@ -11,8 +11,6 @@
 
 namespace dektrium\user\helpers;
 
-use Yii;
-
 /**
  * Password helper.
  *
@@ -24,25 +22,13 @@ class Password
      * Wrapper for yii security helper method.
      *
      * @param $password
-     *
-     * @return string
-     */
-    public static function hash($password)
-    {
-        return Yii::$app->security->generatePasswordHash($password, Yii::$app->getModule('user')->cost);
-    }
-
-    /**
-     * Wrapper for yii security helper method.
-     *
-     * @param $password
      * @param $hash
      *
      * @return bool
      */
     public static function validate($password, $hash)
     {
-        return Yii::$app->security->validatePassword($password, $hash);
+        return \Yii::$app->security->validatePassword($password, $hash);
     }
 
     /**

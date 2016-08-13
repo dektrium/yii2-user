@@ -109,17 +109,6 @@ and `adminPermission` will determine access.
 
 ---
 
-#### cost (Type: `integer`, Default value: `10`)
-
-Cost parameter used by the Blowfish hash algorithm. The higher the value of cost,
-the longer it takes to generate the hash and to verify a password against it.
-Higher `cost` therefore slows down a brute-force attack. For best protection
-against brute for attacks, set it to the highest value that is tolerable on
-production servers. The time taken to compute the hash doubles for every
-increment by one of `cost`.
-
----
-
 #### urlPrefix (Type: `string`, Default value: `user`)
 
 The prefix for user module URL. By changing this value you will be able to chage

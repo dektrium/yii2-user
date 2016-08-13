@@ -40,6 +40,8 @@ class AccessRule extends \yii\filters\AccessRule
                 if (!\Yii::$app->user->isGuest && \Yii::$app->user->identity->isAdmin) {
                     return true;
                 }
+            } elseif ($user->can($role)) {
+                return true;
             }
         }
 

@@ -18,13 +18,13 @@
     ],
     "minimum-stability": "dev",
     "require": {
-        "yiisoft/yii2": "^2.0.0",
+        "yiisoft/yii2": "^2.0.6",
         "yiisoft/yii2-swiftmailer": "^2.0.0",
         "yiisoft/yii2-authclient": "^2.1.0",
         "yiisoft/yii2-bootstrap": "^2.0.0"
     },
     "require-dev": {
-        "yiisoft/yii2-codeception": "^2.0.0",
+        "yiisoft/yii2-codeception": "^2.0.5",
         "codeception/specify": "^0.4.3",
         "codeception/verify": "^0.3.1"
     },

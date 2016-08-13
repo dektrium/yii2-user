@@ -12,7 +12,7 @@ Yii2-user can be installed using composer. Run following command to download and
 install Yii2-user:
 
 ```bash
-composer require "dektrium/yii2-user:0.9.*@dev"
+composer require "dektrium/yii2-user:1.0.0-alpha1@dev"
 ```
 
 ### 2. Configure
@@ -46,5 +46,4 @@ for more information.
 
 ## Troubleshooting
 
-If you're having troubles with Yii2-user, make sure to check out the 
-[troubleshooting guide](troubleshooting.md).
+If you're having troubles with Yii2-user, make sure to check out the [troubleshooting guide](troubleshooting.md).

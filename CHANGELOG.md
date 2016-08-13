@@ -2,6 +2,7 @@
 
 ## 1.0.0-alpha1 [Work in progress]
 
+- Enh #647: Removed `enableFlashMessages` option and removed flash message view (dmeroff)
 - Enh: Finder component has been removed, see UPGRADE.md for details (dmeroff)
 
 ## 0.9.9 [13 August 2016]

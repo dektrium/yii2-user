@@ -19,7 +19,7 @@ The latest version includes following features:
 
 [Read the Documentation for master](docs/README.md)
 
-[Read the Documentation for v0.9.8](https://github.com/dektrium/yii2-user/blob/0.9.8/docs/README.md)
+[Read the Documentation for v0.9.9](https://github.com/dektrium/yii2-user/blob/0.9.9/docs/README.md)
 
 ## Installation
 

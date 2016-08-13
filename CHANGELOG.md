@@ -1,7 +1,8 @@
 # CHANGELOG
 
-## 0.9.9 [Work in progress]
+## 0.9.9 [13 August 2016]
 
+- Enh #746: Changed AccessRule to check other roles/permissions (markux)
 - Enh #649: Updated test suite to codeception 2.2 (dmeroff)
 - Enh #725: Removed message that user is not registered in Recovery and Resend forms (dmeroff)
 - Fix #747: Fixed reverting migrations on PostgreSQL (dmeroff)

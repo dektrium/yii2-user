@@ -4,15 +4,6 @@ All available configuration options are listed below with their default values.
 
 ---
 
-#### enableFlashMessages (Type: `boolean`, Default value: `true`)
-
-If this option is set to `true`, module will show flash messages using
-integrated widget. Otherwise you will need to handle it using your own widget,
-like provided in [yii advanced template](https://github.com/yiisoft/yii2-app-advanced/blob/master/frontend/widgets/Alert.php).
-The keys for those messages are `success`, `info`, `danger`, `warning`.
-
----
-
 #### enableRegistration (Type: `boolean`, Default value: `true`)
 
 If this option is set to `false`, users will not be able to register an account.

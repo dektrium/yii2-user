@@ -4,15 +4,6 @@ All available configuration options are listed below with their default values.
 
 ---
 
-#### enableFlashMessages (Type: `boolean`, Default value: `true`)
-
-If this option is set to `true`, module will show flash messages using
-integrated widget. Otherwise you will need to handle it using your own widget,
-like provided in [yii advanced template](https://github.com/yiisoft/yii2-app-advanced/blob/master/frontend/widgets/Alert.php).
-The keys for those messages are `success`, `info`, `danger`, `warning`.
-
----
-
 #### enableRegistration (Type: `boolean`, Default value: `true`)
 
 If this option is set to `false`, users will not be able to register an account.
@@ -106,17 +97,6 @@ Yii2-user has special admin pages where you can manager registered users or
 create new user accounts. You can specify the existing RBAC permission that will
 allow a user to be able to access those pages. The most permissive of `admins`
 and `adminPermission` will determine access.
-
----
-
-#### cost (Type: `integer`, Default value: `10`)
-
-Cost parameter used by the Blowfish hash algorithm. The higher the value of cost,
-the longer it takes to generate the hash and to verify a password against it.
-Higher `cost` therefore slows down a brute-force attack. For best protection
-against brute for attacks, set it to the highest value that is tolerable on
-production servers. The time taken to compute the hash doubles for every
-increment by one of `cost`.
 
 ---
 

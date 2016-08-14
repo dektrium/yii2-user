@@ -57,7 +57,7 @@ class LoginForm extends Model
             'passwordValidate' => [
                 'password',
                 function ($attribute) {
-                    if ($this->user === null || !Password::validate($this->password, $this->user->password_hash)) {
+                    if ($this->user === null || !$this->user->validatePassword($this->password)) {
                         $this->addError($attribute, Yii::t('user', 'Invalid login or password'));
                     }
                 }

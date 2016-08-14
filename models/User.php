@@ -12,6 +12,7 @@
 namespace dektrium\user\models;
 
 use dektrium\user\helpers\Password;
+use dektrium\user\helpers\PasswordGenerator;
 use dektrium\user\Mailer;
 use dektrium\user\models\query\UserQuery;
 use dektrium\user\Module;
@@ -158,6 +159,15 @@ class User extends ActiveRecord implements IdentityInterface
         return $this->getAttribute('auth_key');
     }
 
+    /**
+     * Generates password hash and sets it to password_hash attribute.
+     * @param string $password
+     */
+    public function setPassword($password)
+    {
+        $this->password_hash = \Yii::$app->security->generatePasswordHash($password);
+    }
+
     /** @inheritdoc */
     public function attributeLabels()
     {
@@ -246,7 +256,11 @@ class User extends ActiveRecord implements IdentityInterface
 
         try {
             $this->confirmed_at = time();
-            $this->password = $this->password == null ? Password::generate(8) : $this->password;
+            if (!$this->password) {
+                /** @var PasswordGenerator $generator */
+                $generator = \Yii::createObject(PasswordGenerator::className());
+                $this->password = $generator->generate();
+            }
 
             $this->trigger(self::BEFORE_CREATE);
 
@@ -283,7 +297,11 @@ class User extends ActiveRecord implements IdentityInterface
 
         try {
             $this->confirmed_at = $this->module->enableConfirmation ? null : time();
-            $this->password     = $this->module->enableGeneratingPassword ? Password::generate(8) : $this->password;
+            if ($this->module->enableGeneratingPassword) {
+                /** @var PasswordGenerator $generator */
+                $generator = \Yii::createObject(PasswordGenerator::className());
+                $this->password = $generator->generate();
+            }
 
             $this->trigger(self::BEFORE_REGISTER);
 
@@ -425,7 +443,19 @@ class User extends ActiveRecord implements IdentityInterface
      */
     public function resetPassword($password)
     {
-        return (bool)$this->updateAttributes(['password_hash' => Password::hash($password)]);
+        $this->setPassword($password);
+        return $this->save(false, ['password_hash']);
+    }
+
+    /**
+     * Validates users password.
+     *
+     * @param  string $password
+     * @return bool
+     */
+    public function validatePassword($password)
+    {
+        return \Yii::$app->security->validatePassword($password, $this->password_hash);
     }
 
     /**
@@ -488,7 +518,7 @@ class User extends ActiveRecord implements IdentityInterface
         }
 
         if (!empty($this->password)) {
-            $this->setAttribute('password_hash', Password::hash($this->password));
+            $this->setPassword($this->password);
         }
 
         return parent::beforeSave($insert);

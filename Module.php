@@ -61,9 +61,6 @@ class Module extends BaseModule
     /** @var int The time before a recovery token becomes invalid. */
     public $recoverWithin = 21600; // 6 hours
 
-    /** @var int Cost parameter used by the Blowfish hash algorithm. */
-    public $cost = 10;
-
     /** @var array An array of administrator's usernames. */
     public $admins = [];
 

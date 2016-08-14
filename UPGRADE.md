@@ -6,6 +6,16 @@ need to following the instructions for both A and B.
 
 ## Upgrade from Yii2-user 0.9.* to Yii2-user 1.0.0-alpha1
 
+- `dektrium\user\helpers\Password` helper has been removed. If you need to generate password then use
+ `dektrium\user\helpers\PasswordGenerator` helper instead. If you used it to hash and validate user's password, then
+ use methods `hashPassword` and `validatePassword` of `dektrium\user\models\User`
+
+- `cost` module's property has been removed. If you used custom cost value, then you should set it through 
+ `passwordHashCost` property of `security` component.
+
+- `enableFlashMessages` module's property has been removed. If you have used it, then you should simply remove it from
+ your config. Moreover Yii2-user does not show flash messages.
+
 - `modelMap` module's property has been removed. Models should be overridden using DI container. Read more in docs.
 
 ## Upgrade from Yii2-user 0.9.* to Yii2-user 0.9.4

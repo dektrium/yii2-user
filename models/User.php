@@ -12,6 +12,7 @@
 namespace dektrium\user\models;
 
 use dektrium\user\helpers\Password;
+use dektrium\user\helpers\PasswordGenerator;
 use dektrium\user\Mailer;
 use dektrium\user\models\query\UserQuery;
 use dektrium\user\Module;
@@ -255,7 +256,11 @@ class User extends ActiveRecord implements IdentityInterface
 
         try {
             $this->confirmed_at = time();
-            $this->password = $this->password == null ? Password::generate(8) : $this->password;
+            if (!$this->password) {
+                /** @var PasswordGenerator $generator */
+                $generator = \Yii::createObject(PasswordGenerator::className());
+                $this->password = $generator->generate();
+            }
 
             $this->trigger(self::BEFORE_CREATE);
 
@@ -292,7 +297,11 @@ class User extends ActiveRecord implements IdentityInterface
 
         try {
             $this->confirmed_at = $this->module->enableConfirmation ? null : time();
-            $this->password     = $this->module->enableGeneratingPassword ? Password::generate(8) : $this->password;
+            if ($this->module->enableGeneratingPassword) {
+                /** @var PasswordGenerator $generator */
+                $generator = \Yii::createObject(PasswordGenerator::className());
+                $this->password = $generator->generate();
+            }
 
             $this->trigger(self::BEFORE_REGISTER);
 

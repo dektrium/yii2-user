@@ -68,14 +68,7 @@ class LoginForm extends Model
         return [
             'requiredFields' => [['login', 'password'], 'required'],
             'loginTrim' => ['login', 'trim'],
-            'passwordValidate' => [
-                'password',
-                function ($attribute) {
-                    if ($this->user === null || !Password::validate($this->password, $this->user->password_hash)) {
-                        $this->addError($attribute, Yii::t('user', 'Invalid login or password'));
-                    }
-                }
-            ],
+            'passwordValidate' => ['password', 'validatePassword'],
             'confirmationValidate' => [
                 'login',
                 function ($attribute) {
@@ -93,6 +86,17 @@ class LoginForm extends Model
             ],
             'rememberMe' => ['rememberMe', 'boolean'],
         ];
+    }
+
+    /**
+     * Validates if the hash of the given password is identical to the saved hash in the database.
+     *
+     * @return void
+     */
+    public function validatePassword($attribute, $params)
+    {
+      if ($this->user === null || !Password::validate($this->password, $this->user->password_hash))
+        $this->addError($attribute, Yii::t('user', 'Invalid login or password'));
     }
 
     /**

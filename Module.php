@@ -33,6 +33,15 @@ class Module extends BaseModule
     /** Email is changed after user clicks both confirmation links sent to his old and new email addresses. */
     const STRATEGY_SECURE = 2;
 
+    /** @var bool Whether to lock login if there are too many invalid login attempts. */
+    public $enableLockLoginAfterFailedLogin = true;
+
+    /** @var int Number of allowed invalid login attempts. */
+    public $numberOfAllowedInvalidLoginAttempts = 3;
+
+    /** @var int The seconds after the last invalid login attempt when the login attempt counter will be reset. */
+    public $secondsAfterLastInvalidLoginToResetCounter = 3600;
+
     /** @var bool Whether to show flash messages. */
     public $enableFlashMessages = true;
 

@@ -68,14 +68,7 @@ class LoginForm extends Model
         return [
             'requiredFields' => [['login', 'password'], 'required'],
             'loginTrim' => ['login', 'trim'],
-            'passwordValidate' => [
-                'password',
-                function ($attribute) {
-                    if ($this->user === null || !Password::validate($this->password, $this->user->password_hash)) {
-                        $this->addError($attribute, Yii::t('user', 'Invalid login or password'));
-                    }
-                }
-            ],
+            'passwordValidate' => ['password', 'validatePassword'],
             'confirmationValidate' => [
                 'login',
                 function ($attribute) {
@@ -94,6 +87,90 @@ class LoginForm extends Model
             'rememberMe' => ['rememberMe', 'boolean'],
         ];
     }
+    
+    /**
+     * Validates if the hash of the given password is identical to the saved hash in the database.
+     *
+     * @return void
+     * @access public
+     */
+    public function validatePassword($attribute, $params)
+    {
+        $error = '';
+        $passwordValidate = false;
+        if ($this->user !== null) {
+            $passwordValidate = Password::validate($this->password, $this->user->password_hash);
+        }
+   
+        if ($this->module->enableLockLoginAfterFailedLogin) {
+            $this->validateLoginLock($attribute, $passwordValidate);
+        } else {
+            if (!$passwordValidate) {
+                $this->addError($attribute, Yii::t('user', 'Invalid login or password.'));
+            }
+            /*if (!empty($error)) {
+                $this->addError($attribute, $error);
+            }*/
+        }
+    }
+    
+    /**
+     * Validates if the login is locked.
+     *
+     * @return void
+     * @access private
+     * @author jkmssoft
+     */
+    private function validateLoginLock($attribute, $passwordValidate)
+    {
+        LoginAttempt::purgeOld();
+
+        $lockTime = 0;
+        $ip = md5(Yii::$app->request->getUserIp());
+        $loginAttempt = \dektrium\user\models\LoginAttempt::find()->where(['ip' => $ip])->one();
+
+        // is within lock time?
+        if ($loginAttempt !== null) {
+            // is last attempt long time ago?
+            if (time() - $loginAttempt->last_attempt_at
+                > $this->module->secondsAfterLastInvalidLoginToResetCounter) {
+                // reset attempts
+                $loginAttempt->attempts = 0;
+            }
+
+            $lockTime = $loginAttempt->getLoginLockTime(); // calculate lock time
+        }
+
+        // log attempt only if invalid login and not within lockTime
+        if (!$passwordValidate && $lockTime == 0) {
+            if ($loginAttempt === null) {
+                // create new logAttempt object
+                $loginAttempt = Yii::createObject(\dektrium\user\models\LoginAttempt::className());
+                $loginAttempt->ip = $ip;
+                $loginAttempt->attempts = 0;
+            }
+
+            $loginAttempt->attempts++;
+            $loginAttempt->last_attempt_at = time();
+
+            $lockTime = $loginAttempt->getLoginLockTime(); // calculate lock time
+            $loginAttempt->save();
+        }
+
+        if ($lockTime > 0 || !$passwordValidate) {
+            $error = Yii::t('user', 'Invalid login or password.');
+        }
+        if ($lockTime > 0) {
+            $error .= ' '.Yii::t('user', 'Login is locked for {0} seconds.', $lockTime);
+        }
+
+        if (!empty($error)) {
+            $this->addError($attribute, $error);
+        }
+        if ($lockTime > 0) {
+            $this->addError($attribute, $lockTime);
+        }
+    }
 
     /**
      * Validates form and logs the user in.
@@ -103,6 +180,7 @@ class LoginForm extends Model
     public function login()
     {
         if ($this->validate()) {
+            LoginAttempt::removeByIp(md5(Yii::$app->request->getUserIp()));
             return Yii::$app->getUser()->login($this->user, $this->rememberMe ? $this->module->rememberFor : 0);
         } else {
             return false;

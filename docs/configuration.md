@@ -91,6 +91,24 @@ time user have to request new recovery message.
 
 ---
 
+#### enableLockLoginAfterFailedLogin (Type: `boolean`, Default value: `true`)
+
+If this option is true, the login will get locked after too many invalid login attempts.
+
+---
+
+#### numberOfAllowedInvalidLoginAttempts (Type: `integer`, Default value: `3` (3 attempts))
+
+Number of allowed invalid login attempts without locking the login.
+
+---
+
+#### secondsAfterLastInvalidLoginToResetCounter (Type: `integer`, Default value: `3600` (3600 seconds))
+
+This option defines after how many seconds after the last invalid login attempt the attempt counter will be reset.
+
+---
+
 #### admins (Type: `array`, Default value: `[]`)
 
 Yii2-user has special admin pages where you can manager registered users or

@@ -41,6 +41,10 @@ class m140504_113157_update_tables extends Migration
         $this->renameColumn('{{%account}}', 'data', 'properties');
 
         // user table
+        if ($this->dbType == 'sqlsrv') {
+            // this is needed because we need to drop the default constraint first
+            $this->dropColumnConstraints('{{%user}}','flags');
+        }
         $this->dropColumn('{{%user}}', 'flags');
         $this->renameColumn('{{%user}}', 'registration_ip', 'registered_from');
         $this->addColumn('{{%user}}', 'logged_in_at', Schema::TYPE_INTEGER);

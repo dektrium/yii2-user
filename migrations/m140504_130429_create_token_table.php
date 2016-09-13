@@ -27,7 +27,7 @@ class m140504_130429_create_token_table extends Migration
         ], $this->tableOptions);
 
         $this->createIndex('token_unique', '{{%token}}', ['user_id', 'code', 'type'], true);
-        $this->addForeignKey('fk_user_token', '{{%token}}', 'user_id', '{{%user}}', 'id', 'CASCADE', 'RESTRICT');
+        $this->addForeignKey('fk_user_token', '{{%token}}', 'user_id', '{{%user}}', 'id', $this->cascade, $this->restrict);
     }
 
     public function down()

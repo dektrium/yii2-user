@@ -9,18 +9,30 @@
  * file that was distributed with this source code.
  */
 
-use yii\db\Migration;
+use dektrium\user\migrations\Migration;
 use yii\db\Schema;
 
 class m141222_135246_alter_username_length extends Migration
 {
     public function up()
     {
-        $this->alterColumn('{{%user}}', 'username', Schema::TYPE_STRING . '(255)');
+        if ($this->dbType == 'sqlsrv') {
+            $this->dropIndex('user_unique_username','{{%user}}');
+        }            
+        $this->alterColumn('{{%user}}', 'username', Schema::TYPE_STRING . '(255) NOT NULL');
+        if ($this->dbType == 'sqlsrv') {
+            $this->createIndex('user_unique_username', '{{%user}}', 'username', true);
+        }
     }
 
     public function down()
     {
-        $this->alterColumn('{{%user}}', 'username', Schema::TYPE_STRING . '(25)');
+        if ($this->dbType == 'sqlsrv') {
+            $this->dropIndex('user_unique_username','{{%user}}');
+        }
+        $this->alterColumn('{{%user}}', 'username', Schema::TYPE_STRING . '(25) NOT NULL');
+        if ($this->dbType == 'sqlsrv') {
+            $this->createIndex('user_unique_username', '{{%user}}', 'username', true);
+        }
     }
 }

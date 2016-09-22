@@ -273,6 +273,7 @@ class User extends ActiveRecord implements IdentityInterface
             return true;
         } catch (\Exception $e) {
             $transaction->rollBack();
+            \Yii::warning($e->getMessage());
             return false;
         }
     }
@@ -316,6 +317,7 @@ class User extends ActiveRecord implements IdentityInterface
             return true;
         } catch (\Exception $e) {
             $transaction->rollBack();
+            \Yii::warning($e->getMessage());
             return false;
         }
     }

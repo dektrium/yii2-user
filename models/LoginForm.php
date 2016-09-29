@@ -107,6 +107,7 @@ class LoginForm extends Model
     public function login()
     {
         if ($this->validate()) {
+            $this->user->updateAttributes(['last_login' => time()]);
             return Yii::$app->getUser()->login($this->user, $this->rememberMe ? $this->module->rememberFor : 0);
         } else {
             return false;

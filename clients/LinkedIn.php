@@ -11,10 +11,9 @@
 
 namespace dektrium\user\clients;
 
-use dektrium\user\clients\ClientInterface;
 use yii\authclient\clients\LinkedIn as BaseLinkedIn;
 
-/*
+/**
  * @author Sam Mousa <sam@mousa.nl>
  */
 class LinkedIn extends BaseLinkedIn implements ClientInterface

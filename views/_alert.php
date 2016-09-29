@@ -22,8 +22,8 @@ use yii\bootstrap\Alert;
             <?php foreach (Yii::$app->session->getAllFlashes() as $type => $message): ?>
                 <?php if (in_array($type, ['success', 'danger', 'warning', 'info'])): ?>
                     <?= Alert::widget([
-                            'options' => ['class' => 'alert-dismissible alert-'.$type],
-                            'body' => $message
+                        'options' => ['class' => 'alert-dismissible alert-' . $type],
+                        'body' => $message
                     ]) ?>
                 <?php endif ?>
             <?php endforeach ?>

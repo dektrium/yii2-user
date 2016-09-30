@@ -145,7 +145,7 @@ class RegistrationController extends Controller
         if ($model->hasErrors()) {
             foreach ($model->getErrors() as $fieldName => $errors) {
                 foreach ($errors as $error) {
-                    Yii::$app->getSession()->setFlash('danger', $error);
+                    \Yii::$app->getSession()->setFlash('danger', $error);
                 }
             }
         }

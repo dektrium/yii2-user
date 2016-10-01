@@ -48,7 +48,7 @@ $this->params['breadcrumbs'][] = $this->title;
 
                     $this->registerJs('
                     var user_login_form = "'.$form->id.'";
-                    var user_login_button_text_wait = "'.Yii::t('user', 'Login is locked for {0} seconds.').'";
+                    var user_login_button_text_wait = "'.Yii::t('user', 'Please wait').': '.Yii::t('user', 'Login is locked for {0} seconds.').'";
                     ', \yii\web\View::POS_END, 'user-login-form-options');
                 } ?>
 

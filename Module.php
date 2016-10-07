@@ -34,7 +34,7 @@ class Module extends BaseModule
     const STRATEGY_SECURE = 2;
 
     /** @var bool Whether to lock login if there are too many invalid login attempts. */
-    public $enableLockLoginAfterFailedLogin = true;
+    public $enableLockLoginAfterFailedLogin = false;
 
     /** @var int Number of allowed invalid login attempts. */
     public $numberOfAllowedInvalidLoginAttempts = 3;

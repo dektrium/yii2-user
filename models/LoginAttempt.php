@@ -95,14 +95,4 @@ class LoginAttempt extends \yii\db\ActiveRecord
         $seconds = time() - \Yii::$app->getModule('user')->secondsAfterLastInvalidLoginToResetCounter;
         return self::deleteAll(['<=', 'last_attempt_at', $seconds]) !== false;
     }
-    
-    /**
-     * Remove invalid login attempt by ip.
-     * @param string $ip
-     * @return boolean Delete result: true on success else false.
-     */
-    public static function removeByIp($ip)
-    {
-        return self::deleteAll(['=', 'ip', $ip]) !== false;
-    }
 }

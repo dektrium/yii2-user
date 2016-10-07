@@ -91,7 +91,7 @@ time user have to request new recovery message.
 
 ---
 
-#### enableLockLoginAfterFailedLogin (Type: `boolean`, Default value: `true`)
+#### enableLockLoginAfterFailedLogin (Type: `boolean`, Default value: `false`)
 
 If this option is true, the login will get locked after too many invalid login attempts.
 

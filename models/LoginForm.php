@@ -180,7 +180,6 @@ class LoginForm extends Model
     public function login()
     {
         if ($this->validate()) {
-            LoginAttempt::removeByIp(md5(Yii::$app->request->getUserIp()));
             return Yii::$app->getUser()->login($this->user, $this->rememberMe ? $this->module->rememberFor : 0);
         } else {
             return false;

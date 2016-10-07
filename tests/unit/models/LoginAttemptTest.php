@@ -47,16 +47,4 @@ class LoginAttemptTest extends \Codeception\Test\Unit
     {
         $this->assertTrue(LoginAttempt::purgeOld() >= 0);
     }
-    
-    /**
-     * Test removeByIp method.
-     */
-    public function testRemoveByIp()
-    {
-        $this->tester->haveFixtures(['login_attempt' => LoginAttemptFixture::className()]);
-        $fixture = $this->tester->grabFixture('login_attempt', 'test');
-        $item = $this->tester->grabRecord(LoginAttempt::className(), ['ip' => $fixture->ip]);
-        $this->assertTrue(LoginAttempt::removeByIp($fixture->ip) >= 0);
-        $this->tester->dontSeeRecord(LoginAttempt::className(), ['ip' => $fixture->ip]);
-    }
 }

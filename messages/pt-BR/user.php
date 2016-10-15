@@ -152,7 +152,7 @@ return [
     'Website' => 'Website',
     'Welcome to {0}' => 'Seja bem-vindo(a) ao site {0}',
     'Welcome! Registration is complete.' => 'Bem-vindo! Você foi cadastrado e logado com sucesso.',
-    'You can assign multiple roles or permissions to user by using the form below' => 'Você pode atribuir múltiplas papeis ou permissões para o usuário usando o formulário abaixo',
+    'You can assign multiple roles or permissions to user by using the form below' => 'Você pode atribuir múltiplos papéis ou permissões para o usuário utilizando o formulário abaixo',
     'You can not block your own account' => 'Você não pode bloquear a sua própria conta',
     'You can not remove your own account' => 'Você não pode excluir a sua própria conta.',
     'You can now log in with the following credentials:' => 'Você pode usá-la para fazer login.',

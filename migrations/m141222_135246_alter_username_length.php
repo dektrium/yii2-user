@@ -17,22 +17,22 @@ class m141222_135246_alter_username_length extends Migration
     public function up()
     {
         if ($this->dbType == 'sqlsrv') {
-            $this->dropIndex('user_unique_username','{{%user}}');
+            $this->dropIndex('{{%user_unique_username}}','{{%user}}');
         }            
         $this->alterColumn('{{%user}}', 'username', Schema::TYPE_STRING . '(255) NOT NULL');
         if ($this->dbType == 'sqlsrv') {
-            $this->createIndex('user_unique_username', '{{%user}}', 'username', true);
+            $this->createIndex('{{%user_unique_username}}', '{{%user}}', 'username', true);
         }
     }
 
     public function down()
     {
         if ($this->dbType == 'sqlsrv') {
-            $this->dropIndex('user_unique_username','{{%user}}');
+            $this->dropIndex('{{%user_unique_username}}','{{%user}}');
         }
         $this->alterColumn('{{%user}}', 'username', Schema::TYPE_STRING . '(25) NOT NULL');
         if ($this->dbType == 'sqlsrv') {
-            $this->createIndex('user_unique_username', '{{%user}}', 'username', true);
+            $this->createIndex('{{%user_unique_username}}', '{{%user}}', 'username', true);
         }
     }
 }

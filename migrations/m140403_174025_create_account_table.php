@@ -27,8 +27,8 @@ class m140403_174025_create_account_table extends Migration
             'properties' => Schema::TYPE_TEXT . ' NULL',
         ], $this->tableOptions);
 
-        $this->createIndex('account_unique', '{{%account}}', ['provider', 'client_id'], true);
-        $this->addForeignKey('fk_user_account', '{{%account}}', 'user_id', '{{%user}}', 'id', $this->cascade, $this->restrict);
+        $this->createIndex('{{%account_unique}}', '{{%account}}', ['provider', 'client_id'], true);
+        $this->addForeignKey('{{%fk_user_account}}', '{{%account}}', 'user_id', '{{%user}}', 'id', $this->cascade, $this->restrict);
     }
 
     public function down()

@@ -20,11 +20,11 @@ class m150623_212711_fix_username_notnull extends Migration
             $this->alterColumn('{{%user}}', 'username', 'SET NOT NULL');
         } else {
             if ($this->dbType == 'sqlsrv') {
-                $this->dropIndex('user_unique_username','{{%user}}');
+                $this->dropIndex('{{%user_unique_username}}','{{%user}}');
             }
             $this->alterColumn('{{%user}}', 'username', Schema::TYPE_STRING . '(255) NOT NULL');
             if ($this->dbType == 'sqlsrv') {
-                $this->createIndex('user_unique_username', '{{%user}}', 'username', true);
+                $this->createIndex('{{%user_unique_username}}', '{{%user}}', 'username', true);
             }
         }
     }
@@ -35,11 +35,11 @@ class m150623_212711_fix_username_notnull extends Migration
             $this->alterColumn('{{%user}}', 'username', 'DROP NOT NULL');
         }else{
             if ($this->dbType == 'sqlsrv') {
-                $this->dropIndex('user_unique_username','{{%user}}');
+                $this->dropIndex('{{%user_unique_username}}','{{%user}}');
             }
             $this->alterColumn('{{%user}}', 'username', Schema::TYPE_STRING . '(255) NULL');
             if ($this->dbType == 'sqlsrv') {
-                $this->createIndex('user_unique_username', '{{%user}}', 'username', true);
+                $this->createIndex('{{%user_unique_username}}', '{{%user}}', 'username', true);
             }
         }
     }

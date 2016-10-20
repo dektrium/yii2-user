@@ -39,10 +39,10 @@ class m140209_132017_init extends Migration
             'updated_at'           => Schema::TYPE_INTEGER . ' NOT NULL',
         ], $this->tableOptions);
 
-        $this->createIndex('user_unique_username', '{{%user}}', 'username', true);
-        $this->createIndex('user_unique_email', '{{%user}}', 'email', true);
-        $this->createIndex('user_confirmation', '{{%user}}', 'id, confirmation_token', true);
-        $this->createIndex('user_recovery', '{{%user}}', 'id, recovery_token', true);
+        $this->createIndex('{{%user_unique_username}}', '{{%user}}', 'username', true);
+        $this->createIndex('{{%user_unique_email}}', '{{%user}}', 'email', true);
+        $this->createIndex('{{%user_confirmation}}', '{{%user}}', 'id, confirmation_token', true);
+        $this->createIndex('{{%user_recovery}}', '{{%user}}', 'id, recovery_token', true);
 
         $this->createTable('{{%profile}}', [
             'user_id'        => Schema::TYPE_INTEGER . ' PRIMARY KEY',
@@ -55,7 +55,7 @@ class m140209_132017_init extends Migration
             'bio'            => Schema::TYPE_TEXT. ' NULL',
         ], $this->tableOptions);
 
-        $this->addForeignKey('fk_user_profile', '{{%profile}}', 'user_id', '{{%user}}', 'id', $this->cascade, $this->restrict);
+        $this->addForeignKey('{{%fk_user_profile}}', '{{%profile}}', 'user_id', '{{%user}}', 'id', $this->cascade, $this->restrict);
     }
 
     public function down()

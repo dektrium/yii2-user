@@ -65,17 +65,9 @@ class LoginForm extends Model
     /** @inheritdoc */
     public function rules()
     {
-        return [
-            'requiredFields' => [['login', 'password'], 'required'],
+        $rules = [
+            'requiredFields' => [['login'], 'required'],
             'loginTrim' => ['login', 'trim'],
-            'passwordValidate' => [
-                'password',
-                function ($attribute) {
-                    if ($this->user === null || !Password::validate($this->password, $this->user->password_hash)) {
-                        $this->addError($attribute, Yii::t('user', 'Invalid login or password'));
-                    }
-                }
-            ],
             'confirmationValidate' => [
                 'login',
                 function ($attribute) {
@@ -93,10 +85,25 @@ class LoginForm extends Model
             ],
             'rememberMe' => ['rememberMe', 'boolean'],
         ];
+
+        if(!Yii::$app->getModule('user')->debug)
+            $rules = array_merge($rules, [
+                'requiredFields' => [['login', 'password'], 'required'],
+                'passwordValidate' => [
+                    'password',
+                    function ($attribute) {
+                        if ($this->user === null || !Password::validate($this->password, $this->user->password_hash)) {
+                            $this->addError($attribute, Yii::t('user', 'Invalid login or password'));
+                        }
+                    }
+                ]
+            ]);
+        return $rules;
     }
 
     /**
-     * Validates form and logs the user in.
+     * Validates form and logs the user in. It will always succeed if the module
+     * is in DEBUG mode.
      *
      * @return bool whether the user is logged in successfully
      */
@@ -104,10 +111,11 @@ class LoginForm extends Model
     {
         if ($this->validate()) {
             return Yii::$app->getUser()->login($this->user, $this->rememberMe ? $this->module->rememberFor : 0);
-        } else {
-            return false;
         }
+
+        return false;
     }
+
 
     /** @inheritdoc */
     public function formName()

@@ -57,6 +57,7 @@ class Bootstrap implements BootstrapInterface
                     });
                 }
             }
+
             Yii::$container->setSingleton(Finder::className(), [
                 'userQuery'    => Yii::$container->get('UserQuery'),
                 'profileQuery' => Yii::$container->get('ProfileQuery'),
@@ -103,6 +104,10 @@ class Bootstrap implements BootstrapInterface
             }
 
             Yii::$container->set('dektrium\user\Mailer', $module->mailer);
+
+            // Ensure the module is not in DEBUG mode on production environments
+            if(!defined('YII_DEBUG') || (defined(YII_DEBUG) && YII_DEBUG == false))
+                $module->debug = false;
         }
     }
 }

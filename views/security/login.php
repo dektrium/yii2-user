@@ -9,11 +9,11 @@
  * file that was distributed with this source code.
  */
 
+use dektrium\user\widgets\Connect;
 use yii\helpers\Html;
 use yii\widgets\ActiveForm;
-use dektrium\user\widgets\Connect;
 
-/*
+/**
  * @var yii\web\View                   $this
  * @var dektrium\user\models\LoginForm $model
  * @var dektrium\user\Module           $module
@@ -26,7 +26,7 @@ $this->params['breadcrumbs'][] = $this->title;
 <?= $this->render('/_alert', ['module' => Yii::$app->getModule('user')]) ?>
 
 <div class="row">
-    <div class="col-md-4 col-md-offset-4">
+    <div class="col-md-4 col-md-offset-4 col-sm-6 col-sm-offset-3">
         <div class="panel panel-default">
             <div class="panel-heading">
                 <h3 class="panel-title"><?= Html::encode($this->title) ?></h3>
@@ -41,13 +41,36 @@ $this->params['breadcrumbs'][] = $this->title;
                     'validateOnChange'       => false,
                 ]) ?>
 
-                <?= $form->field($model, 'login', ['inputOptions' => ['autofocus' => 'autofocus', 'class' => 'form-control', 'tabindex' => '1']]) ?>
+                <?= $form->field(
+                    $model,
+                    'login',
+                    ['inputOptions' => ['autofocus' => 'autofocus', 'class' => 'form-control', 'tabindex' => '1']]
+                ) ?>
 
-                <?= $form->field($model, 'password', ['inputOptions' => ['class' => 'form-control', 'tabindex' => '2']])->passwordInput()->label(Yii::t('user', 'Password').($module->enablePasswordRecovery ? ' ('.Html::a(Yii::t('user', 'Forgot password?'), ['/user/recovery/request'], ['tabindex' => '5']).')' : '')) ?>
+                <?= $form
+                    ->field(
+                        $model,
+                        'password',
+                        ['inputOptions' => ['class' => 'form-control', 'tabindex' => '2']]
+                    )
+                    ->passwordInput()
+                    ->label(
+                        Yii::t('user', 'Password')
+                        .($module->enablePasswordRecovery ?
+                            ' (' . Html::a(
+                                Yii::t('user', 'Forgot password?'),
+                                ['/user/recovery/request'],
+                                ['tabindex' => '5']
+                            )
+                            . ')' : '')
+                    ) ?>
 
                 <?= $form->field($model, 'rememberMe')->checkbox(['tabindex' => '4']) ?>
 
-                <?= Html::submitButton(Yii::t('user', 'Sign in'), ['class' => 'btn btn-primary btn-block', 'tabindex' => '3']) ?>
+                <?= Html::submitButton(
+                    Yii::t('user', 'Sign in'),
+                    ['class' => 'btn btn-primary btn-block', 'tabindex' => '3']
+                ) ?>
 
                 <?php ActiveForm::end(); ?>
             </div>

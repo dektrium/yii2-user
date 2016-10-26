@@ -1,57 +1,11 @@
 # Simpler RBAC using custom access control filter
 
-Built-in Yii2 access control filter supports only two roles -
-`@` and `?`. In this guide you will learn how to add new role
-named `admin`, which will use the admin list provided by
-Yii2-user.
+Yii2-user comes with access control rule which adds support of `admin` role which allows access to users
+added to `admins` property of the module.
 
-## Create filter class
+## Apply filter to your controller
 
-Let's create new file under `@app/filters` named
-`AccessRule.php`:
-
-```php
-<?php
-
-namespace app\filters;
-
-use yii\filters\AccessRule;
-
-class AccessRule extends AccessRule
-{
-
-    /** @inheritdoc */
-    protected function matchRole($user)
-    {
-        if (empty($this->roles)) {
-            return true;
-        }
-
-        foreach ($this->roles as $role) {
-            if ($role === '?') {
-                if (Yii::$app->user->isGuest) {
-                    return true;
-                }
-            } elseif ($role === '@') {
-                if (!Yii::$app->user->isGuest) {
-                    return true;
-                }
-            } elseif ($role === 'admin') {
-                if (!Yii::$app->user->isGuest && Yii::$app->user->identity->isAdmin) {
-                    return true;
-                }
-            }
-        }
-
-        return false;
-    }
-}
-```
-
-## Apply new filter to your controller
-
-Here is an example of how to use created access rule in your
-access control filter:
+Here is an example of how to use access rule in your access control filter:
 
 ```php
 <?php
@@ -82,7 +36,7 @@ class SiteController extends Controller
 			        [
 			            'actions' => ['view', 'search'],
 			            'allow' => true,
-			            'roles' => ['?', '*', 'admin'],
+			            'roles' => ['?', '@', 'admin'],
 			        ],
 			    ],
 			],

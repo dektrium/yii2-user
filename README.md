@@ -17,12 +17,22 @@ The latest version includes following features:
 
 ## Documentation
 
-[Installation instructions](docs/getting-started.md) | [Definitive guide to Yii2-user](docs/README.md)
+[Read the Documentation for master](docs/README.md)
+
+[Read the Documentation for v0.9.9](https://github.com/dektrium/yii2-user/blob/0.9.9/docs/README.md)
+
+## Installation
+
+All installation instructions are located in documentation.
+
+## Support
+
+If you have any questions or problems with Yii2-user you can ask them on [our forum](http://dektrium.com).
 
 ## Contributing to this project
 
 Anyone and everyone is welcome to contribute. Please take a moment to
-review the [guidelines for contributing](CONTRIBUTING.md).
+review the [guidelines for contributing](.github/CONTRIBUTING.md).
 
 ## License
 

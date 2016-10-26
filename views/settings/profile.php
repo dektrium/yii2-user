@@ -11,7 +11,7 @@
 
 use yii\helpers\Html;
 
-/*
+/**
  * @var yii\web\View $this
  * @var yii\widgets\ActiveForm $form
  * @var dektrium\user\models\Profile $profile
@@ -53,13 +53,33 @@ $this->params['breadcrumbs'][] = $this->title;
 
                 <?= $form->field($model, 'location') ?>
 
-                <?= $form->field($model, 'gravatar_email')->hint(\yii\helpers\Html::a(Yii::t('user', 'Change your avatar at Gravatar.com'), 'http://gravatar.com')) ?>
+                <?= $form
+                    ->field($model, 'timezone')
+                    ->dropDownList(
+                        \yii\helpers\ArrayHelper::map(
+                            \dektrium\user\helpers\Timezone::getAll(),
+                            'timezone',
+                            'name'
+                        )
+                    ); ?>
+
+                <?= $form
+                    ->field($model, 'gravatar_email')
+                    ->hint(
+                        \yii\helpers\Html::a(
+                            Yii::t('user', 'Change your avatar at Gravatar.com'),
+                            'http://gravatar.com'
+                        )
+                    ) ?>
 
                 <?= $form->field($model, 'bio')->textarea() ?>
 
                 <div class="form-group">
                     <div class="col-lg-offset-3 col-lg-9">
-                        <?= \yii\helpers\Html::submitButton(Yii::t('user', 'Save'), ['class' => 'btn btn-block btn-success']) ?><br>
+                        <?= \yii\helpers\Html::submitButton(
+                            Yii::t('user', 'Save'),
+                            ['class' => 'btn btn-block btn-success']
+                        ) ?><br>
                     </div>
                 </div>
 

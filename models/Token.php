@@ -11,6 +11,8 @@
 
 namespace dektrium\user\models;
 
+use dektrium\user\traits\ModuleTrait;
+use Yii;
 use yii\db\ActiveRecord;
 use yii\helpers\Url;
 
@@ -29,19 +31,12 @@ use yii\helpers\Url;
  */
 class Token extends ActiveRecord
 {
+    use ModuleTrait;
+
     const TYPE_CONFIRMATION      = 0;
     const TYPE_RECOVERY          = 1;
     const TYPE_CONFIRM_NEW_EMAIL = 2;
     const TYPE_CONFIRM_OLD_EMAIL = 3;
-
-    /** @var \dektrium\user\Module */
-    protected $module;
-
-    /** @inheritdoc */
-    public function init()
-    {
-        $this->module = \Yii::$app->getModule('user');
-    }
 
     /**
      * @return \yii\db\ActiveQuery
@@ -99,8 +94,9 @@ class Token extends ActiveRecord
     public function beforeSave($insert)
     {
         if ($insert) {
+            static::deleteAll(['user_id' => $this->user_id, 'type' => $this->type]);
             $this->setAttribute('created_at', time());
-            $this->setAttribute('code', \Yii::$app->security->generateRandomString());
+            $this->setAttribute('code', Yii::$app->security->generateRandomString());
         }
 
         return parent::beforeSave($insert);

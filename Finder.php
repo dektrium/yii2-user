@@ -11,6 +11,8 @@
 
 namespace dektrium\user;
 
+use dektrium\user\models\query\AccountQuery;
+use dektrium\user\models\Token;
 use yii\authclient\ClientInterface;
 use yii\base\Object;
 use yii\db\ActiveQuery;
@@ -28,7 +30,7 @@ class Finder extends Object
     /** @var ActiveQuery */
     protected $tokenQuery;
 
-    /** @var ActiveQuery */
+    /** @var AccountQuery */
     protected $accountQuery;
 
     /** @var ActiveQuery */
@@ -155,6 +157,14 @@ class Finder extends Object
     }
 
     /**
+     * @return AccountQuery
+     */
+    public function findAccount()
+    {
+        return $this->accountQuery;
+    }
+
+    /**
      * Finds an account by id.
      *
      * @param int $id
@@ -167,37 +177,6 @@ class Finder extends Object
     }
 
     /**
-     * Finds an account by client id and provider name.
-     *
-     * @param string $provider
-     * @param string $clientId
-     *
-     * @return models\Account|null
-     */
-    public function findAccountByProviderAndClientId($provider, $clientId)
-    {
-        return $this->accountQuery->where([
-            'provider'  => $provider,
-            'client_id' => $clientId,
-        ])->one();
-    }
-
-    /**
-     * Finds an account by client.
-     *
-     * @param ClientInterface $client
-     *
-     * @return models\Account|null
-     */
-    public function findAccountByClient(ClientInterface $client)
-    {
-        return $this->accountQuery->where([
-            'provider'  => $client->getId(),
-            'client_id' => $client->getUserAttributes()['id'],
-        ])->one();
-    }
-
-    /**
      * Finds a token by user id and code.
      *
      * @param mixed $condition
@@ -207,6 +186,24 @@ class Finder extends Object
     public function findToken($condition)
     {
         return $this->tokenQuery->where($condition);
+    }
+
+    /**
+     * Finds a token by params.
+     *
+     * @param integer $userId
+     * @param string  $code
+     * @param integer $type
+     *
+     * @return Token
+     */
+    public function findTokenByParams($userId, $code, $type)
+    {
+        return $this->findToken([
+            'user_id' => $userId,
+            'code'    => $code,
+            'type'    => $type,
+        ])->one();
     }
 
     /**

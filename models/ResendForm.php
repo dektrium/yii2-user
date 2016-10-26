@@ -16,28 +16,26 @@ use dektrium\user\Mailer;
 use yii\base\Model;
 
 /**
- * ResendForm gets user email address and validates if user has already confirmed his account. If so, it shows error
- * message, otherwise it generates and sends new confirmation token to user.
- *
- * @property User $user
+ * ResendForm gets user email address and if user with given email is registered it sends new confirmation message
+ * to him in case he did not validate his email.
  *
  * @author Dmitry Erofeev <dmeroff@gmail.com>
  */
 class ResendForm extends Model
 {
-    /** @var string */
+    /**
+     * @var string
+     */
     public $email;
 
-    /** @var User */
-    private $_user;
-
-    /** @var \dektrium\user\Module */
-    protected $module;
-
-    /** @var Mailer */
+    /**
+     * @var Mailer
+     */
     protected $mailer;
 
-    /** @var Finder */
+    /**
+     * @var Finder
+     */
     protected $finder;
 
     /**
@@ -47,40 +45,25 @@ class ResendForm extends Model
      */
     public function __construct(Mailer $mailer, Finder $finder, $config = [])
     {
-        $this->module = \Yii::$app->getModule('user');
         $this->mailer = $mailer;
         $this->finder = $finder;
         parent::__construct($config);
     }
 
     /**
-     * @return User
+     * @inheritdoc
      */
-    public function getUser()
-    {
-        if ($this->_user === null) {
-            $this->_user = $this->finder->findUserByEmail($this->email);
-        }
-
-        return $this->_user;
-    }
-
-    /** @inheritdoc */
     public function rules()
     {
         return [
             'emailRequired' => ['email', 'required'],
             'emailPattern' => ['email', 'email'],
-            'emailExist' => ['email', 'exist', 'targetClass' => $this->module->modelMap['User']],
-            'emailConfirmed' => ['email', function () {
-                if ($this->user != null && $this->user->getIsConfirmed()) {
-                    $this->addError('email', \Yii::t('user', 'This account has already been confirmed'));
-                }
-            }],
         ];
     }
 
-    /** @inheritdoc */
+    /**
+     * @inheritdoc
+     */
     public function attributeLabels()
     {
         return [
@@ -88,7 +71,9 @@ class ResendForm extends Model
         ];
     }
 
-    /** @inheritdoc */
+    /**
+     * @inheritdoc
+     */
     public function formName()
     {
         return 'resend-form';
@@ -104,15 +89,27 @@ class ResendForm extends Model
         if (!$this->validate()) {
             return false;
         }
-        /** @var Token $token */
-        $token = \Yii::createObject([
-            'class'   => Token::className(),
-            'user_id' => $this->user->id,
-            'type'    => Token::TYPE_CONFIRMATION,
-        ]);
-        $token->save(false);
-        $this->mailer->sendConfirmationMessage($this->user, $token);
-        \Yii::$app->session->setFlash('info', \Yii::t('user', 'A message has been sent to your email address. It contains a confirmation link that you must click to complete registration.'));
+
+        $user = $this->finder->findUserByEmail($this->email);
+
+        if ($user instanceof User && !$user->isConfirmed) {
+            /** @var Token $token */
+            $token = \Yii::createObject([
+                'class' => Token::className(),
+                'user_id' => $user->id,
+                'type' => Token::TYPE_CONFIRMATION,
+            ]);
+            $token->save(false);
+            $this->mailer->sendConfirmationMessage($user, $token);
+        }
+
+        \Yii::$app->session->setFlash(
+            'info',
+            \Yii::t(
+                'user',
+                'A message has been sent to your email address. It contains a confirmation link that you must click to complete registration.'
+            )
+        );
 
         return true;
     }

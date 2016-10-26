@@ -11,6 +11,7 @@
 
 namespace dektrium\user\clients;
 
+use Yii;
 use yii\authclient\clients\VKontakte as BaseVKontakte;
 
 /**
@@ -38,6 +39,6 @@ class VKontakte extends BaseVKontakte implements ClientInterface
     /** @inheritdoc */
     protected function defaultTitle()
     {
-        return \Yii::t('user', 'VKontakte');
+        return Yii::t('user', 'VKontakte');
     }
 }

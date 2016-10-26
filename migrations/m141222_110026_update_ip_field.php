@@ -9,9 +9,9 @@
  * file that was distributed with this source code.
  */
 
+use yii\db\Migration;
 use yii\db\Query;
 use yii\db\Schema;
-use yii\db\Migration;
 
 class m141222_110026_update_ip_field extends Migration
 {
@@ -21,14 +21,14 @@ class m141222_110026_update_ip_field extends Migration
 
         $transaction = Yii::$app->db->beginTransaction();
         try {
-            $this->alterColumn('{{%user}}', 'registration_ip', Schema::TYPE_STRING.'(45)');
+            $this->alterColumn('{{%user}}', 'registration_ip', Schema::TYPE_STRING . '(45)');
             foreach ($users as $user) {
                 if ($user['ip'] == null) {
                     continue;
                 }
                 Yii::$app->db->createCommand()->update('{{%user}}', [
                     'registration_ip' => long2ip($user['ip']),
-                ], 'id = '.$user['id'])->execute();
+                ], 'id = ' . $user['id'])->execute();
             }
             $transaction->commit();
         } catch (Exception $e) {
@@ -39,8 +39,27 @@ class m141222_110026_update_ip_field extends Migration
 
     public function down()
     {
-        echo "m141222_110026_update_ip_field cannot be reverted.\n";
+        $users = (new Query())->from('{{%user}}')->select('id, registration_ip ip')->all();
 
-        return false;
+        $transaction = Yii::$app->db->beginTransaction();
+        try {
+            foreach ($users as $user) {
+                if ($user['ip'] == null)
+                    continue;
+                Yii::$app->db->createCommand()->update('{{%user}}', [
+                    'registration_ip' => ip2long($user['ip'])
+                ], 'id = ' . $user['id'])->execute();
+            }
+            if ($this->db->driverName == 'pgsql') {
+                $this->alterColumn('{{%user}}', 'registration_ip', Schema::TYPE_BIGINT . ' USING registration_ip::bigint');
+            } else {
+                $this->alterColumn('{{%user}}', 'registration_ip', Schema::TYPE_BIGINT);
+            }
+
+            $transaction->commit();
+        } catch (Exception $e) {
+            $transaction->rollBack();
+            throw $e;
+        }
     }
 }

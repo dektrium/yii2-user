@@ -11,7 +11,8 @@
 
 namespace dektrium\user\clients;
 
-use yii\authclient\clients\YandexOAuth as BaseYandex;
+use Yii;
+use yii\authclient\clients\Yandex as BaseYandex;
 
 /**
  * @author Dmitry Erofeev <dmeroff@gmail.com>
@@ -28,7 +29,7 @@ class Yandex extends BaseYandex implements ClientInterface
         if ($emails !== null && isset($emails[0])) {
             return $emails[0];
         } else {
-            return;
+            return null;
         }
     }
 
@@ -43,6 +44,6 @@ class Yandex extends BaseYandex implements ClientInterface
     /** @inheritdoc */
     protected function defaultTitle()
     {
-        return \Yii::t('user', 'Yandex');
+        return Yii::t('user', 'Yandex');
     }
 }

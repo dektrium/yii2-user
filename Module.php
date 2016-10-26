@@ -22,7 +22,7 @@ use yii\base\Module as BaseModule;
  */
 class Module extends BaseModule
 {
-    const VERSION = '1.0.0-dev';
+    const VERSION = '0.9.9';
 
     /** Email is changed right after user enter's new email address. */
     const STRATEGY_INSECURE = 0;
@@ -51,6 +51,9 @@ class Module extends BaseModule
     /** @var bool Whether to enable password recovery. */
     public $enablePasswordRecovery = true;
 
+    /** @var bool Whether user can remove his account */
+    public $enableAccountDelete = false;
+
     /** @var int Email changing strategy. */
     public $emailChangeStrategy = self::STRATEGY_DEFAULT;
 
@@ -69,6 +72,9 @@ class Module extends BaseModule
     /** @var array An array of administrator's usernames. */
     public $admins = [];
 
+    /** @var string The Administrator permission name. */
+    public $adminPermission;
+
     /** @var array Mailer configuration */
     public $mailer = [];
 
@@ -84,12 +90,12 @@ class Module extends BaseModule
 
     /** @var array The rules to be used in URL management. */
     public $urlRules = [
-        '<id:\d+>'                    => 'profile/show',
-        '<action:(login|logout)>'     => 'security/<action>',
-        '<action:(register|resend)>'  => 'registration/<action>',
-        'confirm/<id:\d+>/<code:\w+>' => 'registration/confirm',
-        'forgot'                      => 'recovery/request',
-        'recover/<id:\d+>/<code:\w+>' => 'recovery/reset',
-        'settings/<action:\w+>'       => 'settings/<action>',
+        '<id:\d+>'                               => 'profile/show',
+        '<action:(login|logout)>'                => 'security/<action>',
+        '<action:(register|resend)>'             => 'registration/<action>',
+        'confirm/<id:\d+>/<code:[A-Za-z0-9_-]+>' => 'registration/confirm',
+        'forgot'                                 => 'recovery/request',
+        'recover/<id:\d+>/<code:[A-Za-z0-9_-]+>' => 'recovery/reset',
+        'settings/<action:\w+>'                  => 'settings/<action>'
     ];
 }

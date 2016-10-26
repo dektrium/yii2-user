@@ -1,14 +1,16 @@
 <?php
 
 return [
-    'sourcePath' => __DIR__.'/../',
+    'sourcePath' => __DIR__ . '/../',
     'messagePath' => __DIR__,
     'languages' => [
         'ca',
         'da',
         'de',
+        'de-DU',
         'es',
         'fa-IR',
+        'fi',
         'fr',
         'hr',
         'hu',
@@ -16,8 +18,10 @@ return [
         'kz',
         'lt',
         'nl',
+        'pl',
         'pt-BR',
         'pt-PT',
+        'ro',
         'ru',
         'th',
         'tr_TR',
@@ -39,6 +43,7 @@ return [
         '.hgkeep',
         '/messages',
         '/tests',
+        '/vendor',
     ],
     'format' => 'php',
 ];

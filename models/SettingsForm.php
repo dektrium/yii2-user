@@ -14,6 +14,8 @@ namespace dektrium\user\models;
 use dektrium\user\helpers\Password;
 use dektrium\user\Mailer;
 use dektrium\user\Module;
+use dektrium\user\traits\ModuleTrait;
+use Yii;
 use yii\base\Model;
 
 /**
@@ -25,6 +27,8 @@ use yii\base\Model;
  */
 class SettingsForm extends Model
 {
+    use ModuleTrait;
+
     /** @var string */
     public $email;
 
@@ -37,9 +41,6 @@ class SettingsForm extends Model
     /** @var string */
     public $current_password;
 
-    /** @var Module */
-    protected $module;
-
     /** @var Mailer */
     protected $mailer;
 
@@ -50,7 +51,7 @@ class SettingsForm extends Model
     public function getUser()
     {
         if ($this->_user == null) {
-            $this->_user = \Yii::$app->user->identity;
+            $this->_user = Yii::$app->user->identity;
         }
 
         return $this->_user;
@@ -60,7 +61,6 @@ class SettingsForm extends Model
     public function __construct(Mailer $mailer, $config = [])
     {
         $this->mailer = $mailer;
-        $this->module = \Yii::$app->getModule('user');
         $this->setAttributes([
             'username' => $this->user->username,
             'email'    => $this->user->unconfirmed_email ?: $this->user->email,
@@ -74,7 +74,7 @@ class SettingsForm extends Model
         return [
             'usernameRequired' => ['username', 'required'],
             'usernameTrim' => ['username', 'filter', 'filter' => 'trim'],
-            'usernameLenth' => ['username', 'string', 'min' => 3, 'max' => 20],
+            'usernameLength'   => ['username', 'string', 'min' => 3, 'max' => 255],
             'usernamePattern' => ['username', 'match', 'pattern' => '/^[-a-zA-Z0-9_\.@]+$/'],
             'emailRequired' => ['email', 'required'],
             'emailTrim' => ['email', 'filter', 'filter' => 'trim'],
@@ -82,11 +82,11 @@ class SettingsForm extends Model
             'emailUsernameUnique' => [['email', 'username'], 'unique', 'when' => function ($model, $attribute) {
                 return $this->user->$attribute != $model->$attribute;
             }, 'targetClass' => $this->module->modelMap['User']],
-            'newPasswordLength' => ['new_password', 'string', 'min' => 6],
+            'newPasswordLength' => ['new_password', 'string', 'max' => 72, 'min' => 6],
             'currentPasswordRequired' => ['current_password', 'required'],
             'currentPasswordValidate' => ['current_password', function ($attr) {
                 if (!Password::validate($this->$attr, $this->user->password_hash)) {
-                    $this->addError($attr, \Yii::t('user', 'Current password is not valid'));
+                    $this->addError($attr, Yii::t('user', 'Current password is not valid'));
                 }
             }],
         ];
@@ -96,10 +96,10 @@ class SettingsForm extends Model
     public function attributeLabels()
     {
         return [
-            'email'            => \Yii::t('user', 'Email'),
-            'username'         => \Yii::t('user', 'Username'),
-            'new_password'     => \Yii::t('user', 'New password'),
-            'current_password' => \Yii::t('user', 'Current password'),
+            'email'            => Yii::t('user', 'Email'),
+            'username'         => Yii::t('user', 'Username'),
+            'new_password'     => Yii::t('user', 'New password'),
+            'current_password' => Yii::t('user', 'Current password'),
         ];
     }
 
@@ -125,11 +125,14 @@ class SettingsForm extends Model
             } elseif ($this->email != $this->user->email) {
                 switch ($this->module->emailChangeStrategy) {
                     case Module::STRATEGY_INSECURE:
-                        $this->insecureEmailChange(); break;
+                        $this->insecureEmailChange();
+                        break;
                     case Module::STRATEGY_DEFAULT:
-                        $this->defaultEmailChange(); break;
+                        $this->defaultEmailChange();
+                        break;
                     case Module::STRATEGY_SECURE:
-                        $this->secureEmailChange(); break;
+                        $this->secureEmailChange();
+                        break;
                     default:
                         throw new \OutOfBoundsException('Invalid email changing strategy');
                 }
@@ -147,7 +150,7 @@ class SettingsForm extends Model
     protected function insecureEmailChange()
     {
         $this->user->email = $this->email;
-        \Yii::$app->session->setFlash('success', \Yii::t('user', 'Your email address has been changed'));
+        Yii::$app->session->setFlash('success', Yii::t('user', 'Your email address has been changed'));
     }
 
     /**
@@ -157,14 +160,17 @@ class SettingsForm extends Model
     {
         $this->user->unconfirmed_email = $this->email;
         /** @var Token $token */
-        $token = \Yii::createObject([
+        $token = Yii::createObject([
             'class'   => Token::className(),
             'user_id' => $this->user->id,
             'type'    => Token::TYPE_CONFIRM_NEW_EMAIL,
         ]);
         $token->save(false);
         $this->mailer->sendReconfirmationMessage($this->user, $token);
-        \Yii::$app->session->setFlash('info', \Yii::t('user', 'A confirmation message has been sent to your new email address'));
+        Yii::$app->session->setFlash(
+            'info',
+            Yii::t('user', 'A confirmation message has been sent to your new email address')
+        );
     }
 
     /**
@@ -176,7 +182,7 @@ class SettingsForm extends Model
     {
         $this->defaultEmailChange();
         /** @var Token $token */
-        $token = \Yii::createObject([
+        $token = Yii::createObject([
             'class'   => Token::className(),
             'user_id' => $this->user->id,
             'type'    => Token::TYPE_CONFIRM_OLD_EMAIL,
@@ -189,6 +195,12 @@ class SettingsForm extends Model
         $this->user->flags &= ~User::OLD_EMAIL_CONFIRMED;
         $this->user->save(false);
 
-        \Yii::$app->session->setFlash('info', \Yii::t('user', 'We have sent confirmation links to both old and new email addresses. You must click both links to complete your request'));
+        Yii::$app->session->setFlash(
+            'info',
+            Yii::t(
+                'user',
+                'We have sent confirmation links to both old and new email addresses. You must click both links to complete your request'
+            )
+        );
     }
 }

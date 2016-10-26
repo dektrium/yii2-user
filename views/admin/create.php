@@ -9,15 +9,13 @@
  * file that was distributed with this source code.
  */
 
-use dektrium\user\models\User;
 use yii\bootstrap\ActiveForm;
 use yii\bootstrap\Nav;
 use yii\helpers\Html;
-use yii\web\View;
 
-/*
- * @var View $this
- * @var User $user
+/**
+ * @var yii\web\View                $this
+ * @var dektrium\user\models\User   $user
  */
 
 $this->title = Yii::t('user', 'Create a user account');

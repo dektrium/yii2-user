@@ -34,6 +34,11 @@ use yii\bootstrap\Nav;
             'visible' => isset(Yii::$app->extensions['dektrium/yii2-rbac']),
         ],
         [
+            'label' => \Yii::t('user', 'Rules'),
+            'url'   => ['/rbac/rule/index'],
+            'visible' => isset(Yii::$app->extensions['dektrium/yii2-rbac']),
+        ],
+        [
             'label' => Yii::t('user', 'Create'),
             'items' => [
                 [
@@ -50,6 +55,11 @@ use yii\bootstrap\Nav;
                     'url'   => ['/rbac/permission/create'],
                     'visible' => isset(Yii::$app->extensions['dektrium/yii2-rbac']),
                 ],
+                [
+                    'label' => \Yii::t('user', 'New rule'),
+                    'url'   => ['/rbac/rule/create'],
+                    'visible' => isset(Yii::$app->extensions['dektrium/yii2-rbac']),
+                ]
             ],
         ],
     ],

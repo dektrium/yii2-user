@@ -39,6 +39,12 @@ class Bootstrap implements BootstrapInterface
         'UserSearch'       => 'dektrium\user\models\UserSearch',
     ];
 
+    /** @var array yii\web\User default settings */
+    private $_yiiWebUser = [
+        'enableAutoLogin' => true,
+        'loginUrl'        => ['/user/security/login'],
+    ];
+
     /** @inheritdoc */
     public function bootstrap($app)
     {
@@ -67,11 +73,9 @@ class Bootstrap implements BootstrapInterface
             if ($app instanceof ConsoleApplication) {
                 $module->controllerNamespace = 'dektrium\user\commands';
             } else {
-                Yii::$container->set('yii\web\User', [
-                    'enableAutoLogin' => true,
-                    'loginUrl'        => ['/user/security/login'],
-                    'identityClass'   => $module->modelMap['User'],
-                ]);
+
+                $this->_yiiWebUser['identityClass'] = $module->modelMap['User'];
+                Yii::$container->set('yii\web\User', array_merge($module->yiiWebUser, $this->_yiiWebUser));
 
                 $configUrlRule = [
                     'prefix' => $module->urlPrefix,

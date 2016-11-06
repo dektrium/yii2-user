@@ -98,4 +98,7 @@ class Module extends BaseModule
         'recover/<id:\d+>/<code:[A-Za-z0-9_-]+>' => 'recovery/reset',
         'settings/<action:\w+>'                  => 'settings/<action>'
     ];
+
+    /** @var array settings for class yii\web\User */
+    public $yiiWebUser = [];
 }

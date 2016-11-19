@@ -121,7 +121,7 @@ Here is the list of clients supported by the module:
 - You can register new application and get secret keys [here](https://www.linkedin.com/developer/apps/new?)
 
 ```php
-'yandex' => [
+'linkedin' => [
     'class'        => 'dektrium\user\clients\LinkedIn',
     'clientId'     => 'CLIENT_ID',
     'clientSecret' => 'CLIENT_SECRET'

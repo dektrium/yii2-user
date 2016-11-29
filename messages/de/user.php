@@ -18,6 +18,7 @@
  * NOTE: this file must be saved in UTF-8 encoding.
  */
 return [
+    'Are you sure?' => 'Sind Sie sicher?',
     'A confirmation message has been sent to your new email address' => 'Eine Aktivierungsnachricht wurde an ihre E-Mail Adresse versandt',
     'A message has been sent to your email address. It contains a confirmation link that you must click to complete registration.' => 'Eine Nachricht wurde an ihre E-Mail Adresse versandt. Diese enthält einen Aktivierungslink, den Sie besuchen müssen, um die Registrierung fortzusetzen.',
     'A message has been sent to your email address. It contains a password that we generated for you.' => 'Eine Nachricht wurde an ihre E-Mail Adresse versandt. Diese enthält ein Passwort, das für Sie generiert wurde.',
@@ -161,7 +162,10 @@ return [
     'Finish' => 'Beendet',
     'Forgot password?' => 'Passwort vergessen?',
     'Gravatar email' => 'Gravatar EMail',
+    'Generate and send new password to user' => 'Neues Passwort erzeugen und zusenden',
     'Hello' => 'Hallo',
+    'New Password has been generated and sent to user' => 'Ein neues Passwort wurde erzeugt und an den Benutzer versendet',
+    'We have generated a password for you' => 'Wir haben Ihnen ein neues Passwort erzeugt',
     'If you already registered, sign in and connect this account on settings page' => 'Wenn sie sich bereits registriert haben, melden Sie sich an und verbinden Sie diesen Account aufder Einstellungsseite.',
     'If you cannot click the link, please try pasting the text into your browser' => 'Wenn Sie nicht auf den Link klicken können, versuchen Sie den Text in Ihren Browser einzufügen.',
     'If you did not make this request you can ignore this email' => 'Wenn Sie diese Anfrage nicht gemacht haben, können Sie diese E-Mail ignorieren',
@@ -211,5 +215,6 @@ return [
     'You need to confirm your email address' => 'Sie müssen Ihre Email-Adresse bestätigen.',
     'Your account has been blocked' => 'Ihr Zugang wurde gesperrt',
     'Your account has been created' => 'Ihr Zugang wurde erstellt',
+    'Your account on {0} has a new password' => 'Ihr Konto auf {0} hat ein neues Passwort',
     '{0, date, MMMM dd, YYYY HH:mm}' => '{0, date, dd MMMM, YYYY HH:mm}',
 ];

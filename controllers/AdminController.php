@@ -16,6 +16,7 @@ use dektrium\user\Finder;
 use dektrium\user\models\Profile;
 use dektrium\user\models\User;
 use dektrium\user\models\UserSearch;
+use dektrium\user\helpers\Password;
 use dektrium\user\Module;
 use dektrium\user\traits\EventTrait;
 use yii\base\ExitException;
@@ -28,6 +29,7 @@ use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\web\Response;
 use yii\widgets\ActiveForm;
+
 
 /**
  * AdminController allows you to administrate users.
@@ -128,10 +130,10 @@ class AdminController extends Controller
     protected $finder;
 
     /**
-     * @param string  $id
+     * @param string $id
      * @param Module2 $module
-     * @param Finder  $finder
-     * @param array   $config
+     * @param Finder $finder
+     * @param array $config
      */
     public function __construct($id, $module, Finder $finder, $config = [])
     {
@@ -146,9 +148,9 @@ class AdminController extends Controller
             'verbs' => [
                 'class' => VerbFilter::className(),
                 'actions' => [
-                    'delete'  => ['post'],
+                    'delete' => ['post'],
                     'confirm' => ['post'],
-                    'block'   => ['post'],
+                    'block' => ['post'],
                 ],
             ],
             'access' => [
@@ -174,12 +176,12 @@ class AdminController extends Controller
     public function actionIndex()
     {
         Url::remember('', 'actions-redirect');
-        $searchModel  = \Yii::createObject(UserSearch::className());
+        $searchModel = \Yii::createObject(UserSearch::className());
         $dataProvider = $searchModel->search(\Yii::$app->request->get());
 
         return $this->render('index', [
             'dataProvider' => $dataProvider,
-            'searchModel'  => $searchModel,
+            'searchModel' => $searchModel,
         ]);
     }
 
@@ -193,7 +195,7 @@ class AdminController extends Controller
     {
         /** @var User $user */
         $user = \Yii::createObject([
-            'class'    => User::className(),
+            'class' => User::className(),
             'scenario' => 'create',
         ]);
         $event = $this->getUserEvent($user);
@@ -250,14 +252,14 @@ class AdminController extends Controller
     public function actionUpdateProfile($id)
     {
         Url::remember('', 'actions-redirect');
-        $user    = $this->findModel($id);
+        $user = $this->findModel($id);
         $profile = $user->profile;
 
         if ($profile == null) {
             $profile = \Yii::createObject(Profile::className());
             $profile->link('user', $user);
         }
-        $event   = $this->getProfileEvent($profile);
+        $event = $this->getProfileEvent($profile);
 
         $this->performAjaxValidation($profile);
 
@@ -270,7 +272,7 @@ class AdminController extends Controller
         }
 
         return $this->render('_profile', [
-            'user'    => $user,
+            'user' => $user,
             'profile' => $profile,
         ]);
     }
@@ -371,7 +373,7 @@ class AdminController extends Controller
         if ($id == \Yii::$app->user->getId()) {
             \Yii::$app->getSession()->setFlash('danger', \Yii::t('user', 'You can not block your own account'));
         } else {
-            $user  = $this->findModel($id);
+            $user = $this->findModel($id);
             $event = $this->getUserEvent($user);
             if ($user->getIsBlocked()) {
                 $this->trigger(self::EVENT_BEFORE_UNBLOCK, $event);
@@ -385,6 +387,23 @@ class AdminController extends Controller
                 \Yii::$app->getSession()->setFlash('success', \Yii::t('user', 'User has been blocked'));
             }
         }
+
+        return $this->redirect(Url::previous('actions-redirect'));
+    }
+
+    /**
+     * Generates a new password and sends it to the user.
+     *
+     * @return Response
+     */
+    public function actionResendPassword($id)
+    {
+        $user = $this->findModel($id);
+
+        if($user->resendPassword())
+            \Yii::$app->session->setFlash('success', \Yii::t('user', 'New Password has been generated and sent to user'));
+        else
+            \Yii::$app->session->setFlash('danger', \Yii::t('user', 'Error while trying to generate new password'));
 
         return $this->redirect(Url::previous('actions-redirect'));
     }

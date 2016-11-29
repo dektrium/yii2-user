@@ -151,6 +151,24 @@ class Mailer extends Component
     }
 
     /**
+     * Sends a new generated password to a user.
+     *
+     * @param User  $user
+     * @param Password $password
+     *
+     * @return bool
+     */
+    public function sendGeneratedPassword(User $user, $password)
+    {
+        return $this->sendMessage(
+            $user->email,
+            $this->getWelcomeSubject(),
+            'new_password',
+            ['user' => $user, 'password' => $password, 'module' => $this->module]
+        );
+    }
+
+    /**
      * Sends an email to a user with confirmation link.
      *
      * @param User  $user

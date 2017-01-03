@@ -69,6 +69,9 @@ class User extends ActiveRecord implements IdentityInterface
     // following constants are used on secured email changing process
     const OLD_EMAIL_CONFIRMED = 0b1;
     const NEW_EMAIL_CONFIRMED = 0b10;
+    
+    /** @var Constant used to identify and mark not activated account. */
+    const USER_IS_NOT_ACTIVATED_BY_ADMIN = 0;
 
     /** @var string Plain password. Used for model validation. */
     public $password;
@@ -110,7 +113,23 @@ class User extends ActiveRecord implements IdentityInterface
      */
     public function getIsBlocked()
     {
-        return $this->blocked_at != null;
+        return $this->blocked_at > 0;
+    }
+
+    /**
+     * @return bool Whether the user is activated by an admin or not.
+     */
+    public function getIsActivatedByAdmin()
+    {
+        return $this->blocked_at === null;
+    }
+
+    /**
+     * @return bool Is the user not activated by an admin?
+     */
+    public function getIsNotActivatedByAdmin()
+    {
+        return $this->blocked_at === self::USER_IS_NOT_ACTIVATED_BY_ADMIN;
     }
 
     /**
@@ -297,6 +316,10 @@ class User extends ActiveRecord implements IdentityInterface
             $this->confirmed_at = $this->module->enableConfirmation ? null : time();
             $this->password     = $this->module->enableGeneratingPassword ? Password::generate(8) : $this->password;
 
+            if ($this->module->enableActivationByAdminIsRequired) {
+                $this->blocked_at = self::USER_IS_NOT_ACTIVATED_BY_ADMIN;
+            }
+
             $this->trigger(self::BEFORE_REGISTER);
 
             if (!$this->save()) {
@@ -337,7 +360,11 @@ class User extends ActiveRecord implements IdentityInterface
         if ($token instanceof Token && !$token->isExpired) {
             $token->delete();
             if (($success = $this->confirm())) {
-                \Yii::$app->user->login($this, $this->module->rememberFor);
+                // login only if user is activated by admin or if this option is disabled.
+                if ($this->module->enableActivationByAdminIsRequired && $this->getIsActivatedByAdmin()
+                    || !$this->module->enableActivationByAdminIsRequired) {
+                    \Yii::$app->user->login($this, $this->module->rememberFor);
+                }
                 $message = \Yii::t('user', 'Thank you, registration is now complete.');
             } else {
                 $message = \Yii::t('user', 'Something went wrong and your account has not been confirmed.');
@@ -455,6 +482,14 @@ class User extends ActiveRecord implements IdentityInterface
     public function unblock()
     {
         return (bool)$this->updateAttributes(['blocked_at' => null]);
+    }
+
+    /**
+     * Activates the user by calling unblock.
+     */
+    public function activate()
+    {
+        return $this->unblock();
     }
 
     /**

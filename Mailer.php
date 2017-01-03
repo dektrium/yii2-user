@@ -41,6 +41,9 @@ class Mailer extends Component
     /** @var string */
     protected $recoverySubject;
 
+    /** @var string */
+    protected $activationSubject;
+
     /** @var \dektrium\user\Module */
     protected $module;
 
@@ -122,6 +125,26 @@ class Mailer extends Component
     public function setRecoverySubject($recoverySubject)
     {
         $this->recoverySubject = $recoverySubject;
+    }
+
+    /**
+     * @return string
+     */
+    public function getActivationSubject()
+    {
+        if ($this->activationSubject == null) {
+            $this->setActivationSubject(Yii::t('user', 'Account activated by administrator on {0}', Yii::$app->name));
+        }
+
+        return $this->activationSubject;
+    }
+
+    /**
+     * @param string $activationSubject
+     */
+    public function setActivationSubject($activationSubject)
+    {
+        $this->activationSubject = $activationSubject;
     }
 
     /** @inheritdoc */
@@ -207,6 +230,21 @@ class Mailer extends Component
             $this->getRecoverySubject(),
             'recovery',
             ['user' => $user, 'token' => $token]
+        );
+    }
+
+    /**
+     * Sends an email to a user when its account has been activated by an administrator.
+     *
+     * @param User $user
+     *
+     * @return bool
+     */
+    public function sendActivationMessage(User $user)
+    {
+        return $this->sendMessage($user->email,
+            $this->getActivationSubject(),
+            'activation'
         );
     }
 

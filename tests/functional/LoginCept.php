@@ -29,6 +29,21 @@ $user = $I->grabFixture('user', 'blocked');
 $page->login($user->email, 'qwerty');
 $I->see('Your account has been blocked');
 
+$I->amGoingTo('try to login with not activated account');
+$enableActivationByAdminIsRequiredBefore = \Yii::$container->get(\dektrium\user\Module::className(), [
+    'enableActivationByAdminIsRequired'
+]);
+\Yii::$container->set(\dektrium\user\Module::className(), [
+    'enableActivationByAdminIsRequired' => true,
+]);
+$user = $I->grabFixture('user', 'not_activated');
+$page->login($user->email, 'qwerty');
+$I->see('Your account has not yet been activated by an administrator');
+\Yii::$container->set(\dektrium\user\Module::className(), [
+    'enableActivationByAdminIsRequired' => $enableActivationByAdminIsRequiredBefore,
+]);
+
+
 $I->amGoingTo('try to login with wrong credentials');
 $user = $I->grabFixture('user', 'user');
 $page->login($user->email, 'wrong');

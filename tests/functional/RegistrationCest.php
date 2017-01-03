@@ -33,6 +33,7 @@ class RegistrationCest
         \Yii::$container->set(Module::className(), [
             'enableConfirmation'       => false,
             'enableGeneratingPassword' => false,
+            'enableActivationByAdminIsRequired' => false,
         ]);
 
         $page = RegistrationPage::openBy($I);
@@ -100,5 +101,25 @@ class RegistrationCest
         $message = $I->grabLastSentEmail();
         $I->assertArrayHasKey($user->email, $message->getTo());
         $I->assertContains('We have generated a password for you', utf8_encode(quoted_printable_decode($message->getSwiftMessage()->toString())));
+    }
+
+    /**
+     * Tests registration when activation message is sent.
+     * @param FunctionalTester $I
+     */
+    public function testRegistrationWithActivationByAdmin(FunctionalTester $I)
+    {
+        \Yii::$container->set(Module::className(), [
+            'enableConfirmation' => false,
+            'enableActivationByAdminIsRequired' => true,
+        ]);
+        $page = RegistrationPage::openBy($I);
+        $page->register('thomas@example.com', 'thomas', 'thomas');
+        $I->see('Your account has been created and a message with further instructions has been sent to your email');
+        $user = $I->grabRecord(User::className(), ['email' => 'thomas@example.com']);
+        $I->assertFalse($user->isActivatedByAdmin);
+        /** @var yii\swiftmailer\Message $message */
+        $message = $I->grabLastSentEmail();
+        $I->assertContains('An Administrator needs to activate your account. You\'ll receive an email when your account has been activated', utf8_encode(quoted_printable_decode($message->getSwiftMessage()->toString())));
     }
 }

@@ -56,4 +56,14 @@ return [
         'updated_at'    => $time,
         'confirmed_at'  => $time,
     ],
+    'not_activated' => [
+        'username'      => 'mani',
+        'email'         => 'mani@example.com',
+        'password_hash' => '$2y$13$qY.ImaYBppt66qez6B31QO92jc5DYVRzo5NxM1ivItkW74WsSG6Ui',
+        'auth_key'      => 'TnXTrtLdj-YJBlG2A6jFHJreKgbsLYCx',
+        'created_at'    => $time,
+        'updated_at'    => $time,
+        'blocked_at'    => 0,
+        'confirmed_at'  => $time,
+    ],
 ];

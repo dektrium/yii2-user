@@ -65,11 +65,11 @@ $this->params['breadcrumbs'][] = $this->title;
                             . ')' : '')
                     ) ?>
 
-                <?= $form->field($model, 'rememberMe')->checkbox(['tabindex' => '4']) ?>
+                <?= $form->field($model, 'rememberMe')->checkbox(['tabindex' => '3']) ?>
 
                 <?= Html::submitButton(
                     Yii::t('user', 'Sign in'),
-                    ['class' => 'btn btn-primary btn-block', 'tabindex' => '3']
+                    ['class' => 'btn btn-primary btn-block', 'tabindex' => '4']
                 ) ?>
 
                 <?php ActiveForm::end(); ?>

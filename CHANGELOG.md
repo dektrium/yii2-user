@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 0.9.10 [Work in progress]
+
+- Fix #757: Fixed tabindex order in security/login.php view
+
 ## 0.9.9 [13 August 2016]
 
 - Enh #746: Changed AccessRule to check other roles/permissions (markux)

@@ -293,6 +293,27 @@ class AdminController extends Controller
     }
 
     /**
+     * Switches to the given user for the rest of the Session.
+     *
+     * @param int $id
+     *
+     * @return string
+     */
+    public function actionSwitch($id)
+    {
+        $user = $this->findModel($id);
+
+        $old = \Yii::$app->user;
+
+        \Yii::$app->user->switchIdentity($user, 3600);
+
+        \Yii::warning(sprintf('User %s(id: %d) switched to user %s(id: %d).',
+                $old->identity->username, $old->id, \Yii::$app->user->identity->username, \Yii::$app->user->id));
+
+        return $this->goBack();
+    }
+
+    /**
      * If "dektrium/yii2-rbac" extension is installed, this page displays form
      * where user can assign multiple auth items to user.
      *

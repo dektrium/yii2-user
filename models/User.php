@@ -255,7 +255,6 @@ class User extends ActiveRecord implements IdentityInterface
         $transaction = $this->getDb()->beginTransaction();
 
         try {
-            $this->confirmed_at = time();
             $this->password = $this->password == null ? Password::generate(8) : $this->password;
 
             $this->trigger(self::BEFORE_CREATE);
@@ -264,6 +263,8 @@ class User extends ActiveRecord implements IdentityInterface
                 $transaction->rollBack();
                 return false;
             }
+
+            $this->confirm();
 
             $this->mailer->sendWelcomeMessage($this, null, true);
             $this->trigger(self::AFTER_CREATE);

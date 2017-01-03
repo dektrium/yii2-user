@@ -2,7 +2,8 @@
 
 ## 0.9.10 [Work in progress]
 
-- Fix #757: Fixed tabindex order in security/login.php view
+- Fix #761: Fixed EVENT_AFTER_CONFIRM not triggering on user creation (dmeroff)
+- Fix #757: Fixed tabindex order in security/login.php view (dmeroff)
 
 ## 0.9.9 [13 August 2016]
 

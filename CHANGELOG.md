@@ -2,6 +2,7 @@
 
 ## 0.9.10 [Work in progress]
 
+- Fix #777: Rethrow exception on failed user creation or registration (dmeroff)
 - Enh #772, #791: Added ability to log into another user's account (thyseus)
 - Fix #761: Fixed EVENT_AFTER_CONFIRM not triggering on user creation (dmeroff)
 - Fix #757: Fixed tabindex order in security/login.php view (dmeroff)

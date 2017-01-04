@@ -30,7 +30,7 @@ class Migration extends \yii\db\Migration
     {
         parent::init();
 
-        switch (Yii::$app->db->driverName) {
+        switch ($this->db->driverName) {
             case 'mysql':
                 $this->tableOptions = 'CHARACTER SET utf8 COLLATE utf8_unicode_ci ENGINE=InnoDB';
                 break;

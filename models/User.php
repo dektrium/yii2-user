@@ -156,6 +156,19 @@ class User extends ActiveRecord implements IdentityInterface
         return $connected;
     }
 
+    /**
+     * Returns connected account by provider.
+     * @param  string $provider
+     * @return Account|null
+     */
+    public function getAccountByProvider($provider)
+    {
+        $accounts = $this->getAccounts();
+        return isset($accounts[$provider])
+            ? $accounts[$provider]
+            : null;
+    }
+
     /** @inheritdoc */
     public function getId()
     {

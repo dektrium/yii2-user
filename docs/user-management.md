@@ -48,15 +48,22 @@ feature. Place something like this in your view file to allow to jump back when 
 
 ```
 if(Yii::$app->session->has('previous_user'))
-    echo Html::a('<span class="glyphicon glyphicon-user"></span>Previous User', ['//user/admin/switch', 'id' = 'previous'], ['class' => 'btn btn-primary']);
+    echo Html::a(
+    '<span class="glyphicon glyphicon-user"></span>Previous User',
+     ['//user/admin/switch', 'id' = 'previous'], ['class' => 'btn btn-primary', 'data-method' => 'POST']);
 ```
 
 or
 
 ```
+$key = \dektrium\user\controllers\AdminController::ORIGINAL_USER_SESSION_KEY;
 echo Nav::widget([
     'items' => [
-        ['label' => '<span class="glyphicon glyphicon-user"></span>Previous user', 'visible' => Yii::$app->session->has('previous_user'), 'url' => ['//user/admin/switch', 'id' => 'previous']],
+        Yii::$app->session->has($key) ?
+        Html::beginForm(['/user/admin/switch', 'id' => 'original' ], 'post', ['class' => 'navbar-form'])
+            . Html::submitButton('<span class="glyphicon glyphicon-user"></span> Back to original user',
+                ['class' => 'btn btn-link']
+            ) . Html::endForm() : '',
       ],
 ```
 

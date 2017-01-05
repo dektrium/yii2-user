@@ -158,6 +158,7 @@ class AdminController extends Controller
                     'delete'  => ['post'],
                     'confirm' => ['post'],
                     'block'   => ['post'],
+                    'switch'  => ['post'],
                 ],
             ],
             'access' => [

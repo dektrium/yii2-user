@@ -18,6 +18,7 @@ use dektrium\user\models\User;
 use dektrium\user\models\UserSearch;
 use dektrium\user\Module;
 use dektrium\user\traits\EventTrait;
+use yii;
 use yii\base\ExitException;
 use yii\base\Model;
 use yii\base\Module as Module2;
@@ -28,6 +29,7 @@ use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\web\Response;
 use yii\widgets\ActiveForm;
+
 
 /**
  * AdminController allows you to administrate users.
@@ -301,13 +303,19 @@ class AdminController extends Controller
      */
     public function actionSwitch($id)
     {
-        $user = $this->findModel($id);
+        if($id == 'previous') {
+            $previous = Yii::$app->session->get('previous_user');
+            $user = $this->findModel($previous);
+        } else
+            $user = $this->findModel($id);
 
-        $old = \Yii::$app->user;
+        $old = Yii::$app->user;
 
-        \Yii::$app->user->switchIdentity($user, 3600);
+        Yii::$app->session->set('previous_user', $old->id);
 
-        \Yii::warning(sprintf('User %s(id: %d) switched to user %s(id: %d).',
+        Yii::$app->user->switchIdentity($user, 3600);
+
+        Yii::warning(sprintf('User %s(id: %d) switched to user %s(id: %d).',
                 $old->identity->username, $old->id, \Yii::$app->user->identity->username, \Yii::$app->user->id));
 
         return $this->goBack();

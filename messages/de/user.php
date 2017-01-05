@@ -206,7 +206,7 @@ return [
     'User has been unblocked' => 'Benutzer ist nicht länger blockiert',
     'Username' => 'Benutzername',
     'Users' => 'Benutzer',
-    'We have generated a password for you' => 'Wir haben ein Passwort für Sie erstellt'
+    'We have generated a password for you' => 'Wir haben ein Passwort für Sie erstellt',
     'We have received a request to change the email address for your account on {0}' => 'Wir haben eine Anfrage erhalten, die E-Mail-Adresse für Ihr Konto auf {0} zu ändern',
     'We have received a request to reset the password for your account on {0}' => 'Wir haben eine Anfrage erhalten, Ihr Passwort auf {0} zurückzusetzen',
     'Website' => 'Webseite',

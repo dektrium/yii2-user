@@ -311,15 +311,15 @@ class AdminController extends Controller
         $old = Yii::$app->user;
         $session = Yii::$app->session;
 
-        if($id == 'previous' && $session->has('previous_user')) {
-            $user = $this->findModel($session->get('previous_user'));
-            $session->remove('previous_user');
+        if($id == 'original' && $session->has('original_user')) {
+            $user = $this->findModel($session->get('original_user'));
+            $session->remove('original_user');
         } else {
             if (!Yii::$app->user->can('admin'))
                 throw new ForbiddenHttpException;
 
             $user = $this->findModel($id);
-            Yii::$app->session->set('previous_user', $old->id);
+            Yii::$app->session->set('original_user', $old->id);
         }
 
         Yii::$app->user->switchIdentity($user, 3600);

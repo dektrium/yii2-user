@@ -11,8 +11,11 @@
 
 namespace dektrium\user\models;
 
+use dektrium\user\events\RegistrationEvent;
+use dektrium\user\events\UserEvent;
 use dektrium\user\helpers\Password;
 use dektrium\user\helpers\PasswordGenerator;
+use dektrium\user\mail\RegistrationEmail;
 use dektrium\user\Mailer;
 use dektrium\user\models\query\UserQuery;
 use dektrium\user\Module;
@@ -296,6 +299,7 @@ class User extends ActiveRecord implements IdentityInterface
         $transaction = $this->getDb()->beginTransaction();
 
         try {
+            // TODO: move line to UserConfirmation
             $this->confirmed_at = $this->module->enableConfirmation ? null : time();
             if ($this->module->enableGeneratingPassword) {
                 /** @var PasswordGenerator $generator */
@@ -303,28 +307,32 @@ class User extends ActiveRecord implements IdentityInterface
                 $this->password = $generator->generate();
             }
 
-            $this->trigger(self::BEFORE_REGISTER);
+            $this->trigger(self::BEFORE_REGISTER, \Yii::createObject([
+                'class' => UserEvent::className(),
+                'user' => $this,
+            ]));
 
             if (!$this->save()) {
                 $transaction->rollBack();
                 return false;
             }
 
-            if ($this->module->enableConfirmation) {
-                /** @var Token $token */
-                $token = \Yii::createObject(['class' => Token::className(), 'type' => Token::TYPE_CONFIRMATION]);
-                $token->link('user', $this);
-            }
+            /** @var RegistrationEmail $email */
+            $email = \Yii::createObject(RegistrationEmail::className(), [$this]);
+            $email->setIsPasswordShown($this->module->enableGeneratingPassword);
 
-            $this->mailer->sendWelcomeMessage($this, isset($token) ? $token : null);
-            $this->trigger(self::AFTER_REGISTER);
+            $this->trigger(self::AFTER_REGISTER, \Yii::createObject([
+                'class' => RegistrationEvent::className(),
+                'user' => $this,
+                'email' => $email,
+            ]));
 
+            $this->mailer->sendRegistrationMessage($email);
             $transaction->commit();
-
             return true;
         } catch (\Exception $e) {
             $transaction->rollBack();
-            return false;
+            throw $e;
         }
     }
 

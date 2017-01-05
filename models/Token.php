@@ -71,9 +71,11 @@ class Token extends ActiveRecord
     }
 
     /**
-     * @return bool Whether token has expired.
+     * Whether token has expired.
+     *
+     * @return bool
      */
-    public function getIsExpired()
+    public function isExpired()
     {
         switch ($this->type) {
             case self::TYPE_CONFIRMATION:
@@ -89,6 +91,15 @@ class Token extends ActiveRecord
         }
 
         return ($this->created_at + $expirationTime) < time();
+    }
+
+    /**
+     * @return bool Whether token has expired.
+     * @deprecated
+     */
+    public function getIsExpired()
+    {
+        return $this->isExpired();
     }
 
     /** @inheritdoc */

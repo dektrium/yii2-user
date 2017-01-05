@@ -11,6 +11,7 @@
 
 namespace dektrium\user;
 
+use dektrium\user\mail\RegistrationEmail;
 use dektrium\user\models\Token;
 use dektrium\user\models\User;
 use Yii;
@@ -132,12 +133,32 @@ class Mailer extends Component
     }
 
     /**
+     * Sends registration email.
+     *
+     * @param  RegistrationEmail|null $email
+     * @return bool
+     */
+    public function sendRegistrationMessage(RegistrationEmail $email = null)
+    {
+        if ($email instanceof RegistrationEmail) {
+            return $this->sendMessage(
+                $email->getUser()->email,
+                $this->getWelcomeSubject(),
+                'registration',
+                ['email' => $email]
+            );
+        }
+
+        return true;
+    }
+
+    /**
      * Sends an email to a user after registration.
      *
      * @param User  $user
      * @param Token $token
      * @param bool  $showPassword
-     *
+     * @deprecated
      * @return bool
      */
     public function sendWelcomeMessage(User $user, Token $token = null, $showPassword = false)

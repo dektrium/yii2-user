@@ -5,7 +5,7 @@
 - Enh #795: Added method `getAccountByProvider` to User model to get account model by provider name (dmeroff)
 - Fix #778: Migrations now use correct db component (dmeroff)
 - Fix #777: Rethrow exception on failed user creation or registration (dmeroff)
-- Enh #772, #791: Added ability to log into another user's account (thyseus)
+- Enh #772, #791: Added ability to log into another user's account and back to previous user (thyseus)
 - Fix #761: Fixed EVENT_AFTER_CONFIRM not triggering on user creation (dmeroff)
 - Fix #757: Fixed tabindex order in security/login.php view (dmeroff)
 

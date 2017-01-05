@@ -41,6 +41,25 @@ id query parameter.
 Route **/user/admin/delete** deletes an user account. To access this route you should specify id query parameter and do
 a POST request. Be careful, you will not be able to restore deleted account.
 
+### Impersonate User / Become another user
+
+Route **/user/admin/switch** becomes an user for the current session. You need to be an administrator to use this
+feature. Place something like this in your view file to allow to jump back when being impersonated as another person:
+
+```
+if(Yii::$app->session->has('previous_user'))
+    echo Html::a('<span class="glyphicon glyphicon-user"></span>Previous User', ['//user/admin/switch', 'id' = 'previous'], ['class' => 'btn btn-primary']);
+```
+
+or
+
+```
+echo Nav::widget([
+    'items' => [
+        ['label' => '<span class="glyphicon glyphicon-user"></span>Previous user', 'visible' => Yii::$app->session->has('previous_user'), 'url' => ['//user/admin/switch', 'id' => 'previous']],
+      ],
+```
+
 ##Changing CRUD layout
 
 Sometimes you will need to have different layouts for frontend and backend pages. It is really easy to change admin layout:

@@ -126,6 +126,13 @@ class AdminController extends Controller
      */
     const EVENT_AFTER_UNBLOCK = 'afterUnblock';
 
+    /**
+     * Name of the session key in which the original user id is saved
+     * when using the impersonate user function.
+     * Used inside actionSwitch().
+     */
+    const ORIGINAL_USER_SESSION_KEY = 'original_user';
+
     /** @var Finder */
     protected $finder;
 
@@ -310,16 +317,17 @@ class AdminController extends Controller
     {
         $old = Yii::$app->user;
         $session = Yii::$app->session;
+        $key = self::ORIGINAL_USER_SESSION_KEY;
 
-        if($id == 'original' && $session->has('original_user')) {
-            $user = $this->findModel($session->get('original_user'));
-            $session->remove('original_user');
+        if($id == 'original' && $session->has($key)) {
+            $user = $this->findModel($session->get($key));
+            $session->remove($key);
         } else {
             if (!Yii::$app->user->can('admin'))
                 throw new ForbiddenHttpException;
 
             $user = $this->findModel($id);
-            Yii::$app->session->set('original_user', $old->id);
+            Yii::$app->session->set($key, $old->id);
         }
 
         Yii::$app->user->switchIdentity($user, 3600);

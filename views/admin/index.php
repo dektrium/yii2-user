@@ -106,6 +106,7 @@ $this->params['breadcrumbs'][] = $this->title;
                         return Html::a('<span class="glyphicon glyphicon-user"></span>', ['/user/admin/switch', 'id' => $model->id], [
                             'title' => Yii::t('user', 'Become this user'),
                             'data-confirm' => Yii::t('user', 'Are you sure you want to switch to this user for the rest of this Session?'),
+                            'data-method' => 'POST',
                         ]);
                 }
             ],

@@ -47,10 +47,11 @@ Route **/user/admin/switch** becomes an user for the current session. You need t
 feature. Place something like this in your view file to allow to jump back when being impersonated as another person:
 
 ```
-if(Yii::$app->session->has('previous_user'))
+$key = \dektrium\user\controllers\AdminController::ORIGINAL_USER_SESSION_KEY;
+if(Yii::$app->session->has($key))
     echo Html::a(
-    '<span class="glyphicon glyphicon-user"></span>Previous User',
-     ['//user/admin/switch', 'id' = 'previous'], ['class' => 'btn btn-primary', 'data-method' => 'POST']);
+    '<span class="glyphicon glyphicon-user"></span> Back to original user',
+     ['//user/admin/switch', 'id' = 'original'], ['class' => 'btn btn-primary', 'data-method' => 'POST']);
 ```
 
 or

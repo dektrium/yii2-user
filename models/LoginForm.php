@@ -13,9 +13,9 @@ namespace dektrium\user\models;
 
 use dektrium\user\Finder;
 use dektrium\user\helpers\Password;
+use dektrium\user\traits\ModuleTrait;
 use Yii;
 use yii\base\Model;
-use dektrium\user\traits\ModuleTrait;
 
 /**
  * LoginForm get user's login and password, validates them and logs the user in. If user has been blocked, it adds
@@ -86,7 +86,7 @@ class LoginForm extends Model
             'rememberMe' => ['rememberMe', 'boolean'],
         ];
 
-        if(!Yii::$app->getModule('user')->debug)
+        if (!Yii::$app->getModule('user')->debug)
             $rules = array_merge($rules, [
                 'requiredFields' => [['login', 'password'], 'required'],
                 'passwordValidate' => [

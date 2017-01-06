@@ -336,8 +336,8 @@ class AdminController extends Controller
         Yii::warning(sprintf('User %s(id: %d) switched to user %s(id: %d).',
             Yii::$app->user->identity->username,
             Yii::$app->user->id,
-            \Yii::$app->user->identity->username,
-            \Yii::$app->user->id));
+            Yii::$app->user->identity->username,
+            Yii::$app->user->id));
 
         return $this->goHome();
     }

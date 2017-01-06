@@ -106,10 +106,9 @@ class Bootstrap implements BootstrapInterface
             Yii::$container->set('dektrium\user\Mailer', $module->mailer);
 
             // Ensure the module is not in DEBUG mode on production environments
-            if (!defined('YII_DEBUG')
-                || !defined('YII_ENV')
-                || (defined('YII_ENV') && YII_ENV != 'dev')
-                || (defined(YII_DEBUG) && YII_DEBUG == false))
+            if (!defined('YII_DEBUG') || !defined('YII_ENV')
+                || (defined('YII_ENV') && YII_ENV !== 'dev')
+                || (defined(YII_DEBUG) && YII_DEBUG !== true))
                 $module->debug = false;
         }
     }

@@ -9,26 +9,21 @@
  * file that was distributed with this source code.
  */
 
-use dektrium\user\models\UserSearch;
-use yii\data\ActiveDataProvider;
 use yii\grid\GridView;
 use yii\helpers\Html;
-use yii\web\View;
 use yii\widgets\Pjax;
 
 /**
- * @var View $this
- * @var ActiveDataProvider $dataProvider
- * @var UserSearch $searchModel
+ * @var \yii\web\View $this
+ * @var \yii\data\ActiveDataProvider $dataProvider
+ * @var \dektrium\user\models\UserSearch $searchModel
  */
 
 $this->title = Yii::t('user', 'Manage users');
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 
-<?= $this->render('/_alert', [
-    'module' => Yii::$app->getModule('user'),
-]) ?>
+<?= $this->render('/_alert', ['module' => Yii::$app->getModule('user')]) ?>
 
 <?= $this->render('/admin/_menu') ?>
 

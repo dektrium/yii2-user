@@ -309,16 +309,18 @@ class AdminController extends Controller
 
     /**
      * Switches to the given user for the rest of the Session.
+     * When no id is given, we switch back to the original admin user
+     * that started the impersonation.
      *
      * @param int $id
      *
      * @return string
      */
-    public function actionSwitch($id)
+    public function actionSwitch($id = null)
     {
         $key = self::ORIGINAL_USER_SESSION_KEY;
 
-        if($id == 'original' && Yii::$app->session->has($key)) {
+        if(!$id && Yii::$app->session->has($key)) {
             $user = $this->findModel(Yii::$app->session->get($key));
             Yii::$app->session->remove($key);
         } else {

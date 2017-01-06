@@ -51,7 +51,7 @@ $key = \dektrium\user\controllers\AdminController::ORIGINAL_USER_SESSION_KEY;
 if(Yii::$app->session->has($key))
     echo Html::a(
     '<span class="glyphicon glyphicon-user"></span> Back to original user',
-     ['//user/admin/switch', 'id' = 'original'], ['class' => 'btn btn-primary', 'data-method' => 'POST']);
+     ['//user/admin/switch'], ['class' => 'btn btn-primary', 'data-method' => 'POST']);
 ```
 
 or
@@ -61,7 +61,7 @@ $key = \dektrium\user\controllers\AdminController::ORIGINAL_USER_SESSION_KEY;
 echo Nav::widget([
     'items' => [
         Yii::$app->session->has($key) ?
-        Html::beginForm(['/user/admin/switch', 'id' => 'original' ], 'post', ['class' => 'navbar-form'])
+        Html::beginForm(['/user/admin/switch'], 'post', ['class' => 'navbar-form'])
             . Html::submitButton('<span class="glyphicon glyphicon-user"></span> Back to original user',
                 ['class' => 'btn btn-link']
             ) . Html::endForm() : '',

@@ -12,6 +12,7 @@ The latest version includes following features:
 * Account and profile management
 * Console commands
 * User management interface
+* Ability to impersonate as another user given admin access is available
 
 > **NOTE:** Module is in initial development. Anything may change at any time.
 

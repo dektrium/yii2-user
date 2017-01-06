@@ -61,10 +61,10 @@ $key = \dektrium\user\controllers\AdminController::ORIGINAL_USER_SESSION_KEY;
 echo Nav::widget([
     'items' => [
         Yii::$app->session->has($key) ?
-        Html::beginForm(['/user/admin/switch'], 'post', ['class' => 'navbar-form'])
+        '<li>' . Html::beginForm(['/user/admin/switch'], 'post', ['class' => 'navbar-form'])
             . Html::submitButton('<span class="glyphicon glyphicon-user"></span> Back to original user',
                 ['class' => 'btn btn-link']
-            ) . Html::endForm() : '',
+            ) . Html::endForm() . '</li>' : '',
       ],
 ```
 

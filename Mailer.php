@@ -33,6 +33,9 @@ class Mailer extends Component
     protected $welcomeSubject;
 
     /** @var string */
+    protected $newPasswordSubject;
+
+    /** @var string */
     protected $confirmationSubject;
 
     /** @var string */
@@ -62,6 +65,26 @@ class Mailer extends Component
     public function setWelcomeSubject($welcomeSubject)
     {
         $this->welcomeSubject = $welcomeSubject;
+    }
+
+    /**
+     * @return string
+     */
+    public function getNewPasswordSubject()
+    {
+        if ($this->newPasswordSubject == null) {
+            $this->setNewPasswordSubject(Yii::t('user', 'Your password on {0} has been changed', Yii::$app->name));
+        }
+
+        return $this->newPasswordSubject;
+    }
+
+    /**
+     * @param string $newPasswordSubject
+     */
+    public function setNewPasswordSubject($newPasswordSubject)
+    {
+        $this->newPasswordSubject = $newPasswordSubject;
     }
 
     /**
@@ -162,7 +185,7 @@ class Mailer extends Component
     {
         return $this->sendMessage(
             $user->email,
-            $this->getWelcomeSubject(),
+            $this->getNewPasswordSubject(),
             'new_password',
             ['user' => $user, 'password' => $password, 'module' => $this->module]
         );

@@ -217,5 +217,6 @@ return [
     'Your account has been blocked' => 'Ihr Zugang wurde gesperrt',
     'Your account has been created' => 'Ihr Zugang wurde erstellt',
     'Your account on {0} has a new password' => 'Ihr Konto auf {0} hat ein neues Passwort',
+    'Your password on {0} has been changed' => 'Ihr Passwort auf {0} wurde verändert',
     '{0, date, MMMM dd, YYYY HH:mm}' => '{0, date, dd MMMM, YYYY HH:mm}',
 ];

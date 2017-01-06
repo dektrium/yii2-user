@@ -10,6 +10,7 @@
  */
 
 use dektrium\user\widgets\Connect;
+use dektrium\user\assets\LoginAsset;
 use yii\helpers\Html;
 use yii\widgets\ActiveForm;
 
@@ -21,6 +22,7 @@ use yii\widgets\ActiveForm;
 
 $this->title = Yii::t('user', 'Sign in');
 $this->params['breadcrumbs'][] = $this->title;
+
 ?>
 
 <?= $this->render('/_alert', ['module' => Yii::$app->getModule('user')]) ?>
@@ -39,7 +41,16 @@ $this->params['breadcrumbs'][] = $this->title;
                     'validateOnBlur'         => false,
                     'validateOnType'         => false,
                     'validateOnChange'       => false,
-                ]) ?>
+                ]);
+                
+                if ($module->enableLockLoginAfterFailedLogin) {
+                    LoginAsset::register($this);
+
+                    $this->registerJs('
+                    var user_login_form = "'.$form->id.'";
+                    var user_login_button_text_wait = "'.Yii::t('user', 'Please wait').': '.Yii::t('user', 'Login is locked for {0} seconds.').'";
+                    ', \yii\web\View::POS_END, 'user-login-form-options');
+                } ?>
 
                 <?= $form->field(
                     $model,

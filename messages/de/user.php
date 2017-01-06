@@ -18,6 +18,10 @@
  * NOTE: this file must be saved in UTF-8 encoding.
  */
 return [
+    'Attempts' => 'Versuche',
+    'Ip' => 'IP',
+    'Login is locked for {0} seconds.' => 'Login ist für {0} Sekunden gesperrt.',
+    'Please wait' => 'Bitte warten',
     'A confirmation message has been sent to your new email address' => 'Eine Aktivierungsnachricht wurde an ihre E-Mail Adresse versandt',
     'A message has been sent to your email address. It contains a confirmation link that you must click to complete registration.' => 'Eine Nachricht wurde an ihre E-Mail Adresse versandt. Diese enthält einen Aktivierungslink, den Sie besuchen müssen, um die Registrierung fortzusetzen.',
     'A message has been sent to your email address. It contains a password that we generated for you.' => 'Eine Nachricht wurde an ihre E-Mail Adresse versandt. Diese enthält ein Passwort, das für Sie generiert wurde.',

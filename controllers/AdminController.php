@@ -316,25 +316,26 @@ class AdminController extends Controller
      */
     public function actionSwitch($id)
     {
-        $old = Yii::$app->user;
-        $session = Yii::$app->session;
         $key = self::ORIGINAL_USER_SESSION_KEY;
 
-        if($id == 'original' && $session->has($key)) {
-            $user = $this->findModel($session->get($key));
-            $session->remove($key);
+        if($id == 'original' && Yii::$app->session->has($key)) {
+            $user = $this->findModel(Yii::$app->session->get($key));
+            Yii::$app->session->remove($key);
         } else {
             if (!Yii::$app->user->can('admin'))
                 throw new ForbiddenHttpException;
 
             $user = $this->findModel($id);
-            Yii::$app->session->set($key, $old->id);
+            Yii::$app->session->set($key, Yii::$app->user->id);
         }
 
         Yii::$app->user->switchIdentity($user, 3600);
 
         Yii::warning(sprintf('User %s(id: %d) switched to user %s(id: %d).',
-            $old->identity->username, $old->id, \Yii::$app->user->identity->username, \Yii::$app->user->id));
+            Yii::$app->user->identity->username,
+            Yii::$app->user->id,
+            \Yii::$app->user->identity->username,
+            \Yii::$app->user->id));
 
         return $this->goHome();
     }

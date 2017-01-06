@@ -318,6 +318,9 @@ class AdminController extends Controller
      */
     public function actionSwitch($id = null)
     {
+        if(!Yii::$app->getModule('user')->enableImpersonateUser)
+            throw new ForbiddenHttpException(Yii::t('user', 'Impersonate user is disabled in the application configuration'));
+
         $key = self::ORIGINAL_USER_SESSION_KEY;
 
         if(!$id && Yii::$app->session->has($key)) {

@@ -322,7 +322,7 @@ class AdminController extends Controller
             $user = $this->findModel(Yii::$app->session->get($key));
             Yii::$app->session->remove($key);
         } else {
-            if (!Yii::$app->user->can('admin'))
+            if (!Yii::$app->user->identity->isAdmin)
                 throw new ForbiddenHttpException;
 
             $user = $this->findModel($id);

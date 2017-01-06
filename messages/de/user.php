@@ -22,6 +22,7 @@ return [
     'A confirmation message has been sent to your new email address' => 'Eine Aktivierungsnachricht wurde an ihre E-Mail Adresse versandt',
     'A message has been sent to your email address. It contains a confirmation link that you must click to complete registration.' => 'Eine Nachricht wurde an ihre E-Mail Adresse versandt. Diese enthält einen Aktivierungslink, den Sie besuchen müssen, um die Registrierung fortzusetzen.',
     'A message has been sent to your email address. It contains a password that we generated for you.' => 'Eine Nachricht wurde an ihre E-Mail Adresse versandt. Diese enthält ein Passwort, das für Sie generiert wurde.',
+    'Password generation is not possible for admin users' => 'Passwörter von Administratoren können nicht neu generiert werden',
     'A message has been sent to your email address. It contains your password and a confirmation link that you must click to complete registration.' => 'Eine Aktivierungsnachricht wurde an ihre E-Mail Adresse versandt. Diese enthält ihr Passwort und einen Aktivierungslink, den sie besuchen müssen, um die Registrierung fortzusetzen.',
     'A new confirmation link has been sent' => 'Ein neuer Bestätigungs-Link wurde versendet.',
     'Account' => 'Konto',

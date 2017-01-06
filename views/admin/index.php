@@ -37,9 +37,9 @@ $this->params['breadcrumbs'][] = $this->title;
 <?php Pjax::begin() ?>
 
 <?= GridView::widget([
-    'dataProvider'  =>  $dataProvider,
-    'filterModel'   =>  $searchModel,
-    'layout'        =>  "{items}\n{pager}",
+    'dataProvider' => $dataProvider,
+    'filterModel' => $searchModel,
+    'layout' => "{items}\n{pager}",
     'columns' => [
         'username',
         'email:email',
@@ -103,10 +103,11 @@ $this->params['breadcrumbs'][] = $this->title;
             'class' => 'yii\grid\ActionColumn',
             'template' => '{resend_password} {update} {delete}',
             'buttons' => [
-                'resend_password' => function($url, $model, $key) {
-                    return '
-                    <a data-confirm="'. Yii::t('user', 'Are you sure?') .'" href="'.Url::to(['resend-password', 'id' => $model->id]).'">
-                    <span title="'.Yii::t('user', 'Generate and send new password to user').'" class="glyphicon glyphicon-envelope">
+                'resend_password' => function ($url, $model, $key) {
+                    if (!$model->isAdmin)
+                        return '
+                    <a data-confirm="' . Yii::t('user', 'Are you sure?') . '" href="' . Url::to(['resend-password', 'id' => $model->id]) . '">
+                    <span title="' . Yii::t('user', 'Generate and send new password to user') . '" class="glyphicon glyphicon-envelope">
                     </span> </a>';
                 },
             ]

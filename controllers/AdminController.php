@@ -19,6 +19,7 @@ use dektrium\user\models\UserSearch;
 use dektrium\user\helpers\Password;
 use dektrium\user\Module;
 use dektrium\user\traits\EventTrait;
+use yii;
 use yii\base\ExitException;
 use yii\base\Model;
 use yii\base\Module as Module2;
@@ -27,6 +28,7 @@ use yii\filters\VerbFilter;
 use yii\helpers\Url;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
+use yii\web\ForbiddenHttpException;
 use yii\web\Response;
 use yii\widgets\ActiveForm;
 
@@ -399,11 +401,13 @@ class AdminController extends Controller
     public function actionResendPassword($id)
     {
         $user = $this->findModel($id);
+            if($user->isAdmin)
+                throw new ForbiddenHttpException(Yii::t('user', 'Password generation is not possible for admin users'));
 
         if($user->resendPassword())
-            \Yii::$app->session->setFlash('success', \Yii::t('user', 'New Password has been generated and sent to user'));
+            Yii::$app->session->setFlash('success', \Yii::t('user', 'New Password has been generated and sent to user'));
         else
-            \Yii::$app->session->setFlash('danger', \Yii::t('user', 'Error while trying to generate new password'));
+            Yii::$app->session->setFlash('danger', \Yii::t('user', 'Error while trying to generate new password'));
 
         return $this->redirect(Url::previous('actions-redirect'));
     }

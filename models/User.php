@@ -13,7 +13,6 @@ namespace dektrium\user\models;
 
 use dektrium\user\events\RegistrationEvent;
 use dektrium\user\events\UserEvent;
-use dektrium\user\helpers\Password;
 use dektrium\user\helpers\PasswordGenerator;
 use dektrium\user\mail\RegistrationEmail;
 use dektrium\user\Mailer;
@@ -47,6 +46,7 @@ use yii\helpers\ArrayHelper;
  * @property integer $created_at
  * @property integer $updated_at
  * @property integer $flags
+ * @property integer $approved_at
  *
  * Defined relations:
  * @property Account[] $accounts
@@ -92,7 +92,19 @@ class User extends ActiveRecord implements IdentityInterface
     }
 
     /**
-     * @return bool Whether the user is confirmed or not.
+     * Whether the user is approved by admin.
+     *
+     * @return bool
+     */
+    public function isApproved()
+    {
+        return $this->approved_at != null;
+    }
+
+    /**
+     * Whether the user is confirmed or not.
+     *
+     * @return bool
      */
     public function getIsConfirmed()
     {
@@ -196,8 +208,7 @@ class User extends ActiveRecord implements IdentityInterface
     /** @inheritdoc */
     public function scenarios()
     {
-        $scenarios = parent::scenarios();
-        return ArrayHelper::merge($scenarios, [
+        return ArrayHelper::merge(parent::scenarios(), [
             'register' => ['username', 'email', 'password'],
             'connect'  => ['username', 'email'],
             'create'   => ['username', 'email', 'password'],

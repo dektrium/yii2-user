@@ -235,13 +235,14 @@ class RegistrationController extends Controller
     }
 
     /**
-     * @return object|UserConfirmation
+     * @return UserConfirmation|object
+     * @throws NotFoundHttpException
      */
     protected function createConfirmationDomain()
     {
         /** @var UserConfirmation $domain */
         $domain = \Yii::createObject(UserConfirmation::className());
-        if (!$domain->isEnabled) {
+        if (!$domain->isEnabled || !$domain->isConfirmationByEmailEnabled) {
             throw new NotFoundHttpException('Page not found');
         }
         return $domain;

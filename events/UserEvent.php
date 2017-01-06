@@ -34,10 +34,10 @@ class UserEvent extends Event
     }
 
     /**
-     * @param User $form
+     * @param User $user
      */
-    public function setUser(User $form)
+    public function setUser(User $user = null)
     {
-        $this->_user = $form;
+        $this->_user = $user;
     }
 }

@@ -71,6 +71,17 @@ class UserQuery extends ActiveQuery
     }
 
     /**
+     * @param  bool $approved
+     * @return UserQuery
+     */
+    public function approved($approved = true)
+    {
+        return $approved
+            ? $this->andWhere('approved_at IS NOT NULL')
+            : $this->andWhere('approved_at IS NULL');
+    }
+
+    /**
      * @param  bool $blocked
      * @return UserQuery
      */

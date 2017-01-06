@@ -9,10 +9,9 @@
  * file that was distributed with this source code.
  */
 
+use dektrium\user\helpers\Login;
 use dektrium\user\widgets\Connect;
-use dektrium\user\models\User;
 use yii\helpers\Html;
-use yii\helpers\ArrayHelper;
 use yii\widgets\ActiveForm;
 
 /**
@@ -45,8 +44,11 @@ $this->params['breadcrumbs'][] = $this->title;
 
                 <?php
                 if ($module->debug) {
-                    echo $form->field($model, 'login', ['inputOptions' => ['autofocus' => 'autofocus', 'class' => 'form-control', 'tabindex' => '1']])->dropDownList(
-                        ArrayHelper::map(User::find()->where(['blocked_at' => null])->all(), 'username', 'username'));
+                    echo $form->field($model, 'login', [
+                        'inputOptions' => [
+                            'autofocus' => 'autofocus',
+                            'class' => 'form-control',
+                            'tabindex' => '1']])->dropDownList(Login::loginList());
                 } else
                     echo $form->field(
                         $model,

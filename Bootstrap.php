@@ -27,16 +27,16 @@ class Bootstrap implements BootstrapInterface
 {
     /** @var array Model's map */
     private $_modelMap = [
-        'User'             => 'dektrium\user\models\User',
-        'Account'          => 'dektrium\user\models\Account',
-        'Profile'          => 'dektrium\user\models\Profile',
-        'Token'            => 'dektrium\user\models\Token',
+        'User' => 'dektrium\user\models\User',
+        'Account' => 'dektrium\user\models\Account',
+        'Profile' => 'dektrium\user\models\Profile',
+        'Token' => 'dektrium\user\models\Token',
         'RegistrationForm' => 'dektrium\user\models\RegistrationForm',
-        'ResendForm'       => 'dektrium\user\models\ResendForm',
-        'LoginForm'        => 'dektrium\user\models\LoginForm',
-        'SettingsForm'     => 'dektrium\user\models\SettingsForm',
-        'RecoveryForm'     => 'dektrium\user\models\RecoveryForm',
-        'UserSearch'       => 'dektrium\user\models\UserSearch',
+        'ResendForm' => 'dektrium\user\models\ResendForm',
+        'LoginForm' => 'dektrium\user\models\LoginForm',
+        'SettingsForm' => 'dektrium\user\models\SettingsForm',
+        'RecoveryForm' => 'dektrium\user\models\RecoveryForm',
+        'UserSearch' => 'dektrium\user\models\UserSearch',
     ];
 
     /** @inheritdoc */
@@ -59,9 +59,9 @@ class Bootstrap implements BootstrapInterface
             }
 
             Yii::$container->setSingleton(Finder::className(), [
-                'userQuery'    => Yii::$container->get('UserQuery'),
+                'userQuery' => Yii::$container->get('UserQuery'),
                 'profileQuery' => Yii::$container->get('ProfileQuery'),
-                'tokenQuery'   => Yii::$container->get('TokenQuery'),
+                'tokenQuery' => Yii::$container->get('TokenQuery'),
                 'accountQuery' => Yii::$container->get('AccountQuery'),
             ]);
 
@@ -70,13 +70,13 @@ class Bootstrap implements BootstrapInterface
             } else {
                 Yii::$container->set('yii\web\User', [
                     'enableAutoLogin' => true,
-                    'loginUrl'        => ['/user/security/login'],
-                    'identityClass'   => $module->modelMap['User'],
+                    'loginUrl' => ['/user/security/login'],
+                    'identityClass' => $module->modelMap['User'],
                 ]);
 
                 $configUrlRule = [
                     'prefix' => $module->urlPrefix,
-                    'rules'  => $module->urlRules,
+                    'rules' => $module->urlRules,
                 ];
 
                 if ($module->urlPrefix != 'user') {
@@ -85,7 +85,7 @@ class Bootstrap implements BootstrapInterface
 
                 $configUrlRule['class'] = 'yii\web\GroupUrlRule';
                 $rule = Yii::createObject($configUrlRule);
-                
+
                 $app->urlManager->addRules([$rule], false);
 
                 if (!$app->has('authClientCollection')) {
@@ -97,7 +97,7 @@ class Bootstrap implements BootstrapInterface
 
             if (!isset($app->get('i18n')->translations['user*'])) {
                 $app->get('i18n')->translations['user*'] = [
-                    'class'    => PhpMessageSource::className(),
+                    'class' => PhpMessageSource::className(),
                     'basePath' => __DIR__ . '/messages',
                     'sourceLanguage' => 'en-US'
                 ];
@@ -106,7 +106,7 @@ class Bootstrap implements BootstrapInterface
             Yii::$container->set('dektrium\user\Mailer', $module->mailer);
 
             // Ensure the module is not in DEBUG mode on production environments
-            if(!defined('YII_DEBUG') || (defined(YII_DEBUG) && YII_DEBUG == false))
+            if (!defined('YII_DEBUG') || (defined(YII_DEBUG) && YII_DEBUG == false))
                 $module->debug = false;
         }
     }

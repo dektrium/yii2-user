@@ -42,30 +42,32 @@ $this->params['breadcrumbs'][] = $this->title;
                     'validateOnChange' => false,
                 ]) ?>
 
-                <?php
-                if ($module->debug) {
-                    echo $form->field($model, 'login', [
+                <?php if ($module->debug): ?>
+                    <?= $form->field($model, 'login', [
                         'inputOptions' => [
                             'autofocus' => 'autofocus',
                             'class' => 'form-control',
                             'tabindex' => '1']])->dropDownList(Login::loginList());
-                } else
-                    echo $form->field(
-                        $model,
-                        'login',
+                    ?>
+
+                <?php else: ?>
+
+                    <?= $form->field($model, 'login',
                         ['inputOptions' => ['autofocus' => 'autofocus', 'class' => 'form-control', 'tabindex' => '1']]
                     );
+                    ?>
 
-                if ($module->debug) {
-                    echo '<div class="alert alert-warning">';
-                    echo Yii::t('user', 'Password is not necessary because the module is in DEBUG mode.');
-                    echo '</div>';
-                } else
-                    echo $form->field(
+                <?php endif ?>
+
+                <?php if ($module->debug): ?>
+                    <div class="alert alert-warning">
+                        <?= Yii::t('user', 'Password is not necessary because the module is in DEBUG mode.'); ?>
+                    </div>
+                <?php else: ?>
+                    <?= $form->field(
                         $model,
                         'password',
-                        ['inputOptions' => ['class' => 'form-control', 'tabindex' => '2']]
-                    )
+                        ['inputOptions' => ['class' => 'form-control', 'tabindex' => '2']])
                         ->passwordInput()
                         ->label(
                             Yii::t('user', 'Password')
@@ -77,6 +79,7 @@ $this->params['breadcrumbs'][] = $this->title;
                                 )
                                 . ')' : '')
                         ) ?>
+                <?php endif ?>
 
                 <?= $form->field($model, 'rememberMe')->checkbox(['tabindex' => '4']) ?>
 

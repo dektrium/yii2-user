@@ -2,6 +2,7 @@
 
 ## 0.9.10 [Work in progress]
 
+- Enh #767: Added support for MS SQL Server (tsdogs)
 - Enh #795: Added method `getAccountByProvider` to User model to get account model by provider name (dmeroff)
 - Fix #778: Migrations now use correct db component (dmeroff)
 - Fix #777: Rethrow exception on failed user creation or registration (dmeroff)

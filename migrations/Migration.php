@@ -41,7 +41,7 @@ class Migration extends \yii\db\Migration
                 break;
             case 'pgsql':
                 $this->tableOptions = null;
-                $this->dbType = 'mysql';
+                $this->dbType = 'pgsql';
                 break;
             case 'dblib':
             case 'mssql':

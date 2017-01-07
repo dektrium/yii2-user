@@ -42,7 +42,7 @@ class UserConfirmation extends Component implements UserConfirmationInterface
      *
      * @var bool
      */
-    public $isLoginAllowedWhileUnconfirmedEnabled = false;
+    public $isLoginWhileUnconfirmedEnabled = false;
 
     /**
      * Whether user needs to click confirmation link sent by email.

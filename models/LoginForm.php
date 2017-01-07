@@ -98,7 +98,7 @@ class LoginForm extends Model
             return;
         }
 
-        if ($this->user !== null && $service->isEnabled && !$service->isLoginAllowedWhileUnconfirmedEnabled) {
+        if ($this->user !== null && $service->isEnabled && !$service->isLoginWhileUnconfirmedEnabled) {
             if ($service->isConfirmationByEmailEnabled && !$this->user->getIsConfirmed()) {
                 $this->addError($attribute, Yii::t('user', 'You need to confirm your email address'));
             }

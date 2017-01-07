@@ -24,25 +24,44 @@ use yii\base\Component;
  */
 class Mailer extends Component
 {
-    /** @var string */
+    /**
+     * @var string
+     */
     public $viewPath = '@dektrium/user/views/mail';
 
-    /** @var string|array Default: `Yii::$app->params['adminEmail']` OR `no-reply@example.com` */
+    /**
+     * @var string|array Default: `Yii::$app->params['adminEmail']` OR `no-reply@example.com`
+     */
     public $sender;
 
-    /** @var string */
+    /**
+     * @var string
+     */
     protected $welcomeSubject;
 
-    /** @var string */
+    /**
+     * @var string
+     */
     protected $confirmationSubject;
 
-    /** @var string */
+    /**
+     * @var string
+     */
     protected $reconfirmationSubject;
 
-    /** @var string */
+    /**
+     * @var string
+     */
     protected $recoverySubject;
 
-    /** @var \dektrium\user\Module */
+    /**
+     * @var string
+     */
+    protected $approvalSubject;
+
+    /**
+     * @var \dektrium\user\Module
+     */
     protected $module;
 
     /**
@@ -125,7 +144,29 @@ class Mailer extends Component
         $this->recoverySubject = $recoverySubject;
     }
 
-    /** @inheritdoc */
+    /**
+     * @return string
+     */
+    public function getApprovalSubject()
+    {
+        if ($this->approvalSubject == null) {
+            $this->setApprovalSubject(Yii::t('user', 'Your account on {0} has been approved', Yii::$app->name));
+        }
+
+        return $this->approvalSubject;
+    }
+
+    /**
+     * @param string $approvalSubject
+     */
+    public function setApprovalSubject($approvalSubject)
+    {
+        $this->approvalSubject = $approvalSubject;
+    }
+
+    /**
+     * @inheritdoc
+     */
     public function init()
     {
         $this->module = Yii::$app->getModule('user');
@@ -228,6 +269,20 @@ class Mailer extends Component
             $this->getRecoverySubject(),
             'recovery',
             ['user' => $user, 'token' => $token]
+        );
+    }
+
+    /**
+     * Sends an email when user's account has been approved.
+     * @param  User $user
+     * @return bool
+     */
+    public function sendApprovalMessage(User $user)
+    {
+        return $this->sendMessage(
+            $user->email,
+            $this->getApprovalSubject(),
+            'approval'
         );
     }
 

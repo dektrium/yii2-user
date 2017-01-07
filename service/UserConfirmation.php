@@ -111,6 +111,11 @@ class UserConfirmation extends Component implements UserConfirmationInterface
             $this->trigger(self::EVENT_AFTER_APPROVE, $this->getUserEvent($user));
             $user->approved_at = time();
             $user->save(false);
+
+            /** @var Mailer $mailer */
+            $mailer = \Yii::createObject(Mailer::className());
+            $mailer->sendApprovalMessage($user);
+
             $this->trigger(self::EVENT_AFTER_APPROVE, $this->getUserEvent($user));
             return true;
         }

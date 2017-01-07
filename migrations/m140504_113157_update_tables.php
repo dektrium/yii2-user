@@ -20,8 +20,8 @@ class m140504_113157_update_tables extends Migration
     public function up()
     {
         // user table
-        $this->dropIndex('user_confirmation', '{{%user}}');
-        $this->dropIndex('user_recovery', '{{%user}}');
+        $this->dropIndex('{{%user_confirmation}}', '{{%user}}');
+        $this->dropIndex('{{%user_recovery}}', '{{%user}}');
         $this->dropColumn('{{%user}}', 'confirmation_token');
         $this->dropColumn('{{%user}}', 'confirmation_sent_at');
         $this->dropColumn('{{%user}}', 'recovery_token');
@@ -41,6 +41,10 @@ class m140504_113157_update_tables extends Migration
         $this->renameColumn('{{%account}}', 'data', 'properties');
 
         // user table
+        if ($this->dbType == 'sqlsrv') {
+            // this is needed because we need to drop the default constraint first
+            $this->dropColumnConstraints('{{%user}}','flags');
+        }
         $this->dropColumn('{{%user}}', 'flags');
         $this->renameColumn('{{%user}}', 'registration_ip', 'registered_from');
         $this->addColumn('{{%user}}', 'logged_in_at', Schema::TYPE_INTEGER);
@@ -49,7 +53,7 @@ class m140504_113157_update_tables extends Migration
         $this->addColumn('{{%user}}', 'recovery_token', Schema::TYPE_STRING . '(32)');
         $this->addColumn('{{%user}}', 'confirmation_sent_at', Schema::TYPE_INTEGER);
         $this->addColumn('{{%user}}', 'confirmation_token', Schema::TYPE_STRING . '(32)');
-        $this->createIndex('user_confirmation', '{{%user}}', 'id, confirmation_token', true);
-        $this->createIndex('user_recovery', '{{%user}}', 'id, recovery_token', true);
+        $this->createIndex('{{%user_confirmation}}', '{{%user}}', 'id, confirmation_token', true);
+        $this->createIndex('{{%user_recovery}', '{{%user}}', 'id, recovery_token', true);
     }
 }

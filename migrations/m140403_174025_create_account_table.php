@@ -21,14 +21,14 @@ class m140403_174025_create_account_table extends Migration
     {
         $this->createTable('{{%account}}', [
             'id'         => Schema::TYPE_PK,
-            'user_id'    => Schema::TYPE_INTEGER,
+            'user_id'    => Schema::TYPE_INTEGER. ' NULL',
             'provider'   => Schema::TYPE_STRING . ' NOT NULL',
             'client_id'  => Schema::TYPE_STRING . ' NOT NULL',
-            'properties' => Schema::TYPE_TEXT,
+            'properties' => Schema::TYPE_TEXT . ' NULL',
         ], $this->tableOptions);
 
-        $this->createIndex('account_unique', '{{%account}}', ['provider', 'client_id'], true);
-        $this->addForeignKey('fk_user_account', '{{%account}}', 'user_id', '{{%user}}', 'id', 'CASCADE', 'RESTRICT');
+        $this->createIndex('{{%account_unique}}', '{{%account}}', ['provider', 'client_id'], true);
+        $this->addForeignKey('{{%fk_user_account}}', '{{%account}}', 'user_id', '{{%user}}', 'id', $this->cascade, $this->restrict);
     }
 
     public function down()

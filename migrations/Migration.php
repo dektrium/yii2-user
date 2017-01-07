@@ -11,8 +11,6 @@
 
 namespace dektrium\user\migrations;
 
-use Yii;
-
 /**
  * @author Dmitry Erofeev <dmeroff@gmail.com>
  */

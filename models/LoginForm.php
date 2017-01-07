@@ -11,7 +11,8 @@
 
 namespace dektrium\user\models;
 
-use dektrium\user\domain\UserConfirmation;
+use dektrium\user\service\UserConfirmation;
+use dektrium\user\traits\ServiceTrait;
 use Yii;
 use yii\base\Model;
 use dektrium\user\traits\ModuleTrait;
@@ -25,6 +26,7 @@ use dektrium\user\traits\ModuleTrait;
 class LoginForm extends Model
 {
     use ModuleTrait;
+    use ServiceTrait;
 
     /**
      * @var string User's email or username
@@ -90,14 +92,17 @@ class LoginForm extends Model
      */
     public function validateConfirmationStatus($attribute)
     {
-        /** @var UserConfirmation $domain */
-        $domain = Yii::createObject(UserConfirmation::className());
+        $service = $this->getUserConfirmationService();
 
-        if ($this->user !== null && $domain->isEnabled && !$domain->isLoginAllowedWhileUnconfirmedEnabled) {
-            if ($domain->isConfirmationByEmailEnabled && !$this->user->getIsConfirmed()) {
+        if ($this->user !== null && $this->user->getIsAdmin()) {
+            return;
+        }
+
+        if ($this->user !== null && $service->isEnabled && !$service->isLoginAllowedWhileUnconfirmedEnabled) {
+            if ($service->isConfirmationByEmailEnabled && !$this->user->getIsConfirmed()) {
                 $this->addError($attribute, Yii::t('user', 'You need to confirm your email address'));
             }
-            if ($domain->isAdminApprovalEnabled && !$this->user->isApproved()) {
+            if ($service->isAdminApprovalEnabled && !$this->user->isApproved()) {
                 $this->addError($attribute, Yii::t('user', 'Your account needs to be approved by administrator'));
             }
         }

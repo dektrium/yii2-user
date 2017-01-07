@@ -6,6 +6,14 @@ need to following the instructions for both A and B.
 
 ## Upgrade from Yii2-user 0.9.* to Yii2-user 1.0.0-alpha1
 
+- **APPLY NEW MIGRATIONS!**
+
+- Admin view files have been updated. If you were overriding admin views, then change them accordingly to use new
+ functionality.
+
+- `enableConfirmation` and `enableUnconfirmedLogin` module's properties. Instead you need to configure `UserConfirmation`
+ service which got a few new options. More information on how to configure it can be found in [guide](docs/confirmation.md)
+
 - `dektrium\user\helpers\Password` helper has been removed. If you need to generate password then use
  `dektrium\user\helpers\PasswordGenerator` helper instead. If you used it to hash and validate user's password, then
  use methods `hashPassword` and `validatePassword` of `dektrium\user\models\User`

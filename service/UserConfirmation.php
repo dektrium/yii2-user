@@ -9,21 +9,21 @@
  * file that was distributed with this source code.
  */
 
-namespace dektrium\user\domain;
+namespace dektrium\user\service;
 
-use dektrium\user\domain\exceptions\InvalidTokenException;
-use dektrium\user\domain\exceptions\InvalidUserException;
-use dektrium\user\domain\interfaces\AttachableInterface;
+use dektrium\user\service\exceptions\InvalidTokenException;
+use dektrium\user\service\exceptions\InvalidUserException;
 use dektrium\user\events\RegistrationEvent;
 use dektrium\user\events\UserEvent;
 use dektrium\user\mail\RegistrationEmail;
 use dektrium\user\Mailer;
 use dektrium\user\models\Token;
 use dektrium\user\models\User;
+use dektrium\user\service\interfaces\UserConfirmationInterface;
 use yii\base\Component;
 use yii\base\Event;
 
-class UserConfirmation extends Component implements AttachableInterface
+class UserConfirmation extends Component implements UserConfirmationInterface
 {
     const EVENT_BEFORE_CONFIRM = 'beforeConfirm';
     const EVENT_AFTER_CONFIRM = 'afterConfirm';
@@ -70,17 +70,17 @@ class UserConfirmation extends Component implements AttachableInterface
      */
     public function attachEventHandlers()
     {
+        Event::on(User::className(), User::BEFORE_REGISTER, function (RegistrationEvent $event) {
+            $event->getUser()->confirmed_at = $this->isEnabled && $this->isConfirmationByEmailEnabled ? null : time();
+        });
+
         if ($this->isEnabled && $this->isConfirmationByEmailEnabled) {
             Event::on(User::className(), User::AFTER_REGISTER, [$this, 'sendConfirmationMessage']);
         }
     }
 
     /**
-     * Confirms user without any checks.
-     *
-     * @param  User $user
-     * @return bool
-     * @throws InvalidUserException
+     * @inheritdoc
      */
     public function confirm(User $user)
     {
@@ -99,11 +99,7 @@ class UserConfirmation extends Component implements AttachableInterface
     }
 
     /**
-     * Approves user without any checks.
-     *
-     * @param  User $user
-     * @return bool
-     * @throws InvalidUserException
+     * @inheritdoc
      */
     public function approve(User $user)
     {
@@ -123,12 +119,7 @@ class UserConfirmation extends Component implements AttachableInterface
     }
 
     /**
-     * Attempts user confirmation with checking confirmation code.
-     *
-     * @param  User   $user
-     * @param  string $code Confirmation code.
-     * @return bool
-     * @throws InvalidTokenException
+     * @inheritdoc
      */
     public function attemptConfirmation(User $user = null, $code)
     {
@@ -172,9 +163,7 @@ class UserConfirmation extends Component implements AttachableInterface
     }
 
     /**
-     * Resends confirmation message to user if user exists and is not confirmed.
-     *
-     * @param User|null $user
+     * @inheritdoc
      */
     public function resendConfirmationMessage(User $user = null)
     {

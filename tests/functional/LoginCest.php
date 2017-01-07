@@ -1,5 +1,5 @@
 <?php
-use dektrium\user\domain\UserConfirmation;
+use dektrium\user\service\UserConfirmation;
 use tests\_fixtures\UserFixture;
 use tests\_pages\LoginPage;
 

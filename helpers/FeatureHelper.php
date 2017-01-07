@@ -11,7 +11,7 @@
 
 namespace dektrium\user\helpers;
 
-use dektrium\user\domain\UserConfirmation;
+use dektrium\user\service\UserConfirmation;
 
 /**
  * @author Dmitry Erofeev <dmeroff@gmail.com>

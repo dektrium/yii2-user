@@ -11,13 +11,14 @@
 
 namespace dektrium\user\controllers;
 
-use dektrium\user\domain\UserConfirmation;
+use dektrium\user\service\UserConfirmation;
 use dektrium\user\filters\AccessRule;
 use dektrium\user\models\Profile;
 use dektrium\user\models\User;
 use dektrium\user\models\UserSearch;
 use dektrium\user\Module;
 use dektrium\user\traits\EventTrait;
+use dektrium\user\traits\ServiceTrait;
 use yii\base\ExitException;
 use yii\base\Model;
 use yii\filters\AccessControl;
@@ -38,6 +39,7 @@ use yii\widgets\ActiveForm;
 class AdminController extends Controller
 {
     use EventTrait;
+    use ServiceTrait;
 
     /**
      * Event is triggered before creating new user.
@@ -315,7 +317,7 @@ class AdminController extends Controller
         $model = $this->findModel($id);
 
         $this->trigger(self::EVENT_BEFORE_CONFIRM, $this->getUserEvent($model));
-        $this->getUserConfirmation()->confirm($model);
+        $this->getUserConfirmationService()->confirm($model);
         $this->trigger(self::EVENT_AFTER_CONFIRM, $this->getUserEvent($model));
 
         \Yii::$app->getSession()->setFlash('success', \Yii::t('user', 'User has been confirmed'));
@@ -328,7 +330,7 @@ class AdminController extends Controller
         $model = $this->findModel($id);
 
         $this->trigger(self::EVENT_BEFORE_APPROVE, $this->getUserEvent($model));
-        $this->getUserConfirmation()->approve($model);
+        $this->getUserConfirmationService()->approve($model);
         $this->trigger(self::EVENT_AFTER_APPROVE, $this->getUserEvent($model));
 
         \Yii::$app->getSession()->setFlash('success', \Yii::t('user', 'User has been approved'));
@@ -426,13 +428,5 @@ class AdminController extends Controller
                 \Yii::$app->end();
             }
         }
-    }
-
-    /**
-     * @return object|UserConfirmation
-     */
-    protected function getUserConfirmation()
-    {
-        return \Yii::createObject(UserConfirmation::className());
     }
 }

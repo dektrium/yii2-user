@@ -11,9 +11,9 @@
 
 namespace dektrium\user\controllers;
 
-use dektrium\user\domain\exceptions\DomainException;
-use dektrium\user\domain\exceptions\InvalidTokenException;
-use dektrium\user\domain\UserConfirmation;
+use dektrium\user\service\exceptions\ServiceException;
+use dektrium\user\service\exceptions\InvalidTokenException;
+use dektrium\user\service\UserConfirmation;
 use dektrium\user\models\Account;
 use dektrium\user\models\RegistrationForm;
 use dektrium\user\models\ResendForm;
@@ -193,7 +193,7 @@ class RegistrationController extends Controller
         $this->trigger(self::EVENT_BEFORE_CONFIRM, $this->getUserEvent($user));
         try {
             $domain->attemptConfirmation($user, $code);
-        } catch (DomainException $e) {
+        } catch (ServiceException $e) {
             \Yii::error($e);
             return $this->redirect(['/user/security/login']);
         }
@@ -223,7 +223,7 @@ class RegistrationController extends Controller
             try {
                 $domain->resendConfirmationMessage($model->getUser());
                 $this->trigger(self::EVENT_AFTER_RESEND, $this->getFormEvent($model));
-            } catch (DomainException $e) {
+            } catch (ServiceException $e) {
                 \Yii::error($e);
             }
             return $this->redirect(['/user/security/login']);

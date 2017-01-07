@@ -9,7 +9,7 @@
  * file that was distributed with this source code.
  */
 
-namespace dektrium\user\domain\exceptions;
+namespace dektrium\user\service\exceptions;
 
 use yii\base\Exception;
 
@@ -17,7 +17,7 @@ use yii\base\Exception;
  * Base exception class.
  * @author Dmitry Erofeev <dmeroff@gmail.com>
  */
-class DomainException extends Exception
+class ServiceException extends Exception
 {
     /**
      * @return string the user-friendly name of this exception

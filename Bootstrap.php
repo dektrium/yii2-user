@@ -11,7 +11,7 @@
 
 namespace dektrium\user;
 
-use dektrium\user\domain\interfaces\AttachableInterface;
+use dektrium\user\service\interfaces\ServiceInterface;
 use dektrium\user\models\User;
 use Yii;
 use yii\authclient\Collection;
@@ -31,7 +31,7 @@ class Bootstrap implements BootstrapInterface
      * @var array
      */
     protected $attachable = [
-        'dektrium\user\domain\UserConfirmation',
+        'dektrium\user\service\UserConfirmation',
     ];
 
     /**
@@ -89,10 +89,10 @@ class Bootstrap implements BootstrapInterface
 
     /**
      * @param  string $name
-     * @return AttachableInterface
+     * @return ServiceInterface|object
      */
     protected function createAttachableObject($name)
     {
-        return new $name;
+        return Yii::createObject($name);
     }
 }

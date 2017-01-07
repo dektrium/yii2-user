@@ -9,13 +9,13 @@
  * file that was distributed with this source code.
  */
 
-namespace dektrium\user\domain\exceptions;
+namespace dektrium\user\service\exceptions;
 
 /**
  * Invalid token exception is thrown when invalid token is used by user.
  * @author Dmitry Erofeev <dmeroff@gmail.com>
  */
-class InvalidTokenException extends DomainException
+class InvalidTokenException extends ServiceException
 {
     /**
      * @return string the user-friendly name of this exception

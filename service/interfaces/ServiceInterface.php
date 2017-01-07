@@ -9,19 +9,16 @@
  * file that was distributed with this source code.
  */
 
-namespace dektrium\user\domain\exceptions;
+namespace dektrium\user\service\interfaces;
 
 /**
- * Invalid token exception is thrown when invalid user is provided.
  * @author Dmitry Erofeev <dmeroff@gmail.com>
  */
-class InvalidUserException extends DomainException
+interface ServiceInterface
 {
     /**
-     * @return string the user-friendly name of this exception
+     * Attaches needed event handlers.
+     * @return void
      */
-    public function getName()
-    {
-        return 'Invalid user';
-    }
+    public function attachEventHandlers();
 }

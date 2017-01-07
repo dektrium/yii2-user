@@ -10,7 +10,6 @@
  */
 
 use yii\db\Migration;
-use yii\db\Schema;
 
 class m150623_212711_fix_username_notnull extends Migration
 {
@@ -19,7 +18,7 @@ class m150623_212711_fix_username_notnull extends Migration
         if ($this->db->driverName === 'pgsql') {
             $this->alterColumn('{{%user}}', 'username', 'SET NOT NULL');
         } else {
-            $this->alterColumn('{{%user}}', 'username', Schema::TYPE_STRING . '(255) NOT NULL');
+            $this->alterColumn('{{%user}}', 'username', $this->string(255)->notNull());
         }
     }
 
@@ -28,7 +27,7 @@ class m150623_212711_fix_username_notnull extends Migration
         if(Yii::$app->db->driverName == "pgsql"){
             $this->alterColumn('{{%user}}', 'username', 'DROP NOT NULL');
         }else{
-            $this->alterColumn('{{%user}}', 'username', Schema::TYPE_STRING . '(255)');
+            $this->alterColumn('{{%user}}', 'username', $this->string(255));
         }
     }
 }

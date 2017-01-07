@@ -11,12 +11,14 @@
 
 namespace dektrium\user\controllers;
 
+use dektrium\user\service\UserConfirmation;
 use dektrium\user\filters\AccessRule;
 use dektrium\user\models\Profile;
 use dektrium\user\models\User;
 use dektrium\user\models\UserSearch;
 use dektrium\user\Module;
 use dektrium\user\traits\EventTrait;
+use dektrium\user\traits\ServiceTrait;
 use yii\base\ExitException;
 use yii\base\Model;
 use yii\filters\AccessControl;
@@ -37,6 +39,7 @@ use yii\widgets\ActiveForm;
 class AdminController extends Controller
 {
     use EventTrait;
+    use ServiceTrait;
 
     /**
      * Event is triggered before creating new user.
@@ -87,6 +90,18 @@ class AdminController extends Controller
     const EVENT_AFTER_CONFIRM = 'afterConfirm';
 
     /**
+     * Event is triggered before approving existing user.
+     * Triggered with \dektrium\user\events\UserEvent.
+     */
+    const EVENT_BEFORE_APPROVE = 'beforeApprove';
+
+    /**
+     * Event is triggered after approving existing user.
+     * Triggered with \dektrium\user\events\UserEvent.
+     */
+    const EVENT_AFTER_APPROVE = 'afterApprove';
+
+    /**
      * Event is triggered before deleting existing user.
      * Triggered with \dektrium\user\events\UserEvent.
      */
@@ -122,7 +137,9 @@ class AdminController extends Controller
      */
     const EVENT_AFTER_UNBLOCK = 'afterUnblock';
 
-    /** @inheritdoc */
+    /**
+     * @inheritdoc
+     */
     public function behaviors()
     {
         return [
@@ -157,7 +174,7 @@ class AdminController extends Controller
     public function actionIndex()
     {
         Url::remember('', 'actions-redirect');
-        $searchModel  = \Yii::createObject(UserSearch::className());
+        $searchModel = \Yii::createObject(UserSearch::className());
         $dataProvider = $searchModel->search(\Yii::$app->request->get());
 
         return $this->render('index', [
@@ -175,18 +192,13 @@ class AdminController extends Controller
     public function actionCreate()
     {
         /** @var User $user */
-        $user = \Yii::createObject([
-            'class'    => User::className(),
-            'scenario' => 'create',
-        ]);
-        $event = $this->getUserEvent($user);
+        $user = \Yii::createObject(['class' => User::className(), 'scenario' => 'create']);
 
         $this->performAjaxValidation($user);
-
-        $this->trigger(self::EVENT_BEFORE_CREATE, $event);
+        $this->trigger(self::EVENT_BEFORE_CREATE, $this->getUserEvent($user));
         if ($user->load(\Yii::$app->request->post()) && $user->create()) {
             \Yii::$app->getSession()->setFlash('success', \Yii::t('user', 'User has been created'));
-            $this->trigger(self::EVENT_AFTER_CREATE, $event);
+            $this->trigger(self::EVENT_AFTER_CREATE, $this->getUserEvent($user));
             return $this->redirect(['update', 'id' => $user->id]);
         }
 
@@ -207,14 +219,13 @@ class AdminController extends Controller
         Url::remember('', 'actions-redirect');
         $user = $this->findModel($id);
         $user->scenario = 'update';
-        $event = $this->getUserEvent($user);
 
         $this->performAjaxValidation($user);
 
-        $this->trigger(self::EVENT_BEFORE_UPDATE, $event);
+        $this->trigger(self::EVENT_BEFORE_UPDATE, $this->getUserEvent($user));
         if ($user->load(\Yii::$app->request->post()) && $user->save()) {
             \Yii::$app->getSession()->setFlash('success', \Yii::t('user', 'Account details have been updated'));
-            $this->trigger(self::EVENT_AFTER_UPDATE, $event);
+            $this->trigger(self::EVENT_AFTER_UPDATE, $this->getUserEvent($user));
             return $this->refresh();
         }
 
@@ -233,22 +244,19 @@ class AdminController extends Controller
     public function actionUpdateProfile($id)
     {
         Url::remember('', 'actions-redirect');
-        $user    = $this->findModel($id);
+        $user  = $this->findModel($id);
         $profile = $user->profile;
 
         if ($profile == null) {
             $profile = \Yii::createObject(Profile::className());
             $profile->link('user', $user);
         }
-        $event   = $this->getProfileEvent($profile);
 
         $this->performAjaxValidation($profile);
-
-        $this->trigger(self::EVENT_BEFORE_PROFILE_UPDATE, $event);
-
+        $this->trigger(self::EVENT_BEFORE_PROFILE_UPDATE, $this->getProfileEvent($profile));
         if ($profile->load(\Yii::$app->request->post()) && $profile->save()) {
             \Yii::$app->getSession()->setFlash('success', \Yii::t('user', 'Profile details have been updated'));
-            $this->trigger(self::EVENT_AFTER_PROFILE_UPDATE, $event);
+            $this->trigger(self::EVENT_AFTER_PROFILE_UPDATE, $this->getProfileEvent($profile));
             return $this->refresh();
         }
 
@@ -307,13 +315,25 @@ class AdminController extends Controller
     public function actionConfirm($id)
     {
         $model = $this->findModel($id);
-        $event = $this->getUserEvent($model);
 
-        $this->trigger(self::EVENT_BEFORE_CONFIRM, $event);
-        $model->confirm();
-        $this->trigger(self::EVENT_AFTER_CONFIRM, $event);
+        $this->trigger(self::EVENT_BEFORE_CONFIRM, $this->getUserEvent($model));
+        $this->getUserConfirmationService()->confirm($model);
+        $this->trigger(self::EVENT_AFTER_CONFIRM, $this->getUserEvent($model));
 
         \Yii::$app->getSession()->setFlash('success', \Yii::t('user', 'User has been confirmed'));
+
+        return $this->redirect(Url::previous('actions-redirect'));
+    }
+
+    public function actionApprove($id)
+    {
+        $model = $this->findModel($id);
+
+        $this->trigger(self::EVENT_BEFORE_APPROVE, $this->getUserEvent($model));
+        $this->getUserConfirmationService()->approve($model);
+        $this->trigger(self::EVENT_AFTER_APPROVE, $this->getUserEvent($model));
+
+        \Yii::$app->getSession()->setFlash('success', \Yii::t('user', 'User has been approved'));
 
         return $this->redirect(Url::previous('actions-redirect'));
     }
@@ -332,10 +352,9 @@ class AdminController extends Controller
             \Yii::$app->getSession()->setFlash('danger', \Yii::t('user', 'You can not remove your own account'));
         } else {
             $model = $this->findModel($id);
-            $event = $this->getUserEvent($model);
-            $this->trigger(self::EVENT_BEFORE_DELETE, $event);
+            $this->trigger(self::EVENT_BEFORE_DELETE, $this->getUserEvent($model));
             $model->delete();
-            $this->trigger(self::EVENT_AFTER_DELETE, $event);
+            $this->trigger(self::EVENT_AFTER_DELETE, $this->getUserEvent($model));
             \Yii::$app->getSession()->setFlash('success', \Yii::t('user', 'User has been deleted'));
         }
 
@@ -354,17 +373,16 @@ class AdminController extends Controller
         if ($id == \Yii::$app->user->getId()) {
             \Yii::$app->getSession()->setFlash('danger', \Yii::t('user', 'You can not block your own account'));
         } else {
-            $user  = $this->findModel($id);
-            $event = $this->getUserEvent($user);
+            $user = $this->findModel($id);
             if ($user->getIsBlocked()) {
-                $this->trigger(self::EVENT_BEFORE_UNBLOCK, $event);
+                $this->trigger(self::EVENT_BEFORE_UNBLOCK, $this->getUserEvent($user));
                 $user->unblock();
-                $this->trigger(self::EVENT_AFTER_UNBLOCK, $event);
+                $this->trigger(self::EVENT_AFTER_UNBLOCK, $this->getUserEvent($user));
                 \Yii::$app->getSession()->setFlash('success', \Yii::t('user', 'User has been unblocked'));
             } else {
-                $this->trigger(self::EVENT_BEFORE_BLOCK, $event);
+                $this->trigger(self::EVENT_BEFORE_BLOCK, $this->getUserEvent($user));
                 $user->block();
-                $this->trigger(self::EVENT_AFTER_BLOCK, $event);
+                $this->trigger(self::EVENT_AFTER_BLOCK, $this->getUserEvent($user));
                 \Yii::$app->getSession()->setFlash('success', \Yii::t('user', 'User has been blocked'));
             }
         }

@@ -11,12 +11,16 @@
 
 namespace dektrium\user\controllers;
 
+use dektrium\user\service\exceptions\ServiceException;
+use dektrium\user\service\exceptions\InvalidTokenException;
+use dektrium\user\service\UserConfirmation;
 use dektrium\user\models\Account;
 use dektrium\user\models\RegistrationForm;
 use dektrium\user\models\ResendForm;
 use dektrium\user\models\User;
 use dektrium\user\traits\AjaxValidationTrait;
 use dektrium\user\traits\EventTrait;
+use yii\base\Exception;
 use yii\filters\AccessControl;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
@@ -112,14 +116,12 @@ class RegistrationController extends Controller
 
         /** @var RegistrationForm $model */
         $model = \Yii::createObject(RegistrationForm::className());
-        $event = $this->getFormEvent($model);
-
-        $this->trigger(self::EVENT_BEFORE_REGISTER, $event);
 
         $this->performAjaxValidation($model);
 
+        $this->trigger(self::EVENT_BEFORE_REGISTER, $this->getFormEvent($model));
         if ($model->load(\Yii::$app->request->post()) && $model->register()) {
-            $this->trigger(self::EVENT_AFTER_REGISTER, $event);
+            $this->trigger(self::EVENT_AFTER_REGISTER, $this->getFormEvent($model));
             return $this->redirect(['/user/security/login']);
         }
 
@@ -173,8 +175,7 @@ class RegistrationController extends Controller
     }
 
     /**
-     * Confirms user's account. If confirmation was successful logs the user and shows success message. Otherwise
-     * shows error message.
+     * Attempts confirmation by code.
      *
      * @param int    $id
      * @param string $code
@@ -187,20 +188,20 @@ class RegistrationController extends Controller
         /** @var User $user */
         $user = \Yii::createObject(User::className());
         $user = $user::findOne($id);
+        $domain = $this->createConfirmationDomain();
 
-        if ($user === null || $this->module->enableConfirmation == false) {
-            throw new NotFoundHttpException();
+        $this->trigger(self::EVENT_BEFORE_CONFIRM, $this->getUserEvent($user));
+        try {
+            $domain->attemptConfirmation($user, $code);
+        } catch (ServiceException $e) {
+            \Yii::error($e);
+            return $this->redirect(['/user/security/login']);
         }
+        $this->trigger(self::EVENT_AFTER_CONFIRM, $this->getUserEvent($user));
 
-        $event = $this->getUserEvent($user);
-
-        $this->trigger(self::EVENT_BEFORE_CONFIRM, $event);
-
-        $user->attemptConfirmation($code);
-
-        $this->trigger(self::EVENT_AFTER_CONFIRM, $event);
-
-        return $this->goHome();
+        return \Yii::$app->user->getIsGuest()
+            ? $this->redirect(['/user/security/login'])
+            : $this->goHome();
     }
 
     /**
@@ -211,25 +212,39 @@ class RegistrationController extends Controller
      */
     public function actionResend()
     {
-        if ($this->module->enableConfirmation == false) {
-            throw new NotFoundHttpException();
-        }
-
         /** @var ResendForm $model */
         $model = \Yii::createObject(ResendForm::className());
-        $event = $this->getFormEvent($model);
-
-        $this->trigger(self::EVENT_BEFORE_RESEND, $event);
+        $domain = $this->createConfirmationDomain();
 
         $this->performAjaxValidation($model);
 
-        if ($model->load(\Yii::$app->request->post()) && $model->resend()) {
-            $this->trigger(self::EVENT_AFTER_RESEND, $event);
+        $this->trigger(self::EVENT_BEFORE_RESEND, $this->getFormEvent($model));
+        if ($model->load(\Yii::$app->request->post()) && $model->validate()) {
+            try {
+                $domain->resendConfirmationMessage($model->getUser());
+                $this->trigger(self::EVENT_AFTER_RESEND, $this->getFormEvent($model));
+            } catch (ServiceException $e) {
+                \Yii::error($e);
+            }
             return $this->redirect(['/user/security/login']);
         }
 
         return $this->render('resend', [
             'model' => $model,
         ]);
+    }
+
+    /**
+     * @return UserConfirmation|object
+     * @throws NotFoundHttpException
+     */
+    protected function createConfirmationDomain()
+    {
+        /** @var UserConfirmation $domain */
+        $domain = \Yii::createObject(UserConfirmation::className());
+        if (!$domain->isEnabled || !$domain->isConfirmationByEmailEnabled) {
+            throw new NotFoundHttpException('Page not found');
+        }
+        return $domain;
     }
 }

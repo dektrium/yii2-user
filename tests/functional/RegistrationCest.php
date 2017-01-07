@@ -1,6 +1,7 @@
 <?php
 
 
+use dektrium\user\service\UserConfirmation;
 use dektrium\user\models\Token;
 use dektrium\user\models\User;
 use dektrium\user\Module;
@@ -19,8 +20,10 @@ class RegistrationCest
     public function _after(FunctionalTester $I)
     {
         \Yii::$container->set(Module::className(), [
-            'enableConfirmation'       => true,
             'enableGeneratingPassword' => false,
+        ]);
+        Yii::$container->set(UserConfirmation::className(), [
+            'isEnabled' => true,
         ]);
     }
 
@@ -31,8 +34,10 @@ class RegistrationCest
     public function testRegistration(FunctionalTester $I)
     {
         \Yii::$container->set(Module::className(), [
-            'enableConfirmation'       => false,
             'enableGeneratingPassword' => false,
+        ]);
+        Yii::$container->set(UserConfirmation::className(), [
+            'isEnabled' => false,
         ]);
 
         $page = RegistrationPage::openBy($I);
@@ -66,8 +71,8 @@ class RegistrationCest
      */
     public function testRegistrationWithConfirmation(FunctionalTester $I)
     {
-        \Yii::$container->set(Module::className(), [
-            'enableConfirmation' => true,
+        Yii::$container->set(UserConfirmation::className(), [
+            'isEnabled' => true,
         ]);
         $page = RegistrationPage::openBy($I);
         $page->register('tester@example.com', 'tester', 'tester');
@@ -88,8 +93,10 @@ class RegistrationCest
     public function testRegistrationWithoutPassword(FunctionalTester $I)
     {
         \Yii::$container->set(Module::className(), [
-            'enableConfirmation'       => false,
             'enableGeneratingPassword' => true,
+        ]);
+        Yii::$container->set(UserConfirmation::className(), [
+            'isEnabled' => false,
         ]);
         $page = RegistrationPage::openBy($I);
         $page->register('tester@example.com', 'tester');

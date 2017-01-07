@@ -11,33 +11,34 @@
 
 namespace dektrium\user\events;
 
+use dektrium\user\mail\RegistrationEmail;
 use dektrium\user\models\User;
-use yii\base\Event;
 
 /**
+ * @property RegistrationEmail $email
  * @property User $model
  * @author Dmitry Erofeev <dmeroff@gmail.com>
  */
-class UserEvent extends Event
+class RegistrationEvent extends UserEvent
 {
     /**
-     * @var User
+     * @var RegistrationEmail
      */
-    private $_user;
+    protected $email;
 
     /**
-     * @return User
+     * @return RegistrationEmail
      */
-    public function getUser()
+    public function getEmail()
     {
-        return $this->_user;
+        return $this->email;
     }
 
     /**
-     * @param User $user
+     * @param RegistrationEmail $email
      */
-    public function setUser(User $user = null)
+    public function setEmail($email)
     {
-        $this->_user = $user;
+        $this->email = $email;
     }
 }

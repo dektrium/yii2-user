@@ -11,6 +11,7 @@
 
 namespace dektrium\user;
 
+use dektrium\user\mail\RegistrationEmail;
 use dektrium\user\models\Token;
 use dektrium\user\models\User;
 use Yii;
@@ -23,25 +24,44 @@ use yii\base\Component;
  */
 class Mailer extends Component
 {
-    /** @var string */
+    /**
+     * @var string
+     */
     public $viewPath = '@dektrium/user/views/mail';
 
-    /** @var string|array Default: `Yii::$app->params['adminEmail']` OR `no-reply@example.com` */
+    /**
+     * @var string|array Default: `Yii::$app->params['adminEmail']` OR `no-reply@example.com`
+     */
     public $sender;
 
-    /** @var string */
+    /**
+     * @var string
+     */
     protected $welcomeSubject;
 
-    /** @var string */
+    /**
+     * @var string
+     */
     protected $confirmationSubject;
 
-    /** @var string */
+    /**
+     * @var string
+     */
     protected $reconfirmationSubject;
 
-    /** @var string */
+    /**
+     * @var string
+     */
     protected $recoverySubject;
 
-    /** @var \dektrium\user\Module */
+    /**
+     * @var string
+     */
+    protected $approvalSubject;
+
+    /**
+     * @var \dektrium\user\Module
+     */
     protected $module;
 
     /**
@@ -124,11 +144,53 @@ class Mailer extends Component
         $this->recoverySubject = $recoverySubject;
     }
 
-    /** @inheritdoc */
+    /**
+     * @return string
+     */
+    public function getApprovalSubject()
+    {
+        if ($this->approvalSubject == null) {
+            $this->setApprovalSubject(Yii::t('user', 'Your account on {0} has been approved', Yii::$app->name));
+        }
+
+        return $this->approvalSubject;
+    }
+
+    /**
+     * @param string $approvalSubject
+     */
+    public function setApprovalSubject($approvalSubject)
+    {
+        $this->approvalSubject = $approvalSubject;
+    }
+
+    /**
+     * @inheritdoc
+     */
     public function init()
     {
         $this->module = Yii::$app->getModule('user');
         parent::init();
+    }
+
+    /**
+     * Sends registration email.
+     *
+     * @param  RegistrationEmail|null $email
+     * @return bool
+     */
+    public function sendRegistrationMessage(RegistrationEmail $email = null)
+    {
+        if ($email instanceof RegistrationEmail) {
+            return $this->sendMessage(
+                $email->getUser()->email,
+                $this->getWelcomeSubject(),
+                'registration',
+                ['email' => $email]
+            );
+        }
+
+        return true;
     }
 
     /**
@@ -137,7 +199,7 @@ class Mailer extends Component
      * @param User  $user
      * @param Token $token
      * @param bool  $showPassword
-     *
+     * @deprecated
      * @return bool
      */
     public function sendWelcomeMessage(User $user, Token $token = null, $showPassword = false)
@@ -207,6 +269,20 @@ class Mailer extends Component
             $this->getRecoverySubject(),
             'recovery',
             ['user' => $user, 'token' => $token]
+        );
+    }
+
+    /**
+     * Sends an email when user's account has been approved.
+     * @param  User $user
+     * @return bool
+     */
+    public function sendApprovalMessage(User $user)
+    {
+        return $this->sendMessage(
+            $user->email,
+            $this->getApprovalSubject(),
+            'approval'
         );
     }
 

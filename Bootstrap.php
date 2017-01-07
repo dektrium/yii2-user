@@ -11,6 +11,7 @@
 
 namespace dektrium\user;
 
+use dektrium\user\service\interfaces\ServiceInterface;
 use dektrium\user\models\User;
 use Yii;
 use yii\authclient\Collection;
@@ -27,12 +28,18 @@ use yii\i18n\PhpMessageSource;
 class Bootstrap implements BootstrapInterface
 {
     /**
+     * @var array
+     */
+    protected $attachable = [
+        'dektrium\user\service\UserConfirmation',
+    ];
+
+    /**
      * @inheritdoc
      */
     public function bootstrap($app)
     {
         /** @var Module $module */
-        /** @var \yii\db\ActiveRecord $modelName */
         if ($app->hasModule('user') && ($module = $app->getModule('user')) instanceof Module) {
             if ($app instanceof ConsoleApplication) {
                 $module->controllerNamespace = 'dektrium\user\commands';
@@ -66,13 +73,26 @@ class Bootstrap implements BootstrapInterface
 
             if (!isset($app->get('i18n')->translations['user*'])) {
                 $app->get('i18n')->translations['user*'] = [
-                    'class'    => PhpMessageSource::className(),
+                    'class' => PhpMessageSource::className(),
                     'basePath' => __DIR__ . '/messages',
                     'sourceLanguage' => 'en-US'
                 ];
             }
 
             Yii::$container->set('dektrium\user\Mailer', $module->mailer);
+
+            foreach ($this->attachable as $name) {
+                $this->createAttachableObject($name)->attachEventHandlers();
+            }
         }
+    }
+
+    /**
+     * @param  string $name
+     * @return ServiceInterface|object
+     */
+    protected function createAttachableObject($name)
+    {
+        return Yii::createObject($name);
     }
 }

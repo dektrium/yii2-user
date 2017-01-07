@@ -11,7 +11,8 @@
 
 namespace dektrium\user\models;
 
-use dektrium\user\helpers\Password;
+use dektrium\user\service\UserConfirmation;
+use dektrium\user\traits\ServiceTrait;
 use Yii;
 use yii\base\Model;
 use dektrium\user\traits\ModuleTrait;
@@ -25,25 +26,36 @@ use dektrium\user\traits\ModuleTrait;
 class LoginForm extends Model
 {
     use ModuleTrait;
+    use ServiceTrait;
 
-    /** @var string User's email or username */
+    /**
+     * @var string User's email or username
+     */
     public $login;
 
-    /** @var string User's plain password */
+    /**
+     * @var string User's plain password
+     */
     public $password;
 
-    /** @var string Whether to remember the user */
+    /**
+     * @var string Whether to remember the user
+     */
     public $rememberMe = false;
 
-    /** @var \dektrium\user\models\User */
+    /**
+     * @var \dektrium\user\models\User
+     */
     protected $user;
 
-    /** @inheritdoc */
+    /**
+     * @inheritdoc
+     */
     public function attributeLabels()
     {
         return [
-            'login'      => Yii::t('user', 'Login'),
-            'password'   => Yii::t('user', 'Password'),
+            'login' => Yii::t('user', 'Login'),
+            'password' => Yii::t('user', 'Password'),
             'rememberMe' => Yii::t('user', 'Remember me next time'),
         ];
     }
@@ -54,31 +66,58 @@ class LoginForm extends Model
         return [
             'requiredFields' => [['login', 'password'], 'required'],
             'loginTrim' => ['login', 'trim'],
-            'passwordValidate' => [
-                'password',
-                function ($attribute) {
-                    if ($this->user === null || !$this->user->validatePassword($this->password)) {
-                        $this->addError($attribute, Yii::t('user', 'Invalid login or password'));
-                    }
-                }
-            ],
-            'confirmationValidate' => [
-                'login',
-                function ($attribute) {
-                    if ($this->user !== null) {
-                        $confirmationRequired = $this->module->enableConfirmation
-                            && !$this->module->enableUnconfirmedLogin;
-                        if ($confirmationRequired && !$this->user->getIsConfirmed()) {
-                            $this->addError($attribute, Yii::t('user', 'You need to confirm your email address'));
-                        }
-                        if ($this->user->getIsBlocked()) {
-                            $this->addError($attribute, Yii::t('user', 'Your account has been blocked'));
-                        }
-                    }
-                }
-            ],
+            'passwordValidate' => ['password', 'validatePassword'],
+            'confirmationValidate' => ['login', 'validateConfirmationStatus'],
+            'blockValidate' => ['login', 'validateBlockStatus'],
             'rememberMe' => ['rememberMe', 'boolean'],
         ];
+    }
+
+    /**
+     * Validates user's password.
+     *
+     * @param string $attribute
+     */
+    public function validatePassword($attribute)
+    {
+        if ($this->user === null || !$this->user->validatePassword($this->password)) {
+            $this->addError($attribute, Yii::t('user', 'Invalid login or password'));
+        }
+    }
+
+    /**
+     * Validates user's confirmation status.
+     *
+     * @param string $attribute
+     */
+    public function validateConfirmationStatus($attribute)
+    {
+        $service = $this->getUserConfirmationService();
+
+        if ($this->user !== null && $this->user->getIsAdmin()) {
+            return;
+        }
+
+        if ($this->user !== null && $service->isEnabled && !$service->isLoginAllowedWhileUnconfirmedEnabled) {
+            if ($service->isConfirmationByEmailEnabled && !$this->user->getIsConfirmed()) {
+                $this->addError($attribute, Yii::t('user', 'You need to confirm your email address'));
+            }
+            if ($service->isAdminApprovalEnabled && !$this->user->isApproved()) {
+                $this->addError($attribute, Yii::t('user', 'Your account needs to be approved by administrator'));
+            }
+        }
+    }
+
+    /**
+     * Validates user's block status.
+     *
+     * @param string $attribute
+     */
+    public function validateBlockStatus($attribute)
+    {
+        if ($this->user !== null && $this->user->getIsBlocked()) {
+            $this->addError($attribute, Yii::t('user', 'Your account has been blocked'));
+        }
     }
 
     /**
@@ -95,13 +134,17 @@ class LoginForm extends Model
         }
     }
 
-    /** @inheritdoc */
+    /**
+     * @inheritdoc
+     */
     public function formName()
     {
         return 'login-form';
     }
 
-    /** @inheritdoc */
+    /**
+     * @inheritdoc
+     */
     public function beforeValidate()
     {
         if (parent::beforeValidate()) {

@@ -11,8 +11,10 @@
 
 namespace dektrium\user\models;
 
-use dektrium\user\helpers\Password;
+use dektrium\user\events\RegistrationEvent;
+use dektrium\user\events\UserEvent;
 use dektrium\user\helpers\PasswordGenerator;
+use dektrium\user\mail\RegistrationEmail;
 use dektrium\user\Mailer;
 use dektrium\user\models\query\UserQuery;
 use dektrium\user\Module;
@@ -44,6 +46,7 @@ use yii\helpers\ArrayHelper;
  * @property integer $created_at
  * @property integer $updated_at
  * @property integer $flags
+ * @property integer $approved_at
  *
  * Defined relations:
  * @property Account[] $accounts
@@ -63,20 +66,24 @@ class User extends ActiveRecord implements IdentityInterface
     const AFTER_CREATE    = 'afterCreate';
     const BEFORE_REGISTER = 'beforeRegister';
     const AFTER_REGISTER  = 'afterRegister';
-    const BEFORE_CONFIRM  = 'beforeConfirm';
-    const AFTER_CONFIRM   = 'afterConfirm';
 
     // following constants are used on secured email changing process
     const OLD_EMAIL_CONFIRMED = 0b1;
     const NEW_EMAIL_CONFIRMED = 0b10;
 
-    /** @var string Plain password. Used for model validation. */
+    /**
+     * @var string Plain password. Used for model validation.
+     */
     public $password;
 
-    /** @var Profile|null */
+    /**
+     * @var Profile|null
+     */
     private $_profile;
 
-    /** @var string Default username regexp */
+    /**
+     * @var string Default username regexp
+     */
     public static $usernameRegexp = '/^[-a-zA-Z0-9_\.@]+$/';
 
     /**
@@ -89,7 +96,19 @@ class User extends ActiveRecord implements IdentityInterface
     }
 
     /**
-     * @return bool Whether the user is confirmed or not.
+     * Whether the user is approved by admin.
+     *
+     * @return bool
+     */
+    public function isApproved()
+    {
+        return $this->approved_at != null;
+    }
+
+    /**
+     * Whether the user is confirmed or not.
+     *
+     * @return bool
      */
     public function getIsConfirmed()
     {
@@ -193,8 +212,7 @@ class User extends ActiveRecord implements IdentityInterface
     /** @inheritdoc */
     public function scenarios()
     {
-        $scenarios = parent::scenarios();
-        return ArrayHelper::merge($scenarios, [
+        return ArrayHelper::merge(parent::scenarios(), [
             'register' => ['username', 'email', 'password'],
             'connect'  => ['username', 'email'],
             'create'   => ['username', 'email', 'password'],
@@ -296,67 +314,40 @@ class User extends ActiveRecord implements IdentityInterface
         $transaction = $this->getDb()->beginTransaction();
 
         try {
-            $this->confirmed_at = $this->module->enableConfirmation ? null : time();
             if ($this->module->enableGeneratingPassword) {
                 /** @var PasswordGenerator $generator */
                 $generator = \Yii::createObject(PasswordGenerator::className());
                 $this->password = $generator->generate();
             }
 
-            $this->trigger(self::BEFORE_REGISTER);
+            /** @var RegistrationEmail $email */
+            $email = \Yii::createObject(RegistrationEmail::className(), [$this]);
+            $email->setIsPasswordShown($this->module->enableGeneratingPassword);
+
+            $this->trigger(self::BEFORE_REGISTER, \Yii::createObject([
+                'class' => RegistrationEvent::className(),
+                'user' => $this,
+                'email' => $email,
+            ]));
 
             if (!$this->save()) {
                 $transaction->rollBack();
                 return false;
             }
 
-            if ($this->module->enableConfirmation) {
-                /** @var Token $token */
-                $token = \Yii::createObject(['class' => Token::className(), 'type' => Token::TYPE_CONFIRMATION]);
-                $token->link('user', $this);
-            }
+            $this->trigger(self::AFTER_REGISTER, \Yii::createObject([
+                'class' => RegistrationEvent::className(),
+                'user' => $this,
+                'email' => $email,
+            ]));
 
-            $this->mailer->sendWelcomeMessage($this, isset($token) ? $token : null);
-            $this->trigger(self::AFTER_REGISTER);
-
+            $this->mailer->sendRegistrationMessage($email);
             $transaction->commit();
-
             return true;
         } catch (\Exception $e) {
             $transaction->rollBack();
-            return false;
+            throw $e;
         }
-    }
-
-    /**
-     * Attempts user confirmation.
-     *
-     * @param string $code Confirmation code.
-     *
-     * @return boolean
-     */
-    public function attemptConfirmation($code)
-    {
-        /** @var Token $token */
-        $token = \Yii::createObject(Token::className());
-        $token = $token::find()->byUserId($this->id)->byCode($code)->byType(Token::TYPE_CONFIRMATION)->one();
-
-        if ($token instanceof Token && !$token->isExpired) {
-            $token->delete();
-            if (($success = $this->confirm())) {
-                \Yii::$app->user->login($this, $this->module->rememberFor);
-                $message = \Yii::t('user', 'Thank you, registration is now complete.');
-            } else {
-                $message = \Yii::t('user', 'Something went wrong and your account has not been confirmed.');
-            }
-        } else {
-            $success = false;
-            $message = \Yii::t('user', 'The confirmation link is invalid or expired. Please try requesting a new one.');
-        }
-
-        \Yii::$app->session->setFlash($success ? 'success' : 'danger', $message);
-
-        return $success;
     }
 
     /**
@@ -421,17 +412,6 @@ class User extends ActiveRecord implements IdentityInterface
                 $this->save(false);
             }
         }
-    }
-
-    /**
-     * Confirms the user by setting 'confirmed_at' field to current time.
-     */
-    public function confirm()
-    {
-        $this->trigger(self::BEFORE_CONFIRM);
-        $result = (bool) $this->updateAttributes(['confirmed_at' => time()]);
-        $this->trigger(self::AFTER_CONFIRM);
-        return $result;
     }
 
     /**

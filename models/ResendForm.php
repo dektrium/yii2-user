@@ -11,7 +11,6 @@
 
 namespace dektrium\user\models;
 
-use dektrium\user\Mailer;
 use yii\base\Model;
 
 /**
@@ -26,21 +25,6 @@ class ResendForm extends Model
      * @var string
      */
     public $email;
-
-    /**
-     * @var Mailer
-     */
-    protected $mailer;
-
-    /**
-     * @param Mailer $mailer
-     * @param array  $config
-     */
-    public function __construct(Mailer $mailer, $config = [])
-    {
-        $this->mailer = $mailer;
-        parent::__construct($config);
-    }
 
     /**
      * @inheritdoc
@@ -72,39 +56,12 @@ class ResendForm extends Model
     }
 
     /**
-     * Creates new confirmation token and sends it to the user.
-     *
-     * @return bool
+     * @return array|User|null
      */
-    public function resend()
+    public function getUser()
     {
-        if (!$this->validate()) {
-            return false;
-        }
-
         /** @var User $user */
         $user = \Yii::createObject(User::className());
-        $user = $user::find()->byEmail($this->email)->one();
-
-        if ($user instanceof User && !$user->isConfirmed) {
-            /** @var Token $token */
-            $token = \Yii::createObject([
-                'class' => Token::className(),
-                'user_id' => $user->id,
-                'type' => Token::TYPE_CONFIRMATION,
-            ]);
-            $token->save(false);
-            $this->mailer->sendConfirmationMessage($user, $token);
-        }
-
-        \Yii::$app->session->setFlash(
-            'info',
-            \Yii::t(
-                'user',
-                'A message has been sent to your email address. It contains a confirmation link that you must click to complete registration.'
-            )
-        );
-
-        return true;
+        return $user::find()->byEmail($this->email)->one();
     }
 }

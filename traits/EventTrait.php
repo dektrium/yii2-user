@@ -41,11 +41,11 @@ trait EventTrait
     }
 
     /**
-     * @param  User      $user
+     * @param  User|null $user
      * @return UserEvent
      * @throws \yii\base\InvalidConfigException
      */
-    protected function getUserEvent(User $user)
+    protected function getUserEvent(User $user = null)
     {
         return \Yii::createObject(['class' => UserEvent::className(), 'user' => $user]);
     }

@@ -9,6 +9,7 @@
  * file that was distributed with this source code.
  */
 
+use dektrium\user\helpers\FeatureHelper;
 use dektrium\user\widgets\Connect;
 use yii\helpers\Html;
 use yii\widgets\ActiveForm;
@@ -73,7 +74,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 <?php ActiveForm::end(); ?>
             </div>
         </div>
-        <?php if ($module->enableConfirmation): ?>
+        <?php if (FeatureHelper::isEmailConfirmationEnabled()): ?>
             <p class="text-center">
                 <?= Html::a(Yii::t('user', 'Didn\'t receive confirmation message?'), ['/user/registration/resend']) ?>
             </p>

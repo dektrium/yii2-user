@@ -14,19 +14,23 @@ Yii2-user documentation is licensed under the [CC BY 4.0](http://creativecommons
 - [Console commands](console.md)
 - [F.A.Q.](faq.md)
 
-## Overriding
-
-- [Overriding models](overriding-models.md)
-- [Overriding views](overriding-views.md)
-- [Using controller events](using-controller-events.md)
-- [Overriding controllers](overriding-controllers.md)
-
 ## Basics
 
 - [User management](user-management.md)
 - [Authentication via social networks](social-auth.md)
 - [Mailer](mailer.md)
 - [Data model](data-model.md)
+
+## Services
+
+- [Confirmation](confirmation.md)
+
+## Overriding
+
+- [Overriding models](overriding-models.md)
+- [Overriding views](overriding-views.md)
+- [Using controller events](using-controller-events.md)
+- [Overriding controllers](overriding-controllers.md)
 
 ## RBAC
 

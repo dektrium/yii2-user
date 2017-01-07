@@ -21,20 +21,6 @@ will be 8 characters long and will be sent to user via email.
 
 ---
 
-#### enableConfirmation (Type: `boolean`, Default value: `true`)
-
-If this option is set to `true`, module sends email that contains a confirmation
-link that user must click to complete registration.
-
----
-
-#### enableUnconfirmedLogin (Type: `boolean`, Default value: `false`)
-
-If this option is to `true`, users will be able to log in even though they
-didn't confirm his account.
-
----
-
 #### enablePasswordRecovery (Type: `boolean`, Default value: `true`)
 
 If this option is to `true`, users will be able to recovery their forgotten

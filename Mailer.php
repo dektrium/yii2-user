@@ -37,7 +37,7 @@ class Mailer extends Component
     /**
      * @var string
      */
-    protected $welcomeSubject;
+    protected $registrationSubject;
 
     /**
      * @var string
@@ -67,21 +67,21 @@ class Mailer extends Component
     /**
      * @return string
      */
-    public function getWelcomeSubject()
+    public function getRegistrationSubject()
     {
-        if ($this->welcomeSubject == null) {
-            $this->setWelcomeSubject(Yii::t('user', 'Welcome to {0}', Yii::$app->name));
+        if ($this->registrationSubject == null) {
+            $this->setRegistrationSubject(Yii::t('user', 'Welcome to {0}', Yii::$app->name));
         }
 
-        return $this->welcomeSubject;
+        return $this->registrationSubject;
     }
 
     /**
-     * @param string $welcomeSubject
+     * @param string $registrationSubject
      */
-    public function setWelcomeSubject($welcomeSubject)
+    public function setRegistrationSubject($registrationSubject)
     {
-        $this->welcomeSubject = $welcomeSubject;
+        $this->registrationSubject = $registrationSubject;
     }
 
     /**
@@ -184,32 +184,13 @@ class Mailer extends Component
         if ($email instanceof RegistrationEmail) {
             return $this->sendMessage(
                 $email->getUser()->email,
-                $this->getWelcomeSubject(),
+                $this->getRegistrationSubject(),
                 'registration',
                 ['email' => $email]
             );
         }
 
         return true;
-    }
-
-    /**
-     * Sends an email to a user after registration.
-     *
-     * @param User  $user
-     * @param Token $token
-     * @param bool  $showPassword
-     * @deprecated
-     * @return bool
-     */
-    public function sendWelcomeMessage(User $user, Token $token = null, $showPassword = false)
-    {
-        return $this->sendMessage(
-            $user->email,
-            $this->getWelcomeSubject(),
-            'welcome',
-            ['user' => $user, 'token' => $token, 'module' => $this->module, 'showPassword' => $showPassword]
-        );
     }
 
     /**

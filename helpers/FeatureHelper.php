@@ -11,6 +11,7 @@
 
 namespace dektrium\user\helpers;
 
+use dektrium\user\service\RegistrationService;
 use dektrium\user\service\UserConfirmation;
 
 /**
@@ -22,6 +23,11 @@ class FeatureHelper
      * @var UserConfirmation
      */
     protected static $userConfirmation;
+
+    /**
+     * @var RegistrationService
+     */
+    protected static $registrationService;
 
     /**
      * Whether admin approval is enabled.
@@ -44,6 +50,14 @@ class FeatureHelper
     }
 
     /**
+     * @return bool
+     */
+    public static function isRegistrationEnabled()
+    {
+        return static::getRegistrationService()->isEnabled;
+    }
+
+    /**
      * @return object|UserConfirmation
      */
     protected static function getUserConfirmation()
@@ -53,5 +67,17 @@ class FeatureHelper
         }
 
         return static::$userConfirmation;
+    }
+
+    /**
+     * @return object|UserConfirmation
+     */
+    protected static function getRegistrationService()
+    {
+        if (static::$registrationService === null) {
+            static::$registrationService = \Yii::createObject(RegistrationService::className());
+        }
+
+        return static::$registrationService;
     }
 }

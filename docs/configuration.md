@@ -4,23 +4,6 @@ All available configuration options are listed below with their default values.
 
 ---
 
-#### enableRegistration (Type: `boolean`, Default value: `true`)
-
-If this option is set to `false`, users will not be able to register an account.
-Registration page will throw `HttpNotFoundException`. However confirmation will
-continue working and you as an administrator will be able to create an account
-for user from admin interface.
-
----
-
-#### enableGeneratingPassword (Type: `boolean`, Default value: `false`)
-
-If this option is set to `true`, password field on registration page will be
-hidden and password for user will be generated automatically. Generated password
-will be 8 characters long and will be sent to user via email.
-
----
-
 #### enablePasswordRecovery (Type: `boolean`, Default value: `true`)
 
 If this option is to `true`, users will be able to recovery their forgotten

@@ -33,19 +33,18 @@ You can use Login widget to achieve this:
 ```php
 <?php
 
-use dektrium\user\widgets\Login;
 use yii\helpers\Html;
 use yii\widgets\ActiveForm;
+use dektrium\user\widgets\Login;
 
 /**
- * @var yii\web\View              $this
- * @var dektrium\user\models\User $user
- * @var dektrium\user\Module      $module
+ * @var yii\web\View                          $this
+ * @var dektrium\user\models\User             $user
+ * @var dektrium\user\models\RegistrationForm $model
  */
 
 $this->title = Yii::t('user', 'Sign up');
 $this->params['breadcrumbs'][] = $this->title;
-
 ?>
 <div class="row">
     <div class="col-md-4 col-md-offset-1">
@@ -65,7 +64,7 @@ $this->params['breadcrumbs'][] = $this->title;
             </div>
             <div class="panel-body">
                 <?php $form = ActiveForm::begin([
-                    'id'                     => 'registration-form',
+                    'id' => 'registration-form',
                     'enableAjaxValidation'   => true,
                     'enableClientValidation' => false,
                 ]); ?>
@@ -74,7 +73,7 @@ $this->params['breadcrumbs'][] = $this->title;
 
                 <?= $form->field($model, 'username') ?>
 
-                <?php if ($module->enableGeneratingPassword == false): ?>
+                <?php if ($model->isAttributeSafe('password')): ?>
                     <?= $form->field($model, 'password')->passwordInput() ?>
                 <?php endif ?>
 

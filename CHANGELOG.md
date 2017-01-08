@@ -1,6 +1,6 @@
 # CHANGELOG
 
-## 0.9.10 [Work in progress]
+## 0.9.10 [8 January 2017]
 
 - Enh #767: Added support for MS SQL Server (tsdogs)
 - Enh #795: Added method `getAccountByProvider` to User model to get account model by provider name (dmeroff)

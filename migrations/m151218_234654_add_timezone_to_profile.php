@@ -22,5 +22,4 @@ class m151218_234654_add_timezone_to_profile extends Migration
     {
         $this->dropcolumn('{{%profile}}', 'timezone');
     }
-
 }

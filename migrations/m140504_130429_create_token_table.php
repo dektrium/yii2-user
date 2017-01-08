@@ -19,10 +19,10 @@ class m140504_130429_create_token_table extends Migration
     public function up()
     {
         $this->createTable('{{%token}}', [
-            'user_id' => $this->integer()->notNull(),
-            'code' => $this->string(32)->notNull(),
+            'user_id'    => $this->integer()->notNull(),
+            'code'       => $this->string(32)->notNull(),
             'created_at' => $this->integer()->notNull(),
-            'type' => $this->smallInteger()->notNull(),
+            'type'       => $this->smallInteger()->notNull(),
         ], $this->tableOptions);
 
         $this->createIndex('{{%token_unique}}', '{{%token}}', ['user_id', 'code', 'type'], true);

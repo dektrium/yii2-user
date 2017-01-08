@@ -43,8 +43,9 @@ class m141222_110026_update_ip_field extends Migration
         $transaction = Yii::$app->db->beginTransaction();
         try {
             foreach ($users as $user) {
-                if ($user['ip'] == null)
+                if ($user['ip'] == null) {
                     continue;
+                }
                 Yii::$app->db->createCommand()->update('{{%user}}', [
                     'registration_ip' => ip2long($user['ip'])
                 ], 'id = ' . $user['id'])->execute();

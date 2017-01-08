@@ -1,6 +1,7 @@
 <?php
 
 
+use dektrium\user\service\RegistrationService;
 use dektrium\user\service\UserConfirmation;
 use dektrium\user\models\Token;
 use dektrium\user\models\User;
@@ -25,6 +26,10 @@ class RegistrationCest
         Yii::$container->set(UserConfirmation::className(), [
             'isEnabled' => true,
         ]);
+        Yii::$container->set(RegistrationService::className(), [
+            'isEnabled' => true,
+            'enableGeneratingPassword' => false,
+        ]);
     }
 
     /**
@@ -33,9 +38,6 @@ class RegistrationCest
      */
     public function testRegistration(FunctionalTester $I)
     {
-        \Yii::$container->set(Module::className(), [
-            'enableGeneratingPassword' => false,
-        ]);
         Yii::$container->set(UserConfirmation::className(), [
             'isEnabled' => false,
         ]);
@@ -93,6 +95,9 @@ class RegistrationCest
     public function testRegistrationWithoutPassword(FunctionalTester $I)
     {
         \Yii::$container->set(Module::className(), [
+            'enableGeneratingPassword' => true,
+        ]);
+        Yii::$container->set(RegistrationService::className(), [
             'enableGeneratingPassword' => true,
         ]);
         Yii::$container->set(UserConfirmation::className(), [

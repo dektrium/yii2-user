@@ -10,7 +10,6 @@
  */
 
 use dektrium\user\migrations\Migration;
-use yii\db\Schema;
 
 class m150623_212711_fix_username_notnull extends Migration
 {
@@ -20,9 +19,9 @@ class m150623_212711_fix_username_notnull extends Migration
             $this->alterColumn('{{%user}}', 'username', 'SET NOT NULL');
         } else {
             if ($this->dbType == 'sqlsrv') {
-                $this->dropIndex('{{%user_unique_username}}','{{%user}}');
+                $this->dropIndex('{{%user_unique_username}}', '{{%user}}');
             }
-            $this->alterColumn('{{%user}}', 'username', Schema::TYPE_STRING . '(255) NOT NULL');
+            $this->alterColumn('{{%user}}', 'username', $this->string(255)->notNull());
             if ($this->dbType == 'sqlsrv') {
                 $this->createIndex('{{%user_unique_username}}', '{{%user}}', 'username', true);
             }
@@ -31,13 +30,13 @@ class m150623_212711_fix_username_notnull extends Migration
 
     public function down()
     {
-        if($this->dbType == "pgsql"){
+        if ($this->dbType == "pgsql") {
             $this->alterColumn('{{%user}}', 'username', 'DROP NOT NULL');
-        }else{
+        } else {
             if ($this->dbType == 'sqlsrv') {
-                $this->dropIndex('{{%user_unique_username}}','{{%user}}');
+                $this->dropIndex('{{%user_unique_username}}', '{{%user}}');
             }
-            $this->alterColumn('{{%user}}', 'username', Schema::TYPE_STRING . '(255) NULL');
+            $this->alterColumn('{{%user}}', 'username', $this->string(255)->null());
             if ($this->dbType == 'sqlsrv') {
                 $this->createIndex('{{%user_unique_username}}', '{{%user}}', 'username', true);
             }

@@ -1,17 +1,16 @@
 <?php
 
 use yii\db\Query;
-use yii\db\Schema;
 use dektrium\user\migrations\Migration;
 
 class m150614_103145_update_social_account_table extends Migration
 {
     public function up()
     {
-        $this->addColumn('{{%social_account}}', 'code', Schema::TYPE_STRING . '(32) NULL');
-        $this->addColumn('{{%social_account}}', 'created_at', Schema::TYPE_INTEGER. ' NULL');
-        $this->addColumn('{{%social_account}}', 'email', Schema::TYPE_STRING. ' NULL');
-        $this->addColumn('{{%social_account}}', 'username', Schema::TYPE_STRING. ' NULL');
+        $this->addColumn('{{%social_account}}', 'code', $this->string(32)->null());
+        $this->addColumn('{{%social_account}}', 'created_at', $this->integer()->null());
+        $this->addColumn('{{%social_account}}', 'email', $this->string()->null());
+        $this->addColumn('{{%social_account}}', 'username', $this->string()->null());
         $this->createIndex('{{%account_unique_code}}', '{{%social_account}}', 'code', true);
 
         $accounts = (new Query())->from('{{%social_account}}')->select('id')->all();

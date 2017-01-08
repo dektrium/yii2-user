@@ -10,7 +10,6 @@
  */
 
 use dektrium\user\migrations\Migration;
-use yii\db\Schema;
 
 class m150623_212711_fix_username_notnull extends Migration
 {
@@ -22,7 +21,7 @@ class m150623_212711_fix_username_notnull extends Migration
             if ($this->dbType == 'sqlsrv') {
                 $this->dropIndex('{{%user_unique_username}}','{{%user}}');
             }
-            $this->alterColumn('{{%user}}', 'username', Schema::TYPE_STRING . '(255) NOT NULL');
+            $this->alterColumn('{{%user}}', 'username', $this->string(255)->notNull());
             if ($this->dbType == 'sqlsrv') {
                 $this->createIndex('{{%user_unique_username}}', '{{%user}}', 'username', true);
             }
@@ -37,7 +36,7 @@ class m150623_212711_fix_username_notnull extends Migration
             if ($this->dbType == 'sqlsrv') {
                 $this->dropIndex('{{%user_unique_username}}','{{%user}}');
             }
-            $this->alterColumn('{{%user}}', 'username', Schema::TYPE_STRING . '(255) NULL');
+            $this->alterColumn('{{%user}}', 'username', $this->string(255)->null());
             if ($this->dbType == 'sqlsrv') {
                 $this->createIndex('{{%user_unique_username}}', '{{%user}}', 'username', true);
             }

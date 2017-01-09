@@ -376,7 +376,7 @@ class User extends ActiveRecord implements IdentityInterface
     public function resendPassword()
     {
         $this->password = Password::generate(8);
-        $this->save(true, ['password_hash']);
+        $this->save(false, ['password_hash']);
 
         return $this->mailer->sendGeneratedPassword($this, $this->password);
     }

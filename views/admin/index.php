@@ -106,7 +106,7 @@ $this->params['breadcrumbs'][] = $this->title;
                     <span title="' . Yii::t('user', 'Generate and send new password to user') . '" class="glyphicon glyphicon-envelope">
                     </span> </a>';
                 },
-               'switch' => function ($url, $model) {
+                'switch' => function ($url, $model) {
                     if($model->id != Yii::$app->user->id)
                         return Html::a('<span class="glyphicon glyphicon-user"></span>', ['/user/admin/switch', 'id' => $model->id], [
                             'title' => Yii::t('user', 'Become this user'),

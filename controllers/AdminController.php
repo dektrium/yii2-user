@@ -318,29 +318,21 @@ class AdminController extends Controller
      */
     public function actionSwitch($id = null)
     {
-        if(!Yii::$app->getModule('user')->enableImpersonateUser)
+        if (!Yii::$app->getModule('user')->enableImpersonateUser)
             throw new ForbiddenHttpException(Yii::t('user', 'Impersonate user is disabled in the application configuration'));
 
-        $key = self::ORIGINAL_USER_SESSION_KEY;
-
-        if(!$id && Yii::$app->session->has($key)) {
-            $user = $this->findModel(Yii::$app->session->get($key));
-            Yii::$app->session->remove($key);
+        if(!$id && Yii::$app->session->has(self::ORIGINAL_USER_SESSION_KEY)) {
+            $user = $this->findModel(Yii::$app->session->get(self::ORIGINAL_USER_SESSION_KEY));
+            Yii::$app->session->remove(self::ORIGINAL_USER_SESSION_KEY);
         } else {
             if (!Yii::$app->user->identity->isAdmin)
                 throw new ForbiddenHttpException;
 
             $user = $this->findModel($id);
-            Yii::$app->session->set($key, Yii::$app->user->id);
+            Yii::$app->session->set(self::ORIGINAL_USER_SESSION_KEY, Yii::$app->user->id);
         }
 
         Yii::$app->user->switchIdentity($user, 3600);
-
-        Yii::warning(sprintf('User %s(id: %d) switched to user %s(id: %d).',
-            Yii::$app->user->identity->username,
-            Yii::$app->user->id,
-            Yii::$app->user->identity->username,
-            Yii::$app->user->id));
 
         return $this->goHome();
     }

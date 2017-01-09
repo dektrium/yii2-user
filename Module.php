@@ -91,7 +91,7 @@ class Module extends BaseModule
     /** @var array The rules to be used in URL management. */
     public $urlRules = [
         '<id:\d+>'                               => 'profile/show',
-        '<action:(login|logout)>'                => 'security/<action>',
+        '<action:(login|logout|auth)>'           => 'security/<action>',
         '<action:(register|resend)>'             => 'registration/<action>',
         'confirm/<id:\d+>/<code:[A-Za-z0-9_-]+>' => 'registration/confirm',
         'forgot'                                 => 'recovery/request',

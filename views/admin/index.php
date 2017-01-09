@@ -9,8 +9,6 @@
  * file that was distributed with this source code.
  */
 
-use dektrium\user\models\UserSearch;
-use yii\data\ActiveDataProvider;
 use yii\grid\GridView;
 use yii\helpers\Html;
 use yii\helpers\Url;
@@ -19,18 +17,16 @@ use yii\widgets\Pjax;
 
 
 /**
- * @var View $this
- * @var ActiveDataProvider $dataProvider
- * @var UserSearch $searchModel
+ * @var \yii\web\View $this
+ * @var \yii\data\ActiveDataProvider $dataProvider
+ * @var \dektrium\user\models\UserSearch $searchModel
  */
 
 $this->title = Yii::t('user', 'Manage users');
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 
-<?= $this->render('/_alert', [
-    'module' => Yii::$app->getModule('user'),
-]) ?>
+<?= $this->render('/_alert', ['module' => Yii::$app->getModule('user')]) ?>
 
 <?= $this->render('/admin/_menu') ?>
 
@@ -101,7 +97,7 @@ $this->params['breadcrumbs'][] = $this->title;
         ],
         [
             'class' => 'yii\grid\ActionColumn',
-            'template' => '{resend_password} {update} {delete}',
+            'template' => '{switch} {resend_password} {update} {delete}',
             'buttons' => [
                 'resend_password' => function ($url, $model, $key) {
                     if (!$model->isAdmin)
@@ -110,6 +106,13 @@ $this->params['breadcrumbs'][] = $this->title;
                     <span title="' . Yii::t('user', 'Generate and send new password to user') . '" class="glyphicon glyphicon-envelope">
                     </span> </a>';
                 },
+               'switch' => function ($url, $model) {
+                    if($model->id != Yii::$app->user->id)
+                        return Html::a('<span class="glyphicon glyphicon-user"></span>', ['/user/admin/switch', 'id' => $model->id], [
+                            'title' => Yii::t('user', 'Become this user'),
+                            'data-confirm' => Yii::t('user', 'Are you sure you want to switch to this user for the rest of this Session?'),
+                        ]);
+                }
             ]
         ],
     ],

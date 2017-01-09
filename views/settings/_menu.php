@@ -12,18 +12,19 @@
 use yii\helpers\Html;
 use yii\widgets\Menu;
 
-/** @var dektrium\user\models\User $user */
+/**
+ * @var dektrium\user\models\User $user
+ */
+
 $user = Yii::$app->user->identity;
 $networksVisible = count(Yii::$app->authClientCollection->clients) > 0;
-
 ?>
-
 <div class="panel panel-default">
     <div class="panel-heading">
         <h3 class="panel-title">
             <?= Html::img($user->profile->getAvatarUrl(24), [
                 'class' => 'img-rounded',
-                'alt'   => $user->username,
+                'alt' => $user->username,
             ]) ?>
             <?= $user->username ?>
         </h3>

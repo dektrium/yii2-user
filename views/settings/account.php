@@ -13,9 +13,9 @@ use yii\helpers\Html;
 use yii\widgets\ActiveForm;
 
 /**
- * @var $this  yii\web\View
- * @var $form  yii\widgets\ActiveForm
- * @var $model dektrium\user\models\SettingsForm
+ * @var yii\web\View $this
+ * @var yii\widgets\ActiveForm $form
+ * @var dektrium\user\models\SettingsForm $model
  */
 
 $this->title = Yii::t('user', 'Account settings');
@@ -35,13 +35,13 @@ $this->params['breadcrumbs'][] = $this->title;
             </div>
             <div class="panel-body">
                 <?php $form = ActiveForm::begin([
-                    'id'          => 'account-form',
-                    'options'     => ['class' => 'form-horizontal'],
+                    'id' => 'account-form',
+                    'options' => ['class' => 'form-horizontal'],
                     'fieldConfig' => [
-                        'template'     => "{label}\n<div class=\"col-lg-9\">{input}</div>\n<div class=\"col-sm-offset-3 col-lg-9\">{error}\n{hint}</div>",
+                        'template' => "{label}\n<div class=\"col-lg-9\">{input}</div>\n<div class=\"col-sm-offset-3 col-lg-9\">{error}\n{hint}</div>",
                         'labelOptions' => ['class' => 'col-lg-3 control-label'],
                     ],
-                    'enableAjaxValidation'   => true,
+                    'enableAjaxValidation' => true,
                     'enableClientValidation' => false,
                 ]); ?>
 
@@ -51,7 +51,7 @@ $this->params['breadcrumbs'][] = $this->title;
 
                 <?= $form->field($model, 'new_password')->passwordInput() ?>
 
-                <hr />
+                <hr/>
 
                 <?= $form->field($model, 'current_password')->passwordInput() ?>
 
@@ -77,8 +77,8 @@ $this->params['breadcrumbs'][] = $this->title;
                         <?= Yii::t('user', 'Please be certain') ?>.
                     </p>
                     <?= Html::a(Yii::t('user', 'Delete account'), ['delete'], [
-                        'class'        => 'btn btn-danger',
-                        'data-method'  => 'post',
+                        'class' => 'btn btn-danger',
+                        'data-method' => 'post',
                         'data-confirm' => Yii::t('user', 'Are you sure? There is no going back'),
                     ]) ?>
                 </div>

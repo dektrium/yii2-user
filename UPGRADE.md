@@ -8,10 +8,13 @@ need to following the instructions for both A and B.
 
 - **APPLY NEW MIGRATIONS!**
 
+- Removed `enableRegistration` and `enableGeneratingPassword` module's options. Instead you need to configure
+ registration service. More information on how to configure it can be found in [guide](docs/registration.md)
+
 - Admin view files have been updated. If you were overriding admin views, then change them accordingly to use new
  functionality.
 
-- `enableConfirmation` and `enableUnconfirmedLogin` module's properties. Instead you need to configure `UserConfirmation`
+- Removed `enableConfirmation` and `enableUnconfirmedLogin` module's properties. Instead you need to configure `UserConfirmation`
  service which got a few new options. More information on how to configure it can be found in [guide](docs/confirmation.md)
 
 - `dektrium\user\helpers\Password` helper has been removed. If you need to generate password then use
@@ -22,7 +25,7 @@ need to following the instructions for both A and B.
  `passwordHashCost` property of `security` component.
 
 - `enableFlashMessages` module's property has been removed. If you have used it, then you should simply remove it from
- your config. Moreover Yii2-user does not show flash messages.
+ your config. Yii2-user does not show flash messages anymore. You need to use your own widget for it.
 
 - `modelMap` module's property has been removed. Models should be overridden using DI container. Read more in docs.
 

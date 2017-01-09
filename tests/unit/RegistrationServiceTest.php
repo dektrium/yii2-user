@@ -162,9 +162,9 @@ class RegistrationServiceTest extends \Codeception\Test\Unit
             }),
         ]);
         Yii::$container->set(PasswordGenerator::className(), $generator);
-        /** @var RegistrationForm $service */
+        /** @var RegistrationService $service */
         $service = Yii::createObject(RegistrationService::className());
-        $service->enableGeneratingPassword = true;
+        $service->isPasswordGenerated = true;
 
         /** @var RegistrationForm $registrationForm */
         $registrationForm = Stub::makeEmpty(RegistrationForm::className(), [

@@ -86,7 +86,7 @@ class LoginForm extends Model
             'rememberMe' => ['rememberMe', 'boolean'],
         ];
 
-        if (!Yii::$app->module->debug)
+        if (!Yii::$app->getModule('user')->debug)
             $rules = array_merge($rules, [
                 'requiredFields' => [['login', 'password'], 'required'],
                 'passwordValidate' => [

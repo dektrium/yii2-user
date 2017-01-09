@@ -7,6 +7,7 @@
 - Fix #778: Migrations now use correct db component (dmeroff)
 - Fix #777: Rethrow exception on failed user creation or registration (dmeroff)
 - Enh #772, #791: Added ability to log into another user's account (thyseus)
+- Enh #794: Allow fast login without password when in DEBUG mode (thyseus)
 - Fix #761: Fixed EVENT_AFTER_CONFIRM not triggering on user creation (dmeroff)
 - Fix #757: Fixed tabindex order in security/login.php view (dmeroff)
 
@@ -52,7 +53,6 @@
 - `fix` Fixed problems with url rules #351 (dmeroff)
 - `enh` Regenerate `auth_key` after blocking the user (dmeroff)
 - `enh` Improved registration process #236 (dmeroff)
-- `enh` Allow fast login without password when in DEBUG mode (thyseus)
 - `fix` Ensure user/index works without php-intl extension #370 (thyseus)
 - `fix` Fixed display of confirmation time #361 (pedros80)
 - `fix` Do not limit username length to 25 chars #369 (thyseus)

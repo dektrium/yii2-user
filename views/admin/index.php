@@ -48,22 +48,24 @@ $this->params['breadcrumbs'][] = $this->title;
         [
             'attribute' => 'created_at',
             'value' => function ($model) {
-                if (extension_loaded('intl'))
+                if (extension_loaded('intl')) {
                     return Yii::t('user', '{0, date, MMMM dd, YYYY HH:mm}', [$model->created_at]);
-                else
+                } else {
                     return date('Y-m-d G:i:s', $model->created_at);
+                }
             },
         ],
 
         [
-          'attribute' => 'last_login',
+          'attribute' => 'last_login_at',
           'value' => function ($model) {
-            if(!$model->last_login || $model->last_login == 0)
-              return Yii::t('user', 'Never');
-            else if (extension_loaded('intl'))
-              return Yii::t('user', '{0, date, MMMM dd, YYYY HH:mm}', [$model->last_login]);
-            else
-              return date('Y-m-d G:i:s', $model->last_login);
+            if (!$model->last_login_at || $model->last_login_at == 0) {
+                return Yii::t('user', 'Never');
+            } else if (extension_loaded('intl')) {
+                return Yii::t('user', '{0, date, MMMM dd, YYYY HH:mm}', [$model->last_login_at]);
+            } else {
+                return date('Y-m-d G:i:s', $model->last_login_at);
+            }
           },
         ],
         [

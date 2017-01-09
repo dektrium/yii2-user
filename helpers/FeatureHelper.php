@@ -12,7 +12,7 @@
 namespace dektrium\user\helpers;
 
 use dektrium\user\service\RegistrationService;
-use dektrium\user\service\UserConfirmation;
+use dektrium\user\service\ConfirmationService;
 
 /**
  * @author Dmitry Erofeev <dmeroff@gmail.com>
@@ -20,9 +20,9 @@ use dektrium\user\service\UserConfirmation;
 class FeatureHelper
 {
     /**
-     * @var UserConfirmation
+     * @var ConfirmationService
      */
-    protected static $userConfirmation;
+    protected static $confirmationService;
 
     /**
      * @var RegistrationService
@@ -36,7 +36,7 @@ class FeatureHelper
      */
     public static function isAdminApprovalEnabled()
     {
-        return static::getUserConfirmation()->isEnabled && static::getUserConfirmation()->isAdminApprovalEnabled;
+        return static::getConfirmationService()->isEnabled && static::getConfirmationService()->isAdminApprovalEnabled;
     }
 
     /**
@@ -46,7 +46,7 @@ class FeatureHelper
      */
     public static function isEmailConfirmationEnabled()
     {
-        return static::getUserConfirmation()->isEnabled && static::getUserConfirmation()->isEmailConfirmationEnabled;
+        return static::getConfirmationService()->isEnabled && static::getConfirmationService()->isEmailConfirmationEnabled;
     }
 
     /**
@@ -58,19 +58,19 @@ class FeatureHelper
     }
 
     /**
-     * @return object|UserConfirmation
+     * @return object|ConfirmationService
      */
-    protected static function getUserConfirmation()
+    protected static function getConfirmationService()
     {
-        if (static::$userConfirmation === null) {
-            static::$userConfirmation = \Yii::createObject(UserConfirmation::className());
+        if (static::$confirmationService === null) {
+            static::$confirmationService = \Yii::createObject(ConfirmationService::className());
         }
 
-        return static::$userConfirmation;
+        return static::$confirmationService;
     }
 
     /**
-     * @return object|UserConfirmation
+     * @return object|ConfirmationService
      */
     protected static function getRegistrationService()
     {

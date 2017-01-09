@@ -31,7 +31,7 @@ class Bootstrap implements BootstrapInterface
      * @var array
      */
     protected $attachable = [
-        'dektrium\user\service\UserConfirmation',
+        'dektrium\user\service\ConfirmationService',
     ];
 
     /**

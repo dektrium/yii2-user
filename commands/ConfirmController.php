@@ -42,7 +42,7 @@ class ConfirmController extends Controller
         if ($user === null) {
             $this->stdout(Yii::t('user', 'User is not found') . "\n", Console::FG_RED);
         } else {
-            if ($this->getUserConfirmationService()->confirm($user)) {
+            if ($this->getConfirmationService()->confirm($user)) {
                 $this->stdout(Yii::t('user', 'User has been confirmed') . "\n", Console::FG_GREEN);
             } else {
                 $this->stdout(Yii::t('user', 'Error occurred while confirming user') . "\n", Console::FG_RED);

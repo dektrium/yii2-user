@@ -19,11 +19,13 @@ use dektrium\user\mail\RegistrationEmail;
 use dektrium\user\Mailer;
 use dektrium\user\models\Token;
 use dektrium\user\models\User;
-use dektrium\user\service\interfaces\UserConfirmationInterface;
 use yii\base\Component;
 use yii\base\Event;
 
-class UserConfirmation extends Component implements UserConfirmationInterface
+/**
+ * @author Dmitry Erofeev <dmeroff@gmail.com>
+ */
+class ConfirmationService extends Component
 {
     const EVENT_BEFORE_CONFIRM = 'beforeConfirm';
     const EVENT_AFTER_CONFIRM = 'afterConfirm';
@@ -74,7 +76,7 @@ class UserConfirmation extends Component implements UserConfirmationInterface
             RegistrationService::className(),
             RegistrationService::EVENT_BEFORE_REGISTER,
             function (RegistrationEvent $event) {
-                $service = \Yii::createObject(UserConfirmation::className());
+                $service = \Yii::createObject(ConfirmationService::className());
                 if (!$service->isEnabled || !$service->isEmailConfirmationEnabled) {
                     $event->getUser()->confirmed_at = time();
                 }
@@ -86,7 +88,7 @@ class UserConfirmation extends Component implements UserConfirmationInterface
                 RegistrationService::className(),
                 RegistrationService::EVENT_AFTER_REGISTER,
                 function (RegistrationEvent $event) {
-                    $service = \Yii::createObject(UserConfirmation::className());
+                    $service = \Yii::createObject(ConfirmationService::className());
                     $service->sendConfirmationMessage($event);
                 }
             );

@@ -11,7 +11,7 @@
 
 namespace dektrium\user\traits;
 
-use dektrium\user\service\UserConfirmation;
+use dektrium\user\service\ConfirmationService;
 
 /**
  * @author Dmitry Erofeev <dmeroff@gmail.com>
@@ -19,19 +19,19 @@ use dektrium\user\service\UserConfirmation;
 trait ServiceTrait
 {
     /**
-     * @var UserConfirmation
+     * @var ConfirmationService
      */
-    protected $userConfirmationService;
+    protected $confirmationService;
 
     /**
-     * @return UserConfirmation|object
+     * @return ConfirmationService|object
      */
-    protected function getUserConfirmationService()
+    protected function getConfirmationService()
     {
-        if (!$this->userConfirmationService) {
-            $this->userConfirmationService = \Yii::createObject(UserConfirmation::className());
+        if (!$this->confirmationService) {
+            $this->confirmationService = \Yii::createObject(ConfirmationService::className());
         }
 
-        return $this->userConfirmationService;
+        return $this->confirmationService;
     }
 }

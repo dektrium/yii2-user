@@ -8,7 +8,7 @@ use dektrium\user\models\Profile;
 use dektrium\user\models\RegistrationForm;
 use dektrium\user\models\User;
 use dektrium\user\service\RegistrationService;
-use dektrium\user\service\UserConfirmation;
+use dektrium\user\service\ConfirmationService;
 use yii\db\ActiveQuery;
 
 class RegistrationServiceTest extends \Codeception\Test\Unit
@@ -77,8 +77,8 @@ class RegistrationServiceTest extends \Codeception\Test\Unit
             'username' => 'tester',
         ]);
 
-        $confirmation = Stub::makeEmpty(UserConfirmation::className());
-        Yii::$container->set(UserConfirmation::className(), $confirmation);
+        $confirmation = Stub::makeEmpty(ConfirmationService::className());
+        Yii::$container->set(ConfirmationService::className(), $confirmation);
 
         Yii::$container->set(User::className(), $this->user);
     }

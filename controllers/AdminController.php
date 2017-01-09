@@ -11,7 +11,7 @@
 
 namespace dektrium\user\controllers;
 
-use dektrium\user\service\UserConfirmation;
+use dektrium\user\service\ConfirmationService;
 use dektrium\user\filters\AccessRule;
 use dektrium\user\models\Profile;
 use dektrium\user\models\User;
@@ -317,7 +317,7 @@ class AdminController extends Controller
         $model = $this->findModel($id);
 
         $this->trigger(self::EVENT_BEFORE_CONFIRM, $this->getUserEvent($model));
-        $this->getUserConfirmationService()->confirm($model);
+        $this->getConfirmationService()->confirm($model);
         $this->trigger(self::EVENT_AFTER_CONFIRM, $this->getUserEvent($model));
 
         \Yii::$app->getSession()->setFlash('success', \Yii::t('user', 'User has been confirmed'));
@@ -330,7 +330,7 @@ class AdminController extends Controller
         $model = $this->findModel($id);
 
         $this->trigger(self::EVENT_BEFORE_APPROVE, $this->getUserEvent($model));
-        $this->getUserConfirmationService()->approve($model);
+        $this->getConfirmationService()->approve($model);
         $this->trigger(self::EVENT_AFTER_APPROVE, $this->getUserEvent($model));
 
         \Yii::$app->getSession()->setFlash('success', \Yii::t('user', 'User has been approved'));

@@ -2,7 +2,7 @@
 
 
 use dektrium\user\service\RegistrationService;
-use dektrium\user\service\UserConfirmation;
+use dektrium\user\service\ConfirmationService;
 use dektrium\user\models\Token;
 use dektrium\user\models\User;
 use dektrium\user\Module;
@@ -20,7 +20,7 @@ class RegistrationCest
 
     public function _after(FunctionalTester $I)
     {
-        Yii::$container->set(UserConfirmation::className(), [
+        Yii::$container->set(ConfirmationService::className(), [
             'isEnabled' => true,
         ]);
         Yii::$container->set(RegistrationService::className(), [
@@ -35,7 +35,7 @@ class RegistrationCest
      */
     public function testRegistration(FunctionalTester $I)
     {
-        Yii::$container->set(UserConfirmation::className(), [
+        Yii::$container->set(ConfirmationService::className(), [
             'isEnabled' => false,
         ]);
 
@@ -70,7 +70,7 @@ class RegistrationCest
      */
     public function testRegistrationWithConfirmation(FunctionalTester $I)
     {
-        Yii::$container->set(UserConfirmation::className(), [
+        Yii::$container->set(ConfirmationService::className(), [
             'isEnabled' => true,
         ]);
         $page = RegistrationPage::openBy($I);
@@ -94,7 +94,7 @@ class RegistrationCest
         Yii::$container->set(RegistrationService::className(), [
             'isPasswordGeneratorEnabled' => true,
         ]);
-        Yii::$container->set(UserConfirmation::className(), [
+        Yii::$container->set(ConfirmationService::className(), [
             'isEnabled' => false,
         ]);
         $page = RegistrationPage::openBy($I);

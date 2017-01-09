@@ -13,7 +13,7 @@ namespace dektrium\user\controllers;
 
 use dektrium\user\service\exceptions\ServiceException;
 use dektrium\user\service\RegistrationService;
-use dektrium\user\service\UserConfirmation;
+use dektrium\user\service\ConfirmationService;
 use dektrium\user\models\Account;
 use dektrium\user\models\RegistrationForm;
 use dektrium\user\models\ResendForm;
@@ -245,13 +245,13 @@ class RegistrationController extends Controller
     }
 
     /**
-     * @return UserConfirmation|object
+     * @return ConfirmationService|object
      * @throws NotFoundHttpException
      */
     protected function createConfirmationService()
     {
-        /** @var UserConfirmation $service */
-        $service = \Yii::createObject(UserConfirmation::className());
+        /** @var ConfirmationService $service */
+        $service = \Yii::createObject(ConfirmationService::className());
         if (!$service->isEnabled || !$service->isEmailConfirmationEnabled) {
             throw new NotFoundHttpException('Page not found');
         }

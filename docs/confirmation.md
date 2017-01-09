@@ -8,7 +8,7 @@ users either by email or by admin. If you want you can enable both at the same t
 Here is an example of configuring confirmation service with all available options with their default values:
 
 ```php
-\Yii::$container->set('dektrium\user\service\UserConfirmation', [
+\Yii::$container->set('dektrium\user\service\ConfirmationService', [
     // Whether service is enabled
     'isEnabled' => true,
     // Whether users can log in whenever they confirmed their email or not
@@ -29,9 +29,9 @@ sends message about account approval (`dektrium/user/views/mail/approval.php`).
 
 ## Overriding
 
-You may override bundled confirmation service by implementing `dektrium\user\service\interfaces\UserConfirmationInterface`
-or by extending bundled one. In this case you will need to override it using DI container:
+You may override bundled confirmation service by extending bundled one. In this case you will need to override it using
+DI container:
 
 ```php
-\Yii::$container->set('dektrium\user\service\UserConfirmation', 'app\service\CustomUserConfirmation');
+\Yii::$container->set('dektrium\user\service\ConfirmationService', 'app\service\CustomConfirmationService');
 ```

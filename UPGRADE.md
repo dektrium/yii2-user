@@ -14,7 +14,7 @@ need to following the instructions for both A and B.
 - Admin view files have been updated. If you were overriding admin views, then change them accordingly to use new
  functionality.
 
-- Removed `enableConfirmation` and `enableUnconfirmedLogin` module's properties. Instead you need to configure `UserConfirmation`
+- Removed `enableConfirmation` and `enableUnconfirmedLogin` module's properties. Instead you need to configure confirmation
  service which got a few new options. More information on how to configure it can be found in [guide](docs/confirmation.md)
 
 - `dektrium\user\helpers\Password` helper has been removed. If you need to generate password then use

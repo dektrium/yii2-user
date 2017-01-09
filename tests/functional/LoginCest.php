@@ -1,5 +1,5 @@
 <?php
-use dektrium\user\service\UserConfirmation;
+use dektrium\user\service\ConfirmationService;
 use tests\_fixtures\UserFixture;
 use tests\_pages\LoginPage;
 
@@ -19,7 +19,7 @@ class LoginCest
 
     public function testLoginWithDisabledConfirmation(FunctionalTester $I)
     {
-        Yii::$container->set(UserConfirmation::className(), [
+        Yii::$container->set(ConfirmationService::className(), [
             'isEnabled' => false,
         ]);
 
@@ -33,7 +33,7 @@ class LoginCest
 
     public function testLoginWithEnabledEmailConfirmation(FunctionalTester $I)
     {
-        Yii::$container->set(UserConfirmation::className(), [
+        Yii::$container->set(ConfirmationService::className(), [
             'isEnabled' => true,
             'isEmailConfirmationEnabled' => true,
         ]);
@@ -47,7 +47,7 @@ class LoginCest
 
     public function testLoginWithEnabledAdminApproval(FunctionalTester $I)
     {
-        Yii::$container->set(UserConfirmation::className(), [
+        Yii::$container->set(ConfirmationService::className(), [
             'isEnabled' => true,
             'isEmailConfirmationEnabled' => false,
             'isAdminApprovalEnabled' => true,
@@ -68,7 +68,7 @@ class LoginCest
 
     public function testLoginWithEnabledBothEmailAndAdminConfirmation(FunctionalTester $I)
     {
-        Yii::$container->set(UserConfirmation::className(), [
+        Yii::$container->set(ConfirmationService::className(), [
             'isEnabled' => true,
             'isEmailConfirmationEnabled' => true,
             'isAdminApprovalEnabled' => true,
@@ -95,7 +95,7 @@ class LoginCest
 
     public function testCommonLoginFunctions(FunctionalTester $I)
     {
-        Yii::$container->set(UserConfirmation::className(), [
+        Yii::$container->set(ConfirmationService::className(), [
             'isEnabled' => true,
             'isEmailConfirmationEnabled' => true,
             'isAdminApprovalEnabled' => false,

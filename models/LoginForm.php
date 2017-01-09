@@ -11,7 +11,7 @@
 
 namespace dektrium\user\models;
 
-use dektrium\user\service\UserConfirmation;
+use dektrium\user\service\ConfirmationService;
 use dektrium\user\traits\ServiceTrait;
 use Yii;
 use yii\base\Model;
@@ -92,7 +92,7 @@ class LoginForm extends Model
      */
     public function validateConfirmationStatus($attribute)
     {
-        $service = $this->getUserConfirmationService();
+        $service = $this->getConfirmationService();
 
         if ($this->user !== null && $this->user->getIsAdmin()) {
             return;

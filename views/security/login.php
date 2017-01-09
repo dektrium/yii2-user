@@ -9,8 +9,8 @@
  * file that was distributed with this source code.
  */
 
-use dektrium\user\helpers\Login;
 use dektrium\user\widgets\Connect;
+use dektrium\user\models\LoginForm;
 use yii\helpers\Html;
 use yii\widgets\ActiveForm;
 
@@ -47,7 +47,7 @@ $this->params['breadcrumbs'][] = $this->title;
                         'inputOptions' => [
                             'autofocus' => 'autofocus',
                             'class' => 'form-control',
-                            'tabindex' => '1']])->dropDownList(Login::loginList());
+                            'tabindex' => '1']])->dropDownList(LoginForm::loginList());
                     ?>
 
                 <?php else: ?>

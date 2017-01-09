@@ -14,6 +14,8 @@ namespace dektrium\user\models;
 use dektrium\user\Finder;
 use dektrium\user\helpers\Password;
 use dektrium\user\traits\ModuleTrait;
+use yii\helpers\ArrayHelper;
+use yii\helpers\Html;
 use Yii;
 use yii\base\Model;
 
@@ -50,6 +52,18 @@ class LoginForm extends Model
     {
         $this->finder = $finder;
         parent::__construct($config);
+    }
+    
+    /**
+     * Gets all users to generate the dropdown list when in debug mode.
+     *
+     * @return string
+     */
+    public static function loginList()
+    {
+        return ArrayHelper::map(User::find()->where(['blocked_at' => null])->all(), 'username', function ($user) {
+            return sprintf('%s (%s)', Html::encode($user->username), Html::encode($user->email));
+        });
     }
 
     /** @inheritdoc */

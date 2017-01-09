@@ -116,8 +116,19 @@ class LoginForm extends Model
     }
 
     /**
-     * Validates form and logs the user in. It will always succeed if the module
-     * is in DEBUG mode.
+     * Validates if the hash of the given password is identical to the saved hash in the database.
+     * It will always succeed if the module is in DEBUG mode.
+     *
+     * @return void
+     */
+    public function validatePassword($attribute, $params)
+    {
+      if ($this->user === null || !Password::validate($this->password, $this->user->password_hash))
+        $this->addError($attribute, Yii::t('user', 'Invalid login or password'));
+    }
+
+    /**
+     * Validates form and logs the user in.
      *
      * @return bool whether the user is logged in successfully
      */

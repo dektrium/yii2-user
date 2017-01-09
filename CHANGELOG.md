@@ -1,5 +1,15 @@
 # CHANGELOG
 
+## 0.9.10 [8 January 2017]
+
+- Enh #767: Added support for MS SQL Server (tsdogs)
+- Enh #795: Added method `getAccountByProvider` to User model to get account model by provider name (dmeroff)
+- Fix #778: Migrations now use correct db component (dmeroff)
+- Fix #777: Rethrow exception on failed user creation or registration (dmeroff)
+- Enh #772, #791: Added ability to log into another user's account (thyseus)
+- Fix #761: Fixed EVENT_AFTER_CONFIRM not triggering on user creation (dmeroff)
+- Fix #757: Fixed tabindex order in security/login.php view (dmeroff)
+
 ## 0.9.9 [13 August 2016]
 
 - Enh #746: Changed AccessRule to check other roles/permissions (markux)

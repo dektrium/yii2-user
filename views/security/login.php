@@ -34,12 +34,12 @@ $this->params['breadcrumbs'][] = $this->title;
             </div>
             <div class="panel-body">
                 <?php $form = ActiveForm::begin([
-                    'id'                     => 'login-form',
-                    'enableAjaxValidation'   => true,
+                    'id' => 'login-form',
+                    'enableAjaxValidation' => true,
                     'enableClientValidation' => false,
-                    'validateOnBlur'         => false,
-                    'validateOnType'         => false,
-                    'validateOnChange'       => false,
+                    'validateOnBlur' => false,
+                    'validateOnType' => false,
+                    'validateOnChange' => false,
                 ]) ?>
 
                 <?php if ($module->debug): ?>
@@ -81,11 +81,11 @@ $this->params['breadcrumbs'][] = $this->title;
                         ) ?>
                 <?php endif ?>
 
-                <?= $form->field($model, 'rememberMe')->checkbox(['tabindex' => '4']) ?>
+                <?= $form->field($model, 'rememberMe')->checkbox(['tabindex' => '3']) ?>
 
                 <?= Html::submitButton(
                     Yii::t('user', 'Sign in'),
-                    ['class' => 'btn btn-primary btn-block', 'tabindex' => '3']
+                    ['class' => 'btn btn-primary btn-block', 'tabindex' => '4']
                 ) ?>
 
                 <?php ActiveForm::end(); ?>

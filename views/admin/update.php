@@ -9,25 +9,20 @@
  * file that was distributed with this source code.
  */
 
-use dektrium\user\models\User;
 use yii\bootstrap\Nav;
-use yii\web\View;
 
 /**
- * @var View    $this
- * @var User    $user
- * @var string  $content
+ * @var \yii\web\View $this
+ * @var \dektrium\user\models\User $user
+ * @var string $content
  */
 
 $this->title = Yii::t('user', 'Update user account');
 $this->params['breadcrumbs'][] = ['label' => Yii::t('user', 'Users'), 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
-
 ?>
 
-<?= $this->render('/_alert', [
-    'module' => Yii::$app->getModule('user'),
-]) ?>
+<?= $this->render('/_alert', ['module' => Yii::$app->getModule('user')]) ?>
 
 <?= $this->render('_menu') ?>
 
@@ -57,7 +52,7 @@ $this->params['breadcrumbs'][] = $this->title;
                         '<hr>',
                         [
                             'label' => Yii::t('user', 'Confirm'),
-                            'url'   => ['/user/admin/confirm', 'id' => $user->id],
+                            'url' => ['/user/admin/confirm', 'id' => $user->id],
                             'visible' => !$user->isConfirmed,
                             'linkOptions' => [
                                 'class' => 'text-success',
@@ -67,7 +62,7 @@ $this->params['breadcrumbs'][] = $this->title;
                         ],
                         [
                             'label' => Yii::t('user', 'Block'),
-                            'url'   => ['/user/admin/block', 'id' => $user->id],
+                            'url' => ['/user/admin/block', 'id' => $user->id],
                             'visible' => !$user->isBlocked,
                             'linkOptions' => [
                                 'class' => 'text-danger',
@@ -77,7 +72,7 @@ $this->params['breadcrumbs'][] = $this->title;
                         ],
                         [
                             'label' => Yii::t('user', 'Unblock'),
-                            'url'   => ['/user/admin/block', 'id' => $user->id],
+                            'url' => ['/user/admin/block', 'id' => $user->id],
                             'visible' => $user->isBlocked,
                             'linkOptions' => [
                                 'class' => 'text-success',
@@ -87,7 +82,7 @@ $this->params['breadcrumbs'][] = $this->title;
                         ],
                         [
                             'label' => Yii::t('user', 'Delete'),
-                            'url'   => ['/user/admin/delete', 'id' => $user->id],
+                            'url' => ['/user/admin/delete', 'id' => $user->id],
                             'linkOptions' => [
                                 'class' => 'text-danger',
                                 'data-method' => 'post',

@@ -12,9 +12,9 @@
 use dektrium\user\widgets\Connect;
 use yii\helpers\Html;
 
-/*
- * @var yii\web\View $this
- * @var yii\widgets\ActiveForm $form
+/**
+ * @var $this yii\web\View
+ * @var $form yii\widgets\ActiveForm
  */
 
 $this->title = Yii::t('user', 'Networks');
@@ -38,9 +38,9 @@ $this->params['breadcrumbs'][] = $this->title;
                 </div>
                 <?php $auth = Connect::begin([
                     'baseAuthUrl' => ['/user/security/auth'],
-                    'accounts'    => $user->accounts,
-                    'autoRender'  => false,
-                    'popupMode'   => false,
+                    'accounts' => $user->accounts,
+                    'autoRender' => false,
+                    'popupMode' => false,
                 ]) ?>
                 <table class="table">
                     <?php foreach ($auth->getClients() as $client): ?>

@@ -156,6 +156,19 @@ class User extends ActiveRecord implements IdentityInterface
         return $connected;
     }
 
+    /**
+     * Returns connected account by provider.
+     * @param  string $provider
+     * @return Account|null
+     */
+    public function getAccountByProvider($provider)
+    {
+        $accounts = $this->getAccounts();
+        return isset($accounts[$provider])
+            ? $accounts[$provider]
+            : null;
+    }
+
     /** @inheritdoc */
     public function getId()
     {
@@ -255,7 +268,6 @@ class User extends ActiveRecord implements IdentityInterface
         $transaction = $this->getDb()->beginTransaction();
 
         try {
-            $this->confirmed_at = time();
             $this->password = $this->password == null ? Password::generate(8) : $this->password;
 
             $this->trigger(self::BEFORE_CREATE);
@@ -264,6 +276,8 @@ class User extends ActiveRecord implements IdentityInterface
                 $transaction->rollBack();
                 return false;
             }
+
+            $this->confirm();
 
             $this->mailer->sendWelcomeMessage($this, null, true);
             $this->trigger(self::AFTER_CREATE);
@@ -274,7 +288,7 @@ class User extends ActiveRecord implements IdentityInterface
         } catch (\Exception $e) {
             $transaction->rollBack();
             \Yii::warning($e->getMessage());
-            return false;
+            throw $e;
         }
     }
 
@@ -318,7 +332,7 @@ class User extends ActiveRecord implements IdentityInterface
         } catch (\Exception $e) {
             $transaction->rollBack();
             \Yii::warning($e->getMessage());
-            return false;
+            throw $e;
         }
     }
 

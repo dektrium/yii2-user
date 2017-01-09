@@ -18,6 +18,7 @@
  * NOTE: this file must be saved in UTF-8 encoding.
  */
 return [
+    'In order to finish your registration, we need you to enter following fields' => 'Para finalizar sua inscrição, preencha os seguintes campos',
     'In order to finish your registration, we need you to enter your email address' => 'Para concluir seu registro você precisa informar seu endereço de email',
     'Something went wrong' => 'Algo deu errado',
     'VKontakte' => 'VKontakte',
@@ -81,7 +82,7 @@ return [
     'Forgot password?' => 'Esqueceu-se da senha?',
     'Gravatar email' => 'E-mail do Gravatar',
     'Hello' => 'Olá',
-    'If you already registered, sign in and connect this account on settings page' => 'Caso você já seja cadastrado, faça login e conecte esta conta na página de configurações',
+    'If you already registered, sign in and connect this account on settings page' => 'Caso você já seja cadastrado, faça login',
     'If you cannot click the link, please try pasting the text into your browser' => 'Caso tenha problemas, por favor copie o endereço acima e cole no seu navegador',
     'If you did not make this request you can ignore this email' => 'Caso você tenha recebido este email por engano, simplesmente apague-o',
     'In order to complete your registration, please click the link below' => 'Para completar o seu registo, por favor clique no link abaixo',
@@ -99,7 +100,7 @@ return [
     'New email' => 'Novo e-mail',
     'New password' => 'Nova senha',
     'New permission' => 'Nova permissão',
-    'New role' => 'Nova regra',
+    'New role' => 'Novo papel',
     'New user' => 'Novo usuário',
     'Not blocked' => 'Não bloqueado',
     'Password' => 'Senha',
@@ -120,7 +121,7 @@ return [
     'Remember me next time' => 'Lembrar de mim neste computador',
     'Request new confirmation message' => 'Solicitar nova mensagem de confirmação',
     'Reset your password' => 'Redefina sua senha',
-    'Roles' => 'Regras',
+    'Roles' => 'Papéis',
     'Save' => 'Salvar',
     'Sign in' => 'Login',
     'Sign up' => 'Cadastrar-se',
@@ -151,7 +152,7 @@ return [
     'Website' => 'Website',
     'Welcome to {0}' => 'Seja bem-vindo(a) ao site {0}',
     'Welcome! Registration is complete.' => 'Bem-vindo! Você foi cadastrado e logado com sucesso.',
-    'You can assign multiple roles or permissions to user by using the form below' => 'Você pode atribuir múltiplas regras ou permissões para o usuário usando o formulário abaixo',
+    'You can assign multiple roles or permissions to user by using the form below' => 'Você pode atribuir múltiplos papéis ou permissões para o usuário utilizando o formulário abaixo',
     'You can not block your own account' => 'Você não pode bloquear a sua própria conta',
     'You can not remove your own account' => 'Você não pode excluir a sua própria conta.',
     'You can now log in with the following credentials:' => 'Você pode usá-la para fazer login.',
@@ -166,4 +167,5 @@ return [
     'Your password has been changed successfully.' => 'Sua senha foi alterada com sucesso.',
     'Your profile has been updated' => 'As configurações do seu perfil foram alteradas',
     '{0, date, MMMM dd, YYYY HH:mm}' => '{0, date, dd/MM/YYYY - HH:mm}h',
+    'Your account has been blocked.' => 'Sua conta está bloqueada.',
 ];

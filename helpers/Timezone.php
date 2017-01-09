@@ -12,7 +12,7 @@
 namespace dektrium\user\helpers;
 
 /**
- * Password helper.
+ * Timezone helper.
  *
  * @author Dmitry Erofeev <dmeroff@gmail.com>
  */

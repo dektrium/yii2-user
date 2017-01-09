@@ -43,6 +43,27 @@ class RegistrationService extends Component
     public $isPasswordGeneratorEnabled = false;
 
     /**
+     * @var ConfirmationService
+     */
+    private $_confirmationService;
+
+    /**
+     * @return ConfirmationService
+     */
+    public function getConfirmationService()
+    {
+        return $this->_confirmationService;
+    }
+
+    /**
+     * @param ConfirmationService $confirmationService
+     */
+    public function setConfirmationService(ConfirmationService $confirmationService)
+    {
+        $this->_confirmationService = $confirmationService;
+    }
+
+    /**
      * @return PasswordGenerator|object
      */
     public function getPasswordService()
@@ -56,6 +77,21 @@ class RegistrationService extends Component
     public function getMailer()
     {
         return \Yii::createObject(Mailer::className());
+    }
+
+    /**
+     * RegistrationService constructor.
+     * @param ConfirmationService $confirmationService
+     * @param array $config
+     */
+    public function __construct(ConfirmationService $confirmationService, array $config = [])
+    {
+        $this->setConfirmationService($confirmationService);
+
+        $this->on(self::EVENT_BEFORE_REGISTER, [$confirmationService, 'initializeConfirmationStatus']);
+        $this->on(self::EVENT_AFTER_REGISTER, [$confirmationService, 'sendConfirmationMessage']);
+
+        parent::__construct($config);
     }
 
     /**

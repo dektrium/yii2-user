@@ -11,7 +11,6 @@
 
 namespace dektrium\user;
 
-use dektrium\user\service\interfaces\ServiceInterface;
 use dektrium\user\models\User;
 use Yii;
 use yii\authclient\Collection;
@@ -27,13 +26,6 @@ use yii\i18n\PhpMessageSource;
  */
 class Bootstrap implements BootstrapInterface
 {
-    /**
-     * @var array
-     */
-    protected $attachable = [
-        'dektrium\user\service\ConfirmationService',
-    ];
-
     /**
      * @inheritdoc
      */
@@ -80,19 +72,6 @@ class Bootstrap implements BootstrapInterface
             }
 
             Yii::$container->set('dektrium\user\Mailer', $module->mailer);
-
-            foreach ($this->attachable as $name) {
-                $this->createAttachableObject($name)->attachEventHandlers();
-            }
         }
-    }
-
-    /**
-     * @param  string $name
-     * @return ServiceInterface|object
-     */
-    protected function createAttachableObject($name)
-    {
-        return Yii::createObject($name);
     }
 }

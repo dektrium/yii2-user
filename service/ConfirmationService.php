@@ -70,34 +70,6 @@ class ConfirmationService extends Component
     /**
      * @inheritdoc
      */
-    public function attachEventHandlers()
-    {
-        Event::on(
-            RegistrationService::className(),
-            RegistrationService::EVENT_BEFORE_REGISTER,
-            function (RegistrationEvent $event) {
-                $service = \Yii::createObject(ConfirmationService::className());
-                if (!$service->isEnabled || !$service->isEmailConfirmationEnabled) {
-                    $event->getUser()->confirmed_at = time();
-                }
-            }
-        );
-
-        if ($this->isEnabled && $this->isEmailConfirmationEnabled) {
-            Event::on(
-                RegistrationService::className(),
-                RegistrationService::EVENT_AFTER_REGISTER,
-                function (RegistrationEvent $event) {
-                    $service = \Yii::createObject(ConfirmationService::className());
-                    $service->sendConfirmationMessage($event);
-                }
-            );
-        }
-    }
-
-    /**
-     * @inheritdoc
-     */
     public function confirm(User $user)
     {
         if (!$this->isEnabled) {
@@ -167,6 +139,18 @@ class ConfirmationService extends Component
         }
 
         return false;
+    }
+
+    /**
+     * Initializes confirmation status of user.
+     *
+     * @param RegistrationEvent $event
+     */
+    public function initializeConfirmationStatus(RegistrationEvent $event)
+    {
+        if (!$this->isEnabled || !$this->isEmailConfirmationEnabled) {
+            $event->getUser()->confirmed_at = time();
+        }
     }
 
     /**

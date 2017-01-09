@@ -152,6 +152,7 @@ class AdminController extends Controller
                 'actions' => [
                     'delete'  => ['post'],
                     'confirm' => ['post'],
+                    'resendPassword' => ['post'],
                     'block'   => ['post'],
                 ],
             ],

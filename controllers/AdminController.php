@@ -67,6 +67,18 @@ class AdminController extends Controller
     const EVENT_AFTER_UPDATE = 'afterUpdate';
 
     /**
+     * Event is triggered before impersonating as another user.
+     * Triggered with \dektrium\user\events\UserEvent.
+     */
+    const EVENT_BEFORE_IMPERSONATE = 'beforeImpersonate';
+
+    /**
+     * Event is triggered after impersonating as another user.
+     * Triggered with \dektrium\user\events\UserEvent.
+     */
+    const EVENT_AFTER_IMPERSONATE = 'afterImpersonate';
+
+    /**
      * Event is triggered before updating existing user's profile.
      * Triggered with \dektrium\user\events\UserEvent.
      */
@@ -323,6 +335,7 @@ class AdminController extends Controller
 
         if(!$id && Yii::$app->session->has(self::ORIGINAL_USER_SESSION_KEY)) {
             $user = $this->findModel(Yii::$app->session->get(self::ORIGINAL_USER_SESSION_KEY));
+
             Yii::$app->session->remove(self::ORIGINAL_USER_SESSION_KEY);
         } else {
             if (!Yii::$app->user->identity->isAdmin)
@@ -332,7 +345,13 @@ class AdminController extends Controller
             Yii::$app->session->set(self::ORIGINAL_USER_SESSION_KEY, Yii::$app->user->id);
         }
 
+        $event = $this->getUserEvent($user);
+
+        $this->trigger(self::EVENT_BEFORE_IMPERSONATE, $event);
+        
         Yii::$app->user->switchIdentity($user, 3600);
+        
+        $this->trigger(self::EVENT_AFTER_IMPERSONATE, $event);
 
         return $this->goHome();
     }

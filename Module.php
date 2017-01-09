@@ -31,12 +31,6 @@ class Module extends BaseModule
     /** Email is changed after user clicks both confirmation links sent to his old and new email addresses. */
     const STRATEGY_SECURE = 2;
 
-    /** @var bool Whether to enable registration. */
-    public $enableRegistration = true;
-
-    /** @var bool Whether to remove password field from registration form. */
-    public $enableGeneratingPassword = false;
-
     /** @var bool Whether to enable password recovery. */
     public $enablePasswordRecovery = true;
 

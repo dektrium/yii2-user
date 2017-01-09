@@ -70,12 +70,26 @@ class UserConfirmation extends Component implements UserConfirmationInterface
      */
     public function attachEventHandlers()
     {
-        Event::on(User::className(), User::BEFORE_REGISTER, function (RegistrationEvent $event) {
-            $event->getUser()->confirmed_at = $this->isEnabled && $this->isConfirmationByEmailEnabled ? null : time();
-        });
+        Event::on(
+            RegistrationService::className(),
+            RegistrationService::EVENT_BEFORE_REGISTER,
+            function (RegistrationEvent $event) {
+                $service = \Yii::createObject(UserConfirmation::className());
+                if (!$service->isEnabled || !$service->isConfirmationByEmailEnabled) {
+                    $event->getUser()->confirmed_at = time();
+                }
+            }
+        );
 
         if ($this->isEnabled && $this->isConfirmationByEmailEnabled) {
-            Event::on(User::className(), User::AFTER_REGISTER, [$this, 'sendConfirmationMessage']);
+            Event::on(
+                RegistrationService::className(),
+                RegistrationService::EVENT_AFTER_REGISTER,
+                function (RegistrationEvent $event) {
+                    $service = \Yii::createObject(UserConfirmation::className());
+                    $service->sendConfirmationMessage($event);
+                }
+            );
         }
     }
 

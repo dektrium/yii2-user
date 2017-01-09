@@ -11,11 +11,7 @@
 
 namespace dektrium\user\models;
 
-use dektrium\user\events\RegistrationEvent;
-use dektrium\user\events\UserEvent;
 use dektrium\user\helpers\PasswordGenerator;
-use dektrium\user\mail\RegistrationEmail;
-use dektrium\user\Mailer;
 use dektrium\user\models\query\UserQuery;
 use dektrium\user\Module;
 use dektrium\user\traits\ModuleTrait;
@@ -47,6 +43,7 @@ use yii\helpers\ArrayHelper;
  * @property integer $updated_at
  * @property integer $flags
  * @property integer $approved_at
+ * @property string $password
  *
  * Defined relations:
  * @property Account[] $accounts
@@ -54,7 +51,6 @@ use yii\helpers\ArrayHelper;
  *
  * Dependencies:
  * @property-read Module $module
- * @property-read Mailer $mailer
  *
  * @author Dmitry Erofeev <dmeroff@gmail.com>
  */
@@ -64,17 +60,10 @@ class User extends ActiveRecord implements IdentityInterface
 
     const BEFORE_CREATE   = 'beforeCreate';
     const AFTER_CREATE    = 'afterCreate';
-    const BEFORE_REGISTER = 'beforeRegister';
-    const AFTER_REGISTER  = 'afterRegister';
 
     // following constants are used on secured email changing process
     const OLD_EMAIL_CONFIRMED = 0b1;
     const NEW_EMAIL_CONFIRMED = 0b10;
-
-    /**
-     * @var string Plain password. Used for model validation.
-     */
-    public $password;
 
     /**
      * @var Profile|null
@@ -82,17 +71,61 @@ class User extends ActiveRecord implements IdentityInterface
     private $_profile;
 
     /**
+     * @var string
+     */
+    private $_password;
+
+    /**
      * @var string Default username regexp
      */
     public static $usernameRegexp = '/^[-a-zA-Z0-9_\.@]+$/';
 
     /**
-     * @return Mailer
-     * @throws \yii\base\InvalidConfigException
+     * @inheritdoc
      */
-    protected function getMailer()
+    public function getEmail()
     {
-        return \Yii::$container->get(Mailer::className());
+        return $this->getAttribute('email');
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function setEmail($email)
+    {
+        $this->setAttribute('email', $email);
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function getUsername()
+    {
+        return $this->getAttribute('username');
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function setUsername($username)
+    {
+        $this->setAttribute('username', $username);
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function getPassword()
+    {
+        return $this->_password;
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function setPassword($password)
+    {
+        $this->_password = $password;
     }
 
     /**
@@ -176,15 +209,6 @@ class User extends ActiveRecord implements IdentityInterface
     public function getAuthKey()
     {
         return $this->getAttribute('auth_key');
-    }
-
-    /**
-     * Generates password hash and sets it to password_hash attribute.
-     * @param string $password
-     */
-    public function setPassword($password)
-    {
-        $this->password_hash = \Yii::$app->security->generatePasswordHash($password);
     }
 
     /** @inheritdoc */
@@ -287,7 +311,6 @@ class User extends ActiveRecord implements IdentityInterface
                 return false;
             }
 
-            $this->mailer->sendWelcomeMessage($this, null, true);
             $this->trigger(self::AFTER_CREATE);
 
             $transaction->commit();
@@ -296,57 +319,6 @@ class User extends ActiveRecord implements IdentityInterface
         } catch (\Exception $e) {
             $transaction->rollBack();
             return false;
-        }
-    }
-
-    /**
-     * This method is used to register new user account. If Module::enableConfirmation is set true, this method
-     * will generate new confirmation token and use mailer to send it to the user.
-     *
-     * @return bool
-     */
-    public function register()
-    {
-        if ($this->getIsNewRecord() == false) {
-            throw new \RuntimeException('Calling "' . __CLASS__ . '::' . __METHOD__ . '" on existing user');
-        }
-
-        $transaction = $this->getDb()->beginTransaction();
-
-        try {
-            if ($this->module->enableGeneratingPassword) {
-                /** @var PasswordGenerator $generator */
-                $generator = \Yii::createObject(PasswordGenerator::className());
-                $this->password = $generator->generate();
-            }
-
-            /** @var RegistrationEmail $email */
-            $email = \Yii::createObject(RegistrationEmail::className(), [$this]);
-            $email->setIsPasswordShown($this->module->enableGeneratingPassword);
-
-            $this->trigger(self::BEFORE_REGISTER, \Yii::createObject([
-                'class' => RegistrationEvent::className(),
-                'user' => $this,
-                'email' => $email,
-            ]));
-
-            if (!$this->save()) {
-                $transaction->rollBack();
-                return false;
-            }
-
-            $this->trigger(self::AFTER_REGISTER, \Yii::createObject([
-                'class' => RegistrationEvent::className(),
-                'user' => $this,
-                'email' => $email,
-            ]));
-
-            $this->mailer->sendRegistrationMessage($email);
-            $transaction->commit();
-            return true;
-        } catch (\Exception $e) {
-            $transaction->rollBack();
-            throw $e;
         }
     }
 
@@ -423,7 +395,7 @@ class User extends ActiveRecord implements IdentityInterface
      */
     public function resetPassword($password)
     {
-        $this->setPassword($password);
+        $this->password_hash = \Yii::$app->security->generatePasswordHash($password);
         return $this->save(false, ['password_hash']);
     }
 
@@ -487,7 +459,9 @@ class User extends ActiveRecord implements IdentityInterface
         return $this->username;
     }
 
-    /** @inheritdoc */
+    /**
+     * @inheritdoc
+     */
     public function beforeSave($insert)
     {
         if ($insert) {
@@ -497,14 +471,16 @@ class User extends ActiveRecord implements IdentityInterface
             }
         }
 
-        if (!empty($this->password)) {
-            $this->setPassword($this->password);
+        if ($this->getPassword()) {
+            $this->password_hash = \Yii::$app->security->generatePasswordHash($this->getPassword());
         }
 
         return parent::beforeSave($insert);
     }
 
-    /** @inheritdoc */
+    /**
+     * @inheritdoc
+     */
     public function afterSave($insert, $changedAttributes)
     {
         parent::afterSave($insert, $changedAttributes);
@@ -516,22 +492,28 @@ class User extends ActiveRecord implements IdentityInterface
         }
     }
 
-    /** @inheritdoc */
+    /**
+     * @inheritdoc
+     */
     public static function tableName()
     {
         return '{{%user}}';
     }
 
-    /** @inheritdoc */
+    /**
+     * @inheritdoc
+     */
     public static function findIdentity($id)
     {
         return static::findOne($id);
     }
 
-    /** @inheritdoc */
+    /**
+     * @inheritdoc
+     */
     public static function findIdentityByAccessToken($token, $type = null)
     {
-        throw new NotSupportedException('Method "' . __CLASS__ . '::' . __METHOD__ . '" is not implemented.');
+        throw new NotSupportedException('Method "' . __CLASS__ . '::findIdentityByAccessToken" is not implemented.');
     }
 
     /**

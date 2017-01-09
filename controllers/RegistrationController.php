@@ -12,7 +12,7 @@
 namespace dektrium\user\controllers;
 
 use dektrium\user\service\exceptions\ServiceException;
-use dektrium\user\service\exceptions\InvalidTokenException;
+use dektrium\user\service\RegistrationService;
 use dektrium\user\service\UserConfirmation;
 use dektrium\user\models\Account;
 use dektrium\user\models\RegistrationForm;
@@ -20,7 +20,6 @@ use dektrium\user\models\ResendForm;
 use dektrium\user\models\User;
 use dektrium\user\traits\AjaxValidationTrait;
 use dektrium\user\traits\EventTrait;
-use yii\base\Exception;
 use yii\filters\AccessControl;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
@@ -86,7 +85,9 @@ class RegistrationController extends Controller
      */
     const EVENT_AFTER_RESEND = 'afterResend';
 
-    /** @inheritdoc */
+    /**
+     * @inheritdoc
+     */
     public function behaviors()
     {
         return [
@@ -102,32 +103,27 @@ class RegistrationController extends Controller
 
     /**
      * Displays the registration page.
-     * After successful registration if enableConfirmation is enabled shows info message otherwise
-     * redirects to home page.
+     * After successful registration redirects to login page.
      *
      * @return string
      * @throws \yii\web\HttpException
      */
     public function actionRegister()
     {
-        if (!$this->module->enableRegistration) {
-            throw new NotFoundHttpException();
-        }
-
         /** @var RegistrationForm $model */
-        $model = \Yii::createObject(RegistrationForm::className());
+        $model = \Yii::createObject(RegistrationForm::className(), [$this->createRegistrationService()]);
 
         $this->performAjaxValidation($model);
 
         $this->trigger(self::EVENT_BEFORE_REGISTER, $this->getFormEvent($model));
-        if ($model->load(\Yii::$app->request->post()) && $model->register()) {
+        if ($model->load(\Yii::$app->request->post()) && $model->validate()) {
+            $model->getRegistrationService()->register($model);
             $this->trigger(self::EVENT_AFTER_REGISTER, $this->getFormEvent($model));
             return $this->redirect(['/user/security/login']);
         }
 
         return $this->render('register', [
-            'model'  => $model,
-            'module' => $this->module,
+            'model' => $model,
         ]);
     }
 
@@ -188,7 +184,7 @@ class RegistrationController extends Controller
         /** @var User $user */
         $user = \Yii::createObject(User::className());
         $user = $user::findOne($id);
-        $domain = $this->createConfirmationDomain();
+        $domain = $this->createConfirmationService();
 
         $this->trigger(self::EVENT_BEFORE_CONFIRM, $this->getUserEvent($user));
         try {
@@ -214,7 +210,7 @@ class RegistrationController extends Controller
     {
         /** @var ResendForm $model */
         $model = \Yii::createObject(ResendForm::className());
-        $domain = $this->createConfirmationDomain();
+        $domain = $this->createConfirmationService();
 
         $this->performAjaxValidation($model);
 
@@ -235,16 +231,30 @@ class RegistrationController extends Controller
     }
 
     /**
+     * @return RegistrationService
+     * @throws NotFoundHttpException
+     */
+    protected function createRegistrationService()
+    {
+        /** @var RegistrationService $service */
+        $service = \Yii::createObject(RegistrationService::className());
+        if (!$service->isEnabled) {
+            throw new NotFoundHttpException('Page not found');
+        }
+        return $service;
+    }
+
+    /**
      * @return UserConfirmation|object
      * @throws NotFoundHttpException
      */
-    protected function createConfirmationDomain()
+    protected function createConfirmationService()
     {
-        /** @var UserConfirmation $domain */
-        $domain = \Yii::createObject(UserConfirmation::className());
-        if (!$domain->isEnabled || !$domain->isConfirmationByEmailEnabled) {
+        /** @var UserConfirmation $service */
+        $service = \Yii::createObject(UserConfirmation::className());
+        if (!$service->isEnabled || !$service->isConfirmationByEmailEnabled) {
             throw new NotFoundHttpException('Page not found');
         }
-        return $domain;
+        return $service;
     }
 }

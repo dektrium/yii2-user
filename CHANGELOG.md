@@ -2,6 +2,7 @@
 
 ## 1.0.0-alpha1 [Work in progress]
 
+- Enh: Removed `enableRegistration` and `enableGeneratingPassword` module's options, added RegistrationService instead (dmeroff)
 - Enh #577: Removed Password helper, added PasswordGenerator helper (dmeroff)
 - Enh #647: Removed `enableFlashMessages` option and removed flash message view (dmeroff)
 - Enh: Finder component has been removed, see UPGRADE.md for details (dmeroff)

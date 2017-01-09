@@ -48,7 +48,7 @@ class RegistrationEmail extends Object
      * @param  User $user
      * @return RegistrationEmail
      */
-    public function setUser($user)
+    public function setUser(User $user)
     {
         $this->_user = $user;
         return $this;

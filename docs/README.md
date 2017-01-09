@@ -2,7 +2,7 @@
 
 Yii2-user documentation is licensed under the [CC BY 4.0](http://creativecommons.org/licenses/by/4.0/).
 
-© [Dektrium project](http://github.com/dektrium/) 2013 - 2016
+© [Dektrium project](http://github.com/dektrium/) 2013 - 2017
 
 ## Getting Started
 
@@ -23,6 +23,7 @@ Yii2-user documentation is licensed under the [CC BY 4.0](http://creativecommons
 
 ## Services
 
+- [Registration](registration.md)
 - [Confirmation](confirmation.md)
 
 ## Overriding
@@ -40,5 +41,5 @@ Yii2-user documentation is licensed under the [CC BY 4.0](http://creativecommons
 ## Guides
 
 - [How to add captcha](adding-captcha.md)
-- [How to add custom field to User model](adding-new-field-to-user-model.md)
-- [How to add Profile field to the registration form](adding-profile-fields-to-registration-form.md)
+- [How to add custom field to the User model](adding-new-field-to-user-model.md)
+- [How to add more fields to the registration form](adding-fields-to-registration-form.md)

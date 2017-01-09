@@ -11,6 +11,7 @@
 
 namespace dektrium\user\controllers;
 
+use dektrium\user\helpers\FeatureHelper;
 use dektrium\user\models\Account;
 use dektrium\user\models\LoginForm;
 use dektrium\user\models\User;
@@ -180,7 +181,7 @@ class SecurityController extends Controller
         $account = \Yii::createObject(Account::className());
         $account = $account::find()->byClient($client)->one();
 
-        if (!$this->module->enableRegistration && ($account === null || $account->user === null)) {
+        if (!FeatureHelper::isRegistrationEnabled() && ($account === null || $account->user === null)) {
             \Yii::$app->session->setFlash('danger', \Yii::t('user', 'Registration on this website is disabled'));
             $this->action->successUrl = Url::to(['/user/security/login']);
             return;

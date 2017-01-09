@@ -47,8 +47,7 @@ Route **/user/admin/switch** becomes an user for the current session. You need t
 feature. Place something like this in your view file to allow to jump back when being impersonated as another person:
 
 ```
-$key = \dektrium\user\controllers\AdminController::ORIGINAL_USER_SESSION_KEY;
-if(Yii::$app->session->has($key))
+if (Yii::$app->session->has(\dektrium\user\controllers\AdminController::ORIGINAL_USER_SESSION_KEY))
     echo Html::a(
     '<span class="glyphicon glyphicon-user"></span> Back to original user',
      ['//user/admin/switch'], ['class' => 'btn btn-primary', 'data-method' => 'POST']);
@@ -57,10 +56,9 @@ if(Yii::$app->session->has($key))
 or
 
 ```
-$key = \dektrium\user\controllers\AdminController::ORIGINAL_USER_SESSION_KEY;
 echo Nav::widget([
     'items' => [
-        Yii::$app->session->has($key) ?
+        Yii::$app->session->has(\dektrium\user\controllers\AdminController::ORIGINAL_USER_SESSION_KEY;) ?
         '<li>' . Html::beginForm(['/user/admin/switch'], 'post', ['class' => 'navbar-form'])
             . Html::submitButton('<span class="glyphicon glyphicon-user"></span> Back to original user',
                 ['class' => 'btn btn-link']

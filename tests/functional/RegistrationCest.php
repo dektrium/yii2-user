@@ -25,7 +25,7 @@ class RegistrationCest
         ]);
         Yii::$container->set(RegistrationService::className(), [
             'isEnabled' => true,
-            'isPasswordGenerated' => false,
+            'isPasswordGeneratorEnabled' => false,
         ]);
     }
 
@@ -92,7 +92,7 @@ class RegistrationCest
     public function testRegistrationWithoutPassword(FunctionalTester $I)
     {
         Yii::$container->set(RegistrationService::className(), [
-            'isPasswordGenerated' => true,
+            'isPasswordGeneratorEnabled' => true,
         ]);
         Yii::$container->set(UserConfirmation::className(), [
             'isEnabled' => false,

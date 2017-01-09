@@ -40,7 +40,7 @@ class RegistrationService extends Component
      *
      * @var bool
      */
-    public $isPasswordGenerated = false;
+    public $isPasswordGeneratorEnabled = false;
 
     /**
      * @return PasswordGenerator|object
@@ -124,7 +124,7 @@ class RegistrationService extends Component
      */
     protected function setUserPassword(User $user, $password)
     {
-        if ($this->isPasswordGenerated) {
+        if ($this->isPasswordGeneratorEnabled) {
             $user->setPassword($this->getPasswordService()->generate());
         } else {
             if (!$password) {
@@ -181,7 +181,7 @@ class RegistrationService extends Component
     {
         /** @var RegistrationEmail $email */
         $email = \Yii::createObject(RegistrationEmail::className(), [$user]);
-        $email->setIsPasswordShown($this->isPasswordGenerated);
+        $email->setIsPasswordShown($this->isPasswordGeneratorEnabled);
 
         return $email;
     }

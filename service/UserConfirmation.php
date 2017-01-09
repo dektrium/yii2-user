@@ -49,7 +49,7 @@ class UserConfirmation extends Component implements UserConfirmationInterface
      *
      * @var bool
      */
-    public $isConfirmationByEmailEnabled = true;
+    public $isEmailConfirmationEnabled = true;
 
     /**
      * Whether user needs to be confirmed by admin.
@@ -75,13 +75,13 @@ class UserConfirmation extends Component implements UserConfirmationInterface
             RegistrationService::EVENT_BEFORE_REGISTER,
             function (RegistrationEvent $event) {
                 $service = \Yii::createObject(UserConfirmation::className());
-                if (!$service->isEnabled || !$service->isConfirmationByEmailEnabled) {
+                if (!$service->isEnabled || !$service->isEmailConfirmationEnabled) {
                     $event->getUser()->confirmed_at = time();
                 }
             }
         );
 
-        if ($this->isEnabled && $this->isConfirmationByEmailEnabled) {
+        if ($this->isEnabled && $this->isEmailConfirmationEnabled) {
             Event::on(
                 RegistrationService::className(),
                 RegistrationService::EVENT_AFTER_REGISTER,

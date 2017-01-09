@@ -121,7 +121,7 @@ class RegistrationForm extends Model
                 'message' => \Yii::t('user', 'This email address has already been taken')
             ],
         ];
-        if (!$this->getRegistrationService()->isPasswordGenerated) {
+        if (!$this->getRegistrationService()->isPasswordGeneratorEnabled) {
             $rules = array_merge($rules, [
                 // password rules
                 'passwordRequired' => ['password', 'required'],

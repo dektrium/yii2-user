@@ -35,7 +35,7 @@ class LoginCest
     {
         Yii::$container->set(UserConfirmation::className(), [
             'isEnabled' => true,
-            'isConfirmationByEmailEnabled' => true,
+            'isEmailConfirmationEnabled' => true,
         ]);
 
         $page = LoginPage::openBy($I);
@@ -49,7 +49,7 @@ class LoginCest
     {
         Yii::$container->set(UserConfirmation::className(), [
             'isEnabled' => true,
-            'isConfirmationByEmailEnabled' => false,
+            'isEmailConfirmationEnabled' => false,
             'isAdminApprovalEnabled' => true,
         ]);
 
@@ -70,7 +70,7 @@ class LoginCest
     {
         Yii::$container->set(UserConfirmation::className(), [
             'isEnabled' => true,
-            'isConfirmationByEmailEnabled' => true,
+            'isEmailConfirmationEnabled' => true,
             'isAdminApprovalEnabled' => true,
         ]);
 
@@ -97,7 +97,7 @@ class LoginCest
     {
         Yii::$container->set(UserConfirmation::className(), [
             'isEnabled' => true,
-            'isConfirmationByEmailEnabled' => true,
+            'isEmailConfirmationEnabled' => true,
             'isAdminApprovalEnabled' => false,
         ]);
 

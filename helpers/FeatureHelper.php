@@ -46,7 +46,7 @@ class FeatureHelper
      */
     public static function isEmailConfirmationEnabled()
     {
-        return static::getUserConfirmation()->isEnabled && static::getUserConfirmation()->isConfirmationByEmailEnabled;
+        return static::getUserConfirmation()->isEnabled && static::getUserConfirmation()->isEmailConfirmationEnabled;
     }
 
     /**

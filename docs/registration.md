@@ -10,7 +10,7 @@ Here is an example of configuring confirmation service with all available option
 ```php
 \Yii::$container->set('dektrium\user\service\RegistrationService', [
     'isEnabled' => true,
-    'isPasswordGenerated' => false,
+    'isPasswordGeneratorEnabled' => false,
 ]);
 ```
 
@@ -20,7 +20,7 @@ If you don't want users to be able to register on your site, then you need to se
 
 ## Password generation
 
-If you set `isPasswordGenerated` to be true, then service will generate random 8-char password for newly registered
+If you set `isPasswordGeneratorEnabled` to be true, then service will generate random 8-char password for newly registered
 users. Generated password will be injected into email that is sent after registration is complete.
 
 ## Adding more fields to registration form

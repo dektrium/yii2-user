@@ -14,7 +14,7 @@ Here is an example of configuring confirmation service with all available option
     // Whether users can log in whenever they confirmed their email or not
     'isLoginWhileUnconfirmedEnabled' => false,
     // Whether users must click link sent to them in order to complete registration.
-    'isConfirmationByEmailEnabled' => true,
+    'isEmailConfirmationEnabled' => true,
     // Whether users need to be approved by admins
     'isAdminApprovalEnabled' => false,
     // Whether users should be automatically logged in after confirmation

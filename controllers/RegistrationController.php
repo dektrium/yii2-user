@@ -252,7 +252,7 @@ class RegistrationController extends Controller
     {
         /** @var UserConfirmation $service */
         $service = \Yii::createObject(UserConfirmation::className());
-        if (!$service->isEnabled || !$service->isConfirmationByEmailEnabled) {
+        if (!$service->isEnabled || !$service->isEmailConfirmationEnabled) {
             throw new NotFoundHttpException('Page not found');
         }
         return $service;

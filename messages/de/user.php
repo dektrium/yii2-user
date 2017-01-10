@@ -190,6 +190,7 @@ return [
     'Name' => 'Name',
     'Networks' => 'Netzwerke',
     'Password' => 'Passwort',
+    'Password confirmation' => 'Passwort Bestätigung',
     'Password has been changed' => 'Passwort wurde geändert',
     'Please click the link below to complete your password reset' => 'Bitte überprüfen Sie Ihre E-Mail und klicken Sie auf den Bestätigungslink um Ihren Passwort-Reset abzuschließen',
     'Please fix following errors:' => 'Bitte beheben Sie folgende Fehler:',

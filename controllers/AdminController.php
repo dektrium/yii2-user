@@ -32,7 +32,6 @@ use yii\web\ForbiddenHttpException;
 use yii\web\Response;
 use yii\widgets\ActiveForm;
 
-
 /**
  * AdminController allows you to administrate users.
  *
@@ -423,13 +422,15 @@ class AdminController extends Controller
     public function actionResendPassword($id)
     {
         $user = $this->findModel($id);
-            if($user->isAdmin)
-                throw new ForbiddenHttpException(Yii::t('user', 'Password generation is not possible for admin users'));
+        if($user->isAdmin) {
+            throw new ForbiddenHttpException(Yii::t('user', 'Password generation is not possible for admin users'));
+        }
 
-        if($user->resendPassword())
+        if($user->resendPassword()) {
             Yii::$app->session->setFlash('success', \Yii::t('user', 'New Password has been generated and sent to user'));
-        else
+        } else {
             Yii::$app->session->setFlash('danger', \Yii::t('user', 'Error while trying to generate new password'));
+        }
 
         return $this->redirect(Url::previous('actions-redirect'));
     }

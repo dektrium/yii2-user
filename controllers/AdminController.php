@@ -149,10 +149,10 @@ class AdminController extends Controller
             'verbs' => [
                 'class' => VerbFilter::className(),
                 'actions' => [
-                    'delete'  => ['post'],
-                    'confirm' => ['post'],
-                    'resendPassword' => ['post'],
-                    'block'   => ['post'],
+                    'delete'          => ['post'],
+                    'confirm'         => ['post'],
+                    'resend-password' => ['post'],
+                    'block'           => ['post'],
                 ],
             ],
             'access' => [
@@ -422,11 +422,11 @@ class AdminController extends Controller
     public function actionResendPassword($id)
     {
         $user = $this->findModel($id);
-        if($user->isAdmin) {
+        if ($user->isAdmin) {
             throw new ForbiddenHttpException(Yii::t('user', 'Password generation is not possible for admin users'));
         }
 
-        if($user->resendPassword()) {
+        if ($user->resendPassword()) {
             Yii::$app->session->setFlash('success', \Yii::t('user', 'New Password has been generated and sent to user'));
         } else {
             Yii::$app->session->setFlash('danger', \Yii::t('user', 'Error while trying to generate new password'));

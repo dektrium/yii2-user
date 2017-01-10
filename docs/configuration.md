@@ -132,6 +132,21 @@ will loke like `auth/login`, `auth/admin`, `auth/register`, etc.
 
 The rules to be used in URL management.
 
+---
+
+#### yiiWebUser (Type: `array`, Default value: `[]`)
+
+ Component yii\web\User settings. 
+
+ If you like set user logged out after 600 seconds, if he remains inactive, use 
+ follow settings:
+```PHP
+            'yiiWebUser' => [
+                'enableAutoLogin' => false,
+                'authTimeout'     => 600,
+            ]
+```
+
 Configuration example
 ---------------------
 

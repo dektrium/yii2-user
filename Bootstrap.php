@@ -112,14 +112,18 @@ class Bootstrap implements BootstrapInterface
     /** Ensure the module is not in DEBUG mode on production environments */
     public function ensureCorrectDebugSetting()
     {
-        if (!defined('YII_DEBUG'))
+        if (!defined('YII_DEBUG')) {
             return false;
-        if (!defined('YII_ENV'))
+        }
+        if (!defined('YII_ENV')) {
             return false;
-        if (defined('YII_ENV') && YII_ENV !== 'dev')
+        }
+        if (defined('YII_ENV') && YII_ENV !== 'dev') {
             return false;
-        if (defined('YII_DEBUG') && YII_DEBUG !== true)
+        }
+        if (defined('YII_DEBUG') && YII_DEBUG !== true) {
             return false;
+        }
 
         return Yii::$app->getModule('user')->debug;
     }

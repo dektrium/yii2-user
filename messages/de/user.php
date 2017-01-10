@@ -190,6 +190,8 @@ return [
     'Remember me next time' => 'Anmeldung für das nächste Mal merken',
     'Request new confirmation message' => 'Neue Bestätigungsmail anfordern',
     'Reset your password' => 'Passwort zurücksetzen',
+    'Never' => 'Nie',
+    'Last login' => 'Letzte Anmeldung',
     'Save' => 'Speichern',
     'Sign in' => 'Anmelden',
     'Sign up' => 'Registrieren',

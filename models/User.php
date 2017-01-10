@@ -42,6 +42,7 @@ use yii\helpers\ArrayHelper;
  * @property integer $blocked_at
  * @property integer $created_at
  * @property integer $updated_at
+ * @property integer $last_login
  * @property integer $flags
  *
  * Defined relations:
@@ -191,6 +192,7 @@ class User extends ActiveRecord implements IdentityInterface
             'unconfirmed_email' => \Yii::t('user', 'New email'),
             'password'          => \Yii::t('user', 'Password'),
             'created_at'        => \Yii::t('user', 'Registration time'),
+            'last_login_at'     => \Yii::t('user', 'Last login'),
             'confirmed_at'      => \Yii::t('user', 'Confirmation time'),
         ];
     }

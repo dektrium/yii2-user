@@ -54,6 +54,7 @@ return [
     'Invalid or expired link' => 'Falscher oder abgelaufener Link',
     'New email' => 'Neue E-Mail Adresse',
     'New password' => 'Neues Passwort',
+    'New password confirmation' => 'Neues Passwort Bestätigung',
     'New permission' => 'Neue Berechtigung',
     'New role' => 'Neue Rolle',
     'New user' => 'Neuer Benutzer',

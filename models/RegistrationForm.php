@@ -39,6 +39,11 @@ class RegistrationForm extends Model
     public $password;
 
     /**
+     * @var string Password confirmation
+     */
+    public $password_confirmation;
+
+    /**
      * @inheritdoc
      */
     public function rules()

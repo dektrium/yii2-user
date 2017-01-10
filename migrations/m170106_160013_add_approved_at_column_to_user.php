@@ -2,15 +2,16 @@
 
 use yii\db\Migration;
 
-class m170106_160013_add_approved_at_column_to_user extends Migration
+class m160929_103127_add_last_login_at_to_user_table extends Migration
 {
-    public function safeUp()
-    {
-        $this->addColumn('user', 'approved_at', $this->integer());
-    }
+  public function up()
+  {
+    $this->addColumn('{{%user}}', 'last_login_at', $this->integer());
 
-    public function safeDown()
-    {
-        $this->dropColumn('user', 'approved_at');
-    }
+  }
+
+  public function down()
+  {
+    $this->dropColumn('{{%user}}', 'last_login_at');
+  }
 }

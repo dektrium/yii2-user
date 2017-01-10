@@ -18,7 +18,11 @@ class m141222_135246_alter_username_length extends Migration
         if ($this->dbType == 'sqlsrv') {
             $this->dropIndex('{{%user_unique_username}}', '{{%user}}');
         }
-        $this->alterColumn('{{%user}}', 'username', $this->string(255)->notNull());
+        if ($this->dbType == 'pgsql') {
+            $this->alterColumn('{{%user}}', 'username', 'SET NOT NULL');
+        } else {
+            $this->alterColumn('{{%user}}', 'username', $this->string(255)->notNull());
+        }
         if ($this->dbType == 'sqlsrv') {
             $this->createIndex('{{%user_unique_username}}', '{{%user}}', 'username', true);
         }
@@ -29,7 +33,11 @@ class m141222_135246_alter_username_length extends Migration
         if ($this->dbType == 'sqlsrv') {
             $this->dropIndex('{{%user_unique_username}}', '{{%user}}');
         }
-        $this->alterColumn('{{%user}}', 'username', $this->string(25)->notNull());
+        if ($this->dbType == 'pgsql') {
+            $this->alterColumn('{{%user}}', 'username', 'DROP NOT NULL');
+        } else {
+            $this->alterColumn('{{%user}}', 'username', $this->string(255)->notNull());
+        }
         if ($this->dbType == 'sqlsrv') {
             $this->createIndex('{{%user_unique_username}}', '{{%user}}', 'username', true);
         }

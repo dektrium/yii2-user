@@ -20,7 +20,7 @@ class m141222_110026_update_ip_field extends Migration
 
         $transaction = Yii::$app->db->beginTransaction();
         try {
-            $this->alterColumn('{{%user}}', 'registration_ip', $this->string(45)->null());
+            $this->alterColumn('{{%user}}', 'registration_ip', $this->string(45));
             foreach ($users as $user) {
                 if ($user['ip'] == null) {
                     continue;
@@ -53,7 +53,7 @@ class m141222_110026_update_ip_field extends Migration
             if ($this->dbType == 'pgsql') {
                 $this->alterColumn('{{%user}}', 'registration_ip', $this->bigInteger() . ' USING registration_ip::bigint');
             } else {
-                $this->alterColumn('{{%user}}', 'registration_ip', $this->bigInteger()->null());
+                $this->alterColumn('{{%user}}', 'registration_ip', $this->bigInteger());
             }
 
             $transaction->commit();

@@ -68,6 +68,18 @@ class AdminController extends Controller
     const EVENT_AFTER_UPDATE = 'afterUpdate';
 
     /**
+     * Event is triggered before impersonating as another user.
+     * Triggered with \dektrium\user\events\UserEvent.
+     */
+    const EVENT_BEFORE_IMPERSONATE = 'beforeImpersonate';
+
+    /**
+     * Event is triggered after impersonating as another user.
+     * Triggered with \dektrium\user\events\UserEvent.
+     */
+    const EVENT_AFTER_IMPERSONATE = 'afterImpersonate';
+
+    /**
      * Event is triggered before updating existing user's profile.
      * Triggered with \dektrium\user\events\UserEvent.
      */
@@ -127,6 +139,13 @@ class AdminController extends Controller
      */
     const EVENT_AFTER_UNBLOCK = 'afterUnblock';
 
+    /**
+     * Name of the session key in which the original user id is saved
+     * when using the impersonate user function.
+     * Used inside actionSwitch().
+     */
+    const ORIGINAL_USER_SESSION_KEY = 'original_user';
+
     /** @var Finder */
     protected $finder;
 
@@ -153,6 +172,7 @@ class AdminController extends Controller
                     'confirm'         => ['post'],
                     'resend-password' => ['post'],
                     'block'           => ['post'],
+                    'switch'          => ['post'],
                 ],
             ],
             'access' => [
@@ -161,6 +181,11 @@ class AdminController extends Controller
                     'class' => AccessRule::className(),
                 ],
                 'rules' => [
+                    [
+                        'allow' => true,
+                        'actions' => ['switch'],
+                        'roles' => ['@'],
+                    ],
                     [
                         'allow' => true,
                         'roles' => ['admin'],
@@ -298,23 +323,41 @@ class AdminController extends Controller
 
     /**
      * Switches to the given user for the rest of the Session.
+     * When no id is given, we switch back to the original admin user
+     * that started the impersonation.
      *
      * @param int $id
      *
      * @return string
      */
-    public function actionSwitch($id)
+    public function actionSwitch($id = null)
     {
-        $user = $this->findModel($id);
+        if (!$this->module->enableImpersonateUser) {
+            throw new ForbiddenHttpException(Yii::t('user', 'Impersonate user is disabled in the application configuration'));
+        }
 
-        $old = \Yii::$app->user;
+        if(!$id && Yii::$app->session->has(self::ORIGINAL_USER_SESSION_KEY)) {
+            $user = $this->findModel(Yii::$app->session->get(self::ORIGINAL_USER_SESSION_KEY));
 
-        \Yii::$app->user->switchIdentity($user, 3600);
+            Yii::$app->session->remove(self::ORIGINAL_USER_SESSION_KEY);
+        } else {
+            if (!Yii::$app->user->identity->isAdmin) {
+                throw new ForbiddenHttpException;
+            }
 
-        \Yii::warning(sprintf('User %s(id: %d) switched to user %s(id: %d).',
-                $old->identity->username, $old->id, \Yii::$app->user->identity->username, \Yii::$app->user->id));
+            $user = $this->findModel($id);
+            Yii::$app->session->set(self::ORIGINAL_USER_SESSION_KEY, Yii::$app->user->id);
+        }
 
-        return $this->goBack();
+        $event = $this->getUserEvent($user);
+
+        $this->trigger(self::EVENT_BEFORE_IMPERSONATE, $event);
+        
+        Yii::$app->user->switchIdentity($user, 3600);
+        
+        $this->trigger(self::EVENT_AFTER_IMPERSONATE, $event);
+
+        return $this->goHome();
     }
 
     /**

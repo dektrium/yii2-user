@@ -2,6 +2,7 @@
 
 ## 0.9.11 [10 January 2017]
 
+- Enh #794: Allow fast login without password when in DEBUG mode (thyseus)
 - Enh #826: Auth action added to auth rules (faenir)
 - Enh #820: Added ability to switch back to latest user after being impersonated (thyseus)
 - Enh #774: Added last_login_at column to user table (thyseus)

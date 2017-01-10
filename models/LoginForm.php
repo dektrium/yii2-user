@@ -13,9 +13,11 @@ namespace dektrium\user\models;
 
 use dektrium\user\Finder;
 use dektrium\user\helpers\Password;
+use dektrium\user\traits\ModuleTrait;
+use yii\helpers\ArrayHelper;
+use yii\helpers\Html;
 use Yii;
 use yii\base\Model;
-use dektrium\user\traits\ModuleTrait;
 
 /**
  * LoginForm get user's login and password, validates them and logs the user in. If user has been blocked, it adds
@@ -51,6 +53,18 @@ class LoginForm extends Model
         $this->finder = $finder;
         parent::__construct($config);
     }
+    
+    /**
+     * Gets all users to generate the dropdown list when in debug mode.
+     *
+     * @return string
+     */
+    public static function loginList()
+    {
+        return ArrayHelper::map(User::find()->where(['blocked_at' => null])->all(), 'username', function ($user) {
+            return sprintf('%s (%s)', Html::encode($user->username), Html::encode($user->email));
+        });
+    }
 
     /** @inheritdoc */
     public function attributeLabels()
@@ -65,10 +79,9 @@ class LoginForm extends Model
     /** @inheritdoc */
     public function rules()
     {
-        return [
-            'requiredFields' => [['login', 'password'], 'required'],
+        $rules = [
+            'requiredFields' => [['login'], 'required'],
             'loginTrim' => ['login', 'trim'],
-            'passwordValidate' => ['password', 'validatePassword'],
             'confirmationValidate' => [
                 'login',
                 function ($attribute) {
@@ -86,10 +99,27 @@ class LoginForm extends Model
             ],
             'rememberMe' => ['rememberMe', 'boolean'],
         ];
+
+        if (!$this->module->debug) {
+            $rules = array_merge($rules, [
+                'requiredFields' => [['login', 'password'], 'required'],
+                'passwordValidate' => [
+                    'password',
+                    function ($attribute) {
+                        if ($this->user === null || !Password::validate($this->password, $this->user->password_hash)) {
+                            $this->addError($attribute, Yii::t('user', 'Invalid login or password'));
+                        }
+                    }
+                ]
+            ]);
+        }
+
+        return $rules;
     }
 
     /**
      * Validates if the hash of the given password is identical to the saved hash in the database.
+     * It will always succeed if the module is in DEBUG mode.
      *
      * @return void
      */
@@ -109,10 +139,11 @@ class LoginForm extends Model
         if ($this->validate()) {
             $this->user->updateAttributes(['last_login_at' => time()]);
             return Yii::$app->getUser()->login($this->user, $this->rememberMe ? $this->module->rememberFor : 0);
-        } else {
-            return false;
         }
+
+        return false;
     }
+
 
     /** @inheritdoc */
     public function formName()

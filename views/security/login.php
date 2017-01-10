@@ -10,6 +10,7 @@
  */
 
 use dektrium\user\widgets\Connect;
+use dektrium\user\models\LoginForm;
 use yii\helpers\Html;
 use yii\widgets\ActiveForm;
 
@@ -41,25 +42,44 @@ $this->params['breadcrumbs'][] = $this->title;
                     'validateOnChange' => false,
                 ]) ?>
 
-                <?= $form->field(
-                    $model,
-                    'login',
-                    ['inputOptions' => ['autofocus' => 'autofocus', 'class' => 'form-control', 'tabindex' => '1']]
-                ) ?>
+                <?php if ($module->debug): ?>
+                    <?= $form->field($model, 'login', [
+                        'inputOptions' => [
+                            'autofocus' => 'autofocus',
+                            'class' => 'form-control',
+                            'tabindex' => '1']])->dropDownList(LoginForm::loginList());
+                    ?>
 
-                <?= $form
-                    ->field($model, 'password', ['inputOptions' => ['class' => 'form-control', 'tabindex' => '2']])
-                    ->passwordInput()
-                    ->label(
-                        Yii::t('user', 'Password')
-                        . ($module->enablePasswordRecovery ?
-                            ' (' . Html::a(
-                                Yii::t('user', 'Forgot password?'),
-                                ['/user/recovery/request'],
-                                ['tabindex' => '5']
-                            )
-                            . ')' : '')
-                    ) ?>
+                <?php else: ?>
+
+                    <?= $form->field($model, 'login',
+                        ['inputOptions' => ['autofocus' => 'autofocus', 'class' => 'form-control', 'tabindex' => '1']]
+                    );
+                    ?>
+
+                <?php endif ?>
+
+                <?php if ($module->debug): ?>
+                    <div class="alert alert-warning">
+                        <?= Yii::t('user', 'Password is not necessary because the module is in DEBUG mode.'); ?>
+                    </div>
+                <?php else: ?>
+                    <?= $form->field(
+                        $model,
+                        'password',
+                        ['inputOptions' => ['class' => 'form-control', 'tabindex' => '2']])
+                        ->passwordInput()
+                        ->label(
+                            Yii::t('user', 'Password')
+                            . ($module->enablePasswordRecovery ?
+                                ' (' . Html::a(
+                                    Yii::t('user', 'Forgot password?'),
+                                    ['/user/recovery/request'],
+                                    ['tabindex' => '5']
+                                )
+                                . ')' : '')
+                        ) ?>
+                <?php endif ?>
 
                 <?= $form->field($model, 'rememberMe')->checkbox(['tabindex' => '3']) ?>
 

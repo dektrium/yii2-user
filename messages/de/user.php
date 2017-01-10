@@ -218,4 +218,5 @@ return [
     'Your account has been blocked' => 'Ihr Zugang wurde gesperrt',
     'Your account has been created' => 'Ihr Zugang wurde erstellt',
     '{0, date, MMMM dd, YYYY HH:mm}' => '{0, date, dd MMMM, YYYY HH:mm}',
+    'Password is not necessary because the module is in DEBUG mode.' => 'Passwort ist nicht notwendig, da die Applikation im DEBUG-Modus ist',
 ];

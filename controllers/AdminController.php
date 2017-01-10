@@ -330,16 +330,18 @@ class AdminController extends Controller
      */
     public function actionSwitch($id = null)
     {
-        if (!Yii::$app->getModule('user')->enableImpersonateUser)
+        if (!$this->module->enableImpersonateUser) {
             throw new ForbiddenHttpException(Yii::t('user', 'Impersonate user is disabled in the application configuration'));
+        }
 
         if(!$id && Yii::$app->session->has(self::ORIGINAL_USER_SESSION_KEY)) {
             $user = $this->findModel(Yii::$app->session->get(self::ORIGINAL_USER_SESSION_KEY));
 
             Yii::$app->session->remove(self::ORIGINAL_USER_SESSION_KEY);
         } else {
-            if (!Yii::$app->user->identity->isAdmin)
+            if (!Yii::$app->user->identity->isAdmin) {
                 throw new ForbiddenHttpException;
+            }
 
             $user = $this->findModel($id);
             Yii::$app->session->set(self::ORIGINAL_USER_SESSION_KEY, Yii::$app->user->id);

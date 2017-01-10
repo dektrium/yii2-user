@@ -50,7 +50,7 @@ feature. Place something like this in your view file to allow to jump back when 
 if (Yii::$app->session->has(\dektrium\user\controllers\AdminController::ORIGINAL_USER_SESSION_KEY))
     echo Html::a(
     '<span class="glyphicon glyphicon-user"></span> Back to original user',
-     ['//user/admin/switch'], ['class' => 'btn btn-primary', 'data-method' => 'POST']);
+     ['/user/admin/switch'], ['class' => 'btn btn-primary', 'data-method' => 'POST']);
 ```
 
 or

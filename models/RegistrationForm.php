@@ -68,8 +68,9 @@ class RegistrationForm extends Model
                 'message' => Yii::t('user', 'This email address has already been taken')
             ],
             // password rules
-            'passwordRequired' => ['password', 'required', 'skipOnEmpty' => $this->module->enableGeneratingPassword],
-            'passwordLength'   => ['password', 'string', 'min' => 6, 'max' => 72],
+            'passwordRequired'       => ['password', 'required', 'skipOnEmpty' => $this->module->enableGeneratingPassword],
+            'passwordLength'         => ['password', 'string', 'min' => 6, 'max' => 72],
+            'passwordConfirmation'   => ['password_confirmation', 'compare', 'compareAttribute' => 'password'],
         ];
     }
 
@@ -82,6 +83,7 @@ class RegistrationForm extends Model
             'email'    => Yii::t('user', 'Email'),
             'username' => Yii::t('user', 'Username'),
             'password' => Yii::t('user', 'Password'),
+            'password_confirmation' => Yii::t('user', 'Password confirmation'),
         ];
     }
 

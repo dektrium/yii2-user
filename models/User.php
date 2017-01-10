@@ -23,6 +23,7 @@ use yii\web\Application as WebApplication;
 use yii\web\IdentityInterface;
 use yii\helpers\ArrayHelper;
 
+
 /**
  * User ActiveRecord model.
  *
@@ -365,6 +366,21 @@ class User extends ActiveRecord implements IdentityInterface
         \Yii::$app->session->setFlash($success ? 'success' : 'danger', $message);
 
         return $success;
+    }
+
+    /**
+     * Generates a new password and sends it to the user.
+     *
+     * @param string $code Confirmation code.
+     *
+     * @return boolean
+     */
+    public function resendPassword()
+    {
+        $this->password = Password::generate(8);
+        $this->save(false, ['password_hash']);
+
+        return $this->mailer->sendGeneratedPassword($this, $this->password);
     }
 
     /**

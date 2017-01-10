@@ -16,6 +16,7 @@ use dektrium\user\Finder;
 use dektrium\user\models\Profile;
 use dektrium\user\models\User;
 use dektrium\user\models\UserSearch;
+use dektrium\user\helpers\Password;
 use dektrium\user\Module;
 use dektrium\user\traits\EventTrait;
 use yii;
@@ -167,10 +168,11 @@ class AdminController extends Controller
             'verbs' => [
                 'class' => VerbFilter::className(),
                 'actions' => [
-                    'delete'  => ['post'],
-                    'confirm' => ['post'],
-                    'block'   => ['post'],
-                    'switch'  => ['post'],
+                    'delete'          => ['post'],
+                    'confirm'         => ['post'],
+                    'resend-password' => ['post'],
+                    'block'           => ['post'],
+                    'switch'          => ['post'],
                 ],
             ],
             'access' => [
@@ -284,7 +286,7 @@ class AdminController extends Controller
             $profile = \Yii::createObject(Profile::className());
             $profile->link('user', $user);
         }
-        $event   = $this->getProfileEvent($profile);
+        $event = $this->getProfileEvent($profile);
 
         $this->performAjaxValidation($profile);
 
@@ -450,6 +452,27 @@ class AdminController extends Controller
                 $this->trigger(self::EVENT_AFTER_BLOCK, $event);
                 \Yii::$app->getSession()->setFlash('success', \Yii::t('user', 'User has been blocked'));
             }
+        }
+
+        return $this->redirect(Url::previous('actions-redirect'));
+    }
+
+    /**
+     * Generates a new password and sends it to the user.
+     *
+     * @return Response
+     */
+    public function actionResendPassword($id)
+    {
+        $user = $this->findModel($id);
+        if ($user->isAdmin) {
+            throw new ForbiddenHttpException(Yii::t('user', 'Password generation is not possible for admin users'));
+        }
+
+        if ($user->resendPassword()) {
+            Yii::$app->session->setFlash('success', \Yii::t('user', 'New Password has been generated and sent to user'));
+        } else {
+            Yii::$app->session->setFlash('danger', \Yii::t('user', 'Error while trying to generate new password'));
         }
 
         return $this->redirect(Url::previous('actions-redirect'));

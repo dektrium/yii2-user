@@ -100,7 +100,7 @@ class LoginForm extends Model
             'rememberMe' => ['rememberMe', 'boolean'],
         ];
 
-        if (!$this->module->debug)
+        if (!$this->module->debug) {
             $rules = array_merge($rules, [
                 'requiredFields' => [['login', 'password'], 'required'],
                 'passwordValidate' => [
@@ -112,6 +112,8 @@ class LoginForm extends Model
                     }
                 ]
             ]);
+        }
+
         return $rules;
     }
 

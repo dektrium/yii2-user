@@ -54,6 +54,9 @@ class Module extends BaseModule
     /** @var bool Whether user can remove his account */
     public $enableAccountDelete = false;
 
+    /** @var bool Enable the 'impersonate as another user' function */
+    public $enableImpersonateUser = true;
+
     /** @var int Email changing strategy. */
     public $emailChangeStrategy = self::STRATEGY_DEFAULT;
 

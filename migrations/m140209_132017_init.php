@@ -44,7 +44,7 @@ class m140209_132017_init extends Migration
         $this->createIndex('{{%user_recovery}}', '{{%user}}', 'id, recovery_token', true);
 
         $this->createTable('{{%profile}}', [
-            'user_id'        => $this->integer()->append('PRIMARY KEY'),
+            'user_id'        => $this->integer()->notNull()->append('PRIMARY KEY'),
             'name'           => $this->string(255)->null(),
             'public_email'   => $this->string(255)->null(),
             'gravatar_email' => $this->string(255)->null(),

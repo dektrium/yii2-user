@@ -44,7 +44,7 @@ class m140209_132017_init extends Migration
         $this->createIndex('{{%user_recovery}}', '{{%user}}', 'id, recovery_token', true);
 
         $this->createTable('{{%profile}}', [
-            'user_id'        => $this->primaryKey(),
+            'user_id'        => $this->integer()->notNull(),
             'name'           => $this->string(255)->null(),
             'public_email'   => $this->string(255)->null(),
             'gravatar_email' => $this->string(255)->null(),
@@ -53,6 +53,8 @@ class m140209_132017_init extends Migration
             'website'        => $this->string(255)->null(),
             'bio'            => $this->text()->null(),
         ], $this->tableOptions);
+        
+        $this->addPrimaryKey('PRIMARY', '{{%profile}}', 'user_id');
 
         $this->addForeignKey('{{%fk_user_profile}}', '{{%profile}}', 'user_id', '{{%user}}', 'id', $this->cascade, $this->restrict);
     }

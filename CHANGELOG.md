@@ -1,5 +1,10 @@
 # CHANGELOG
 
+## 0.9.12 [11 January 2017]
+
+- Fix: Fixed migrations (dmeroff)
+- Fix #832: Fixed admin view file (thyseus)
+
 ## 0.9.11 [10 January 2017]
 
 - Fix: Fixed migrations for postgresql (dmeroff)

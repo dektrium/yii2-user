@@ -38,7 +38,7 @@ use yii\helpers\ArrayHelper;
  * @property string  $unconfirmed_email
  * @property string  $password_hash
  * @property string  $auth_key
- * @property integer $registration_ip
+ * @property string  $registration_ip
  * @property integer $confirmed_at
  * @property integer $blocked_at
  * @property integer $created_at

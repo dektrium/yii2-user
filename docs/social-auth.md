@@ -34,6 +34,7 @@ Here is the list of clients supported by the module:
 - [Github](#github)
 - [VKontakte](#vkontakte)
 - [Yandex](#yandex)
+- [LinkedIn](#linkedin)
 
 ### Facebook
 
@@ -115,6 +116,23 @@ Here is the list of clients supported by the module:
 ],
 ```
 
+### LinkedIn
+
+- You can register new application and get secret keys [here](https://www.linkedin.com/developer/apps/new?)
+
+```php
+'linkedin' => [
+    'class'        => 'dektrium\user\clients\LinkedIn',
+    'clientId'     => 'CLIENT_ID',
+    'clientSecret' => 'CLIENT_SECRET'
+],
+```
+
+### Other networks
+
+Yii2-user also supports all social networks provied by [Yii2-authclient](https://github.com/yiisoft/yii2-authclient) extension.
+However it does not support registration without entering email and username after authenticating via network.
+
 ## Configuration example
 
 The following config allows to log in using 3 networks (Twitter, Facebook and Google):
@@ -140,4 +158,36 @@ The following config allows to log in using 3 networks (Twitter, Facebook and Go
         ],
     ],
 ],
+```
+
+## How to access social network attributes
+
+You can fill user's profile with data provided by social network, here is quick example of how to fill profile name
+with the name provided via facebook:
+
+```php
+// plase this code somewhere in your config files (bootstrap.php in case of using advanced app template, web.php in case
+// of using basic app template
+
+use dektrium\user\controllers\SecurityController; 
+
+Event::on(SecurityController::class, SecurityController::EVENT_AFTER_AUTHENTICATE, function (AuthEvent $e) {
+    // if user account was not created we should not continue
+    if ($e->account->user === null) {
+        return;
+    }
+
+    // we are using switch here, because all networks provide different sets of data
+    switch ($e->client->getName()) {
+        case 'facebook':
+            $e->account->user->profile->updateAttributes([
+                'name' => $e->client->getUserAttributes()['name'],
+            ]);
+        case 'vkontakte':
+            // some different logic
+    }
+    
+    // after saving all user attributes will be stored under account model
+    // Yii::$app->identity->user->accounts['facebook']->decodedData
+});
 ```

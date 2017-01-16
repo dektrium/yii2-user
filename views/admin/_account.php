@@ -12,18 +12,17 @@
 use yii\bootstrap\ActiveForm;
 use yii\helpers\Html;
 
-/*
+/**
  * @var yii\web\View $this
  * @var dektrium\user\models\User $user
  */
-
 ?>
 
 <?php $this->beginContent('@dektrium/user/views/admin/update.php', ['user' => $user]) ?>
 
 <?php $form = ActiveForm::begin([
     'layout' => 'horizontal',
-    'enableAjaxValidation'   => true,
+    'enableAjaxValidation' => true,
     'enableClientValidation' => false,
     'fieldConfig' => [
         'horizontalCssClasses' => [

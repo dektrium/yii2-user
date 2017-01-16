@@ -22,7 +22,7 @@ use yii\base\Module as BaseModule;
  */
 class Module extends BaseModule
 {
-    const VERSION = '1.0.0-dev';
+    const VERSION = '0.9.12';
 
     /** Email is changed right after user enter's new email address. */
     const STRATEGY_INSECURE = 0;
@@ -51,6 +51,12 @@ class Module extends BaseModule
     /** @var bool Whether to enable password recovery. */
     public $enablePasswordRecovery = true;
 
+    /** @var bool Whether user can remove his account */
+    public $enableAccountDelete = false;
+
+    /** @var bool Enable the 'impersonate as another user' function */
+    public $enableImpersonateUser = true;
+
     /** @var int Email changing strategy. */
     public $emailChangeStrategy = self::STRATEGY_DEFAULT;
 
@@ -69,6 +75,9 @@ class Module extends BaseModule
     /** @var array An array of administrator's usernames. */
     public $admins = [];
 
+    /** @var string The Administrator permission name. */
+    public $adminPermission;
+
     /** @var array Mailer configuration */
     public $mailer = [];
 
@@ -82,10 +91,16 @@ class Module extends BaseModule
      */
     public $urlPrefix = 'user';
 
+    /**
+     * @var bool Is the user module in DEBUG mode? Will be set to false automatically
+     * if the application leaves DEBUG mode.
+     */
+    public $debug = false;
+
     /** @var array The rules to be used in URL management. */
     public $urlRules = [
         '<id:\d+>'                               => 'profile/show',
-        '<action:(login|logout)>'                => 'security/<action>',
+        '<action:(login|logout|auth)>'           => 'security/<action>',
         '<action:(register|resend)>'             => 'registration/<action>',
         'confirm/<id:\d+>/<code:[A-Za-z0-9_-]+>' => 'registration/confirm',
         'forgot'                                 => 'recovery/request',

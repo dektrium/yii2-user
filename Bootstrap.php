@@ -57,6 +57,7 @@ class Bootstrap implements BootstrapInterface
                     });
                 }
             }
+
             Yii::$container->setSingleton(Finder::className(), [
                 'userQuery'    => Yii::$container->get('UserQuery'),
                 'profileQuery' => Yii::$container->get('ProfileQuery'),
@@ -69,8 +70,8 @@ class Bootstrap implements BootstrapInterface
             } else {
                 Yii::$container->set('yii\web\User', [
                     'enableAutoLogin' => true,
-                    'loginUrl'        => ['/user/security/login'],
-                    'identityClass'   => $module->modelMap['User'],
+                    'loginUrl' => ['/user/security/login'],
+                    'identityClass' => $module->modelMap['User'],
                 ]);
 
                 $configUrlRule = [
@@ -84,7 +85,7 @@ class Bootstrap implements BootstrapInterface
 
                 $configUrlRule['class'] = 'yii\web\GroupUrlRule';
                 $rule = Yii::createObject($configUrlRule);
-                
+
                 $app->urlManager->addRules([$rule], false);
 
                 if (!$app->has('authClientCollection')) {
@@ -96,12 +97,34 @@ class Bootstrap implements BootstrapInterface
 
             if (!isset($app->get('i18n')->translations['user*'])) {
                 $app->get('i18n')->translations['user*'] = [
-                    'class'    => PhpMessageSource::className(),
+                    'class' => PhpMessageSource::className(),
                     'basePath' => __DIR__ . '/messages',
+                    'sourceLanguage' => 'en-US'
                 ];
             }
 
             Yii::$container->set('dektrium\user\Mailer', $module->mailer);
+
+            $module->debug = $this->ensureCorrectDebugSetting();
         }
+    }
+
+    /** Ensure the module is not in DEBUG mode on production environments */
+    public function ensureCorrectDebugSetting()
+    {
+        if (!defined('YII_DEBUG')) {
+            return false;
+        }
+        if (!defined('YII_ENV')) {
+            return false;
+        }
+        if (defined('YII_ENV') && YII_ENV !== 'dev') {
+            return false;
+        }
+        if (defined('YII_DEBUG') && YII_DEBUG !== true) {
+            return false;
+        }
+
+        return Yii::$app->getModule('user')->debug;
     }
 }

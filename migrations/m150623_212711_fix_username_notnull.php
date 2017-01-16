@@ -9,22 +9,37 @@
  * file that was distributed with this source code.
  */
 
-use yii\db\Migration;
-use yii\db\Schema;
+use dektrium\user\migrations\Migration;
 
 class m150623_212711_fix_username_notnull extends Migration
 {
     public function up()
     {
-        if ($this->db->driverName === 'pgsql') {
+        if ($this->dbType == 'pgsql') {
             $this->alterColumn('{{%user}}', 'username', 'SET NOT NULL');
         } else {
-            $this->alterColumn('{{%user}}', 'username', Schema::TYPE_STRING . '(255) NOT NULL');
+            if ($this->dbType == 'sqlsrv') {
+                $this->dropIndex('{{%user_unique_username}}', '{{%user}}');
+            }
+            $this->alterColumn('{{%user}}', 'username', $this->string(255)->notNull());
+            if ($this->dbType == 'sqlsrv') {
+                $this->createIndex('{{%user_unique_username}}', '{{%user}}', 'username', true);
+            }
         }
     }
 
     public function down()
     {
-        $this->alterColumn('{{%user}}', 'username', Schema::TYPE_STRING . '(255)');
+        if ($this->dbType == "pgsql") {
+            $this->alterColumn('{{%user}}', 'username', 'DROP NOT NULL');
+        } else {
+            if ($this->dbType == 'sqlsrv') {
+                $this->dropIndex('{{%user_unique_username}}', '{{%user}}');
+            }
+            $this->alterColumn('{{%user}}', 'username', $this->string(255)->null());
+            if ($this->dbType == 'sqlsrv') {
+                $this->createIndex('{{%user_unique_username}}', '{{%user}}', 'username', true);
+            }
+        }
     }
 }

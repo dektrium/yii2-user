@@ -12,7 +12,7 @@
 namespace dektrium\user\clients;
 
 use Yii;
-use yii\authclient\clients\YandexOAuth as BaseYandex;
+use yii\authclient\clients\Yandex as BaseYandex;
 
 /**
  * @author Dmitry Erofeev <dmeroff@gmail.com>

@@ -30,6 +30,9 @@ class UserSearch extends Model
     /** @var int */
     public $created_at;
 
+    /** @var int */
+    public $last_login_at;
+
     /** @var string */
     public $registration_ip;
 
@@ -50,8 +53,9 @@ class UserSearch extends Model
     public function rules()
     {
         return [
-            'fieldsSafe' => [['username', 'email', 'registration_ip', 'created_at'], 'safe'],
+            'fieldsSafe' => [['username', 'email', 'registration_ip', 'created_at', 'last_login_at'], 'safe'],
             'createdDefault' => ['created_at', 'default', 'value' => null],
+            'lastloginDefault' => ['last_login_at', 'default', 'value' => null],
         ];
     }
 
@@ -62,6 +66,7 @@ class UserSearch extends Model
             'username'        => Yii::t('user', 'Username'),
             'email'           => Yii::t('user', 'Email'),
             'created_at'      => Yii::t('user', 'Registration time'),
+            'last_login_at'   => Yii::t('user', 'Last login'),
             'registration_ip' => Yii::t('user', 'Registration ip'),
         ];
     }

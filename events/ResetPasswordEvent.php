@@ -43,7 +43,7 @@ class ResetPasswordEvent extends Event
     /**
      * @param Token $token
      */
-    public function setToken(Token $token)
+    public function setToken(Token $token = null)
     {
         $this->_token = $token;
     }

@@ -2,12 +2,16 @@
 
 Adding captcha to forms is pretty easy and can be done in three steps:
 
-1. In the model you have to add captcha field and validation rules.
-2. In the view you have to show captcha field
-3. In the controller you have to add captcha action
+1. Add new field and validation rule in the model
+2. Show captcha in view
+3. Add captcha action in controller
 
 In this guide I would like to show you how to add captcha field in the registration form but you can add captcha
 to any form following this steps.
+
+> **NOTE:** Captcha will not work with ajax validation enabled
+ ([see](https://github.com/yiisoft/yii2/blob/master/framework/captcha/CaptchaValidator.php#L20)).
+ You should not enable it in active form configuration array.
 
 ## 1. Adding field and validation rules to model
 

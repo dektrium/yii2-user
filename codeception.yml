@@ -1,0 +1,30 @@
+actor: Tester
+paths:
+    tests: tests
+    log: tests/_output
+    data: tests/_data
+    helpers: tests/_support
+settings:
+    bootstrap: _bootstrap.php
+    colors: true
+    memory_limit: 1024M
+modules:
+    config:
+        Yii2:
+            configFile: 'tests/_app/config/test.php'
+coverage:
+    enabled: true
+    include:
+            - ../clients/*
+            - ../controllers/*
+            - ../events/*
+            - ../filters/*
+            - ../helpers/*
+            - ../models/*
+            - ../traits/*
+            - ../views/*
+            - ../widgets/*
+            - ../Bootstrap.php
+            - ../Module.php
+            - ../Mailer.php
+            - ../Finder.php

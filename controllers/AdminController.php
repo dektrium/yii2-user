@@ -16,9 +16,10 @@ use dektrium\user\Finder;
 use dektrium\user\models\Profile;
 use dektrium\user\models\User;
 use dektrium\user\models\UserSearch;
+use dektrium\user\helpers\Password;
 use dektrium\user\Module;
 use dektrium\user\traits\EventTrait;
-use Yii;
+use yii;
 use yii\base\ExitException;
 use yii\base\Model;
 use yii\base\Module as Module2;
@@ -27,6 +28,7 @@ use yii\filters\VerbFilter;
 use yii\helpers\Url;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
+use yii\web\ForbiddenHttpException;
 use yii\web\Response;
 use yii\widgets\ActiveForm;
 
@@ -64,6 +66,18 @@ class AdminController extends Controller
      * Triggered with \dektrium\user\events\UserEvent.
      */
     const EVENT_AFTER_UPDATE = 'afterUpdate';
+
+    /**
+     * Event is triggered before impersonating as another user.
+     * Triggered with \dektrium\user\events\UserEvent.
+     */
+    const EVENT_BEFORE_IMPERSONATE = 'beforeImpersonate';
+
+    /**
+     * Event is triggered after impersonating as another user.
+     * Triggered with \dektrium\user\events\UserEvent.
+     */
+    const EVENT_AFTER_IMPERSONATE = 'afterImpersonate';
 
     /**
      * Event is triggered before updating existing user's profile.
@@ -125,6 +139,13 @@ class AdminController extends Controller
      */
     const EVENT_AFTER_UNBLOCK = 'afterUnblock';
 
+    /**
+     * Name of the session key in which the original user id is saved
+     * when using the impersonate user function.
+     * Used inside actionSwitch().
+     */
+    const ORIGINAL_USER_SESSION_KEY = 'original_user';
+
     /** @var Finder */
     protected $finder;
 
@@ -147,9 +168,11 @@ class AdminController extends Controller
             'verbs' => [
                 'class' => VerbFilter::className(),
                 'actions' => [
-                    'delete'  => ['post'],
-                    'confirm' => ['post'],
-                    'block'   => ['post'],
+                    'delete'          => ['post'],
+                    'confirm'         => ['post'],
+                    'resend-password' => ['post'],
+                    'block'           => ['post'],
+                    'switch'          => ['post'],
                 ],
             ],
             'access' => [
@@ -158,6 +181,11 @@ class AdminController extends Controller
                     'class' => AccessRule::className(),
                 ],
                 'rules' => [
+                    [
+                        'allow' => true,
+                        'actions' => ['switch'],
+                        'roles' => ['@'],
+                    ],
                     [
                         'allow' => true,
                         'roles' => ['admin'],
@@ -175,8 +203,8 @@ class AdminController extends Controller
     public function actionIndex()
     {
         Url::remember('', 'actions-redirect');
-        $searchModel  = Yii::createObject(UserSearch::className());
-        $dataProvider = $searchModel->search(Yii::$app->request->get());
+        $searchModel  = \Yii::createObject(UserSearch::className());
+        $dataProvider = $searchModel->search(\Yii::$app->request->get());
 
         return $this->render('index', [
             'dataProvider' => $dataProvider,
@@ -193,7 +221,7 @@ class AdminController extends Controller
     public function actionCreate()
     {
         /** @var User $user */
-        $user = Yii::createObject([
+        $user = \Yii::createObject([
             'class'    => User::className(),
             'scenario' => 'create',
         ]);
@@ -202,8 +230,8 @@ class AdminController extends Controller
         $this->performAjaxValidation($user);
 
         $this->trigger(self::EVENT_BEFORE_CREATE, $event);
-        if ($user->load(Yii::$app->request->post()) && $user->create()) {
-            Yii::$app->getSession()->setFlash('success', Yii::t('user', 'User has been created'));
+        if ($user->load(\Yii::$app->request->post()) && $user->create()) {
+            \Yii::$app->getSession()->setFlash('success', \Yii::t('user', 'User has been created'));
             $this->trigger(self::EVENT_AFTER_CREATE, $event);
             return $this->redirect(['update', 'id' => $user->id]);
         }
@@ -230,8 +258,8 @@ class AdminController extends Controller
         $this->performAjaxValidation($user);
 
         $this->trigger(self::EVENT_BEFORE_UPDATE, $event);
-        if ($user->load(Yii::$app->request->post()) && $user->save()) {
-            Yii::$app->getSession()->setFlash('success', Yii::t('user', 'Account details have been updated'));
+        if ($user->load(\Yii::$app->request->post()) && $user->save()) {
+            \Yii::$app->getSession()->setFlash('success', \Yii::t('user', 'Account details have been updated'));
             $this->trigger(self::EVENT_AFTER_UPDATE, $event);
             return $this->refresh();
         }
@@ -253,19 +281,19 @@ class AdminController extends Controller
         Url::remember('', 'actions-redirect');
         $user    = $this->findModel($id);
         $profile = $user->profile;
-        $event   = $this->getProfileEvent($profile);
 
         if ($profile == null) {
-            $profile = Yii::createObject(Profile::className());
+            $profile = \Yii::createObject(Profile::className());
             $profile->link('user', $user);
         }
+        $event = $this->getProfileEvent($profile);
 
         $this->performAjaxValidation($profile);
 
         $this->trigger(self::EVENT_BEFORE_PROFILE_UPDATE, $event);
 
-        if ($profile->load(Yii::$app->request->post()) && $profile->save()) {
-            Yii::$app->getSession()->setFlash('success', Yii::t('user', 'Profile details have been updated'));
+        if ($profile->load(\Yii::$app->request->post()) && $profile->save()) {
+            \Yii::$app->getSession()->setFlash('success', \Yii::t('user', 'Profile details have been updated'));
             $this->trigger(self::EVENT_AFTER_PROFILE_UPDATE, $event);
             return $this->refresh();
         }
@@ -294,6 +322,45 @@ class AdminController extends Controller
     }
 
     /**
+     * Switches to the given user for the rest of the Session.
+     * When no id is given, we switch back to the original admin user
+     * that started the impersonation.
+     *
+     * @param int $id
+     *
+     * @return string
+     */
+    public function actionSwitch($id = null)
+    {
+        if (!$this->module->enableImpersonateUser) {
+            throw new ForbiddenHttpException(Yii::t('user', 'Impersonate user is disabled in the application configuration'));
+        }
+
+        if(!$id && Yii::$app->session->has(self::ORIGINAL_USER_SESSION_KEY)) {
+            $user = $this->findModel(Yii::$app->session->get(self::ORIGINAL_USER_SESSION_KEY));
+
+            Yii::$app->session->remove(self::ORIGINAL_USER_SESSION_KEY);
+        } else {
+            if (!Yii::$app->user->identity->isAdmin) {
+                throw new ForbiddenHttpException;
+            }
+
+            $user = $this->findModel($id);
+            Yii::$app->session->set(self::ORIGINAL_USER_SESSION_KEY, Yii::$app->user->id);
+        }
+
+        $event = $this->getUserEvent($user);
+
+        $this->trigger(self::EVENT_BEFORE_IMPERSONATE, $event);
+        
+        Yii::$app->user->switchIdentity($user, 3600);
+        
+        $this->trigger(self::EVENT_AFTER_IMPERSONATE, $event);
+
+        return $this->goHome();
+    }
+
+    /**
      * If "dektrium/yii2-rbac" extension is installed, this page displays form
      * where user can assign multiple auth items to user.
      *
@@ -304,7 +371,7 @@ class AdminController extends Controller
      */
     public function actionAssignments($id)
     {
-        if (!isset(Yii::$app->extensions['dektrium/yii2-rbac'])) {
+        if (!isset(\Yii::$app->extensions['dektrium/yii2-rbac'])) {
             throw new NotFoundHttpException();
         }
         Url::remember('', 'actions-redirect');
@@ -331,7 +398,7 @@ class AdminController extends Controller
         $model->confirm();
         $this->trigger(self::EVENT_AFTER_CONFIRM, $event);
 
-        Yii::$app->getSession()->setFlash('success', Yii::t('user', 'User has been confirmed'));
+        \Yii::$app->getSession()->setFlash('success', \Yii::t('user', 'User has been confirmed'));
 
         return $this->redirect(Url::previous('actions-redirect'));
     }
@@ -346,15 +413,15 @@ class AdminController extends Controller
      */
     public function actionDelete($id)
     {
-        if ($id == Yii::$app->user->getId()) {
-            Yii::$app->getSession()->setFlash('danger', Yii::t('user', 'You can not remove your own account'));
+        if ($id == \Yii::$app->user->getId()) {
+            \Yii::$app->getSession()->setFlash('danger', \Yii::t('user', 'You can not remove your own account'));
         } else {
             $model = $this->findModel($id);
             $event = $this->getUserEvent($model);
             $this->trigger(self::EVENT_BEFORE_DELETE, $event);
             $model->delete();
             $this->trigger(self::EVENT_AFTER_DELETE, $event);
-            Yii::$app->getSession()->setFlash('success', Yii::t('user', 'User has been deleted'));
+            \Yii::$app->getSession()->setFlash('success', \Yii::t('user', 'User has been deleted'));
         }
 
         return $this->redirect(['index']);
@@ -369,8 +436,8 @@ class AdminController extends Controller
      */
     public function actionBlock($id)
     {
-        if ($id == Yii::$app->user->getId()) {
-            Yii::$app->getSession()->setFlash('danger', Yii::t('user', 'You can not block your own account'));
+        if ($id == \Yii::$app->user->getId()) {
+            \Yii::$app->getSession()->setFlash('danger', \Yii::t('user', 'You can not block your own account'));
         } else {
             $user  = $this->findModel($id);
             $event = $this->getUserEvent($user);
@@ -378,13 +445,34 @@ class AdminController extends Controller
                 $this->trigger(self::EVENT_BEFORE_UNBLOCK, $event);
                 $user->unblock();
                 $this->trigger(self::EVENT_AFTER_UNBLOCK, $event);
-                Yii::$app->getSession()->setFlash('success', Yii::t('user', 'User has been unblocked'));
+                \Yii::$app->getSession()->setFlash('success', \Yii::t('user', 'User has been unblocked'));
             } else {
                 $this->trigger(self::EVENT_BEFORE_BLOCK, $event);
                 $user->block();
                 $this->trigger(self::EVENT_AFTER_BLOCK, $event);
-                Yii::$app->getSession()->setFlash('success', Yii::t('user', 'User has been blocked'));
+                \Yii::$app->getSession()->setFlash('success', \Yii::t('user', 'User has been blocked'));
             }
+        }
+
+        return $this->redirect(Url::previous('actions-redirect'));
+    }
+
+    /**
+     * Generates a new password and sends it to the user.
+     *
+     * @return Response
+     */
+    public function actionResendPassword($id)
+    {
+        $user = $this->findModel($id);
+        if ($user->isAdmin) {
+            throw new ForbiddenHttpException(Yii::t('user', 'Password generation is not possible for admin users'));
+        }
+
+        if ($user->resendPassword()) {
+            Yii::$app->session->setFlash('success', \Yii::t('user', 'New Password has been generated and sent to user'));
+        } else {
+            Yii::$app->session->setFlash('danger', \Yii::t('user', 'Error while trying to generate new password'));
         }
 
         return $this->redirect(Url::previous('actions-redirect'));
@@ -418,11 +506,11 @@ class AdminController extends Controller
      */
     protected function performAjaxValidation($model)
     {
-        if (Yii::$app->request->isAjax && !Yii::$app->request->isPjax) {
-            if ($model->load(Yii::$app->request->post())) {
-                Yii::$app->response->format = Response::FORMAT_JSON;
+        if (\Yii::$app->request->isAjax && !\Yii::$app->request->isPjax) {
+            if ($model->load(\Yii::$app->request->post())) {
+                \Yii::$app->response->format = Response::FORMAT_JSON;
                 echo json_encode(ActiveForm::validate($model));
-                Yii::$app->end();
+                \Yii::$app->end();
             }
         }
     }

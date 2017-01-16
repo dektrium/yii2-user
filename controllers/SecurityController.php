@@ -18,7 +18,6 @@ use dektrium\user\models\User;
 use dektrium\user\Module;
 use dektrium\user\traits\AjaxValidationTrait;
 use dektrium\user\traits\EventTrait;
-use Yii;
 use yii\authclient\AuthAction;
 use yii\authclient\ClientInterface;
 use yii\filters\AccessControl;
@@ -110,7 +109,7 @@ class SecurityController extends Controller
             'access' => [
                 'class' => AccessControl::className(),
                 'rules' => [
-                    ['allow' => true, 'actions' => ['login', 'auth', 'blocked'], 'roles' => ['?']],
+                    ['allow' => true, 'actions' => ['login', 'auth'], 'roles' => ['?']],
                     ['allow' => true, 'actions' => ['login', 'auth', 'logout'], 'roles' => ['@']],
                 ],
             ],
@@ -131,7 +130,7 @@ class SecurityController extends Controller
                 'class' => AuthAction::className(),
                 // if user is not logged in, will try to log him in, otherwise
                 // will try to connect social account to user.
-                'successCallback' => Yii::$app->user->isGuest
+                'successCallback' => \Yii::$app->user->isGuest
                     ? [$this, 'authenticate']
                     : [$this, 'connect'],
             ],
@@ -145,18 +144,19 @@ class SecurityController extends Controller
      */
     public function actionLogin()
     {
-        if (!Yii::$app->user->isGuest) {
+        if (!\Yii::$app->user->isGuest) {
             $this->goHome();
         }
 
         /** @var LoginForm $model */
-        $model = Yii::createObject(LoginForm::className());
+        $model = \Yii::createObject(LoginForm::className());
         $event = $this->getFormEvent($model);
 
         $this->performAjaxValidation($model);
+
         $this->trigger(self::EVENT_BEFORE_LOGIN, $event);
 
-        if ($model->load(Yii::$app->getRequest()->post()) && $model->login()) {
+        if ($model->load(\Yii::$app->getRequest()->post()) && $model->login()) {
             $this->trigger(self::EVENT_AFTER_LOGIN, $event);
             return $this->goBack();
         }
@@ -174,11 +174,11 @@ class SecurityController extends Controller
      */
     public function actionLogout()
     {
-        $event = $this->getUserEvent(Yii::$app->user->identity);
+        $event = $this->getUserEvent(\Yii::$app->user->identity);
 
         $this->trigger(self::EVENT_BEFORE_LOGOUT, $event);
 
-        Yii::$app->getUser()->logout();
+        \Yii::$app->getUser()->logout();
 
         $this->trigger(self::EVENT_AFTER_LOGOUT, $event);
 
@@ -197,14 +197,14 @@ class SecurityController extends Controller
         $account = $this->finder->findAccount()->byClient($client)->one();
 
         if (!$this->module->enableRegistration && ($account === null || $account->user === null)) {
-            Yii::$app->session->setFlash('danger', Yii::t('user', 'Registration on this website is disabled'));
+            \Yii::$app->session->setFlash('danger', \Yii::t('user', 'Registration on this website is disabled'));
             $this->action->successUrl = Url::to(['/user/security/login']);
             return;
         }
 
         if ($account === null) {
             /** @var Account $account */
-            $accountObj = Yii::createObject(Account::className());
+            $accountObj = \Yii::createObject(Account::className());
             $account = $accountObj::create($client);
         }
 
@@ -214,11 +214,11 @@ class SecurityController extends Controller
 
         if ($account->user instanceof User) {
             if ($account->user->isBlocked) {
-                Yii::$app->session->setFlash('danger', Yii::t('user', 'Your account has been blocked.'));
+                \Yii::$app->session->setFlash('danger', \Yii::t('user', 'Your account has been blocked.'));
                 $this->action->successUrl = Url::to(['/user/security/login']);
             } else {
-                Yii::$app->user->login($account->user, $this->module->rememberFor);
-                $this->action->successUrl = Yii::$app->getUser()->getReturnUrl();
+                \Yii::$app->user->login($account->user, $this->module->rememberFor);
+                $this->action->successUrl = \Yii::$app->getUser()->getReturnUrl();
             }
         } else {
             $this->action->successUrl = $account->getConnectUrl();
@@ -235,7 +235,7 @@ class SecurityController extends Controller
     public function connect(ClientInterface $client)
     {
         /** @var Account $account */
-        $account = Yii::createObject(Account::className());
+        $account = \Yii::createObject(Account::className());
         $event   = $this->getAuthEvent($account, $client);
 
         $this->trigger(self::EVENT_BEFORE_CONNECT, $event);

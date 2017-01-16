@@ -12,17 +12,16 @@
 use dektrium\rbac\widgets\Assignments;
 
 /**
- * @var yii\web\View 				$this
- * @var dektrium\user\models\User 	$user
+ * @var yii\web\View $this
+ * @var dektrium\user\models\User $user
  */
-
 ?>
 
 <?php $this->beginContent('@dektrium/user/views/admin/update.php', ['user' => $user]) ?>
 
 <?= yii\bootstrap\Alert::widget([
     'options' => [
-        'class' => 'alert-info',
+        'class' => 'alert-info alert-dismissible',
     ],
     'body' => Yii::t('user', 'You can assign multiple roles or permissions to user by using the form below'),
 ]) ?>

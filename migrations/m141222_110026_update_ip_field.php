@@ -9,9 +9,8 @@
  * file that was distributed with this source code.
  */
 
-use yii\db\Migration;
+use dektrium\user\migrations\Migration;
 use yii\db\Query;
-use yii\db\Schema;
 
 class m141222_110026_update_ip_field extends Migration
 {
@@ -21,7 +20,7 @@ class m141222_110026_update_ip_field extends Migration
 
         $transaction = Yii::$app->db->beginTransaction();
         try {
-            $this->alterColumn('{{%user}}', 'registration_ip', Schema::TYPE_STRING . '(45)');
+            $this->alterColumn('{{%user}}', 'registration_ip', $this->string(45));
             foreach ($users as $user) {
                 if ($user['ip'] == null) {
                     continue;
@@ -44,13 +43,19 @@ class m141222_110026_update_ip_field extends Migration
         $transaction = Yii::$app->db->beginTransaction();
         try {
             foreach ($users as $user) {
-                if ($user['ip'] == null)
+                if ($user['ip'] == null) {
                     continue;
+                }
                 Yii::$app->db->createCommand()->update('{{%user}}', [
                     'registration_ip' => ip2long($user['ip'])
                 ], 'id = ' . $user['id'])->execute();
             }
-            $this->alterColumn('{{%user}}', 'registration_ip', Schema::TYPE_BIGINT);
+            if ($this->dbType == 'pgsql') {
+                $this->alterColumn('{{%user}}', 'registration_ip', $this->bigInteger() . ' USING registration_ip::bigint');
+            } else {
+                $this->alterColumn('{{%user}}', 'registration_ip', $this->bigInteger());
+            }
+
             $transaction->commit();
         } catch (Exception $e) {
             $transaction->rollBack();

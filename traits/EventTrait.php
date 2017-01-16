@@ -89,7 +89,7 @@ trait EventTrait
      * @return ResetPasswordEvent
      * @throws \yii\base\InvalidConfigException
      */
-    protected function getResetPasswordEvent(Token $token, RecoveryForm $form = null)
+    protected function getResetPasswordEvent(Token $token = null, RecoveryForm $form = null)
     {
         return \Yii::createObject(['class' => ResetPasswordEvent::className(), 'token' => $token, 'form' => $form]);
     }

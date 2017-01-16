@@ -82,7 +82,7 @@ class SettingsForm extends Model
             'emailUsernameUnique' => [['email', 'username'], 'unique', 'when' => function ($model, $attribute) {
                 return $this->user->$attribute != $model->$attribute;
             }, 'targetClass' => $this->module->modelMap['User']],
-            'newPasswordLength' => ['new_password', 'string', 'min' => 6],
+            'newPasswordLength' => ['new_password', 'string', 'max' => 72, 'min' => 6],
             'currentPasswordRequired' => ['current_password', 'required'],
             'currentPasswordValidate' => ['current_password', function ($attr) {
                 if (!Password::validate($this->$attr, $this->user->password_hash)) {
@@ -167,7 +167,10 @@ class SettingsForm extends Model
         ]);
         $token->save(false);
         $this->mailer->sendReconfirmationMessage($this->user, $token);
-        Yii::$app->session->setFlash('info', Yii::t('user', 'A confirmation message has been sent to your new email address'));
+        Yii::$app->session->setFlash(
+            'info',
+            Yii::t('user', 'A confirmation message has been sent to your new email address')
+        );
     }
 
     /**
@@ -192,6 +195,12 @@ class SettingsForm extends Model
         $this->user->flags &= ~User::OLD_EMAIL_CONFIRMED;
         $this->user->save(false);
 
-        Yii::$app->session->setFlash('info', Yii::t('user', 'We have sent confirmation links to both old and new email addresses. You must click both links to complete your request'));
+        Yii::$app->session->setFlash(
+            'info',
+            Yii::t(
+                'user',
+                'We have sent confirmation links to both old and new email addresses. You must click both links to complete your request'
+            )
+        );
     }
 }

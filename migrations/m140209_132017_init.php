@@ -10,7 +10,6 @@
  */
 
 use dektrium\user\migrations\Migration;
-use yii\db\Schema;
 
 /**
  * @author Dmitry Erofeev <dmeroff@gmail.com
@@ -20,42 +19,42 @@ class m140209_132017_init extends Migration
     public function up()
     {
         $this->createTable('{{%user}}', [
-            'id' => Schema::TYPE_PK,
-            'username'             => Schema::TYPE_STRING . '(25) NOT NULL',
-            'email'                => Schema::TYPE_STRING . '(255) NOT NULL',
-            'password_hash'        => Schema::TYPE_STRING . '(60) NOT NULL',
-            'auth_key'             => Schema::TYPE_STRING . '(32) NOT NULL',
-            'confirmation_token'   => Schema::TYPE_STRING . '(32)',
-            'confirmation_sent_at' => Schema::TYPE_INTEGER,
-            'confirmed_at'         => Schema::TYPE_INTEGER,
-            'unconfirmed_email'    => Schema::TYPE_STRING . '(255)',
-            'recovery_token'       => Schema::TYPE_STRING . '(32)',
-            'recovery_sent_at'     => Schema::TYPE_INTEGER,
-            'blocked_at'           => Schema::TYPE_INTEGER,
-            'registered_from'      => Schema::TYPE_INTEGER,
-            'logged_in_from'       => Schema::TYPE_INTEGER,
-            'logged_in_at'         => Schema::TYPE_INTEGER,
-            'created_at'           => Schema::TYPE_INTEGER . ' NOT NULL',
-            'updated_at'           => Schema::TYPE_INTEGER . ' NOT NULL',
+            'id'                   => $this->primaryKey(),
+            'username'             => $this->string(25)->notNull(),
+            'email'                => $this->string(255)->notNull(),
+            'password_hash'        => $this->string(60)->notNull(),
+            'auth_key'             => $this->string(32)->notNull(),
+            'confirmation_token'   => $this->string(32)->null(),
+            'confirmation_sent_at' => $this->integer()->null(),
+            'confirmed_at'         => $this->integer()->null(),
+            'unconfirmed_email'    => $this->string(255)->null(),
+            'recovery_token'       => $this->string(32)->null(),
+            'recovery_sent_at'     => $this->integer()->null(),
+            'blocked_at'           => $this->integer()->null(),
+            'registered_from'      => $this->integer()->null(),
+            'logged_in_from'       => $this->integer()->null(),
+            'logged_in_at'         => $this->integer()->null(),
+            'created_at'           => $this->integer()->notNull(),
+            'updated_at'           => $this->integer()->notNull(),
         ], $this->tableOptions);
 
-        $this->createIndex('user_unique_username', '{{%user}}', 'username', true);
-        $this->createIndex('user_unique_email', '{{%user}}', 'email', true);
-        $this->createIndex('user_confirmation', '{{%user}}', 'id, confirmation_token', true);
-        $this->createIndex('user_recovery', '{{%user}}', 'id, recovery_token', true);
+        $this->createIndex('{{%user_unique_username}}', '{{%user}}', 'username', true);
+        $this->createIndex('{{%user_unique_email}}', '{{%user}}', 'email', true);
+        $this->createIndex('{{%user_confirmation}}', '{{%user}}', 'id, confirmation_token', true);
+        $this->createIndex('{{%user_recovery}}', '{{%user}}', 'id, recovery_token', true);
 
         $this->createTable('{{%profile}}', [
-            'user_id'        => Schema::TYPE_INTEGER . ' PRIMARY KEY',
-            'name'           => Schema::TYPE_STRING . '(255)',
-            'public_email'   => Schema::TYPE_STRING . '(255)',
-            'gravatar_email' => Schema::TYPE_STRING . '(255)',
-            'gravatar_id'    => Schema::TYPE_STRING . '(32)',
-            'location'       => Schema::TYPE_STRING . '(255)',
-            'website'        => Schema::TYPE_STRING . '(255)',
-            'bio'            => Schema::TYPE_TEXT,
+            'user_id'        => $this->integer()->notNull()->append('PRIMARY KEY'),
+            'name'           => $this->string(255)->null(),
+            'public_email'   => $this->string(255)->null(),
+            'gravatar_email' => $this->string(255)->null(),
+            'gravatar_id'    => $this->string(32)->null(),
+            'location'       => $this->string(255)->null(),
+            'website'        => $this->string(255)->null(),
+            'bio'            => $this->text()->null(),
         ], $this->tableOptions);
 
-        $this->addForeignKey('fk_user_profile', '{{%profile}}', 'user_id', '{{%user}}', 'id', 'CASCADE', 'RESTRICT');
+        $this->addForeignKey('{{%fk_user_profile}}', '{{%profile}}', 'user_id', '{{%user}}', 'id', $this->cascade, $this->restrict);
     }
 
     public function down()

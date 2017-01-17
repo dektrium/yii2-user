@@ -47,8 +47,8 @@ class RegistrationForm extends Model
 
         return [
             // username rules
+            'usernameTrim'     => ['username', 'trim'],
             'usernameLength'   => ['username', 'string', 'min' => 3, 'max' => 255],
-            'usernameTrim'     => ['username', 'filter', 'filter' => 'trim'],
             'usernamePattern'  => ['username', 'match', 'pattern' => $user::$usernameRegexp],
             'usernameRequired' => ['username', 'required'],
             'usernameUnique'   => [
@@ -58,7 +58,7 @@ class RegistrationForm extends Model
                 'message' => Yii::t('user', 'This username has already been taken')
             ],
             // email rules
-            'emailTrim'     => ['email', 'filter', 'filter' => 'trim'],
+            'emailTrim'     => ['email', 'trim'],
             'emailRequired' => ['email', 'required'],
             'emailPattern'  => ['email', 'email'],
             'emailUnique'   => [

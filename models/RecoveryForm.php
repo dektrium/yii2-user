@@ -85,7 +85,7 @@ class RecoveryForm extends Model
     public function rules()
     {
         return [
-            'emailTrim' => ['email', 'filter', 'filter' => 'trim'],
+            'emailTrim' => ['email', 'trim'],
             'emailRequired' => ['email', 'required'],
             'emailPattern' => ['email', 'email'],
             'passwordRequired' => ['password', 'required'],

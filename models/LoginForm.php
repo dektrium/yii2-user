@@ -80,8 +80,8 @@ class LoginForm extends Model
     public function rules()
     {
         $rules = [
-            'requiredFields' => [['login'], 'required'],
             'loginTrim' => ['login', 'trim'],
+            'requiredFields' => [['login'], 'required'],
             'confirmationValidate' => [
                 'login',
                 function ($attribute) {

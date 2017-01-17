@@ -72,12 +72,12 @@ class SettingsForm extends Model
     public function rules()
     {
         return [
+            'usernameTrim' => ['username', 'trim'],
             'usernameRequired' => ['username', 'required'],
-            'usernameTrim' => ['username', 'filter', 'filter' => 'trim'],
             'usernameLength'   => ['username', 'string', 'min' => 3, 'max' => 255],
             'usernamePattern' => ['username', 'match', 'pattern' => '/^[-a-zA-Z0-9_\.@]+$/'],
+            'emailTrim' => ['email', 'trim'],
             'emailRequired' => ['email', 'required'],
-            'emailTrim' => ['email', 'filter', 'filter' => 'trim'],
             'emailPattern' => ['email', 'email'],
             'emailUsernameUnique' => [['email', 'username'], 'unique', 'when' => function ($model, $attribute) {
                 return $this->user->$attribute != $model->$attribute;

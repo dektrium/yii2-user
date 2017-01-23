@@ -43,7 +43,7 @@ use yii\helpers\ArrayHelper;
  * @property integer $blocked_at
  * @property integer $created_at
  * @property integer $updated_at
- * @property integer $last_login
+ * @property integer $last_login_at
  * @property integer $flags
  *
  * Defined relations:

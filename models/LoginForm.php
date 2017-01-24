@@ -82,39 +82,36 @@ class LoginForm extends Model
         $rules = [
             'requiredFields' => [['login'], 'required'],
             'loginTrim' => ['login', 'trim'],
-            'confirmationValidate' => [
-                'login',
-                function ($attribute) {
-                    if ($this->user !== null) {
-                        $confirmationRequired = $this->module->enableConfirmation
-                            && !$this->module->enableUnconfirmedLogin;
-                        if ($confirmationRequired && !$this->user->getIsConfirmed()) {
-                            $this->addError($attribute, Yii::t('user', 'You need to confirm your email address'));
-                        }
-                        if ($this->user->getIsBlocked()) {
-                            $this->addError($attribute, Yii::t('user', 'Your account has been blocked'));
-                        }
-                    }
-                }
-            ],
+            'confirmationValidate' => ['login', 'validateConfirmation'],
             'rememberMe' => ['rememberMe', 'boolean'],
         ];
 
         if (!$this->module->debug) {
             $rules = array_merge($rules, [
                 'requiredFields' => [['login', 'password'], 'required'],
-                'passwordValidate' => [
-                    'password',
-                    function ($attribute) {
-                        if ($this->user === null || !Password::validate($this->password, $this->user->password_hash)) {
-                            $this->addError($attribute, Yii::t('user', 'Invalid login or password'));
-                        }
-                    }
-                ]
+                'passwordValidate' => ['password', 'validatePassword']
             ]);
         }
 
         return $rules;
+    }
+    
+    /**
+     * Validates if the user account is confirmed and not blocked.
+     *
+     * @return void
+     */
+    public function validateConfirmation($attribute, $params)
+    {
+        if ($this->user !== null) {
+            $confirmationRequired = $this->module->enableConfirmation && !$this->module->enableUnconfirmedLogin;
+            if ($confirmationRequired && !$this->user->getIsConfirmed()) {
+                $this->addError($attribute, Yii::t('user', 'You need to confirm your email address'));
+            }
+            if ($this->user->getIsBlocked()) {
+                $this->addError($attribute, Yii::t('user', 'Your account has been blocked'));
+            }
+        }
     }
 
     /**

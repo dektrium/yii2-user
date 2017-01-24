@@ -224,6 +224,7 @@ class User extends ActiveRecord implements IdentityInterface
     {
         return [
             // username rules
+            'usernameTrim'     => ['username', 'trim'],
             'usernameRequired' => ['username', 'required', 'on' => ['register', 'create', 'connect', 'update']],
             'usernameMatch'    => ['username', 'match', 'pattern' => static::$usernameRegexp],
             'usernameLength'   => ['username', 'string', 'min' => 3, 'max' => 255],
@@ -232,9 +233,9 @@ class User extends ActiveRecord implements IdentityInterface
                 'unique',
                 'message' => \Yii::t('user', 'This username has already been taken')
             ],
-            'usernameTrim'     => ['username', 'trim'],
 
             // email rules
+            'emailTrim'     => ['email', 'trim'],
             'emailRequired' => ['email', 'required', 'on' => ['register', 'connect', 'create', 'update']],
             'emailPattern'  => ['email', 'email'],
             'emailLength'   => ['email', 'string', 'max' => 255],
@@ -243,7 +244,6 @@ class User extends ActiveRecord implements IdentityInterface
                 'unique',
                 'message' => \Yii::t('user', 'This email address has already been taken')
             ],
-            'emailTrim'     => ['email', 'trim'],
 
             // password rules
             'passwordRequired' => ['password', 'required', 'on' => ['register']],

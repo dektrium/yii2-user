@@ -105,7 +105,11 @@ class RecoveryForm extends Model
         }
 
         $user = $this->finder->findUserByEmail($this->email);
-
+        if (!$user) {
+            $this->addError('email', \Yii::t('user', 'There is no user with such email'));
+            return false;
+        }
+        
         if ($user instanceof User) {
             /** @var Token $token */
             $token = \Yii::createObject([

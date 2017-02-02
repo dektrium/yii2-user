@@ -45,7 +45,7 @@ class Register extends Widget
     /**
      * @var bool 
      */
-    public $enableGeneratingPassword = false;
+    public $enableGeneratingPassword = null;
     
     /**
      * @var bool
@@ -68,6 +68,9 @@ class Register extends Widget
         
         if (!$this->model) {
             $this->model = \Yii::createObject(RegistrationForm::className());
+        }
+        if ($this->enableGeneratingPassword === null) {
+            $this->enableGeneratingPassword = Yii::$app->getModule('user')->enableGeneratingPassword;
         }
     }
     

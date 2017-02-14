@@ -186,5 +186,5 @@ return [
     'Your email address has been changed' => 'Je e-mailadres is aangepast',
     'Your password has been changed successfully.' => 'Je wachtwoord is succesvol aangepast',
     'Your profile has been updated' => 'Je profiel is geüpdatet',
-    '{0, date, MMMM dd, YYYY HH:mm}' => '{0, datum, dd MMMM, YYYY HH:mm}',
+    '{0, date, MMMM dd, YYYY HH:mm}' => '{0, date, dd MMMM, YYYY HH:mm}',
 ];

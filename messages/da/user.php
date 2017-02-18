@@ -169,7 +169,7 @@ return [
     'If you did not make this request you can ignore this email' => 'P.S. Hvis du har modtaget denne email ved en fejl, kan du bare slette den',
     'In order to complete your registration, please click the link below' => 'For at fuldføre din registrering, klik venligst på nedenstående link',
     'In order to complete your request, please click the link below' => 'For at fuldføre din anmodning, klik venligst på nedenstående link',
-    'Information' => '@@Information@@',
+    'Information' => 'Information',
     'Invalid login or password' => 'Ugyldigt brugernavn eller kodeord',
     'Joined on {0, date}' => 'Tilmeldt d. {0, date}',
     'Location' => 'Lokation',

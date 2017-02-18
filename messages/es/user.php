@@ -169,7 +169,7 @@ return [
     'If you did not make this request you can ignore this email' => 'PD: Si ha recibido este correo electrónico por error, simplemente elimínelo',
     'In order to complete your registration, please click the link below' => 'Para completar el registro, por favor haga clic en el siguiente enlace',
     'In order to complete your request, please click the link below' => 'Para completar la petición, haga clic en el siguiente enlace',
-    'Information' => '@@Información@@',
+    'Information' => 'Información',
     'Invalid login or password' => 'Usuario o contraseña incorrectos',
     'Joined on {0, date}' => 'Registrado el {0, date}',
     'Location' => 'Localización',

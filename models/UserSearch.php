@@ -67,7 +67,7 @@ class UserSearch extends Model
             'email'           => Yii::t('user', 'Email'),
             'created_at'      => Yii::t('user', 'Registration time'),
             'last_login_at'   => Yii::t('user', 'Last login'),
-            'registration_ip' => Yii::t('user', 'Registration ip'),
+            'registration_ip' => Yii::t('user', 'Registration IP'),
         ];
     }
 

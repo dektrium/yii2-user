@@ -140,6 +140,7 @@ return [
     'Are you sure you want to unblock this user?' => '¿Está seguro de desbloquear a este usuario?',
     'Are you sure? Deleted user can not be restored' => '¿Está seguro?¡ Un usuario eliminado no puede ser restaurado!',
     'Bio' => 'Biografía',
+	'Time zone' => 'Zona horaria',
     'Block' => 'Bloquear',
     'Block status' => 'Estado de bloqueo',
     'Blocked at {0, date, MMMM dd, YYYY HH:mm}' => 'Bloqueado el {0, date, dd MMMM, YYYY HH:mm}',

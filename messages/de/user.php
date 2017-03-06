@@ -48,6 +48,7 @@ return [
     'Delete' => 'Löschen',
     'Don\'t have an account? Sign up!' => 'Noch kein Konto? Jetzt registrieren!',
     'In order to finish your registration, we need you to enter your email address' => 'Um ihre Registrierung abzuschliessen, müssen Sie ihre E-Mail Adresse angeben',
+    'In order to finish your registration, we need you to enter following fields' => 'Um ihre Registrierung abzuschliessen, müssen Sie folgende Felder ausfüllen',
     'Invalid or expired link' => 'Falscher oder abgelaufener Link',
     'New email' => 'Neue E-Mail Adresse',
     'New password' => 'Neues Passwort',

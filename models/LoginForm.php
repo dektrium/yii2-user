@@ -57,7 +57,7 @@ class LoginForm extends Model
     /**
      * Gets all users to generate the dropdown list when in debug mode.
      *
-     * @return string
+     * @return array
      */
     public static function loginList()
     {

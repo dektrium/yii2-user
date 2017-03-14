@@ -61,7 +61,10 @@ class LoginForm extends Model
      */
     public static function loginList()
     {
-        return ArrayHelper::map(User::find()->where(['blocked_at' => null])->all(), 'username', function ($user) {
+        /** @var \dektrium\user\Module $module */
+        $module = \Yii::$app->getModule('user');
+
+        return ArrayHelper::map($module->modelMap['User']::find()->where(['blocked_at' => null])->all(), 'username', function ($user) {
             return sprintf('%s (%s)', Html::encode($user->username), Html::encode($user->email));
         });
     }

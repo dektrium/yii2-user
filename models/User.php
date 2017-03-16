@@ -16,6 +16,7 @@ use dektrium\user\helpers\Password;
 use dektrium\user\Mailer;
 use dektrium\user\Module;
 use dektrium\user\traits\ModuleTrait;
+use Yii;
 use yii\base\NotSupportedException;
 use yii\behaviors\TimestampBehavior;
 use yii\db\ActiveRecord;
@@ -564,4 +565,11 @@ class User extends ActiveRecord implements IdentityInterface
     {
         throw new NotSupportedException('Method "' . __CLASS__ . '::' . __METHOD__ . '" is not implemented.');
     }
+    
+    /** @inheritdoc */
+    public static function instantiate($row)
+    {
+        return Yii::createObject(static::className());
+    }
+
 }

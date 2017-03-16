@@ -53,6 +53,7 @@ return [
     'Assignments' => 'Права пользователя',
     'Awesome, almost there. Now you need to click the confirmation link sent to your new email address' => 'Почти готово! Осталось перейти по ссылке, отправленной на ваш новый почтовый адрес',
     'Awesome, almost there. Now you need to click the confirmation link sent to your old email address' => 'Почти готово! Осталось перейти по ссылке, отправленной на ваш старый почтовый адрес',
+    'Back to original user' => 'Вернутся к исходному пользователю',
     'Become this user' => 'Войти как этот пользователь',
     'Bio' => 'О себе',
     'Block' => 'Блокировать',

@@ -57,14 +57,52 @@ or
 
 ```
 echo Nav::widget([
+    'options' => ['class' => 'navbar-nav navbar-right'],
     'items' => [
-        Yii::$app->session->has(\dektrium\user\controllers\AdminController::ORIGINAL_USER_SESSION_KEY;) ?
+        Yii::$app->session->has(\dektrium\user\controllers\AdminController::ORIGINAL_USER_SESSION_KEY) ?
         '<li>' . Html::beginForm(['/user/admin/switch'], 'post', ['class' => 'navbar-form'])
             . Html::submitButton('<span class="glyphicon glyphicon-user"></span> Back to original user',
                 ['class' => 'btn btn-link']
             ) . Html::endForm() . '</li>' : '',
       ],
+    ]);
 ```
+
+You can declare module options 'adminPermission'. Access to action `switch` must be prefaced to all:
+```
+    'modules' => [
+        'user' => [
+            'class' => 'dektrium\user\Module',
+            'adminPermission' => 'administrateUser',
+        ],
+    ],
+```
+```
+    'modules' => [
+        'user' => [
+            'controllerMap' => [
+                'admin' => [
+                    'class' => 'dektrium\user\controllers\AdminController',
+                    'as access' => [
+                        'class' => 'yii\filters\AccessControl',
+                        'rules' => [
+                            [
+                                'allow' => true,
+                                'roles' => ['administrateUser'],
+                            ],
+                            [
+                                'actions' => ['switch'],
+                                'allow' => true,
+                                'roles' => ['@'],
+                            ],
+                        ],
+                    ],
+                ],
+            ],
+        ],
+    ],
+```
+
 
 ##Changing CRUD layout
 

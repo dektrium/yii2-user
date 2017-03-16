@@ -274,7 +274,7 @@ class SettingsController extends Controller
     public function actionDelete()
     {
         if (!$this->module->enableAccountDelete) {
-            throw new NotFoundHttpException(\Yii::t('user', 'Not found'));
+            throw new NotFoundHttpException(\Yii::t('user', 'Account deletion is deactivated'));
         }
 
         /** @var User $user */
@@ -284,10 +284,13 @@ class SettingsController extends Controller
         \Yii::$app->user->logout();
 
         $this->trigger(self::EVENT_BEFORE_DELETE, $event);
-        $user->delete();
+        $success = $user->delete();
         $this->trigger(self::EVENT_AFTER_DELETE, $event);
 
-        \Yii::$app->session->setFlash('info', \Yii::t('user', 'Your account has been completely deleted'));
+        if($success)
+            \Yii::$app->session->setFlash('info', \Yii::t('user', 'Your account has been completely deleted'));
+        else
+            \Yii::$app->session->setFlash('danger', \Yii::t('user', 'Your account could not be deleted'));
 
         return $this->goHome();
     }

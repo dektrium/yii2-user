@@ -287,10 +287,14 @@ class SettingsController extends Controller
         $success = $user->delete();
         $this->trigger(self::EVENT_AFTER_DELETE, $event);
 
-        if($success)
+
+        if ($success) {
             \Yii::$app->session->setFlash('info', \Yii::t('user', 'Your account has been completely deleted'));
-        else
+            return $this->goHome();
+        } else {
             \Yii::$app->session->setFlash('danger', \Yii::t('user', 'Your account could not be deleted'));
+            return $this->goBack();
+        }
 
         return $this->goHome();
     }

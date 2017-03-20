@@ -12,12 +12,15 @@
 namespace dektrium\user\controllers;
 
 use dektrium\user\Finder;
+use dektrium\user\models\AccountDeletionForm;
+use dektrium\user\models\PasswordChangeForm;
 use dektrium\user\models\Profile;
 use dektrium\user\models\SettingsForm;
 use dektrium\user\models\User;
 use dektrium\user\Module;
 use dektrium\user\traits\AjaxValidationTrait;
 use dektrium\user\traits\EventTrait;
+use Yii;
 use yii\filters\AccessControl;
 use yii\filters\VerbFilter;
 use yii\web\Controller;
@@ -103,10 +106,10 @@ class SettingsController extends Controller
     protected $finder;
 
     /**
-     * @param string           $id
+     * @param string $id
      * @param \yii\base\Module $module
-     * @param Finder           $finder
-     * @param array            $config
+     * @param Finder $finder
+     * @param array $config
      */
     public function __construct($id, $module, Finder $finder, $config = [])
     {
@@ -122,21 +125,21 @@ class SettingsController extends Controller
                 'class' => VerbFilter::className(),
                 'actions' => [
                     'disconnect' => ['post'],
-                    'delete'     => ['post'],
+                    'delete' => ['post'],
                 ],
             ],
             'access' => [
                 'class' => AccessControl::className(),
                 'rules' => [
                     [
-                        'allow'   => true,
+                        'allow' => true,
                         'actions' => ['profile', 'account', 'networks', 'disconnect', 'delete'],
-                        'roles'   => ['@'],
+                        'roles' => ['@'],
                     ],
                     [
-                        'allow'   => true,
+                        'allow' => true,
                         'actions' => ['confirm'],
-                        'roles'   => ['?', '@'],
+                        'roles' => ['?', '@'],
                     ],
                 ],
             ],
@@ -180,28 +183,39 @@ class SettingsController extends Controller
      */
     public function actionAccount()
     {
-        /** @var SettingsForm $model */
-        $model = \Yii::createObject(SettingsForm::className());
-        $event = $this->getFormEvent($model);
+        $settings = \Yii::createObject(SettingsForm::className());
+        $account_deletion = \Yii::createObject(AccountDeletionForm::className());
+        $password_change = \Yii::createObject(PasswordChangeForm::className());
+        $event = $this->getFormEvent($settings);
 
-        $this->performAjaxValidation($model);
+        $this->performAjaxValidation($settings);
+        $this->performAjaxValidation($password_change);
 
         $this->trigger(self::EVENT_BEFORE_ACCOUNT_UPDATE, $event);
-        if ($model->load(\Yii::$app->request->post()) && $model->save()) {
-            \Yii::$app->session->setFlash('success', \Yii::t('user', 'Your account details have been updated'));
+
+        if ($settings->load(\Yii::$app->request->post()) && $settings->save()) {
+            \Yii::$app->session->setFlash('success', Yii::t('user', 'Your account details have been updated'));
+            $this->trigger(self::EVENT_AFTER_ACCOUNT_UPDATE, $event);
+            return $this->refresh();
+        }
+
+        if ($password_change->load(\Yii::$app->request->post()) && $password_change->save()) {
+            \Yii::$app->session->setFlash('success', Yii::t('user', 'Your password has been changed successfully.'));
             $this->trigger(self::EVENT_AFTER_ACCOUNT_UPDATE, $event);
             return $this->refresh();
         }
 
         return $this->render('account', [
-            'model' => $model,
+            'settings' => $settings,
+            'account_deletion' => $account_deletion,
+            'password_change' => $password_change,
         ]);
     }
 
     /**
      * Attempts changing user's email address.
      *
-     * @param int    $id
+     * @param int $id
      * @param string $code
      *
      * @return string
@@ -273,27 +287,32 @@ class SettingsController extends Controller
      */
     public function actionDelete()
     {
-        if (!$this->module->enableAccountDelete) {
+        if (!Yii::$app->getModule('user')->enableAccountDelete) {
             throw new NotFoundHttpException(\Yii::t('user', 'Account deletion is deactivated'));
         }
 
         /** @var User $user */
-        $user  = \Yii::$app->user->identity;
-        $event = $this->getUserEvent($user);
+        $user = \Yii::$app->user->identity;
+        $account_deletion = new AccountDeletionForm();
 
-        \Yii::$app->user->logout();
+        $this->performAjaxValidation($account_deletion);
 
-        $this->trigger(self::EVENT_BEFORE_DELETE, $event);
-        $success = $user->delete();
-        $this->trigger(self::EVENT_AFTER_DELETE, $event);
+        if ($account_deletion->load(Yii::$app->request->post()) && $account_deletion->validate()) {
+            $event = $this->getUserEvent($user);
 
+            Yii::$app->user->logout();
 
-        if ($success) {
-            \Yii::$app->session->setFlash('info', \Yii::t('user', 'Your account has been completely deleted'));
-            return $this->goHome();
-        } else {
-            \Yii::$app->session->setFlash('danger', \Yii::t('user', 'Your account could not be deleted'));
-            return $this->goBack();
+            $this->trigger(self::EVENT_BEFORE_DELETE, $event);
+            $success = $user->delete();
+            $this->trigger(self::EVENT_AFTER_DELETE, $event);
+
+            if ($success) {
+                Yii::$app->session->setFlash('info', \Yii::t('user', 'Your account has been completely deleted'));
+                return $this->goHome();
+            } else {
+                Yii::$app->session->setFlash('danger', \Yii::t('user', 'Your account could not be deleted'));
+                return $this->goBack();
+            }
         }
 
         return $this->goHome();

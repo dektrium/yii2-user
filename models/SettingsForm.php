@@ -19,7 +19,7 @@ use Yii;
 use yii\base\Model;
 
 /**
- * SettingsForm gets user's username, email and password and changes them.
+ * SettingsForm gets user's username and email and changes them.
  *
  * @property User $user
  *
@@ -103,7 +103,6 @@ class SettingsForm extends Model
         if ($this->validate()) {
             $this->user->scenario = 'settings';
             $this->user->username = $this->username;
-            $this->user->password = $this->new_password;
             if ($this->email == $this->user->email && $this->user->unconfirmed_email != null) {
                 $this->user->unconfirmed_email = null;
             } elseif ($this->email != $this->user->email) {

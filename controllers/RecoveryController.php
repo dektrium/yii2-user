@@ -120,10 +120,7 @@ class RecoveryController extends Controller
 
         if ($model->load(\Yii::$app->request->post()) && $model->sendRecoveryMessage()) {
             $this->trigger(self::EVENT_AFTER_REQUEST, $event);
-            return $this->render('/message', [
-                'title'  => \Yii::t('user', 'Recovery message sent'),
-                'module' => $this->module,
-            ]);
+            return $this->render('/recovery/request_sent');
         }
 
         return $this->render('request', [

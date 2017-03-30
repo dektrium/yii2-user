@@ -84,6 +84,22 @@ class Module extends BaseModule
     /** @var array Model map */
     public $modelMap = [];
 
+    /** @var array Ip configuration that determines if an administrator can log in.
+     * Defaults to null which means that no ip check is being performed.
+     * It uses the yii\validators\IpValidator for validation:
+     * @see http://www.yiiframework.com/doc-2.0/guide-tutorial-core-validators.html#ip
+     * @see http://www.yiiframework.com/doc-2.0/yii-validators-ipvalidator.html
+     * @example
+        'ranges' => [
+            '192.168.10.128'
+            '!192.168.10.0/24',
+            'any' // allows any other IP addresses
+            ]
+     * In this example, access is allowed for all the IPv4 and IPv6 addresses excluding the 192.168.10.0/24 subnet.
+     * IPv4 address 192.168.10.128 is also allowed, because it is listed before the restriction.
+     */
+    public $allowedIpConfiguration = null;
+
     /**
      * @var string The prefix for user module URL.
      *

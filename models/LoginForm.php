@@ -159,7 +159,7 @@ class LoginForm extends Model
     {
         $config = $this->module->allowedIpConfiguration;
 
-        if (!$this->user->isAdmin || !$config) {
+        if (!$this->user || !$this->user->isAdmin || !$config) {
             return true;
         }
 

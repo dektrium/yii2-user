@@ -10,8 +10,9 @@ Assume you decided to override user class and change registration process. Letâ€
 namespace app\models;
 
 use dektrium\user\models\User as BaseUser;
+use dektrium\user\models\UserInterface;
 
-class User extends BaseUser
+class User extends BaseUser implements UserInterface
 {
     public function register()
     {

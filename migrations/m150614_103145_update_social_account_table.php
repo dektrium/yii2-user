@@ -15,10 +15,10 @@ class m150614_103145_update_social_account_table extends Migration
 
         $accounts = (new Query())->from('{{%social_account}}')->select('id')->all();
 
-        $transaction = Yii::$app->db->beginTransaction();
+        $transaction = $this->db->beginTransaction();
         try {
             foreach ($accounts as $account) {
-                Yii::$app->db->createCommand()->update('{{%social_account}}', [
+                $this->db->createCommand()->update('{{%social_account}}', [
                     'created_at' => time(),
                 ], 'id = ' . $account['id'])->execute();
             }

@@ -18,14 +18,14 @@ class m141222_110026_update_ip_field extends Migration
     {
         $users = (new Query())->from('{{%user}}')->select('id, registration_ip ip')->all();
 
-        $transaction = Yii::$app->db->beginTransaction();
+        $transaction = $this->db->beginTransaction();
         try {
             $this->alterColumn('{{%user}}', 'registration_ip', $this->string(45));
             foreach ($users as $user) {
                 if ($user['ip'] == null) {
                     continue;
                 }
-                Yii::$app->db->createCommand()->update('{{%user}}', [
+                $this->db->createCommand()->update('{{%user}}', [
                     'registration_ip' => long2ip($user['ip']),
                 ], 'id = ' . $user['id'])->execute();
             }
@@ -40,13 +40,13 @@ class m141222_110026_update_ip_field extends Migration
     {
         $users = (new Query())->from('{{%user}}')->select('id, registration_ip ip')->all();
 
-        $transaction = Yii::$app->db->beginTransaction();
+        $transaction = $this->db->beginTransaction();
         try {
             foreach ($users as $user) {
                 if ($user['ip'] == null) {
                     continue;
                 }
-                Yii::$app->db->createCommand()->update('{{%user}}', [
+                $this->db->createCommand()->update('{{%user}}', [
                     'registration_ip' => ip2long($user['ip'])
                 ], 'id = ' . $user['id'])->execute();
             }

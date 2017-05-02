@@ -16,7 +16,7 @@ class m141222_110026_update_ip_field extends Migration
 {
     public function up()
     {
-        $users = (new Query())->from('{{%user}}')->select('id, registration_ip ip')->all();
+        $users = (new Query())->from('{{%user}}')->select('id, registration_ip ip')->all($this->db);
 
         $transaction = $this->db->beginTransaction();
         try {
@@ -38,7 +38,7 @@ class m141222_110026_update_ip_field extends Migration
 
     public function down()
     {
-        $users = (new Query())->from('{{%user}}')->select('id, registration_ip ip')->all();
+        $users = (new Query())->from('{{%user}}')->select('id, registration_ip ip')->all($this->db);
 
         $transaction = $this->db->beginTransaction();
         try {

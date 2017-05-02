@@ -13,7 +13,7 @@ class m150614_103145_update_social_account_table extends Migration
         $this->addColumn('{{%social_account}}', 'username', $this->string()->null());
         $this->createIndex('{{%account_unique_code}}', '{{%social_account}}', 'code', true);
 
-        $accounts = (new Query())->from('{{%social_account}}')->select('id')->all();
+        $accounts = (new Query())->from('{{%social_account}}')->select('id')->all($this->db);
 
         $transaction = $this->db->beginTransaction();
         try {

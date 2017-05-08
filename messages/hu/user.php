@@ -175,7 +175,7 @@ return [
     'If you did not make this request you can ignore this email' => 'Ui: Ha valamilyen hiba miatt kapta meg ezt az emailt, kérem törölje',
     'In order to complete your registration, please click the link below' => 'A regisztráció befejezéséhez klikkeljen az alábbi linkre',
     'In order to complete your request, please click the link below' => 'A kérés befejezéséhez klikkeljen az alábbi linkre',
-    'Information' => '@@Információ@@',
+    'Information' => 'Információ',
     'Invalid login or password' => 'Nem megfelelő felhasználónév vagy jelszó',
     'Joined on {0, date}' => 'Regisztráció ideje {0, date}',
     'Location' => 'Helyszín',

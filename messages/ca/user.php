@@ -175,7 +175,7 @@ return [
     'If you did not make this request you can ignore this email' => 'PD: Si has rebut aquest correu electrònic per error, simplement elimina\'l',
     'In order to complete your registration, please click the link below' => 'Per a completar el registre, si us plau, fes click al següent enllaç',
     'In order to complete your request, please click the link below' => 'Per a completar la petició, fes click al següent enllaç',
-    'Information' => '@@Informació@@',
+    'Information' => 'Informació',
     'Invalid login or password' => 'Usuari o contrasenyaa incorrectes',
     'Joined on {0, date}' => 'Registrat el {0, date}',
     'Location' => 'Localització',

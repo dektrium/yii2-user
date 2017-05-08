@@ -99,7 +99,7 @@ return [
     'Information' => 'Informatie',
     'Invalid login or password' => 'Ongeldige gebruikersnaam of wachtwoord',
     'Invalid or expired link' => 'Ongeldige of verlopen link',
-    'It will be deleted forever' => 'Dit zal voor altijd verwijderd worden',
+    'It will be deleted forever' => 'Dit zal permanent verwijderd worden',
     'Joined on {0, date}' => 'Geregistreerd op {0, date}',
     'Location' => 'Locatie',
     'Login' => 'Log in',

@@ -4,6 +4,7 @@
 
 - Fix: Fixed migrations (dmeroff)
 - Fix #832: Fixed admin view file (thyseus)
+- Enh #839: Order by most recent registration first (created_at DESC) by default (thyseus)
 
 ## 0.9.11 [10 January 2017]
 

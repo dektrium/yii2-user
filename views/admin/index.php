@@ -10,11 +10,11 @@
  */
 
 use yii\grid\GridView;
+use yii\helpers\ArrayHelper;
 use yii\helpers\Html;
 use yii\helpers\Url;
 use yii\web\View;
 use yii\widgets\Pjax;
-
 
 /**
  * @var \yii\web\View $this
@@ -58,7 +58,6 @@ $this->params['breadcrumbs'][] = $this->title;
                 }
             },
         ],
-
         [
           'attribute' => 'last_login_at',
           'value' => function ($model) {
@@ -70,6 +69,17 @@ $this->params['breadcrumbs'][] = $this->title;
                 return date('Y-m-d G:i:s', $model->last_login_at);
             }
           },
+        ],
+        [
+            'attribute' => 'auth_items',
+            'format' => 'html',
+            'value' => function ($data) {
+                return implode(', ', array_map(function ($ai) {
+                    return $ai->name;
+                }, $data->authItems));
+            },
+            'filter' => ArrayHelper::map(Yii::$app->db->createCommand('select name from auth_item')->queryAll(), 'name', 'name'),
+            'visible' => Yii::$app->hasModule('rbac'),
         ],
         [
             'header' => Yii::t('user', 'Confirmation'),

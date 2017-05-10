@@ -36,6 +36,9 @@ class UserSearch extends Model
     /** @var string */
     public $registration_ip;
 
+    /** @var string in case the yii2-rbac module is used, we can filter users by auth_items in the admin/index view */
+    public $auth_items;
+
     /** @var Finder */
     protected $finder;
 
@@ -53,7 +56,7 @@ class UserSearch extends Model
     public function rules()
     {
         return [
-            'fieldsSafe' => [['username', 'email', 'registration_ip', 'created_at', 'last_login_at'], 'safe'],
+            'fieldsSafe' => [['username', 'email', 'registration_ip', 'created_at', 'last_login_at', 'auth_items'], 'safe'],
             'createdDefault' => ['created_at', 'default', 'value' => null],
             'lastloginDefault' => ['last_login_at', 'default', 'value' => null],
         ];
@@ -87,6 +90,11 @@ class UserSearch extends Model
 
         if (!($this->load($params) && $this->validate())) {
             return $dataProvider;
+        }
+
+        if ($this->auth_items) {
+            $query->leftJoin('auth_assignment', 'auth_assignment.user_id = user.id');
+            $query->andFilterWhere(['item_name' => $this->auth_items]);
         }
 
         if ($this->created_at !== null) {

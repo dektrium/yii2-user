@@ -92,15 +92,17 @@ class UserSearch extends Model
             return $dataProvider;
         }
 
+        $table_name = $query->modelClass::tableName();
+
         if ($this->created_at !== null) {
             $date = strtotime($this->created_at);
-            $query->andFilterWhere(['between', 'created_at', $date, $date + 3600 * 24]);
+            $query->andFilterWhere(['between', $table_name . '.created_at', $date, $date + 3600 * 24]);
         }
 
-        $query->andFilterWhere(['like', 'username', $this->username])
-            ->andFilterWhere(['like', 'email', $this->email])
-            ->andFilterWhere(['user.id' => $this->id])
-            ->andFilterWhere(['registration_ip' => $this->registration_ip]);
+        $query->andFilterWhere(['like', $table_name . '.username', $this->username])
+              ->andFilterWhere(['like', $table_name . '.email', $this->email])
+              ->andFilterWhere([$table_name . '.id' => $this->id])
+              ->andFilterWhere([$table_name . 'registration_ip' => $this->registration_ip]);
 
         return $dataProvider;
     }

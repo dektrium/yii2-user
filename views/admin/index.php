@@ -37,6 +37,10 @@ $this->params['breadcrumbs'][] = $this->title;
     'filterModel'  => $searchModel,
     'layout'       => "{items}\n{pager}",
     'columns' => [
+        [
+            'attribute' => 'id',
+            'headerOptions' => ['style' => 'width:90px;'], # 90px is sufficient for 5-digit user ids
+        ],
         'username',
         'email:email',
         [

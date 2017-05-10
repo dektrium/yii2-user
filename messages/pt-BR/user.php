@@ -168,4 +168,5 @@ return [
     'Your profile has been updated' => 'As configurações do seu perfil foram alteradas',
     '{0, date, MMMM dd, YYYY HH:mm}' => '{0, date, dd/MM/YYYY - HH:mm}h',
     'Your account has been blocked.' => 'Sua conta está bloqueada.',
+    'Your account has been created and a message with further instructions has been sent to your email' => 'Sua conta foi criada e uma mensagem com mais instruções foi enviada para seu e-mail.',
 ];

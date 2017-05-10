@@ -127,6 +127,19 @@ class User extends ActiveRecord implements IdentityInterface
     }
 
     /**
+     * @return mixed return the assigned authorization items of the current user.
+     * @throws \InvalidArgumentException when auth manager is not configured.
+     */
+    public function getAuthItems()
+    {
+        if (!\Yii::$app->authManager) {
+            throw new \InvalidArgumentException('Auth Manager is not configured in application configuration');
+        }
+
+        return \Yii::$app->authManager->getItemsByUser($this->id);
+    }
+
+    /**
      * @return \yii\db\ActiveQuery
      */
     public function getProfile()
@@ -187,6 +200,7 @@ class User extends ActiveRecord implements IdentityInterface
     public function attributeLabels()
     {
         return [
+            'auth_items'        => \Yii::t('user', 'Auth items'),
             'username'          => \Yii::t('user', 'Username'),
             'email'             => \Yii::t('user', 'Email'),
             'registration_ip'   => \Yii::t('user', 'Registration ip'),

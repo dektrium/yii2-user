@@ -11,7 +11,7 @@
 
 namespace dektrium\user\filters;
 
-use yii\web\NotFoundHttpException;
+use yii\web\ForbiddenHttpException;
 use yii\base\ActionFilter;
 
 /**
@@ -35,8 +35,8 @@ class BackendFilter extends ActionFilter
      */
     public function beforeAction($action)
     {
-        if (in_array($action->controller->id, $this->controllers)) {
-            throw new NotFoundHttpException('Not found');
+        if (in_array($action->controller->id, $this->controllers) && !Yii::$app->user->identity->getIsAdmin()) {
+            throw new ForbiddenHttpException('Access denied');
         }
 
         return true;

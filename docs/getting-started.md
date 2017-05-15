@@ -29,6 +29,18 @@ Add following lines to your main configuration file:
 ],
 ```
 
+Furthermore, set Yii2-user's `User` class as identity class for Yii2's user component:
+
+```php
+'components' => [
+        ...
+        'user' => [
+            'identityClass' => 'dektrium\user\models\User',
+        ],
+        ...
+],
+```
+
 ### 3. Update database schema
 
 The last thing you need to do is updating your database schema by applying the

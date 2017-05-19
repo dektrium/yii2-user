@@ -60,6 +60,21 @@ class RegistrationForm extends BaseRegistrationForm
         ]);
         $user->setProfile($profile);
     }
+    
+    public function register() {
+        if (!$this->validate()) {
+            return false;
+        }
+    
+        $this->user->setAttributes([
+            'email'    => $this->email,
+            'username' => $this->username,
+            'password' => $this->password,
+            'field' => $this->fiwld // Your field there
+        ]);
+    
+        return $this->user->register();
+    }
 }
 ```
 

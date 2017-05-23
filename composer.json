@@ -1,5 +1,5 @@
 {
-    "name": "dektrium/yii2-user",
+    "name": "dabilite/yii2-user",
     "description": "Flexible user registration and authentication module for Yii2",
     "keywords": ["yii2", "yii2-user", "user management", "dektrium"],
     "type": "yii2-extension",

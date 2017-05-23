@@ -207,9 +207,13 @@ class SettingsController extends Controller
      * @return string
      * @throws \yii\web\HttpException
      */
-    public function actionConfirm($id, $code)
+    public function actionConfirm($code)
     {
-        $user = $this->finder->findUserById($id);
+
+	$token_user = $this->finder->findToken(['code' => $code])->one();
+	$user_id = $token_user->user_id;
+
+        $user = $this->finder->findUserById($user_id);
 
         if ($user === null || $this->module->emailChangeStrategy == Module::STRATEGY_INSECURE) {
             throw new NotFoundHttpException();

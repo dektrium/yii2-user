@@ -140,15 +140,15 @@ class RecoveryController extends Controller
      * @return string
      * @throws \yii\web\NotFoundHttpException
      */
-    public function actionReset($id, $code)
+    public function actionReset($code)
     {
         if (!$this->module->enablePasswordRecovery) {
             throw new NotFoundHttpException();
         }
 
         /** @var Token $token */
-        $token = $this->finder->findToken(['user_id' => $id, 'code' => $code, 'type' => Token::TYPE_RECOVERY])->one();
-        if (empty($token) || ! $token instanceof Token) {
+        $token = $this->finder->findToken(['code' => $code, 'type' => Token::TYPE_RECOVERY])->one();
+	if (empty($token) || ! $token instanceof Token) {
             throw new NotFoundHttpException();
         }
         $event = $this->getResetPasswordEvent($token);

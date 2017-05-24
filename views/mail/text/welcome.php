@@ -10,12 +10,13 @@
  */
 
 /**
- * @var dektrium\user\models\User
+ * @var dektrium\user\models\User $user
  */
 ?>
 <?= Yii::t('user', 'Hello') ?>,
 
 <?= Yii::t('user', 'Your account on {0} has been created', Yii::$app->name) ?>.
+<?= Yii::t('user', 'Your username is: {username}', ['username'=>$user->username]) ?>.
 <?php if ($module->enableGeneratingPassword): ?>
 <?= Yii::t('user', 'We have generated a password for you') ?>:
 <?= $user->password ?>

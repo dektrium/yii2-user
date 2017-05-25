@@ -9,6 +9,7 @@
  * file that was distributed with this source code.
  */
 
+
 /**
  * @var dektrium\user\models\User $user
  */
@@ -28,6 +29,8 @@
 <?= $token->url ?>
 
 <?= Yii::t('user', 'If you cannot click the link, please try pasting the text into your browser') ?>.
+<?php else: ?>
+<?= Yii::t('user', 'You can log-in to your account here: {login-url}',['login-url'=>\Yii::$app->urlManager->createAbsoluteUrl(['user/security/login'])]) ?>
 <?php endif ?>
 
 <?= Yii::t('user', 'If you did not make this request you can ignore this email') ?>.

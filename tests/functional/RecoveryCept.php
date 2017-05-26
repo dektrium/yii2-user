@@ -46,6 +46,7 @@ $user = $I->grabFixture('user', 'user_with_recovery_token');
 $token = $I->grabRecord(Token::className(), ['user_id' => $user->id, 'type' => Token::TYPE_RECOVERY]);
 $I->amOnPage(Url::toRoute(['/user/recovery/reset', 'id' => $user->id, 'code' => $token->code]));
 $I->fillField('#recovery-form-password', 'newpass');
+$I->fillField('#recovery-form-password_confirmation', 'newpass');
 $I->click('Finish');
 $I->see('Your password has been changed successfully.');
 

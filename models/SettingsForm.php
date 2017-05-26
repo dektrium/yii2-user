@@ -39,6 +39,9 @@ class SettingsForm extends Model
     public $new_password;
 
     /** @var string */
+    public $new_password_confirmation;
+
+    /** @var string */
     public $current_password;
 
     /** @var Mailer */
@@ -83,6 +86,7 @@ class SettingsForm extends Model
                 return $this->user->$attribute != $model->$attribute;
             }, 'targetClass' => $this->module->modelMap['User']],
             'newPasswordLength' => ['new_password', 'string', 'max' => 72, 'min' => 6],
+            'newPasswordConfirmation' => ['new_password_confirmation', 'compare', 'compareAttribute' => 'new_password'],
             'currentPasswordRequired' => ['current_password', 'required'],
             'currentPasswordValidate' => ['current_password', function ($attr) {
                 if (!Password::validate($this->$attr, $this->user->password_hash)) {
@@ -96,10 +100,11 @@ class SettingsForm extends Model
     public function attributeLabels()
     {
         return [
-            'email'            => Yii::t('user', 'Email'),
-            'username'         => Yii::t('user', 'Username'),
-            'new_password'     => Yii::t('user', 'New password'),
-            'current_password' => Yii::t('user', 'Current password'),
+            'email'                     => Yii::t('user', 'Email'),
+            'username'                  => Yii::t('user', 'Username'),
+            'new_password'              => Yii::t('user', 'New password'),
+            'new_password_confirmation' => Yii::t('user', 'New password confirmation'),
+            'current_password'          => Yii::t('user', 'Current password'),
         ];
     }
 

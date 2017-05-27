@@ -26,6 +26,13 @@ class Google extends BaseGoogle implements ClientInterface
             : null;
     }
 
+    public function getImage()
+    {
+        return isset($this->getUserAttributes()['image'][0]['url'])
+            ? $this->getUserAttributes()['image'][0]['url']
+            : null;
+    }
+
     /** @inheritdoc */
     public function getUsername()
     {

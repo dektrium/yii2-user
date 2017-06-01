@@ -1,0 +1,64 @@
+version: '2'
+services:
+
+
+## Running tests
+  functional-tests:
+    extends: codeception
+    entrypoint: [
+      "/sbin/tini",
+      "--",
+      "/bin/wait-for-it",
+      "-h", "$$MYSQL_HOST:3306",
+      "-t", "100",
+       "--",
+      "/project/tests/runtests.sh",
+      "run functional"
+    ]
+    depends_on:
+      - mysql
+
+#    entrypoint: "ls /project"
+
+## Running unit tests
+  unit:
+      extends: codeception
+      entrypoint: [
+        "/sbin/tini",
+        "--",
+        "/bin/wait-for-it",
+        "-h", "$$DB_HOST:3306",
+        "-t", "100",
+        "--",
+        "/project/tests/runtests.sh",
+        "run unit"
+      ]
+      depends_on:
+        - mysql
+## Running codeception helper scripts.
+  codeception:
+    tty: true
+    image: sammousa/php-with-extensions
+    entrypoint: ["/sbin/tini", "--", "/project/tests/runtests.sh"]
+    volumes:
+      - ./:/project
+    environment:
+      MYSQL_ROOT_PASSWORD: secret
+      MYSQL_USER: dabilite
+      MYSQL_PASSWORD: testpass
+      MYSQL_DATABASE: test
+#     We set this to keep compatibility between gitlab-ci and docker compose
+      RUNNER_IP: web
+      MYSQL_HOST: mysql
+      YII_ENV: "test"
+## Mysql server (local)
+  mysql:
+    image: mysql:5.7.14
+    tmpfs:
+      - /var/lib/mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: secret
+      MYSQL_USER: dabilite
+      MYSQL_PASSWORD: testpass
+      MYSQL_DATABASE: test
+

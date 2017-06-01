@@ -22,13 +22,12 @@ cache:
 # install dependencies
 install:
   - travis_retry composer self-update
-  - travis_retry composer global require "codeception/codeception:2.2.5"
   - travis_retry composer global require "fxp/composer-asset-plugin:~1.1.0"
   - travis_retry composer install --prefer-dist
 
 before_script:
   - mysql -e 'create database dektrium_test;'
   - php tests/_app/yii.php migrate --migrationPath=@dektrium/user/migrations --interactive=0
-  - ~/.composer/vendor/bin/codecept build
+  - vendor/bin/codecept build
 
-script: ~/.composer/vendor/bin/codecept run
+script: vendor/bin/codecept run

@@ -4,6 +4,7 @@ $time = time();
 
 return [
     'user' => [
+        'id'            => 1,
         'username'      => 'user',
         'email'         => 'user@example.com',
         'password_hash' => '$2y$13$qY.ImaYBppt66qez6B31QO92jc5DYVRzo5NxM1ivItkW74WsSG6Ui',
@@ -13,6 +14,7 @@ return [
         'confirmed_at'  => $time,
     ],
     'unconfirmed' => [
+        'id'            => 2,
         'username'      => 'joe',
         'email'         => 'joe@example.com',
         'password_hash' => '$2y$13$CIH1LSMPzU9xDCywt3QO8uovAu2axp8hwuXVa72oI.1G/USsGyMBS',
@@ -21,6 +23,7 @@ return [
         'updated_at'    => $time,
     ],
     'unconfirmed_with_expired_token' => [
+        'id'            => 3,
         'username'      => 'john',
         'email'         => 'john@example.com',
         'password_hash' => '$2y$13$qY.ImaYBppt66qez6B31QO92jc5DYVRzo5NxM1ivItkW74WsSG6Ui',
@@ -29,6 +32,7 @@ return [
         'updated_at'    => $time - 86401,
     ],
     'blocked' => [
+        'id'            => 4,
         'username'      => 'steven',
         'email'         => 'steven@example.com',
         'password_hash' => '$2y$13$qY.ImaYBppt66qez6B31QO92jc5DYVRzo5NxM1ivItkW74WsSG6Ui',
@@ -39,6 +43,7 @@ return [
         'confirmed_at'  => $time,
     ],
     'user_with_expired_recovery_token' => [
+        'id'            => 5,
         'username'      => 'andrew',
         'email'         => 'andrew@example.com',
         'password_hash' => '$2y$13$qY.ImaYBppt66qez6B31QO92jc5DYVRzo5NxM1ivItkW74WsSG6Ui',
@@ -48,6 +53,7 @@ return [
         'confirmed_at'  => $time - 21601,
     ],
     'user_with_recovery_token' => [
+        'id'            => 6,
         'username'      => 'alex',
         'email'         => 'alex@example.com',
         'password_hash' => '$2y$13$qY.ImaYBppt66qez6B31QO92jc5DYVRzo5NxM1ivItkW74WsSG6Ui',

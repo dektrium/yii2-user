@@ -18,8 +18,8 @@ return [
         ],
     ],
     'components' => [
-        'session' => [
-
+        'assetManager' => [
+            'basePath' => '/tmp'
         ],
         'db' => require __DIR__ . '/db.php',
         'mailer' => [

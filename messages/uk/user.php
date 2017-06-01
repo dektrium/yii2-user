@@ -201,7 +201,7 @@ return [
     'User has been deleted' => 'Користувача було видалено',
     'User has been unblocked' => 'Користувача було розблоковано',
     'User is not found' => 'Користувача не знайдено',
-    'Username' => 'Им\'я користувача',
+    'Username' => 'Ім\'я користувача',
     'Users' => 'Користувачі',
     'We have received a request to change the email address for your account on {0}' => 'Ви нещодавно запросили зміну email на {0}',
     'We have received a request to reset the password for your account on {0}' => 'Ви нещодавно запросили зміну пароля на {0}',

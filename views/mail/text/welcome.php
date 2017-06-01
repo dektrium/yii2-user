@@ -9,13 +9,16 @@
  * file that was distributed with this source code.
  */
 
+
 /**
- * @var dektrium\user\models\User
+ * @var dektrium\user\models\User $user
  */
 ?>
 <?= Yii::t('user', 'Hello') ?>,
 
 <?= Yii::t('user', 'Your account on {0} has been created', Yii::$app->name) ?>.
+<?= Yii::t('user', 'Your username is') ?>:
+<?= $user->username?>
 <?php if ($module->enableGeneratingPassword): ?>
 <?= Yii::t('user', 'We have generated a password for you') ?>:
 <?= $user->password ?>
@@ -27,6 +30,8 @@
 <?= $token->url ?>
 
 <?= Yii::t('user', 'If you cannot click the link, please try pasting the text into your browser') ?>.
+<?php else: ?>
+<?= Yii::t('user', 'You can log-in to your account here: {login-url}',['login-url'=>\Yii::$app->urlManager->createAbsoluteUrl(['user/security/login'])]) ?>
 <?php endif ?>
 
 <?= Yii::t('user', 'If you did not make this request you can ignore this email') ?>.

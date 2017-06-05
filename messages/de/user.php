@@ -35,6 +35,7 @@ return [
     'An error occurred processing your request' => 'Ein Fehler ist aufgetreten',
     'Assignments' => 'Zuordnungen',
     'Are you sure you want to switch to this user for the rest of this Session?' => 'Sind Sie sicher, dass sie für den Rest der Sitzung zu diesem Benutzer wechseln möchten?',
+    'Auth item' => 'Berechtigung',
     'Awesome, almost there. Now you need to click the confirmation link sent to your new email address' => 'Fast geschafft. Nun müssen Sie nur noch den Aktivierungslink besuchen, der an ihre neue E-Mail Adresse gesendet wurde',
     'Awesome, almost there. Now you need to click the confirmation link sent to your old email address' => 'Fast geschafft. Nun müssen Sie nur noch den Aktivierungslink besuchen, der an ihre alte E-Mail Adresse gesendet wurde',
     'Become this user' => 'Zu diesem Nutzer wechseln',

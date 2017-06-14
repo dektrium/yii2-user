@@ -103,7 +103,8 @@ class UserSearch extends Model
             $query->andFilterWhere(['item_name' => $this->auth_item]);
         }
 
-        $table_name = $query->modelClass::tableName();
+        $model = $query->modelClass;
+        $table_name = $model::tableName();
 
         if ($this->created_at !== null) {
             $date = strtotime($this->created_at);

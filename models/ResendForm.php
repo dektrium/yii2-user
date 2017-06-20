@@ -101,15 +101,25 @@ class ResendForm extends Model
             ]);
             $token->save(false);
             $this->mailer->sendConfirmationMessage($user, $token);
+
+            \Yii::$app->session->setFlash(
+                'info',
+                \Yii::t(
+                    'user',
+                    'A message has been sent to your email address. It contains a confirmation link that you must click to complete registration.'
+                )
+            );
+        } else {
+            \Yii::$app->session->setFlash(
+                'warning',
+                \Yii::t(
+                    'user',
+                    'Could not send message to the given email address. Please register or resend password.'
+                )
+            );
+
         }
 
-        \Yii::$app->session->setFlash(
-            'info',
-            \Yii::t(
-                'user',
-                'A message has been sent to your email address. It contains a confirmation link that you must click to complete registration.'
-            )
-        );
 
         return true;
     }

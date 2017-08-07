@@ -29,6 +29,9 @@ class Mailer extends Component
     /** @var string|array Default: `Yii::$app->params['adminEmail']` OR `no-reply@example.com` */
     public $sender;
 
+    /** @var \yii\mail\BaseMailer Default: `Yii::$app->mailer` */
+    public $mailerComponent;
+
     /** @var string */
     protected $welcomeSubject;
 
@@ -261,8 +264,7 @@ class Mailer extends Component
      */
     protected function sendMessage($to, $subject, $view, $params = [])
     {
-        /** @var \yii\mail\BaseMailer $mailer */
-        $mailer = Yii::$app->mailer;
+        $mailer = $this->mailerComponent === null ? Yii::$app->mailer : Yii::$app->get($this->mailerComponent);
         $mailer->viewPath = $this->viewPath;
         $mailer->getView()->theme = Yii::$app->view->theme;
 

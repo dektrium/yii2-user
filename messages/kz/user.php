@@ -167,7 +167,7 @@ return [
     'If you did not make this request you can ignore this email' => 'P.S. Егер бұл хатты түсініспеушілік нәтижесінде алған болсаңыз, хатты өшіре салыңыз',
     'In order to complete your registration, please click the link below' => 'Тіркелуді аяқтау үшін төмендегі сілтемені шертіңіз',
     'In order to complete your request, please click the link below' => 'Сұранысты аяқтау үшін төмендегі сілтемені шертіңіз',
-    'Information' => '@@Мәлімет@@',
+    'Information' => 'Мәлімет',
     'Invalid login or password' => 'Құпия сөз немесе логин дұрыс емес',
     'Joined on {0, date}' => '{0, date} күні қосылды',
     'Location' => 'Мекен-жайы',

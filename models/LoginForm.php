@@ -53,15 +53,20 @@ class LoginForm extends Model
         $this->finder = $finder;
         parent::__construct($config);
     }
-    
+
     /**
      * Gets all users to generate the dropdown list when in debug mode.
      *
-     * @return string
+     * @return array
      */
     public static function loginList()
     {
-        return ArrayHelper::map(User::find()->where(['blocked_at' => null])->all(), 'username', function ($user) {
+        /** @var \dektrium\user\Module $module */
+        $module = \Yii::$app->getModule('user');
+
+        $userModel = $module->modelMap['User'];
+
+        return ArrayHelper::map($userModel::find()->where(['blocked_at' => null])->all(), 'username', function ($user) {
             return sprintf('%s (%s)', Html::encode($user->username), Html::encode($user->email));
         });
     }
@@ -136,7 +141,7 @@ class LoginForm extends Model
      */
     public function login()
     {
-        if ($this->validate()) {
+        if ($this->validate() && $this->user) {
             $this->user->updateAttributes(['last_login_at' => time()]);
             return Yii::$app->getUser()->login($this->user, $this->rememberMe ? $this->module->rememberFor : 0);
         }

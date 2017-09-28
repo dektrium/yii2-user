@@ -121,7 +121,13 @@ class RecoveryForm extends Model
             if (!$this->mailer->sendRecoveryMessage($user, $token)) {
                 return false;
             }
-        }
+        } else {
+			\Yii::$app->session->setFlash(
+				'error',
+				\Yii::t('user', 'User is not found')
+			);
+        	return false;
+		}
 
         \Yii::$app->session->setFlash(
             'info',

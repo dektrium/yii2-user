@@ -108,12 +108,18 @@ class Profile extends ActiveRecord
         }
     }
 
+    /*===
+    
+    that 2 methods do error, when yii acess to the field in /views/settings/profile.php:60
+    yii can not work with DateTimeZone object. It needs string only attribute.
+    ===*/
+
     /**
      * Get the user's time zone.
      * Defaults to the application timezone if not specified by the user.
      * @return \DateTimeZone
      */
-    public function getTimeZone()
+    /*public function getTimeZone()
     {
         try {
             return new \DateTimeZone($this->timezone);
@@ -121,16 +127,16 @@ class Profile extends ActiveRecord
             // Default to application time zone if the user hasn't set their time zone
             return new \DateTimeZone(\Yii::$app->timeZone);
         }
-    }
+    }*/
 
     /**
      * Set the user's time zone.
      * @param \DateTimeZone $timezone the timezone to save to the user's profile
      */
-    public function setTimeZone(\DateTimeZone $timeZone)
+    /*public function setTimeZone(\DateTimeZone $timeZone)
     {
         $this->setAttribute('timezone', $timeZone->getName());
-    }
+    }*/
 
     /**
      * Converts DateTime to user's local time

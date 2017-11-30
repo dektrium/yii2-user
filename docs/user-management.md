@@ -49,7 +49,7 @@ feature. Place something like this in your view file to allow to jump back when 
 ```
 if (Yii::$app->session->has(\dektrium\user\controllers\AdminController::ORIGINAL_USER_SESSION_KEY))
     echo Html::a(
-    '<span class="glyphicon glyphicon-user"></span> Back to original user',
+    '<span class="glyphicon glyphicon-user"></span> ' . Yii::t('main', 'Back to original user'),
      ['/user/admin/switch'], ['class' => 'btn btn-primary', 'data-method' => 'POST']);
 ```
 
@@ -57,14 +57,52 @@ or
 
 ```
 echo Nav::widget([
+    'options' => ['class' => 'navbar-nav navbar-right'],
     'items' => [
-        Yii::$app->session->has(\dektrium\user\controllers\AdminController::ORIGINAL_USER_SESSION_KEY;) ?
+        Yii::$app->session->has(\dektrium\user\controllers\AdminController::ORIGINAL_USER_SESSION_KEY) ?
         '<li>' . Html::beginForm(['/user/admin/switch'], 'post', ['class' => 'navbar-form'])
-            . Html::submitButton('<span class="glyphicon glyphicon-user"></span> Back to original user',
+            . Html::submitButton('<span class="glyphicon glyphicon-user"></span> ' . Yii::t('user', 'Back to original user'),
                 ['class' => 'btn btn-link']
             ) . Html::endForm() . '</li>' : '',
       ],
+    ]);
 ```
+
+You can declare module options 'adminPermission'. Access to action `switch` must be prefaced to all:
+```
+    'modules' => [
+        'user' => [
+            'class' => 'dektrium\user\Module',
+            'adminPermission' => 'administrateUser',
+        ],
+    ],
+```
+```
+    'modules' => [
+        'user' => [
+            'controllerMap' => [
+                'admin' => [
+                    'class' => 'dektrium\user\controllers\AdminController',
+                    'as access' => [
+                        'class' => 'yii\filters\AccessControl',
+                        'rules' => [
+                            [
+                                'allow' => true,
+                                'roles' => ['administrateUser'],
+                            ],
+                            [
+                                'actions' => ['switch'],
+                                'allow' => true,
+                                'roles' => ['@'],
+                            ],
+                        ],
+                    ],
+                ],
+            ],
+        ],
+    ],
+```
+
 
 ##Changing CRUD layout
 

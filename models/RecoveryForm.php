@@ -36,6 +36,11 @@ class RecoveryForm extends Model
     public $password;
 
     /**
+     * @var string
+     */
+    public $password_confirmation;
+
+    /**
      * @var Mailer
      */
     protected $mailer;
@@ -65,6 +70,7 @@ class RecoveryForm extends Model
         return [
             'email'    => \Yii::t('user', 'Email'),
             'password' => \Yii::t('user', 'Password'),
+            'password_confirmation' => \Yii::t('user', 'Password confirmation'),
         ];
     }
 
@@ -89,6 +95,7 @@ class RecoveryForm extends Model
             'emailRequired' => ['email', 'required'],
             'emailPattern' => ['email', 'email'],
             'passwordRequired' => ['password', 'required'],
+            'newPasswordConfirmation' => ['password_confirmation', 'compare', 'compareAttribute' => 'password'],
             'passwordLength' => ['password', 'string', 'max' => 72, 'min' => 6],
         ];
     }

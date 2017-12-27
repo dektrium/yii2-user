@@ -18,6 +18,9 @@ return [
         ],
     ],
     'components' => [
+        'session' => [
+
+        ],
         'db' => require __DIR__ . '/db.php',
         'mailer' => [
             'useFileTransport' => true,

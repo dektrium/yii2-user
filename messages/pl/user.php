@@ -102,6 +102,7 @@ return [
     'Email settings' => 'Ustawienia e-mail',
     'In order to complete your request, we need you to verify that you initiated this request' => 'Aby dokończyć ten proces, musisz potwierdzić, że jesteś jego inicjatorem',
     'Last login at {0, date, MMMM dd, YYYY HH:mm} from {1}' => 'Ostatnie logowanie w dniu {0, date, dd MMMM, YYYY HH:mm} z {1}',
+    'Last login' => 'Ostatnie logowanie',
     'Looks like this is first time you are using {0} account to sign in to {1}' => 'Wygląda na to, że pierwszy raz używasz konta {0}, aby zalogować się do {1}',
     'Password and username will be sent to user by email' => 'Hasło i nazwa zostaną wysłane na adres e-mail użytkownika',
     'Password recovery finished' => 'Resetowanie hasła zakończone',

@@ -73,7 +73,7 @@ return [
     'Delete' => 'Dzēst',
     'Didn\'t receive confirmation message?' => 'Nesaņēmat apstiprinājuma e-pastu?',
     'Disconnect' => 'Atslēgt',
-    'Don\'t have an account? Sign up!' => 'Nav lietoāja konta? Reģistrējaties!',
+    'Don\'t have an account? Sign up!' => 'Nav lietotāja konta? Reģistrējieties!',
     'Email' => 'E-pasts',
     'Email (public)' => 'Publiskais e-pasts',
     'Error occurred while changing password' => 'Nomainot paroli radusies kļūda',

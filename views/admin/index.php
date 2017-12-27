@@ -10,11 +10,11 @@
  */
 
 use yii\grid\GridView;
+use yii\helpers\ArrayHelper;
 use yii\helpers\Html;
 use yii\helpers\Url;
 use yii\web\View;
 use yii\widgets\Pjax;
-
 
 /**
  * @var \yii\web\View $this
@@ -62,7 +62,6 @@ $this->params['breadcrumbs'][] = $this->title;
                 }
             },
         ],
-
         [
           'attribute' => 'last_login_at',
           'value' => function ($model) {
@@ -74,6 +73,21 @@ $this->params['breadcrumbs'][] = $this->title;
                 return date('Y-m-d G:i:s', $model->last_login_at);
             }
           },
+        ],
+        [
+            'attribute' => 'auth_item',
+            'format' => 'html',
+            'value' => function ($data) {
+                return implode(', ', array_map(function ($ai) {
+                    return $ai->name;
+                }, $data->authItems));
+            },
+            'filter' => \Yii::$app->authManager instanceof yii\rbac\DbManager ? ArrayHelper::map(array_merge(
+                Yii::$app->authManager->getRoles(),
+                Yii::$app->authManager->getPermissions()
+            ),
+                'name', 'name') : null,
+            'visible' => Yii::$app->get('authManager') instanceof yii\rbac\ManagerInterface,
         ],
         [
             'header' => Yii::t('user', 'Confirmation'),
@@ -125,7 +139,7 @@ $this->params['breadcrumbs'][] = $this->title;
                     }
                 },
                 'switch' => function ($url, $model) {
-                    if($model->id != Yii::$app->user->id && Yii::$app->getModule('user')->enableImpersonateUser) {
+                    if(!$model->isAdmin && $model->id != Yii::$app->user->id && Yii::$app->getModule('user')->enableImpersonateUser) {
                         return Html::a('<span class="glyphicon glyphicon-user"></span>', ['/user/admin/switch', 'id' => $model->id], [
                             'title' => Yii::t('user', 'Become this user'),
                             'data-confirm' => Yii::t('user', 'Are you sure you want to switch to this user for the rest of this Session?'),

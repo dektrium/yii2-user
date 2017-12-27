@@ -127,6 +127,17 @@ class User extends ActiveRecord implements IdentityInterface
     }
 
     /**
+     * Wrapper function to retrieve authorization items of the current user.
+     *
+     * @return mixed return the assigned authorization items of the current user. When no authManager is configured,
+     * it returns an empty array since by definition there are no authorization items for the current (or any) user.
+     */
+    public function getAuthItems()
+    {
+        return \Yii::$app->authManager ? \Yii::$app->authManager->getItemsByUser($this->id) : [];
+    }
+
+    /**
      * @return \yii\db\ActiveQuery
      */
     public function getProfile()
@@ -187,6 +198,7 @@ class User extends ActiveRecord implements IdentityInterface
     public function attributeLabels()
     {
         return [
+            'auth_item'         => \Yii::t('user', 'Auth item'),
             'username'          => \Yii::t('user', 'Username'),
             'email'             => \Yii::t('user', 'Email'),
             'registration_ip'   => \Yii::t('user', 'Registration ip'),

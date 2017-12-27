@@ -107,4 +107,11 @@ class Module extends BaseModule
         'recover/<id:\d+>/<code:[A-Za-z0-9_-]+>' => 'recovery/reset',
         'settings/<action:\w+>'                  => 'settings/<action>'
     ];
+
+    /** @var string The database connection to use for models in this module. */
+    public $dbConnection = 'db';
+
+    public function getDb() {
+        return \Yii::$app->get($this->dbConnection);
+    }
 }

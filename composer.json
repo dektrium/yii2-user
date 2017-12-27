@@ -1,32 +1,38 @@
 {
-    "name": "dektrium/yii2-user",
+    "name": "dabilite/yii2-user",
     "description": "Flexible user registration and authentication module for Yii2",
-    "keywords": ["yii2", "yii2-user", "user management", "dektrium"],
+    "keywords": ["yii2", "yii2-user", "user management", "dektrium", "dabilite"],
     "type": "yii2-extension",
     "license": "MIT",
     "support": {
-        "issues": "https://github.com/dektrium/yii2-user/issues?state=open",
-        "forum": "https://gitter.im/dektrium/yii2-user",
-        "source": "https://github.com/dektrium/yii2-user"
+        "issues": "https://github.com/dabilite/yii2-user/issues?state=open",
+        "source": "https://github.com/dabilite/yii2-user"
     },
     "authors": [
         {
             "name": "Dmitry Erofeev",
             "email": "dmeroff@gmail.com",
             "homepage": "http://dmeroff.ru"
+        },
+        {
+            "name": "Sam Mousa",
+            "email": "sam@mousa.nl",
+            "homepage": "https://www.linkedin.com/in/sam-mousa-16333820/"
         }
     ],
-    "minimum-stability": "dev",
     "require": {
         "yiisoft/yii2": "^2.0.0",
         "yiisoft/yii2-swiftmailer": "^2.0.0",
         "yiisoft/yii2-authclient": "^2.1.0",
-        "yiisoft/yii2-bootstrap": "^2.0.0"
+        "yiisoft/yii2-bootstrap": "^2.0.0",
+        "codeception/codeception": "^2.3"
     },
     "require-dev": {
-        "yiisoft/yii2-codeception": "^2.0.0",
         "codeception/specify": "^0.4.3",
         "codeception/verify": "^0.3.1"
+    },
+    "provide": {
+        "dektrium/yii2-user": "0.9.12"
     },
     "autoload": {
         "psr-4": {

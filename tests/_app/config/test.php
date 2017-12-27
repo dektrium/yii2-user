@@ -18,6 +18,9 @@ return [
         ],
     ],
     'components' => [
+        'assetManager' => [
+            'basePath' => '/tmp'
+        ],
         'db' => require __DIR__ . '/db.php',
         'mailer' => [
             'useFileTransport' => true,

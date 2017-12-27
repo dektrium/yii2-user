@@ -93,7 +93,7 @@ class UserSearch extends Model
             return $dataProvider;
         }
 
-        $table_name = $query->modelClass::tableName();
+        $table_name = \Yii::createObject(['class' => $query->modelClass])->tableName();
 
         if ($this->created_at !== null) {
             $date = strtotime($this->created_at);

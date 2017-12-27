@@ -19,7 +19,7 @@ use Yii;
 use yii\base\Model;
 
 /**
- * SettingsForm gets user's username, email and password and changes them.
+ * SettingsForm gets user's username and email and changes them.
  *
  * @property User $user
  *
@@ -35,17 +35,21 @@ class SettingsForm extends Model
     /** @var string */
     public $username;
 
-    /** @var string */
-    public $new_password;
-
-    /** @var string */
-    public $current_password;
-
     /** @var Mailer */
     protected $mailer;
 
     /** @var User */
     private $_user;
+
+    /** @inheritdoc */
+    public function __construct(Mailer $mailer, $config = [])
+    {
+        $this->setAttributes([
+            'username' => $this->user->username,
+            'email' => $this->user->unconfirmed_email ?: $this->user->email,
+        ], false);
+        parent::__construct($config);
+    }
 
     /** @return User */
     public function getUser()
@@ -58,23 +62,12 @@ class SettingsForm extends Model
     }
 
     /** @inheritdoc */
-    public function __construct(Mailer $mailer, $config = [])
-    {
-        $this->mailer = $mailer;
-        $this->setAttributes([
-            'username' => $this->user->username,
-            'email'    => $this->user->unconfirmed_email ?: $this->user->email,
-        ], false);
-        parent::__construct($config);
-    }
-
-    /** @inheritdoc */
     public function rules()
     {
         return [
             'usernameTrim' => ['username', 'trim'],
             'usernameRequired' => ['username', 'required'],
-            'usernameLength'   => ['username', 'string', 'min' => 3, 'max' => 255],
+            'usernameLength' => ['username', 'string', 'min' => 3, 'max' => 255],
             'usernamePattern' => ['username', 'match', 'pattern' => '/^[-a-zA-Z0-9_\.@]+$/'],
             'emailTrim' => ['email', 'trim'],
             'emailRequired' => ['email', 'required'],
@@ -82,13 +75,6 @@ class SettingsForm extends Model
             'emailUsernameUnique' => [['email', 'username'], 'unique', 'when' => function ($model, $attribute) {
                 return $this->user->$attribute != $model->$attribute;
             }, 'targetClass' => $this->module->modelMap['User']],
-            'newPasswordLength' => ['new_password', 'string', 'max' => 72, 'min' => 6],
-            'currentPasswordRequired' => ['current_password', 'required'],
-            'currentPasswordValidate' => ['current_password', function ($attr) {
-                if (!Password::validate($this->$attr, $this->user->password_hash)) {
-                    $this->addError($attr, Yii::t('user', 'Current password is not valid'));
-                }
-            }],
         ];
     }
 
@@ -96,10 +82,8 @@ class SettingsForm extends Model
     public function attributeLabels()
     {
         return [
-            'email'            => Yii::t('user', 'Email'),
-            'username'         => Yii::t('user', 'Username'),
-            'new_password'     => Yii::t('user', 'New password'),
-            'current_password' => Yii::t('user', 'Current password'),
+            'email' => Yii::t('user', 'Email'),
+            'username' => Yii::t('user', 'Username'),
         ];
     }
 
@@ -119,7 +103,6 @@ class SettingsForm extends Model
         if ($this->validate()) {
             $this->user->scenario = 'settings';
             $this->user->username = $this->username;
-            $this->user->password = $this->new_password;
             if ($this->email == $this->user->email && $this->user->unconfirmed_email != null) {
                 $this->user->unconfirmed_email = null;
             } elseif ($this->email != $this->user->email) {
@@ -161,9 +144,9 @@ class SettingsForm extends Model
         $this->user->unconfirmed_email = $this->email;
         /** @var Token $token */
         $token = Yii::createObject([
-            'class'   => Token::className(),
+            'class' => Token::className(),
             'user_id' => $this->user->id,
-            'type'    => Token::TYPE_CONFIRM_NEW_EMAIL,
+            'type' => Token::TYPE_CONFIRM_NEW_EMAIL,
         ]);
         $token->save(false);
         $this->mailer->sendReconfirmationMessage($this->user, $token);
@@ -183,9 +166,9 @@ class SettingsForm extends Model
         $this->defaultEmailChange();
         /** @var Token $token */
         $token = Yii::createObject([
-            'class'   => Token::className(),
+            'class' => Token::className(),
             'user_id' => $this->user->id,
-            'type'    => Token::TYPE_CONFIRM_OLD_EMAIL,
+            'type' => Token::TYPE_CONFIRM_OLD_EMAIL,
         ]);
         $token->save(false);
         $this->mailer->sendReconfirmationMessage($this->user, $token);

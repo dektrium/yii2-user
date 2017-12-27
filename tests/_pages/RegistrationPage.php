@@ -25,6 +25,7 @@ class RegistrationPage extends BasePage
         $this->actor->fillField('#register-form-username', $username);
         if ($password !== null) {
             $this->actor->fillField('#register-form-password', $password);
+            $this->actor->fillField('#register-form-password_confirmation', $password);
         }
         $this->actor->click('Sign up');
     }

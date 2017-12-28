@@ -217,6 +217,7 @@ class SecurityController extends Controller
                 \Yii::$app->session->setFlash('danger', \Yii::t('user', 'Your account has been blocked.'));
                 $this->action->successUrl = Url::to(['/user/security/login']);
             } else {
+                $account->user->updateAttributes(['last_login_at' => time()]);
                 \Yii::$app->user->login($account->user, $this->module->rememberFor);
                 $this->action->successUrl = \Yii::$app->getUser()->getReturnUrl();
             }

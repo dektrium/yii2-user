@@ -57,8 +57,8 @@ class Migration extends \yii\db\Migration
     
     public function dropColumnConstraints($table, $column)
     {
-        $table = Yii::$app->db->schema->getRawTableName($table);
-        $cmd = Yii::$app->db->createCommand('SELECT name FROM sys.default_constraints
+        $table = $this->db->schema->getRawTableName($table);
+        $cmd = $this->db->createCommand('SELECT name FROM sys.default_constraints
                                 WHERE parent_object_id = object_id(:table)
                                 AND type = \'D\' AND parent_column_id = (
                                     SELECT column_id 
@@ -69,7 +69,7 @@ class Migration extends \yii\db\Migration
                                 
         $constraints = $cmd->queryAll();
         foreach ($constraints as $c) {
-            $this->execute('ALTER TABLE '.Yii::$app->db->quoteTableName($table).' DROP CONSTRAINT '.Yii::$app->db->quoteColumnName($c['name']));
+            $this->execute('ALTER TABLE '.$this->db->quoteTableName($table).' DROP CONSTRAINT '.$this->db->quoteColumnName($c['name']));
         }
     }
 }

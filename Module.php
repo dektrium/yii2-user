@@ -97,6 +97,9 @@ class Module extends BaseModule
      */
     public $debug = false;
 
+    /** @var string The database connection to use for models in this module. */
+    public $dbConnection = 'db';
+
     /** @var array The rules to be used in URL management. */
     public $urlRules = [
         '<id:\d+>'                               => 'profile/show',
@@ -107,4 +110,12 @@ class Module extends BaseModule
         'recover/<id:\d+>/<code:[A-Za-z0-9_-]+>' => 'recovery/reset',
         'settings/<action:\w+>'                  => 'settings/<action>'
     ];
+
+    /**
+     * @return string
+     */
+    public function getDb()
+    {
+        return \Yii::$app->get($this->dbConnection);
+    }
 }

@@ -29,3 +29,6 @@ phpunit.phar
 tests/_app/config/db.local.php
 tests/_support/_generated
 tests/_output/*
+
+# composer lock file
+composer.lock

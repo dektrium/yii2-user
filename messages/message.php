@@ -28,6 +28,7 @@ return [
         'uk',
         'vi',
         'zh-CN',
+        'zh-TW',
     ],
     'translator' => 'Yii::t',
     'sort' => false,

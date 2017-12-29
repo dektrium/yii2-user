@@ -143,7 +143,15 @@ class SecurityController extends Controller
      * @return string|Response
      */
     public function actionLogin()
-    {
+    {   
+        //Checking if GET variable *returnUrl* were defined 
+        
+        $returnUrl=\Yii::$app->request->get('returnUrl',null);
+
+        if (filter_var($returnUrl, FILTER_VALIDATE_URL) === FALSE) {
+            $returnUrl=null;
+        }
+        
         if (!\Yii::$app->user->isGuest) {
             $this->goHome();
         }
@@ -158,7 +166,7 @@ class SecurityController extends Controller
 
         if ($model->load(\Yii::$app->getRequest()->post()) && $model->login()) {
             $this->trigger(self::EVENT_AFTER_LOGIN, $event);
-            return $this->goBack();
+            return $this->goBack($returnUrl);
         }
 
         return $this->render('login', [

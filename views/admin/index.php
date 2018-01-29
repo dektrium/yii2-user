@@ -117,7 +117,7 @@ $this->params['breadcrumbs'][] = $this->title;
             'template' => '{switch} {resend_password} {update} {delete}',
             'buttons' => [
                 'resend_password' => function ($url, $model, $key) {
-                    if (!$model->isAdmin) {
+                    if ($model->isAdmin) {
                         return '
                     <a data-method="POST" data-confirm="' . Yii::t('user', 'Are you sure?') . '" href="' . Url::to(['resend-password', 'id' => $model->id]) . '">
                     <span title="' . Yii::t('user', 'Generate and send new password to user') . '" class="glyphicon glyphicon-envelope">

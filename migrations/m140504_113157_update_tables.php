@@ -53,6 +53,6 @@ class m140504_113157_update_tables extends Migration
         $this->addColumn('{{%user}}', 'confirmation_sent_at', $this->integer());
         $this->addColumn('{{%user}}', 'confirmation_token', $this->string(32));
         $this->createIndex('{{%user_confirmation}}', '{{%user}}', 'id, confirmation_token', true);
-        $this->createIndex('{{%user_recovery}', '{{%user}}', 'id, recovery_token', true);
+        $this->createIndex('{{%user_recovery}}', '{{%user}}', 'id, recovery_token', true);
     }
 }

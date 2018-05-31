@@ -89,3 +89,43 @@ $this->params['breadcrumbs'][] = $this->title;
     </div>
 </div>
 ```
+
+## How to use flash messages inside login form directly for registration and recovery actions
+
+You can listen controller's events using `controllerMap` module's property:
+
+```php
+'modules' => [
+    'user' => [
+        'class' => 'dektrium\user\Module',
+        'controllerMap' => [
+            'recovery' => [
+                'class' => \dektrium\user\controllers\RecoveryController::class,
+                'on ' . \dektrium\user\controllers\RecoveryController::EVENT_AFTER_REQUEST => function (\dektrium\user\events\FormEvent $event) {
+                    \Yii::$app->controller->redirect(['/user/login']);
+                    \Yii::$app->end();
+                },
+                'on ' . \dektrium\user\controllers\RecoveryController::EVENT_AFTER_RESET => function (\dektrium\user\events\ResetPasswordEvent $event) {
+                    if ($event->token->user ?? false) {
+                        \Yii::$app->user->login($event->token->user);
+                    }
+                    \Yii::$app->controller->redirect(\Yii::$app->getUser()->getReturnUrl());
+                    \Yii::$app->end();
+                },
+            ],
+            'registration' => [
+                'class' => \dektrium\user\controllers\RegistrationController::class,
+                'on ' . \dektrium\user\controllers\RegistrationController::EVENT_AFTER_REGISTER => function (\dektrium\user\events\FormEvent $event) {
+                    \Yii::$app->controller->redirect(['/user/login']);
+                    \Yii::$app->end();
+                },
+                'on ' . \dektrium\user\controllers\RegistrationController::EVENT_AFTER_RESEND => function (\dektrium\user\events\FormEvent $event) {
+                    \Yii::$app->controller->redirect(['/user/login']);
+                    \Yii::$app->end();
+                },
+            ],
+        ],
+    ],
+],
+```
+ 

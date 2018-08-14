@@ -6,10 +6,7 @@ supportLabel: support
 # Comment to post on issues marked as support requests, `{issue-author}` is an
 # optional placeholder. Set to `false` to disable
 supportComment: >
-  :wave: @{issue-author}, we use the issue tracker exclusively for bug reports
-  and feature requests. However, this issue appears to be a support request.
-
-  This project is not being actively maintained and there is no one officially offering support or help.
+  :wave: @{issue-author}, this project is not being actively maintained and there is no one officially offering support or help.
 
   Only PRs are being evaluated (there is no deadline for evaluation).
 

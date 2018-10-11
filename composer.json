@@ -40,5 +40,11 @@
             "dev-master": "0.9.x-dev",
             "dev-develop": "1.0.x-dev"
         }
-    }
+    },
+    "repositories": [
+        {
+            "type": "composer",
+            "url": "https://asset-packagist.org"
+        }
+    ]
 }

@@ -7,6 +7,7 @@ helper `\yii\helpers\Url::to()`.
 - **/user/registration/register** Displays registration form
 - **/user/registration/resend**   Displays resend form
 - **/user/registration/confirm**  Confirms a user (requires *id* and *token* query params)
+- **/user/registration/connect**  Create new account that will be connected to social account
 - **/user/security/login**        Displays login form
 - **/user/security/logout**       Logs the user out (available only via POST method)
 - **/user/recovery/request**      Displays recovery request form

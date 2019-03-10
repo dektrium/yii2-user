@@ -1,6 +1,7 @@
 language: php
 
 php:
+  - 7.1
   - 7.0
   - 5.6
   - 5.5
@@ -8,6 +9,7 @@ php:
 
 # environment variable used in test suite
 env: TEST_ENVIRONMENT=travis
+dist: precise
 
 # faster builds on new travis setup not using sudo
 sudo: false

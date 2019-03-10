@@ -52,13 +52,25 @@ Here is the list of clients supported by the module:
 
 - You can register new application and get secret keys [here](https://dev.twitter.com/apps/new).
 
-> NOTE: Current version of Twitter API does not provide user's email address, so we can't register user without making him enter his email address
+> NOTE: Current version of Twitter API does not provide user's email address whithout elevated permissions (https://dev.twitter.com/rest/reference/get/account/verify_credentials), so we can't register user without making him enter his email address
 
 ```php
 'twitter' => [
     'class'          => 'dektrium\user\clients\Twitter',
     'consumerKey'    => 'CONSUMER_KEY',
     'consumerSecret' => 'CONSUMER_SECRET',
+],
+```
+- If you have requested elevated permissions for your app, you need to send the include_email parameter to obtain the user email
+
+```php
+'twitter' => [
+    'class'          => 'dektrium\user\clients\Twitter',
+    'consumerKey'    => 'CONSUMER_KEY',
+    'consumerSecret' => 'CONSUMER_SECRET',
+    'attributeParams' => [
+        'include_email' => 'true'
+    ],
 ],
 ```
 

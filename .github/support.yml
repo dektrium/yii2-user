@@ -1,0 +1,25 @@
+# Configuration for support-requests - https://github.com/dessant/support-requests
+
+# Label used to mark issues as support requests
+supportLabel: support
+
+# Comment to post on issues marked as support requests, `{issue-author}` is an
+# optional placeholder. Set to `false` to disable
+supportComment: >
+  :wave: @{issue-author}, this project is not being actively maintained and there is no one officially offering support or help.
+
+  Only PRs are being evaluated (there is no deadline for evaluation).
+
+  Read more here: https://github.com/dektrium/yii2-user/issues/903
+
+# Close issues marked as support requests
+close: true
+
+# Lock issues marked as support requests
+lock: false
+
+# Assign `off-topic` as the reason for locking. Set to `false` to disable
+setLockReason: true
+
+# Repository to extend settings from
+# _extends: repo

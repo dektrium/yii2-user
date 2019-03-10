@@ -122,7 +122,7 @@ class User extends ActiveRecord implements IdentityInterface
     {
         return
             (\Yii::$app->getAuthManager() && $this->module->adminPermission ?
-                \Yii::$app->user->can($this->module->adminPermission) : false)
+                \Yii::$app->authManager->checkAccess($this->id, $this->module->adminPermission) : false)
             || in_array($this->username, $this->module->admins);
     }
 
@@ -258,7 +258,8 @@ class User extends ActiveRecord implements IdentityInterface
     }
 
     /**
-     * Creates new user account. It generates password if it is not provided by user.
+     * Creates new user account. If Module::enableGeneratingPassword is set true, this method
+     * will generate password.
      *
      * @return bool
      */
@@ -271,7 +272,7 @@ class User extends ActiveRecord implements IdentityInterface
         $transaction = $this->getDb()->beginTransaction();
 
         try {
-            $this->password = $this->password == null ? Password::generate(8) : $this->password;
+            $this->password = ($this->password == null && $this->module->enableGeneratingPassword) ? Password::generate(8) : $this->password;
 
             $this->trigger(self::BEFORE_CREATE);
 

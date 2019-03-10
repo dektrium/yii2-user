@@ -93,7 +93,9 @@ class UserSearch extends Model
             return $dataProvider;
         }
 
+
         $table_name = $query->modelClass->tableName();
+
 
         if ($this->created_at !== null) {
             $date = strtotime($this->created_at);
@@ -103,7 +105,7 @@ class UserSearch extends Model
         $query->andFilterWhere(['like', $table_name . '.username', $this->username])
               ->andFilterWhere(['like', $table_name . '.email', $this->email])
               ->andFilterWhere([$table_name . '.id' => $this->id])
-              ->andFilterWhere([$table_name . 'registration_ip' => $this->registration_ip]);
+              ->andFilterWhere([$table_name . '.registration_ip' => $this->registration_ip]);
 
         return $dataProvider;
     }

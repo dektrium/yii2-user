@@ -489,6 +489,13 @@ class User extends ActiveRecord implements IdentityInterface
         return (bool)$this->updateAttributes(['blocked_at' => null]);
     }
 
+    public function terminateSessions()
+    {
+        return (bool)$this->updateAttributes([
+            'auth_key' => \Yii::$app->security->generateRandomString(),
+        ]);
+    }
+
     /**
      * Generates new username based on email address, or creates new username
      * like "emailuser1".

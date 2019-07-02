@@ -20,6 +20,7 @@ use dektrium\user\traits\AjaxValidationTrait;
 use dektrium\user\traits\EventTrait;
 use yii\authclient\AuthAction;
 use yii\authclient\ClientInterface;
+use yii\base\InvalidConfigException;
 use yii\filters\AccessControl;
 use yii\filters\VerbFilter;
 use yii\helpers\Url;
@@ -61,6 +62,18 @@ class SecurityController extends Controller
      * Triggered with \dektrium\user\events\UserEvent.
      */
     const EVENT_AFTER_LOGOUT = 'afterLogout';
+
+    /**
+     * Event is triggered before terminate user sessions.
+     * Triggered with \dektrium\user\events\FormEvent.
+     */
+    const EVENT_BEFORE_TERMINATE_SESSIONS = 'beforeTerminateSessions';
+
+    /**
+     * Event is triggered after terminate user sessions.
+     * Triggered with \dektrium\user\events\FormEvent.
+     */
+    const EVENT_AFTER_TERMINATE_SESSIONS = 'afterTerminateSessions';
 
     /**
      * Event is triggered before authenticating user via social network.
@@ -110,13 +123,14 @@ class SecurityController extends Controller
                 'class' => AccessControl::className(),
                 'rules' => [
                     ['allow' => true, 'actions' => ['login', 'auth'], 'roles' => ['?']],
-                    ['allow' => true, 'actions' => ['login', 'auth', 'logout'], 'roles' => ['@']],
+                    ['allow' => true, 'actions' => ['login', 'auth', 'logout', 'terminate-sessions'], 'roles' => ['@']],
                 ],
             ],
             'verbs' => [
                 'class' => VerbFilter::className(),
                 'actions' => [
                     'logout' => ['post'],
+                    'terminateSessions' => ['post'],
                 ],
             ],
         ];
@@ -186,6 +200,38 @@ class SecurityController extends Controller
     }
 
     /**
+     * Terminate all session user
+     *
+     * @return Response
+     * @throws InvalidConfigException
+     */
+    public function actionTerminateSessions()
+    {
+        $user = \Yii::$app->user;
+
+        $event = $this->getUserEvent($user->identity);
+
+        $this->trigger(self::EVENT_BEFORE_TERMINATE_SESSIONS, $event);
+
+        $duration = $this->getDurationIdentityFromCookie();
+        $backUrl = \Yii::$app->getUser()->getReturnUrl(\Yii::$app->request->referrer);
+
+        $user->identity->terminateSessions();
+
+        $sessionIds = $this->finder->findActiveSessionHistoryById($user->id)
+            ->select(['session_id'])
+            ->column();
+
+        $this->terminateSessions($sessionIds);
+
+        $user->login($user->identity, $duration);
+
+        $this->trigger(self::EVENT_AFTER_TERMINATE_SESSIONS, $event);
+
+        return $this->redirect($backUrl);
+    }
+
+    /**
      * Tries to authenticate user via social network. If user has already used
      * this network's account, he will be logged in. Otherwise, it will try
      * to create new user account.
@@ -246,5 +292,39 @@ class SecurityController extends Controller
         $this->trigger(self::EVENT_AFTER_CONNECT, $event);
 
         $this->action->successUrl = Url::to(['/user/settings/networks']);
+    }
+
+    /**
+     * Get duration current session from cookie
+     *
+     * @return int
+     */
+    protected function getDurationIdentityFromCookie()
+    {
+        $value = \Yii::$app->getRequest()->getCookies()->getValue(\Yii::$app->user->identityCookie['name']);
+        if ($value === null) {
+            return null;
+        }
+        $data = json_decode($value, true);
+        if (is_array($data) && count($data) == 3) {
+            return $data[2];
+        }
+        return 0;
+    }
+
+    /**
+     * @param $sessionIds
+     * @return bool
+     */
+    protected function terminateSessions($sessionIds)
+    {
+        foreach ($sessionIds as $sessionId) {
+            session_write_close();
+            session_id($sessionId);
+            session_start();
+            session_destroy();
+        }
+
+        return true;
     }
 }

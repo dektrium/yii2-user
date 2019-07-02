@@ -57,6 +57,53 @@ If this option is to `true`, users will be able to completely delete their accou
 
 ---
 
+#### enableSessionHistory (Type: `boolean, integer`, Default value: `false`)
+
+If this option is to `true`, session history will be kept.
+
+```
+...
+'components' => [
+    ...
+    'session' => 'dektrium\user\models\SessionHistoryDecorator'
+    ...
+],
+...
+```
+
+If you want use yii\web\DbSession or own class
+```
+...
+'container' => [
+    'singletons' => [
+        ...
+        'yii\web\Session' => 'yii\web\DbSession'
+        ...
+    ]
+]
+```
+
+---
+
+#### numberSessionHistory (Type: `boolean, integer`, Default value: `false`)
+
+
+Stores the number of expired `session history`, values:
+
+- `false` Store all records without deleting
+- `integer` Count of records for storing
+
+---
+
+#### timeoutSessionHistory (Type: `boolean, integer`, Default value: `false`)
+
+How long store `session history` after expiring, values:
+
+- `false` Store all records without deleting
+- `integer` Time for storing after expiring
+
+---
+
 #### emailChangeStrategy (Type: `integer`, Default value: `\dektrium\user\Module::STRATEGY_DEFAULT`)
 
 When user tries change his password, there are three ways how this change will

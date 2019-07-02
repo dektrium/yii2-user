@@ -13,6 +13,7 @@ namespace dektrium\user\controllers;
 
 use dektrium\user\Finder;
 use dektrium\user\models\Profile;
+use dektrium\user\models\SessionHistorySearch;
 use dektrium\user\models\SettingsForm;
 use dektrium\user\models\User;
 use dektrium\user\Module;
@@ -130,7 +131,7 @@ class SettingsController extends Controller
                 'rules' => [
                     [
                         'allow'   => true,
-                        'actions' => ['profile', 'account', 'networks', 'disconnect', 'delete'],
+                        'actions' => ['profile', 'account', 'networks', 'disconnect', 'delete', 'session-history'],
                         'roles'   => ['@'],
                     ],
                     [
@@ -290,5 +291,23 @@ class SettingsController extends Controller
         \Yii::$app->session->setFlash('info', \Yii::t('user', 'Your account has been completely deleted'));
 
         return $this->goHome();
+    }
+
+    /**
+     * Display list session history.
+     *
+     * @return mixed
+     */
+    public function actionSessionHistory()
+    {
+        $searchModel = new SessionHistorySearch([
+            'user_id' => \Yii::$app->user->id,
+        ]);
+        $dataProvider = $searchModel->search(\Yii::$app->request->queryParams);
+
+        return $this->render('session-history', [
+            'searchModel' => $searchModel,
+            'dataProvider' => $dataProvider,
+        ]);
     }
 }

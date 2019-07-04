@@ -47,6 +47,9 @@ class Mailer extends Component
     /** @var string */
     protected $recoverySubject;
 
+    /** @var string */
+    protected $recoveryCodesSubject;
+
     /** @var \dektrium\user\Module */
     protected $module;
 
@@ -150,6 +153,26 @@ class Mailer extends Component
         $this->recoverySubject = $recoverySubject;
     }
 
+    /**
+     * @return string
+     */
+    public function getRecoveryCodesSubject()
+    {
+        if ($this->recoverySubject == null) {
+            $this->setRecoverySubject(Yii::t('user', 'Please save your two-factor recovery codes from {0}', Yii::$app->name));
+        }
+
+        return $this->recoveryCodesSubject;
+    }
+
+    /**
+     * @param string $recoveryCodesSubject
+     */
+    public function setRecoveryCodesSubject($recoveryCodesSubject)
+    {
+        $this->recoveryCodesSubject = $recoveryCodesSubject;
+    }
+
     /** @inheritdoc */
     public function init()
     {
@@ -251,6 +274,24 @@ class Mailer extends Component
             $this->getRecoverySubject(),
             'recovery',
             ['user' => $user, 'token' => $token]
+        );
+    }
+
+    /**
+     * Sends an email to a user with recovery two factor authentication codes.
+     *
+     * @param User  $user
+     * @param Token[] $codes
+     *
+     * @return bool
+     */
+    public function sendRecoveryCodesMessage(User $user, array $codes)
+    {
+        return $this->sendMessage(
+            $user->email,
+            $this->getRecoverySubject(),
+            'recovery-codes',
+            ['user' => $user, 'codes' => $codes]
         );
     }
 

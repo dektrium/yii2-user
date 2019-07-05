@@ -204,7 +204,7 @@ return array (
   'Recovery codes' => 'Коды восстановления',
   'Enter the secret code in the application or scan the QR code' => 'Введите секретный код в приложении или отсканируйте QR код',
   'Recovery codes are used to access your account in the event you cannot receive two-factor authentication codes' => 'Коды восстановления используются для доступа к вашей учетной записи, если вы не можете получить коды двухфакторной аутентификации',
-  'Install {0} or another two-factor authentication application (TOTP, 2FA)' => 'Установите {0} или двугое приложение для "Двухфакторной авторизации" (TOTP, 2FA)',
+  'Install {0} or another two-factor authentication application (TOTP, 2FA)' => 'Установите {0} или другое приложение для "Двухфакторной авторизации" (TOTP, 2FA)',
   'Enter the code from the application to activate' => 'Введите код из приложения для активации',
   'Regenerate' => 'Перегенерировать',
   'You have {0} recovery keys left' => 'У вас осталось ключей восстановления: {0}',

@@ -379,13 +379,13 @@ class SettingsController extends Controller
         $model = \Yii::createObject(TwoFactorEditForm::className());
         $event = $this->getFormEvent($model);
 
-        $this->trigger(self::EVENT_BEFORE_TWO_FACTOR, $event);
+        $this->trigger(self::EVENT_BEFORE_REGENERATE_TFA_RECOVERY_CODES, $event);
         if ($model->regenerateRecoveryCods()) {
             \Yii::$app->session->setFlash(
                 'success',
                 \Yii::t('user', 'Recovery codes for two factor authentication have been regenerated')
             );
-            $this->trigger(self::EVENT_AFTER_TWO_FACTOR, $event);
+            $this->trigger(self::EVENT_AFTER_REGENERATE_TFA_RECOVERY_CODES, $event);
         } else {
             \Yii::$app->session->setFlash('error', \Yii::t('user', 'An error occurred processing your request'));
         }

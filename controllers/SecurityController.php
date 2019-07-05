@@ -240,15 +240,21 @@ class SecurityController extends Controller
      */
     public function actionTwoFactorAuthentication()
     {
-        if (false === $this->module->enableTwoFactorAuthentication) {
+        $credentials = \Yii::$app->session->get($this->tfaCredentialsKey);
+        if (false === $this->module->enableTwoFactorAuthentication
+            || empty($credentials)) {
             throw new NotFoundHttpException();
         }
 
         /** @var LoginForm $model */
         $loginForm = \Yii::createObject(LoginForm::className());
-        $loginForm->setAttributes(\Yii::$app->session->get($this->tfaCredentialsKey));
+        $loginForm->setAttributes($credentials);
         $loginForm->scenario = $loginForm::SCENARIO_TFA_LOGIN;
         $eventLogin = $this->getFormEvent($loginForm);
+
+        if(false === $loginForm->validate()){
+            throw new NotFoundHttpException();
+        }
 
         /** @var TwoFactorForm $model */
         $model = \Yii::createObject(TwoFactorForm::className());

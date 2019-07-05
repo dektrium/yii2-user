@@ -37,7 +37,7 @@ $helper = Instance::ensure(RecoveryCodesHelper::class);
 <div class="row">
     <div class="col-xs-12">
         <?= Html::a(
-            Yii::t('user', 'Regenerate'), ['/user/settings/two-factor-regenerate-recovery-code'], [
+            Yii::t('user', 'Regenerate'), ['/user/settings/two-factor-regenerate-recovery-codes'], [
                 'data' => [
                     'pjax' => 1,
                     'method' => 'post'

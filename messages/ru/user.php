@@ -207,4 +207,8 @@ return array (
   'Install {0} or another two-factor authentication application (TOTP, 2FA)' => 'Установите {0} или двугое приложение для "Двухфакторной авторизации" (TOTP, 2FA)',
   'Enter the code from the application to activate' => 'Введите код из приложения для активации',
   'Regenerate' => 'Перегенерировать',
+  'You have {0} recovery keys left' => 'У вас осталось ключей восстановления: {0}',
+  'Your two factor authentication settings have been updated' => 'Параметры двухфакторной аутентификации были обновлены',
+  'Recovery codes for two factor authentication have been regenerated' => 'Перегенерированы коды восстановления для двухфакторной аутентификации',
+  'Enter a one-time password from the app or recovery code' => 'Введите одноразовый пароль из приложения или код восстановления'
 );

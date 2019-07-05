@@ -12,248 +12,122 @@
 namespace dektrium\user\models;
 
 use dektrium\user\Finder;
-use dektrium\user\Mailer;
 use dektrium\user\traits\ModuleTrait;
 use dektrium\user\validators\TwoFactorCodeValidator;
-use RobThree\Auth\TwoFactorAuth;
 use Yii;
 use yii\base\InvalidConfigException;
 use yii\base\Model;
-use yii\di\Instance;
+use yii\db\StaleObjectException;
 
 /**
- * SettingsForm gets user's username, email and password and changes them.
+ * TwoFactorForm confirm TFA code for login.
  *
- * @property bool $isEnabled
- *
- * @property User $user
- * @property Finder $finder
- *
- * @author Dmitry Erofeev <dmeroff@gmail.com>
+ * @property string $secret
  */
 class TwoFactorForm extends Model
 {
     use ModuleTrait;
 
-    /** @var boolean */
-    public $disable = false;
-
-    /** @var string */
-    public $secret;
-
     /** @var string */
     public $code;
 
-    /** @var bool Count bits for creating secret code for TFA */
-    public $tfaBits = 160;
-
-    /** @var int */
-    public $sizeQrCode = 200;
-
-    /** @var bool|string Issuer name of code in application */
-    public $tfaIssuer = false;
-
-    /** @var int */
-    public $countRecoveryCodes = 8;
-
-    /** @var int */
-    public $lengthRecoveryCode = 10;
-
-    /** @var Mailer */
-    protected $mailer;
-
-    /** @var TwoFactorAuth */
-    protected $tfa;
-
     /** @var User */
-    private $_user;
+    protected $user;
 
-    /** @return User */
-    public function getUser()
+    /** @var string */
+    protected $_secret;
+
+    /** @var Token[] */
+    protected $_recoveryCodes;
+
+    /** @var Finder */
+    protected $finder;
+
+    /** @var LoginForm */
+    protected $loginForm;
+
+    /**
+     * @param Finder $finder
+     * @param array $config
+     */
+    public function __construct(Finder $finder, $config = [])
     {
-        if ($this->_user == null) {
-            $this->_user = Yii::$app->user->identity;
-        }
-
-        return $this->_user;
-    }
-
-    /** @inheritdoc */
-    public function __construct(Mailer $mailer, TwoFactorAuth $tfa, $config = [])
-    {
-        $this->mailer = $mailer;
-        $this->tfa = $tfa;
-        $this->setAttributes([
-            'secret' => $this->tfa->createSecret(
-                $this->tfaBits
-            ),
-        ], false);
+        $this->finder = $finder;
         parent::__construct($config);
-    }
-
-    /** @inheritdoc */
-    public function rules()
-    {
-        return [
-            'disable' => ['disable', 'boolean'],
-            'secret' => ['secret', 'string'],
-            'secretRequired' => ['secret', 'required'],
-            'code' => ['code', 'string'],
-            'codeTrim' => ['code', 'trim'],
-            'codeRequired' => ['code', 'required'],
-            'codeVerify' => ['code', TwoFactorCodeValidator::class, 'secretAttribute' => 'secret']
-        ];
     }
 
     /** @inheritdoc */
     public function attributeLabels()
     {
         return [
-            'secret' => Yii::t('user', 'Secret'),
             'code' => Yii::t('user', 'Code'),
         ];
     }
 
+    /** @inheritdoc */
+    public function rules()
+    {
+        $rules = [
+            'code' => ['code', 'trim'],
+            'codeRequire' => ['code', 'required'],
+            'codeVerify' => [
+                'code',
+                TwoFactorCodeValidator::class,
+                'secretAttribute' => 'secret',
+                'recoveryCodes' => [$this, 'getRecoveryCodes']
+            ],
+        ];
+
+        return $rules;
+    }
+
     /**
-     * @return bool
+     * @return string
      */
-    public function getIsEnabled()
+    public function getSecret()
     {
-        return (bool)$this->user->hasTFA;
+        return $this->_secret;
     }
 
-    public function getQrCodeUrl()
+    /**
+     * @param $login
+     * @return $this
+     */
+    public function setUserByLogin($login)
     {
-        $qrCode = $this->tfa->getQRText(
+        $this->user = $this->finder->findUserByUsernameOrEmail(trim($login));
 
-            Yii::t('user', $this->getTfaIssuer(), [
-                'username' => $this->user->username,
-                'email' => $this->user->email,
-            ]),
-            $this->secret
-        );
-        $result = $this->tfa->getQrCodeProvider()->getUrl(
-            $qrCode, $this->sizeQrCode
-        );
+        $this->_secret = $this->user->tfa_key;
 
-        return $result;
+        return $this;
     }
 
+    /**
+     * @return Token[]
+     */
     public function getRecoveryCodes()
     {
-        return $this->finder->findToken([
-            'user_id' => $this->user->id,
-            'type' => Token::TYPE_TFA_RECOVERY,
-        ])->all();
-    }
-
-    public function save()
-    {
-        if ($this->disable) {
-            return $this->deleteTfaKey();
-        }
-
-        if (false === $this->validate()) {
-            return false;
-        }
-
-        $transaction = Yii::$app->db->beginTransaction();
-
-        try {
-            $result = $this->initTfaKey() && $this->initRecoveryCodes();
-
-            if ($result) {
-                $transaction->commit();
-            } else {
-                $transaction->rollBack();
-            }
-        } catch (\Exception $e) {
-            $transaction->rollBack();
-            Yii::error($e);
-
-            $result = false;
-        } catch (\Throwable $e) {
-            $transaction->rollBack();
-            Yii::error($e);
-
-            $result = false;
-        }
-
-        return $result;
-    }
-
-    public function regenerateRecoveryCods()
-    {
-        $this->deleteRecoveryCodes();
-
-        return $this->initRecoveryCodes();
-    }
-
-    protected function initTfaKey()
-    {
-        return $this->user->updateAttributes([
-            'tfa_key' => $this->secret
-        ]);
-    }
-
-    protected function deleteTfaKey()
-    {
-        $this->user->tfa_key = null;
-
-        $this->deleteRecoveryCodes();
-
-        return $this->user->save();
-    }
-
-    protected function initRecoveryCodes()
-    {
-        $indexRecoveryCode = $this->countRecoveryCodes;
-
-        if ($indexRecoveryCode <= 0) {
-            return true;
-        }
-
-        $recoveryCodes = [];
-        while ($indexRecoveryCode > 0) {
-            $indexRecoveryCode--;
-            $recoveryCode = \Yii::createObject([
-                'class' => Token::className(),
+        if (empty($this->_recoveryCodes)) {
+            $this->_recoveryCodes = $this->finder->findToken([
                 'user_id' => $this->user->id,
                 'type' => Token::TYPE_TFA_RECOVERY,
-                'length' => $this->lengthRecoveryCode,
-            ]);
-
-            if (!$recoveryCode->save(false)) {
-                return false;
-            }
-
-            $recoveryCodes[] = $recoveryCode;
+            ])->indexBy(['code'])->all();
         }
 
-        if (!$this->mailer->sendRecoveryCodesMessage($this->user, $recoveryCodes)) {
-            return false;
+        return $this->_recoveryCodes;
+    }
+
+    /**
+     * @throws \Throwable
+     * @throws StaleObjectException
+     */
+    public function deleteUserRecoveryCode()
+    {
+        if (isset($this->getRecoveryCodes()[$this->code])) {
+            return (bool)$this->getRecoveryCodes()[$this->code]->delete();
         }
 
-        return true;
-    }
-
-    protected function deleteRecoveryCodes()
-    {
-        /** @var Token $tokenClass */
-        $tokenClass = Instance::ensure(Token::className());
-
-        return $this->getModule()->getDb()->createCommand()->delete(
-            $tokenClass::tableName(),
-            [
-                'user_id' => $this->user->id,
-                'type' => Token::TYPE_TFA_RECOVERY,
-            ]
-        )->execute();
-    }
-
-    public function getTfaIssuer()
-    {
-        return $this->tfaIssuer ? $this->tfaIssuer : \Yii::$app->name . ' ({email})';
+        return false;
     }
 
     /**

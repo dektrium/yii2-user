@@ -14,7 +14,7 @@ namespace dektrium\user\controllers;
 use dektrium\user\Finder;
 use dektrium\user\models\Profile;
 use dektrium\user\models\SettingsForm;
-use dektrium\user\models\TwoFactorForm;
+use dektrium\user\models\TwoFactorEditForm;
 use dektrium\user\models\User;
 use dektrium\user\Module;
 use dektrium\user\traits\AjaxValidationTrait;
@@ -166,8 +166,7 @@ class SettingsController extends Controller
                             'disconnect',
                             'delete',
                             'two-factor',
-                            'two-factor-regenerate-recovery-code',
-                            ''
+                            'two-factor-regenerate-recovery-codes',
                         ],
                         'roles'   => ['@'],
                     ],
@@ -345,14 +344,14 @@ class SettingsController extends Controller
         }
 
         /** @var SettingsForm $model */
-        $model = \Yii::createObject(TwoFactorForm::className());
+        $model = \Yii::createObject(TwoFactorEditForm::className());
         $event = $this->getFormEvent($model);
 
         $this->performAjaxValidation($model);
 
         $this->trigger(self::EVENT_BEFORE_TWO_FACTOR, $event);
         if ($model->load(\Yii::$app->request->post()) && $model->save()) {
-            \Yii::$app->session->setFlash('success', \Yii::t('user', 'Your account details have been updated'));
+            \Yii::$app->session->setFlash('success', \Yii::t('user', 'Your two factor authentication settings have been updated'));
             $this->trigger(self::EVENT_AFTER_TWO_FACTOR, $event);
             return $this->refresh();
         }
@@ -377,14 +376,15 @@ class SettingsController extends Controller
             throw new NotFoundHttpException(\Yii::t('user', 'Not found'));
         }
 
-        $model = \Yii::createObject([
-            'class' => TwoFactorForm::className(),
-        ]);;
+        $model = \Yii::createObject(TwoFactorEditForm::className());
         $event = $this->getFormEvent($model);
 
         $this->trigger(self::EVENT_BEFORE_TWO_FACTOR, $event);
         if ($model->regenerateRecoveryCods()) {
-            \Yii::$app->session->setFlash('success', \Yii::t('user', 'Your account details have been updated'));
+            \Yii::$app->session->setFlash(
+                'success',
+                \Yii::t('user', 'Recovery codes for two factor authentication have been regenerated')
+            );
             $this->trigger(self::EVENT_AFTER_TWO_FACTOR, $event);
         } else {
             \Yii::$app->session->setFlash('error', \Yii::t('user', 'An error occurred processing your request'));

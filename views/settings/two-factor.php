@@ -16,7 +16,7 @@ use yii\bootstrap\Modal;
 /**
  * @var yii\web\View $this
  * @var yii\widgets\ActiveForm $form
- * @var dektrium\user\models\TwoFactorForm $model
+ * @var dektrium\user\models\TwoFactorEditForm $model
  */
 
 $this->title = Yii::t('user', 'Two factor authentication');

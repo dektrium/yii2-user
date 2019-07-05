@@ -15,6 +15,9 @@ class TwoFactorCodeValidator extends Validator
     /** @var string */
     public $secretAttribute;
 
+    /** @var array */
+    public $recoveryCodes = [];
+
     /** @var TwoFactorAuth */
     protected $tfa;
 
@@ -38,7 +41,18 @@ class TwoFactorCodeValidator extends Validator
         $secret = $this->getSecret($model);
         $value = $model->$attribute;
         if (false === $this->tfa->verifyCode($secret, $value)) {
-            $this->addError($model, $attribute, $this->message);
+            $recoveryCodes = $this->recoveryCodes;
+            if (is_callable($recoveryCodes)) {
+                $recoveryCodes = ($recoveryCodes)($this, $model, $attribute);
+            }
+
+            if (empty($recoveryCodes)) {
+                $recoveryCodes = [];
+            }
+
+            if (empty($recoveryCodes[$value])) {
+                $this->addError($model, $attribute, $this->message);
+            }
         }
     }
 

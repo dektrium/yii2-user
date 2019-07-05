@@ -14,16 +14,19 @@ namespace dektrium\user\controllers;
 use dektrium\user\Finder;
 use dektrium\user\models\Account;
 use dektrium\user\models\LoginForm;
+use dektrium\user\models\TwoFactorForm;
 use dektrium\user\models\User;
 use dektrium\user\Module;
 use dektrium\user\traits\AjaxValidationTrait;
 use dektrium\user\traits\EventTrait;
 use yii\authclient\AuthAction;
 use yii\authclient\ClientInterface;
+use yii\db\StaleObjectException;
 use yii\filters\AccessControl;
 use yii\filters\VerbFilter;
 use yii\helpers\Url;
 use yii\web\Controller;
+use yii\web\NotFoundHttpException;
 use yii\web\Response;
 
 /**
@@ -86,6 +89,34 @@ class SecurityController extends Controller
      */
     const EVENT_AFTER_CONNECT = 'afterConnect';
 
+    /**
+     * Event is triggered before confirm two factor authentication code.
+     * Triggered with \dektrium\user\events\FormEvent.
+     */
+    const EVENT_BEFORE_TFA = 'beforeTFA';
+
+    /**
+     * Event is triggered after confirm two factor authentication code.
+     * Triggered with \dektrium\user\events\FormEvent.
+     */
+    const EVENT_AFTER_TFA = 'afterTFA';
+
+    /**
+     * @var string
+     */
+    public $tfaCounterKey = 'tfa-count';
+
+    /**
+     * Count attempts typing TFA code
+     *
+     * @var int
+     */
+    public $tfaCount = 10;
+
+    /**
+     * @var string
+     */
+    public $tfaCredentialsKey = 'credentials';
 
     /** @var Finder */
     protected $finder;
@@ -109,7 +140,7 @@ class SecurityController extends Controller
             'access' => [
                 'class' => AccessControl::className(),
                 'rules' => [
-                    ['allow' => true, 'actions' => ['login', 'auth'], 'roles' => ['?']],
+                    ['allow' => true, 'actions' => ['login', 'auth', 'two-factor-authentication'], 'roles' => ['?']],
                     ['allow' => true, 'actions' => ['login', 'auth', 'logout'], 'roles' => ['@']],
                 ],
             ],
@@ -156,9 +187,21 @@ class SecurityController extends Controller
 
         $this->trigger(self::EVENT_BEFORE_LOGIN, $event);
 
-        if ($model->load(\Yii::$app->getRequest()->post()) && $model->login()) {
-            $this->trigger(self::EVENT_AFTER_LOGIN, $event);
-            return $this->goBack();
+        if ($model->load(\Yii::$app->getRequest()->post())) {
+            if (
+                $this->module->enableTwoFactorAuthentication
+                && $model->hasTFA()
+            ) {
+                if ($model->validate()) {
+                    $attributes = $model->scenarios()[$model::SCENARIO_TFA_LOGIN];
+                    \Yii::$app->session->set($this->tfaCredentialsKey, $model->getAttributes($attributes));
+                    \Yii::$app->session->set($this->tfaCounterKey, $this->tfaCount);
+                    return $this->redirect(['/user/security/two-factor-authentication']);
+                }
+            } elseif ($model->login()) {
+                $this->trigger(self::EVENT_AFTER_LOGIN, $event);
+                return $this->goBack();
+            }
         }
 
         return $this->render('login', [
@@ -183,6 +226,62 @@ class SecurityController extends Controller
         $this->trigger(self::EVENT_AFTER_LOGOUT, $event);
 
         return $this->goHome();
+    }
+
+    /**
+     * Display confirm TFA page
+     *
+     * @return Response
+     * @throws NotFoundHttpException
+     * @throws \Throwable
+     * @throws ExitException
+     * @throws InvalidConfigException
+     * @throws StaleObjectException
+     */
+    public function actionTwoFactorAuthentication()
+    {
+        if (false === $this->module->enableTwoFactorAuthentication) {
+            throw new NotFoundHttpException();
+        }
+
+        /** @var LoginForm $model */
+        $loginForm = \Yii::createObject(LoginForm::className());
+        $loginForm->setAttributes(\Yii::$app->session->get($this->tfaCredentialsKey));
+        $loginForm->scenario = $loginForm::SCENARIO_TFA_LOGIN;
+        $eventLogin = $this->getFormEvent($loginForm);
+
+        /** @var TwoFactorForm $model */
+        $model = \Yii::createObject(TwoFactorForm::className());
+        $model->setUserByLogin($loginForm->login);
+        $event = $this->getFormEvent($model);
+
+        $this->performAjaxValidation($model, [$this, 'checkTfaCounter']);
+
+        $this->trigger(self::EVENT_BEFORE_TFA, $event);
+
+        if ($model->load(\Yii::$app->getRequest()->post()) && $model->validate()) {
+            $this->checkTfaCounter();
+            if($loginForm->login()){
+                if ($model->deleteUserRecoveryCode()) {
+                    \Yii::$app->session->setFlash(
+                        'warning',
+                        \Yii::t(
+                            'user',
+                            'You have {0} recovery keys left',
+                            count($model->getRecoveryCodes()) - 1
+                        )
+                    );
+                }
+
+                $this->trigger(self::EVENT_AFTER_TFA, $event);
+                $this->trigger(self::EVENT_AFTER_LOGIN, $eventLogin);
+                return $this->goBack();
+            }
+        }
+
+        return $this->render('two-factor', [
+            'model' => $model,
+        ]);
     }
 
     /**
@@ -246,5 +345,26 @@ class SecurityController extends Controller
         $this->trigger(self::EVENT_AFTER_CONNECT, $event);
 
         $this->action->successUrl = Url::to(['/user/settings/networks']);
+    }
+
+    /**
+     * Decrease two factor authentication counter
+     */
+    protected function checkTfaCounter()
+    {
+        $session = \Yii::$app->session;
+
+        $tfaCounter = $session->get($this->tfaCounterKey);
+
+        if ($tfaCounter <= 0 && false) {
+            $user = \Yii::$app->user;
+            $user->acceptableRedirectTypes[] = 'application/json';
+            $user->loginRequired();
+        }
+
+        $session->set(
+            $this->tfaCounterKey,
+            $tfaCounter - 1
+        );
     }
 }

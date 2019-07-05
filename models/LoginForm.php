@@ -29,6 +29,8 @@ class LoginForm extends Model
 {
     use ModuleTrait;
 
+    const SCENARIO_TFA_LOGIN = 'tfaLogin';
+
     /** @var string User's email or username */
     public $login;
 
@@ -52,6 +54,20 @@ class LoginForm extends Model
     {
         $this->finder = $finder;
         parent::__construct($config);
+    }
+
+    /** @inheritdoc */
+    public function scenarios()
+    {
+        $scenarios = parent::scenarios();
+
+        $scenarios[self::SCENARIO_TFA_LOGIN] = [
+            'login',
+            'password',
+            'rememberMe',
+        ];
+
+        return $scenarios;
     }
 
     /**
@@ -154,6 +170,13 @@ class LoginForm extends Model
         return false;
     }
 
+    /**
+     * @return bool
+     */
+    public function hasTFA()
+    {
+        return $this->getUserByLogin($this->login)->hasTFA;
+    }
 
     /** @inheritdoc */
     public function formName()
@@ -165,11 +188,20 @@ class LoginForm extends Model
     public function beforeValidate()
     {
         if (parent::beforeValidate()) {
-            $this->user = $this->finder->findUserByUsernameOrEmail(trim($this->login));
+            $this->user = $this->getUserByLogin($this->login);
 
             return true;
         } else {
             return false;
         }
+    }
+
+    /**
+     * @param string $login
+     * @return User
+     */
+    protected function getUserByLogin($login)
+    {
+        return $this->finder->findUserByUsernameOrEmail(trim($login));
     }
 }

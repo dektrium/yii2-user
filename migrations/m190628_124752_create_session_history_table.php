@@ -52,19 +52,6 @@ class m190628_124752_create_session_history_table extends Migration
             $this->cascade,
             $this->restrict
         );
-
-        $session = Yii::$app->session;
-        if ($session instanceof DbSession && $this->db === $session->db) {
-            $this->addForeignKey(
-                '{{%fk_session_session_history}}',
-                self::SESSION_HISTORY_TABLE,
-                'session_id',
-                $session->sessionTable,
-                'id',
-                'SET NULL',
-                $this->restrict
-            );
-        }
     }
 
     /**

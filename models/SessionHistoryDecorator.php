@@ -114,10 +114,12 @@ class SessionHistoryDecorator extends Session
                     $this->unbindSessionHistory($oldSid);
                 });
             } else {
+                $this->transaction(function () use ($user, $oldSid) {
                      $this->getDB()->createCommand()->delete($this->sessionHistoryTable, [
-                        'user_id' => $user->id,
+                        'user_id' => $user->getId(),
                         'session_id' => $oldSid,
                     ])->execute();
+                });
             }
 
             return true;

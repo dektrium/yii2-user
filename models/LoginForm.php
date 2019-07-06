@@ -175,7 +175,9 @@ class LoginForm extends Model
      */
     public function hasTFA()
     {
-        return $this->getUserByLogin($this->login)->hasTFA;
+        $user = $this->getUserByLogin($this->login);
+
+        return isset($user) && $user->hasTFA;
     }
 
     /** @inheritdoc */

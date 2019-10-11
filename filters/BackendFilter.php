@@ -35,7 +35,7 @@ class BackendFilter extends ActionFilter
      */
     public function beforeAction($action)
     {
-        if (in_array($action->controller->id, $this->controllers)) {
+        if (!in_array($action->controller->id, $this->controllers)) {
             throw new NotFoundHttpException('Not found');
         }
 

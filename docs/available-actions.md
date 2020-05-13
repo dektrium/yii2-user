@@ -15,6 +15,7 @@ helper `\yii\helpers\Url::to()`.
 - **/user/settings/account**      Displays account settings form (email, username, password)
 - **/user/settings/networks**     Displays social network accounts settings page
 - **/user/profile/show**          Displays user's profile (requires *id* query param)
+- **/user/session-history/index** Displays user session history
 - **/user/admin/index**           Displays user management interface
 
 ## Example of menu

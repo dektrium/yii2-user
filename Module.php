@@ -11,7 +11,9 @@
 
 namespace dektrium\user;
 
+use yii\base\InvalidConfigException;
 use yii\base\Module as BaseModule;
+use yii\db\Connection;
 
 /**
  * This is the main module class for the Yii2-user.
@@ -56,6 +58,24 @@ class Module extends BaseModule
 
     /** @var bool Enable the 'impersonate as another user' function */
     public $enableImpersonateUser = true;
+
+    /**
+     * @var bool Enable the 'session history' function
+     * Using with {@see SessionHistoryDecorator}
+     */
+    public $enableSessionHistory = false;
+
+    /**
+     * @var int|bool The number of 'session history' records will be stored for user
+     * if equals false records will not be deleted
+     */
+    public $numberSessionHistory = false;
+
+    /**
+     * @var int|bool The time after which the expired 'session history' will be deleted
+     * if equals false records will not be deleted
+     */
+    public $timeoutSessionHistory = false;
 
     /** @var int Email changing strategy. */
     public $emailChangeStrategy = self::STRATEGY_DEFAULT;
@@ -112,10 +132,27 @@ class Module extends BaseModule
     ];
 
     /**
-     * @return string
+     * @return Connection
+     * @throws InvalidConfigException
      */
     public function getDb()
     {
         return \Yii::$app->get($this->dbConnection);
+    }
+
+    /**
+     * @return bool
+     */
+    public function hasNumberSessionHistory()
+    {
+        return $this->numberSessionHistory !== false && $this->numberSessionHistory > 0;
+    }
+
+    /**
+     * @return bool
+     */
+    public function hasTimeoutSessionHistory()
+    {
+        return $this->timeoutSessionHistory !== false && $this->timeoutSessionHistory > 0;
     }
 }

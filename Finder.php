@@ -13,7 +13,6 @@ namespace dektrium\user;
 
 use dektrium\user\models\query\AccountQuery;
 use dektrium\user\models\Token;
-use yii\authclient\ClientInterface;
 use yii\base\BaseObject;
 use yii\db\ActiveQuery;
 
@@ -35,6 +34,9 @@ class Finder extends BaseObject
 
     /** @var ActiveQuery */
     protected $profileQuery;
+
+    /** @var ActiveQuery */
+    protected $sessionHistoryQuery;
 
     /**
      * @return ActiveQuery
@@ -68,6 +70,14 @@ class Finder extends BaseObject
         return $this->profileQuery;
     }
 
+    /**
+     * @return ActiveQuery
+     */
+    public function getSessionHistoryQuery()
+    {
+        return $this->sessionHistoryQuery;
+    }
+
     /** @param ActiveQuery $accountQuery */
     public function setAccountQuery(ActiveQuery $accountQuery)
     {
@@ -90,6 +100,12 @@ class Finder extends BaseObject
     public function setProfileQuery(ActiveQuery $profileQuery)
     {
         $this->profileQuery = $profileQuery;
+    }
+
+    /** @param ActiveQuery $sessionHistoryQuery */
+    public function setSessionHistoryQuery(ActiveQuery $sessionHistoryQuery)
+    {
+        $this->sessionHistoryQuery = $sessionHistoryQuery;
     }
 
     /**
@@ -223,10 +239,38 @@ class Finder extends BaseObject
      *
      * @param mixed $condition
      *
-     * @return \yii\db\ActiveQuery
+     * @return ActiveQuery
      */
     public function findProfile($condition)
     {
         return $this->profileQuery->where($condition);
+    }
+
+    /**
+     *  Find session history
+     *
+     * @param mixed $condition
+     *
+     * @return ActiveQuery
+     */
+    public function findSessionHistory($condition)
+    {
+        return $this->sessionHistoryQuery->where($condition);
+    }
+
+    /**
+     * Finds a active record of session history by user id.
+     *
+     * @param int $id
+     *
+     * @return ActiveQuery
+     */
+    public function findActiveSessionHistoryById($id)
+    {
+        return $this->findSessionHistory([
+            'AND',
+            ['=', 'user_id', $id],
+            ['IS NOT', 'session_id', null],
+        ]);
     }
 }

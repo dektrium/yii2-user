@@ -11,6 +11,7 @@
 
 namespace dektrium\user\widgets;
 
+use dektrium\user\traits\ModuleTrait;
 use yii\widgets\Menu;
 use Yii;
 use yii\base\Widget;
@@ -20,6 +21,7 @@ use yii\base\Widget;
  */
 class UserMenu extends Widget
 {
+    use ModuleTrait;
     
     /** @array \dektrium\user\models\RegistrationForm */
     public $items;
@@ -29,6 +31,7 @@ class UserMenu extends Widget
         parent::init();
         
         $networksVisible = count(Yii::$app->authClientCollection->clients) > 0;
+        $sessionHistoryVisible = $this->getModule()->enableSessionHistory;
         
         $this->items = [
                 ['label' => Yii::t('user', 'Profile'), 'url' => ['/user/settings/profile']],
@@ -37,6 +40,11 @@ class UserMenu extends Widget
                     'label' => Yii::t('user', 'Networks'),
                     'url' => ['/user/settings/networks'],
                     'visible' => $networksVisible
+                ],
+                [
+                    'label' => Yii::t('user', 'Session history'),
+                    'url' => ['/user/settings/session-history'],
+                    'visible' => $sessionHistoryVisible
                 ],
             ];
     }

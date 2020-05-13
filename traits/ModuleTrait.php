@@ -3,6 +3,7 @@
 namespace dektrium\user\traits;
 
 use dektrium\user\Module;
+use yii\db\Connection;
 
 /**
  * Trait ModuleTrait
@@ -21,7 +22,7 @@ trait ModuleTrait
     }
 
     /**
-     * @return string
+     * @return Connection
      */
     public static function getDb()
     {

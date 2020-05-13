@@ -37,6 +37,8 @@ class Bootstrap implements BootstrapInterface
         'SettingsForm'     => 'dektrium\user\models\SettingsForm',
         'RecoveryForm'     => 'dektrium\user\models\RecoveryForm',
         'UserSearch'       => 'dektrium\user\models\UserSearch',
+        'SessionHistory'   => 'dektrium\user\models\SessionHistory',
+        'SessionHistorySearch' => 'dektrium\user\models\SessionHistorySearch',
     ];
 
     /** @inheritdoc */
@@ -51,7 +53,7 @@ class Bootstrap implements BootstrapInterface
                 Yii::$container->set($class, $definition);
                 $modelName = is_array($definition) ? $definition['class'] : $definition;
                 $module->modelMap[$name] = $modelName;
-                if (in_array($name, ['User', 'Profile', 'Token', 'Account'])) {
+                if (in_array($name, ['User', 'Profile', 'Token', 'Account', 'SessionHistory'])) {
                     Yii::$container->set($name . 'Query', function () use ($modelName) {
                         return $modelName::find();
                     });
@@ -63,6 +65,7 @@ class Bootstrap implements BootstrapInterface
                 'profileQuery' => Yii::$container->get('ProfileQuery'),
                 'tokenQuery'   => Yii::$container->get('TokenQuery'),
                 'accountQuery' => Yii::$container->get('AccountQuery'),
+                'sessionHistoryQuery' => Yii::$container->get('SessionHistoryQuery'),
             ]);
 
             if ($app instanceof ConsoleApplication) {

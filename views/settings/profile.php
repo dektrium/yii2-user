@@ -66,7 +66,7 @@ $this->params['breadcrumbs'][] = $this->title;
                         )
                     ); ?>
 
-                <?= $form
+                <? if ($this->context->module->enableGravatar) echo $form
                     ->field($model, 'gravatar_email')
                     ->hint(Html::a(Yii::t('user', 'Change your avatar at Gravatar.com'), 'http://gravatar.com')) ?>
 

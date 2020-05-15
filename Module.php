@@ -57,6 +57,12 @@ class Module extends BaseModule
     /** @var bool Enable the 'impersonate as another user' function */
     public $enableImpersonateUser = true;
 
+    /** @var array which roles are allowed to impersonate into another user? */
+    public $allowImpersonateForRoles = ['admin'];
+
+    /** @var array which roles are never allowed to be impersonated into? */
+    public $denyImpersonateIntoRoles = ['admin'];
+
     /** @var int Email changing strategy. */
     public $emailChangeStrategy = self::STRATEGY_DEFAULT;
 

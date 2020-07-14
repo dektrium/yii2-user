@@ -14,10 +14,12 @@ namespace dektrium\user\models;
 use dektrium\user\Finder;
 use dektrium\user\helpers\Password;
 use dektrium\user\traits\ModuleTrait;
+use yii\base\DynamicModel;
 use yii\helpers\ArrayHelper;
 use yii\helpers\Html;
 use Yii;
 use yii\base\Model;
+use yii\validators\IpValidator;
 
 /**
  * LoginForm get user's login and password, validates them and logs the user in. If user has been blocked, it adds
@@ -155,6 +157,30 @@ class LoginForm extends Model
     }
 
 
+    /**
+     * Validates if an administrator is coming from the correct IP adress.
+     *
+     * @see Module $allowedIpConfiguration
+     * @see http://www.yiiframework.com/doc-2.0/guide-tutorial-core-validators.html#ip
+     * @see http://www.yiiframework.com/doc-2.0/yii-validators-ipvalidator.html
+     * @return mixed true if the check is correct, an array with the errors otherwise
+     */
+    public function checkValidIpAddresses()
+    {
+        $config = $this->module->allowedIpConfiguration;
+
+        if (!$this->user || !$this->user->isAdmin || !$config) {
+            return true;
+        }
+
+        $rules = ArrayHelper::merge(['login', 'ip'], $config);
+
+        $model = DynamicModel::validateData(['login' => Yii::$app->request->userIP], [$rules]);
+
+        return $model->hasErrors() ? $model->getErrors() : true;
+    }
+
+
     /** @inheritdoc */
     public function formName()
     {
@@ -166,6 +192,14 @@ class LoginForm extends Model
     {
         if (parent::beforeValidate()) {
             $this->user = $this->finder->findUserByUsernameOrEmail(trim($this->login));
+
+            $valid = $this->checkValidIpAddresses();
+
+            if($valid !== true) {
+                foreach($valid as $error) {
+                    $this->addError('login', $error);
+                }
+            }
 
             return true;
         } else {

@@ -24,14 +24,18 @@ trait AjaxValidationTrait
      * Performs ajax validation.
      *
      * @param Model $model
+     * @param callable $beforeSend
      *
      * @throws \yii\base\ExitException
      */
-    protected function performAjaxValidation(Model $model)
+    protected function performAjaxValidation(Model $model, callable $beforeSend = null)
     {
         if (\Yii::$app->request->isAjax && $model->load(\Yii::$app->request->post())) {
             \Yii::$app->response->format = Response::FORMAT_JSON;
             \Yii::$app->response->data   = ActiveForm::validate($model);
+            if(is_callable($beforeSend)){
+                $beforeSend($model);
+            }
             \Yii::$app->response->send();
             \Yii::$app->end();
         }

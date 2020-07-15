@@ -37,6 +37,40 @@ class Token extends ActiveRecord
     const TYPE_RECOVERY          = 1;
     const TYPE_CONFIRM_NEW_EMAIL = 2;
     const TYPE_CONFIRM_OLD_EMAIL = 3;
+    const TYPE_TFA_RECOVERY      = 4;
+
+    private $_length = 32;
+
+    /**
+     * List of type for deleting token before create
+     *
+     * @var array
+     */
+    protected $deletingType = [
+        self::TYPE_CONFIRMATION => true,
+        self::TYPE_RECOVERY => true,
+        self::TYPE_CONFIRM_NEW_EMAIL => true,
+        self::TYPE_CONFIRM_OLD_EMAIL => true,
+    ];
+
+    /**
+     * @param $length
+     * @return $this
+     */
+    public function setLength($length)
+    {
+        $this->_length = $length;
+
+        return $this;
+    }
+
+    /**
+     * @return int
+     */
+    public function getLength()
+    {
+        return $this->_length;
+    }
 
     /**
      * @return \yii\db\ActiveQuery
@@ -94,9 +128,17 @@ class Token extends ActiveRecord
     public function beforeSave($insert)
     {
         if ($insert) {
-            static::deleteAll(['user_id' => $this->user_id, 'type' => $this->type]);
+            if (isset($this->deletingType[$this->type])) {
+                static::deleteAll([
+                    'user_id' => $this->user_id,
+                    'type' => $this->type
+                ]);
+            }
             $this->setAttribute('created_at', time());
-            $this->setAttribute('code', Yii::$app->security->generateRandomString());
+            $this->setAttribute(
+                'code',
+                Yii::$app->security->generateRandomString($this->getLength())
+            );
         }
 
         return parent::beforeSave($insert);

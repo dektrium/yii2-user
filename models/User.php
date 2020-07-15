@@ -30,6 +30,7 @@ use yii\helpers\ArrayHelper;
  * @property bool    $isAdmin
  * @property bool    $isBlocked
  * @property bool    $isConfirmed
+ * @property bool    $hasTFA
  *
  * Database fields:
  * @property integer $id
@@ -38,6 +39,7 @@ use yii\helpers\ArrayHelper;
  * @property string  $unconfirmed_email
  * @property string  $password_hash
  * @property string  $auth_key
+ * @property string  $tfa_key
  * @property string  $registration_ip
  * @property integer $confirmed_at
  * @property integer $blocked_at
@@ -124,6 +126,14 @@ class User extends ActiveRecord implements IdentityInterface
             (\Yii::$app->getAuthManager() && $this->module->adminPermission ?
                 \Yii::$app->authManager->checkAccess($this->id, $this->module->adminPermission) : false)
             || in_array($this->username, $this->module->admins);
+    }
+
+    /**
+     * @return bool Whether the user is an two factor authentication or not.
+     */
+    public function getHasTFA()
+    {
+        return (bool)$this->tfa_key;
     }
 
     /**

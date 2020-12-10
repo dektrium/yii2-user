@@ -15,6 +15,7 @@ return [
         'hr',
         'hu',
         'it',
+        'ko-KR',
         'kz',
         'lt',
         'nl',

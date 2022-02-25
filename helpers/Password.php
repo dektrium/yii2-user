@@ -59,7 +59,7 @@ class Password
     {
         $sets = [
             'abcdefghjkmnpqrstuvwxyz',
-            'ABCDEFGHJKMNPQRSTUVWXYZ',
+            //'ABCDEFGHJKMNPQRSTUVWXYZ',
             '23456789',
         ];
         $all = '';

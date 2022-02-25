@@ -188,4 +188,12 @@ return array (
   'Your password has been changed successfully.' => 'Ваш пароль был успешно изменен.',
   'Your profile has been updated' => 'Настройки профиля были успешно сохранены',
   '{0, date, MMMM dd, YYYY HH:mm}' => '{0, date, dd MMMM, YYYY HH:mm}',
+  'Nicknames' => 'Ники (Nicknames)',
+  'Your password on {0} has been changed' => 'Ваш пароль на {0} был изменён',
+  'Your account on {0} has a new password' => 'В вашем аккаунте на {0} был установлен новый пароль',
+  'New Password has been generated and sent to user' => 'Новый пароль был сгенерирован и отправлен пользователю',
+  'Account view' => 'Просмотр аккаунта',
+  'Edit' => 'Редактировать',
+  'Personal account' => 'Личный кабинет',
+  'Joined on' => 'Присоединился',
 );

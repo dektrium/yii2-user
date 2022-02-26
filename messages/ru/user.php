@@ -198,4 +198,10 @@ return array (
   'Edit' => 'Редактировать',
   'Personal account' => 'Личный кабинет',
   'Joined on' => 'Присоединился',
+  'Phone' => 'Телефон',
+  'Avatar' => 'Аватар',
+  'Enter verification code' => 'Введите код с картинки',
+  'I agree with the' => 'Я принимаю',
+  'terms of the site' => 'условия сайта',
+  'This phone has already been taken' => 'Этот номер телефона уже зарегистрирован в системе',
 );

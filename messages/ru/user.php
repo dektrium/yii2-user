@@ -204,4 +204,6 @@ return array (
   'I agree with the' => 'Я принимаю',
   'terms of the site' => 'условия сайта',
   'This phone has already been taken' => 'Этот номер телефона уже зарегистрирован в системе',
+  'Captcha' => 'Код с картинки',
+  'Enter a new password' => 'Введите новый пароль',
 );

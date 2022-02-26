@@ -77,6 +77,8 @@ return array (
   'Didn\'t receive confirmation message?' => 'Не пришло письмо?',
   'Disconnect' => 'Отключить',
   'Don\'t have an account? Sign up!' => 'Нет аккаунта? Зарегистрируйтесь!',
+  'Don\'t have an account?' => 'Нет аккаунта?',
+  'Sign up!' => 'Зарегистрируйтесь!',
   'Email' => 'Email',
   'Email (public)' => 'Публичный email',
   'Error occurred while changing password' => 'При смене пароля произошла ошибка',

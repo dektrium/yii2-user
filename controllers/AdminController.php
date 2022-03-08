@@ -39,7 +39,7 @@ use yii\widgets\ActiveForm;
  *
  * @author Dmitry Erofeev <dmeroff@gmail.com
  */
-class AdminController extends Controller
+class AdminController extends \app\components\Controller
 {
     use EventTrait;
 

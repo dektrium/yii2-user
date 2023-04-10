@@ -20,9 +20,9 @@
     "require": {
         "php": ">=5.4.0",
         "yiisoft/yii2": "^2.0.13",
-        "yiisoft/yii2-swiftmailer": "^2.0.0",
-        "yiisoft/yii2-authclient": "^2.1.0",
-        "yiisoft/yii2-bootstrap": "^2.0.0"
+        "yiisoft/yii2-symfonymailer": "~2.0.3"
+        "yiisoft/yii2-authclient": "^2.2.0",
+        "yiisoft/yii2-bootstrap5": "^2",
     },
     "require-dev": {
         "yiisoft/yii2-codeception": "^2.0.0",

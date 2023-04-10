@@ -5,9 +5,7 @@
     "type": "yii2-extension",
     "license": "MIT",
     "support": {
-        "issues": "https://github.com/dektrium/yii2-user/issues?state=open",
-        "forum": "https://gitter.im/dektrium/yii2-user",
-        "source": "https://github.com/dektrium/yii2-user"
+        "source": "https://github.com/enyakerch/yii2-user"
     },
     "authors": [
         {

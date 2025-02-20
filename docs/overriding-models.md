@@ -9,7 +9,7 @@ Assume you decided to override user class and change registration process. Letâ€
 ```php
 namespace app\models;
 
-use dektrium\user\models\User as BaseUser;
+use ddmtechdev\user\models\User as BaseUser;
 
 class User extends BaseUser
 {
@@ -25,7 +25,7 @@ In order to make Yii2-user use your class you need to configure module as follow
 ```php
 ...
 'user' => [
-    'class' => 'dektrium\user\Module',
+    'class' => 'ddmtechdev\user\Module',
     'modelMap' => [
         'User' => 'app\models\User',
     ],
@@ -41,7 +41,7 @@ Yii2-user allows you to attach behavior or event handler to any model. To do thi
 [
     ...
     'user' => [
-        'class' => 'dektrium\user\Module',
+        'class' => 'ddmtechdev\user\Module',
         'modelMap' => [
             'User' => [
                 'class' => 'app\models\User',

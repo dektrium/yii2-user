@@ -14,7 +14,7 @@ Mailer can be configured as followed:
 ```php
 ...
 'user' => [
-    'class' => 'dektrium\user\Module',
+    'class' => 'ddmtechdev\user\Module',
     'mailer' => [
         'sender'                => 'no-reply@myhost.com', // or ['no-reply@myhost.com' => 'Sender name']
         'welcomeSubject'        => 'Welcome subject',

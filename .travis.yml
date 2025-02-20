@@ -28,8 +28,8 @@ install:
   - travis_retry composer install --prefer-dist
 
 before_script:
-  - mysql -e 'create database dektrium_test;'
-  - php tests/_app/yii.php migrate --migrationPath=@dektrium/user/migrations --interactive=0
+  - mysql -e 'create database ddmtechdev_test;'
+  - php tests/_app/yii.php migrate --migrationPath=@ddmtechdev/user/migrations --interactive=0
   - ~/.composer/vendor/bin/codecept build
 
 script: ~/.composer/vendor/bin/codecept run

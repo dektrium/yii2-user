@@ -1,15 +1,15 @@
 <?php
 
 /*
- * This file is part of the Dektrium project
+ * This file is part of the DDMTechDev project
  *
- * (c) Dektrium project <http://github.com/dektrium>
+ * (c) DDMTechDev project <http://github.com/ddmtechdev>
  *
  * For the full copyright and license information, please view the LICENSE.md
  * file that was distributed with this source code.
  */
 
-namespace dektrium\user\clients;
+namespace ddmtechdev\user\clients;
 
 use yii\authclient\ClientInterface as BaseInterface;
 

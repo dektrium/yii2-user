@@ -1,9 +1,9 @@
 <?php
 
 
-use dektrium\user\models\Token;
-use dektrium\user\models\User;
-use dektrium\user\Module;
+use ddmtechdev\user\models\Token;
+use ddmtechdev\user\models\User;
+use ddmtechdev\user\Module;
 use tests\_fixtures\UserFixture;
 use tests\_pages\LoginPage;
 use tests\_pages\RegistrationPage;

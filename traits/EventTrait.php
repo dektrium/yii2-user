@@ -1,27 +1,27 @@
 <?php
 
 /*
- * This file is part of the Dektrium project.
+ * This file is part of the DDMTechDev project.
  *
- * (c) Dektrium project <http://github.com/dektrium/>
+ * (c) DDMTechDev project <http://github.com/ddmtechdev/>
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
 
-namespace dektrium\user\traits;
+namespace ddmtechdev\user\traits;
 
-use dektrium\user\events\AuthEvent;
-use dektrium\user\events\ConnectEvent;
-use dektrium\user\events\FormEvent;
-use dektrium\user\events\ProfileEvent;
-use dektrium\user\events\ResetPasswordEvent;
-use dektrium\user\events\UserEvent;
-use dektrium\user\models\Account;
-use dektrium\user\models\Profile;
-use dektrium\user\models\RecoveryForm;
-use dektrium\user\models\Token;
-use dektrium\user\models\User;
+use ddmtechdev\user\events\AuthEvent;
+use ddmtechdev\user\events\ConnectEvent;
+use ddmtechdev\user\events\FormEvent;
+use ddmtechdev\user\events\ProfileEvent;
+use ddmtechdev\user\events\ResetPasswordEvent;
+use ddmtechdev\user\events\UserEvent;
+use ddmtechdev\user\models\Account;
+use ddmtechdev\user\models\Profile;
+use ddmtechdev\user\models\RecoveryForm;
+use ddmtechdev\user\models\Token;
+use ddmtechdev\user\models\User;
 use yii\authclient\ClientInterface;
 use yii\base\Model;
 

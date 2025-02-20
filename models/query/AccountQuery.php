@@ -1,17 +1,17 @@
 <?php
 
 /*
- * This file is part of the Dektrium project.
+ * This file is part of the DDMTechDev project.
  *
- * (c) Dektrium project <http://github.com/dektrium/>
+ * (c) DDMTechDev project <http://github.com/ddmtechdev/>
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
 
-namespace dektrium\user\models\query;
+namespace ddmtechdev\user\models\query;
 
-use dektrium\user\models\Account;
+use ddmtechdev\user\models\Account;
 use yii\authclient\ClientInterface;
 use yii\db\ActiveQuery;
 

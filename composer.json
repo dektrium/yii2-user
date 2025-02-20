@@ -1,13 +1,13 @@
 {
-    "name": "dektrium/yii2-user",
+    "name": "ddmtechdev/yii2-user",
     "description": "Flexible user registration and authentication module for Yii2",
-    "keywords": ["yii2", "yii2-user", "user management", "dektrium"],
+    "keywords": ["yii2", "yii2-user", "user management", "ddmtechdev"],
     "type": "yii2-extension",
     "license": "MIT",
     "support": {
-        "issues": "https://github.com/dektrium/yii2-user/issues?state=open",
-        "forum": "https://gitter.im/dektrium/yii2-user",
-        "source": "https://github.com/dektrium/yii2-user"
+        "issues": "https://github.com/ddmtechdev/yii2-user/issues?state=open",
+        "forum": "https://gitter.im/ddmtechdev/yii2-user",
+        "source": "https://github.com/ddmtechdev/yii2-user"
     },
     "authors": [
         {
@@ -31,11 +31,11 @@
     },
     "autoload": {
         "psr-4": {
-            "dektrium\\user\\": ""
+            "ddmtechdev\\user\\": ""
         }
     },
     "extra": {
-        "bootstrap": "dektrium\\user\\Bootstrap",
+        "bootstrap": "ddmtechdev\\user\\Bootstrap",
         "branch-alias": {
             "dev-master": "0.9.x-dev",
             "dev-develop": "1.0.x-dev"

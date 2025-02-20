@@ -10,7 +10,7 @@ To enable console commands, you need to add module into console config of you ap
         'id' => 'app-console',
         'modules' => [
             'user' => [
-                'class' => 'dektrium\user\Module',
+                'class' => 'ddmtechdev\user\Module',
             ],
         ],
         ...

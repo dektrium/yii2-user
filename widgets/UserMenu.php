@@ -1,15 +1,15 @@
 <?php
 
 /*
- * This file is part of the Dektrium project.
+ * This file is part of the DDMTechDev project.
  *
- * (c) Dektrium project <http://github.com/dektrium>
+ * (c) DDMTechDev project <http://github.com/ddmtechdev>
  *
  * For the full copyright and license information, please view the LICENSE.md
  * file that was distributed with this source code.
  */
 
-namespace dektrium\user\widgets;
+namespace ddmtechdev\user\widgets;
 
 use yii\widgets\Menu;
 use Yii;
@@ -21,7 +21,7 @@ use yii\base\Widget;
 class UserMenu extends Widget
 {
     
-    /** @array \dektrium\user\models\RegistrationForm */
+    /** @array \ddmtechdev\user\models\RegistrationForm */
     public $items;
     
     public function init()

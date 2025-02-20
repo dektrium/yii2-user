@@ -1,23 +1,23 @@
 <?php
 
 /*
- * This file is part of the Dektrium project.
+ * This file is part of the DDMTechDev project.
  *
- * (c) Dektrium project <http://github.com/dektrium/>
+ * (c) DDMTechDev project <http://github.com/ddmtechdev/>
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
 
-namespace dektrium\user\controllers;
+namespace ddmtechdev\user\controllers;
 
-use dektrium\user\Finder;
-use dektrium\user\models\Profile;
-use dektrium\user\models\SettingsForm;
-use dektrium\user\models\User;
-use dektrium\user\Module;
-use dektrium\user\traits\AjaxValidationTrait;
-use dektrium\user\traits\EventTrait;
+use ddmtechdev\user\Finder;
+use ddmtechdev\user\models\Profile;
+use ddmtechdev\user\models\SettingsForm;
+use ddmtechdev\user\models\User;
+use ddmtechdev\user\Module;
+use ddmtechdev\user\traits\AjaxValidationTrait;
+use ddmtechdev\user\traits\EventTrait;
 use yii\filters\AccessControl;
 use yii\filters\VerbFilter;
 use yii\web\Controller;
@@ -27,7 +27,7 @@ use yii\web\NotFoundHttpException;
 /**
  * SettingsController manages updating user settings (e.g. profile, email and password).
  *
- * @property \dektrium\user\Module $module
+ * @property \ddmtechdev\user\Module $module
  *
  * @author Dmitry Erofeev <dmeroff@gmail.com>
  */
@@ -38,61 +38,61 @@ class SettingsController extends Controller
 
     /**
      * Event is triggered before updating user's profile.
-     * Triggered with \dektrium\user\events\UserEvent.
+     * Triggered with \ddmtechdev\user\events\UserEvent.
      */
     const EVENT_BEFORE_PROFILE_UPDATE = 'beforeProfileUpdate';
 
     /**
      * Event is triggered after updating user's profile.
-     * Triggered with \dektrium\user\events\UserEvent.
+     * Triggered with \ddmtechdev\user\events\UserEvent.
      */
     const EVENT_AFTER_PROFILE_UPDATE = 'afterProfileUpdate';
 
     /**
      * Event is triggered before updating user's account settings.
-     * Triggered with \dektrium\user\events\FormEvent.
+     * Triggered with \ddmtechdev\user\events\FormEvent.
      */
     const EVENT_BEFORE_ACCOUNT_UPDATE = 'beforeAccountUpdate';
 
     /**
      * Event is triggered after updating user's account settings.
-     * Triggered with \dektrium\user\events\FormEvent.
+     * Triggered with \ddmtechdev\user\events\FormEvent.
      */
     const EVENT_AFTER_ACCOUNT_UPDATE = 'afterAccountUpdate';
 
     /**
      * Event is triggered before changing users' email address.
-     * Triggered with \dektrium\user\events\UserEvent.
+     * Triggered with \ddmtechdev\user\events\UserEvent.
      */
     const EVENT_BEFORE_CONFIRM = 'beforeConfirm';
 
     /**
      * Event is triggered after changing users' email address.
-     * Triggered with \dektrium\user\events\UserEvent.
+     * Triggered with \ddmtechdev\user\events\UserEvent.
      */
     const EVENT_AFTER_CONFIRM = 'afterConfirm';
 
     /**
      * Event is triggered before disconnecting social account from user.
-     * Triggered with \dektrium\user\events\ConnectEvent.
+     * Triggered with \ddmtechdev\user\events\ConnectEvent.
      */
     const EVENT_BEFORE_DISCONNECT = 'beforeDisconnect';
 
     /**
      * Event is triggered after disconnecting social account from user.
-     * Triggered with \dektrium\user\events\ConnectEvent.
+     * Triggered with \ddmtechdev\user\events\ConnectEvent.
      */
     const EVENT_AFTER_DISCONNECT = 'afterDisconnect';
 
     /**
      * Event is triggered before deleting user's account.
-     * Triggered with \dektrium\user\events\UserEvent.
+     * Triggered with \ddmtechdev\user\events\UserEvent.
      */
     const EVENT_BEFORE_DELETE = 'beforeDelete';
 
     /**
      * Event is triggered after deleting user's account.
-     * Triggered with \dektrium\user\events\UserEvent.
+     * Triggered with \ddmtechdev\user\events\UserEvent.
      */
     const EVENT_AFTER_DELETE = 'afterDelete';
 

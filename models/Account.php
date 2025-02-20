@@ -1,20 +1,20 @@
 <?php
 
 /*
- * This file is part of the Dektrium project.
+ * This file is part of the DDMTechDev project.
  *
- * (c) Dektrium project <http://github.com/dektrium/>
+ * (c) DDMTechDev project <http://github.com/ddmtechdev/>
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
 
-namespace dektrium\user\models;
+namespace ddmtechdev\user\models;
 
-use dektrium\user\clients\ClientInterface;
-use dektrium\user\Finder;
-use dektrium\user\models\query\AccountQuery;
-use dektrium\user\traits\ModuleTrait;
+use ddmtechdev\user\clients\ClientInterface;
+use ddmtechdev\user\Finder;
+use ddmtechdev\user\models\query\AccountQuery;
+use ddmtechdev\user\traits\ModuleTrait;
 use yii\authclient\ClientInterface as BaseClientInterface;
 use yii\db\ActiveRecord;
 use yii\helpers\Json;

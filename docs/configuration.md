@@ -57,7 +57,7 @@ If this option is to `true`, users will be able to completely delete their accou
 
 ---
 
-#### emailChangeStrategy (Type: `integer`, Default value: `\dektrium\user\Module::STRATEGY_DEFAULT`)
+#### emailChangeStrategy (Type: `integer`, Default value: `\ddmtechdev\user\Module::STRATEGY_DEFAULT`)
 
 When user tries change his password, there are three ways how this change will
 happen:
@@ -143,7 +143,7 @@ The configuration should be applied in your main configuration file:
 'modules' => [
     ...
     'user' => [
-        'class' => 'dektrium\user\Module',
+        'class' => 'ddmtechdev\user\Module',
         'enableUnconfirmedLogin' => true,
         'confirmWithin' => 21600,
         'cost' => 12,

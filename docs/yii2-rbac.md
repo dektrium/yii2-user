@@ -6,7 +6,7 @@ permissions to users.
 
 ## Installation
 
-Installation instructions are located in [Yii2-rbac repository](https://github.com/dektrium/yii2-rbac).
+Installation instructions are located in [Yii2-rbac repository](https://github.com/ddmtechdev/yii2-rbac).
 
 ## Usage
 

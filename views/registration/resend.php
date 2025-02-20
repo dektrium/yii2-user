@@ -1,9 +1,9 @@
 <?php
 
 /*
- * This file is part of the Dektrium project.
+ * This file is part of the DDMTechDev project.
  *
- * (c) Dektrium project <http://github.com/dektrium>
+ * (c) DDMTechDev project <http://github.com/ddmtechdev>
  *
  * For the full copyright and license information, please view the LICENSE.md
  * file that was distributed with this source code.
@@ -14,7 +14,7 @@ use yii\widgets\ActiveForm;
 
 /**
  * @var yii\web\View $this
- * @var dektrium\user\models\ResendForm $model
+ * @var ddmtechdev\user\models\ResendForm $model
  */
 
 $this->title = Yii::t('user', 'Request new confirmation message');

@@ -1,15 +1,15 @@
 <?php
 
 /*
- * This file is part of the Dektrium project.
+ * This file is part of the DDMTechDev project.
  *
- * (c) Dektrium project <http://github.com/dektrium/>
+ * (c) DDMTechDev project <http://github.com/ddmtechdev/>
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
 
-namespace dektrium\user;
+namespace ddmtechdev\user;
 
 use Yii;
 use yii\authclient\Collection;
@@ -27,16 +27,16 @@ class Bootstrap implements BootstrapInterface
 {
     /** @var array Model's map */
     private $_modelMap = [
-        'User'             => 'dektrium\user\models\User',
-        'Account'          => 'dektrium\user\models\Account',
-        'Profile'          => 'dektrium\user\models\Profile',
-        'Token'            => 'dektrium\user\models\Token',
-        'RegistrationForm' => 'dektrium\user\models\RegistrationForm',
-        'ResendForm'       => 'dektrium\user\models\ResendForm',
-        'LoginForm'        => 'dektrium\user\models\LoginForm',
-        'SettingsForm'     => 'dektrium\user\models\SettingsForm',
-        'RecoveryForm'     => 'dektrium\user\models\RecoveryForm',
-        'UserSearch'       => 'dektrium\user\models\UserSearch',
+        'User'             => 'ddmtechdev\user\models\User',
+        'Account'          => 'ddmtechdev\user\models\Account',
+        'Profile'          => 'ddmtechdev\user\models\Profile',
+        'Token'            => 'ddmtechdev\user\models\Token',
+        'RegistrationForm' => 'ddmtechdev\user\models\RegistrationForm',
+        'ResendForm'       => 'ddmtechdev\user\models\ResendForm',
+        'LoginForm'        => 'ddmtechdev\user\models\LoginForm',
+        'SettingsForm'     => 'ddmtechdev\user\models\SettingsForm',
+        'RecoveryForm'     => 'ddmtechdev\user\models\RecoveryForm',
+        'UserSearch'       => 'ddmtechdev\user\models\UserSearch',
     ];
 
     /** @inheritdoc */
@@ -47,7 +47,7 @@ class Bootstrap implements BootstrapInterface
         if ($app->hasModule('user') && ($module = $app->getModule('user')) instanceof Module) {
             $this->_modelMap = array_merge($this->_modelMap, $module->modelMap);
             foreach ($this->_modelMap as $name => $definition) {
-                $class = "dektrium\\user\\models\\" . $name;
+                $class = "ddmtechdev\\user\\models\\" . $name;
                 Yii::$container->set($class, $definition);
                 $modelName = is_array($definition) ? $definition['class'] : $definition;
                 $module->modelMap[$name] = $modelName;
@@ -66,7 +66,7 @@ class Bootstrap implements BootstrapInterface
             ]);
 
             if ($app instanceof ConsoleApplication) {
-                $module->controllerNamespace = 'dektrium\user\commands';
+                $module->controllerNamespace = 'ddmtechdev\user\commands';
             } else {
                 Yii::$container->set('yii\web\User', [
                     'enableAutoLogin' => true,
@@ -103,7 +103,7 @@ class Bootstrap implements BootstrapInterface
                 ];
             }
 
-            Yii::$container->set('dektrium\user\Mailer', $module->mailer);
+            Yii::$container->set('ddmtechdev\user\Mailer', $module->mailer);
 
             $module->debug = $this->ensureCorrectDebugSetting();
         }

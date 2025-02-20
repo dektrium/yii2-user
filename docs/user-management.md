@@ -11,7 +11,7 @@ To start using user management interface you have to add your username to admini
 'modules' => [
     ...
     'user' => [
-        'class'  => 'dektrium\user\Module',
+        'class'  => 'ddmtechdev\user\Module',
         'admins' => ['your-username-goes-here']
     ],
     ...
@@ -47,7 +47,7 @@ Route **/user/admin/switch** becomes an user for the current session. You need t
 feature. Place something like this in your view file to allow to jump back when being impersonated as another person:
 
 ```
-if (Yii::$app->session->has(\dektrium\user\controllers\AdminController::ORIGINAL_USER_SESSION_KEY))
+if (Yii::$app->session->has(\ddmtechdev\user\controllers\AdminController::ORIGINAL_USER_SESSION_KEY))
     echo Html::a(
     '<span class="glyphicon glyphicon-user"></span> ' . Yii::t('main', 'Back to original user'),
      ['/user/admin/switch'], ['class' => 'btn btn-primary', 'data-method' => 'POST']);
@@ -59,7 +59,7 @@ or
 echo Nav::widget([
     'options' => ['class' => 'navbar-nav navbar-right'],
     'items' => [
-        Yii::$app->session->has(\dektrium\user\controllers\AdminController::ORIGINAL_USER_SESSION_KEY) ?
+        Yii::$app->session->has(\ddmtechdev\user\controllers\AdminController::ORIGINAL_USER_SESSION_KEY) ?
         '<li>' . Html::beginForm(['/user/admin/switch'], 'post', ['class' => 'navbar-form'])
             . Html::submitButton('<span class="glyphicon glyphicon-user"></span> ' . Yii::t('user', 'Back to original user'),
                 ['class' => 'btn btn-link']
@@ -72,7 +72,7 @@ You can declare module options 'adminPermission'. Access to action `switch` must
 ```
     'modules' => [
         'user' => [
-            'class' => 'dektrium\user\Module',
+            'class' => 'ddmtechdev\user\Module',
             'adminPermission' => 'administrateUser',
         ],
     ],
@@ -82,7 +82,7 @@ You can declare module options 'adminPermission'. Access to action `switch` must
         'user' => [
             'controllerMap' => [
                 'admin' => [
-                    'class' => 'dektrium\user\controllers\AdminController',
+                    'class' => 'ddmtechdev\user\controllers\AdminController',
                     'as access' => [
                         'class' => 'yii\filters\AccessControl',
                         'rules' => [
@@ -113,7 +113,7 @@ Sometimes you will need to have different layouts for frontend and backend pages
 'modules' => [
     ...
     'user' => [
-        'class' => 'dektrium\user\Module',
+        'class' => 'ddmtechdev\user\Module',
         'controllerMap' => [
             'admin' => [
                 'class'  => 'app\controllers\user\AdminController',

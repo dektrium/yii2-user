@@ -1,4 +1,4 @@
-# [ABANDONED] Yii2-user [![Build Status](https://img.shields.io/travis/dektrium/yii2-user/master.svg?style=flat-square)](https://travis-ci.org/dektrium/yii2-user) [![Packagist Version](https://img.shields.io/packagist/v/dektrium/yii2-user.svg?style=flat-square)](https://packagist.org/packages/dektrium/yii2-user) [![Total Downloads](https://img.shields.io/packagist/dt/dektrium/yii2-user.svg?style=flat-square)](https://packagist.org/packages/dektrium/yii2-user) [![Software License](https://img.shields.io/badge/license-MIT-brightgreen.svg?style=flat-square)](LICENSE.md)
+# [ABANDONED] Yii2-user [![Build Status](https://img.shields.io/travis/ddmtechdev/yii2-user/master.svg?style=flat-square)](https://travis-ci.org/ddmtechdev/yii2-user) [![Packagist Version](https://img.shields.io/packagist/v/ddmtechdev/yii2-user.svg?style=flat-square)](https://packagist.org/packages/ddmtechdev/yii2-user) [![Total Downloads](https://img.shields.io/packagist/dt/ddmtechdev/yii2-user.svg?style=flat-square)](https://packagist.org/packages/ddmtechdev/yii2-user) [![Software License](https://img.shields.io/badge/license-MIT-brightgreen.svg?style=flat-square)](LICENSE.md)
 
 ATTENTION: THIS PROJECT HAS BEEN ABANDONED!!!
 --------------------------------------------
@@ -23,7 +23,7 @@ The latest version includes following features:
 
 [Read the Documentation for master](docs/README.md)
 
-[Read the Documentation for v0.9.12](https://github.com/dektrium/yii2-user/blob/0.9.12/docs/README.md)
+[Read the Documentation for v0.9.12](https://github.com/ddmtechdev/yii2-user/blob/0.9.12/docs/README.md)
 
 ## Installation
 
@@ -31,7 +31,7 @@ All installation instructions are located in documentation.
 
 ## Support
 
-If you have any questions or problems with Yii2-user you can ask them on [our forum](http://dektrium.com).
+If you have any questions or problems with Yii2-user you can ask them on [our forum](http://ddmtechdev.com).
 
 ## Contributing to this project
 

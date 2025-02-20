@@ -9,7 +9,7 @@ patches and features.
 
 ## Do you have a question or problem with using Yii2-user?
 
-Ask any question about how to use Yii2-user on [our forum](http://dektrium.com).
+Ask any question about how to use Yii2-user on [our forum](http://ddmtechdev.com).
 
 ## Did you find a security issue?
 
@@ -25,7 +25,7 @@ address: `dmeroff@gmail.com`.
  
 ## Do you intend to add a new feature or change an existing one?
 
-- Suggest your change on [our forum](http://dektrium.com) and start writing code.
+- Suggest your change on [our forum](http://ddmtechdev.com) and start writing code.
 - Do not open an issue on GitHub until you have collected positive feedback about the change. GitHub issues are
  primarily intended for bug reports and fixes.
 

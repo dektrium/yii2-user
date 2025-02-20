@@ -37,7 +37,7 @@ should set them via `modelMap` module's property.
 ```php
 'modules' => [
     'user' => [
-        'class' => 'dektrium\user\Module',
+        'class' => 'ddmtechdev\user\Module',
         'components' => [
             'manager' => [
                 'User' => 'your\model\User',
@@ -54,7 +54,7 @@ should set them via `modelMap` module's property.
 ```php
 'modules' => [
     'user' => [
-        'class' => 'dektrium\user\Module',
+        'class' => 'ddmtechdev\user\Module',
         'modelMap' => [
             'User' => 'your\model\User',
             'Profile' => 'your\model\Profile',
@@ -72,7 +72,7 @@ module property. You can read more about mailer configuration [here](docs/mailer
 ```php
 'modules' => [
     'user' => [
-        'class' => 'dektrium\user\Module',
+        'class' => 'ddmtechdev\user\Module',
         'components' => [
             'mailer' => [
                 'sender' => 'noreply@myhost.com',
@@ -87,7 +87,7 @@ module property. You can read more about mailer configuration [here](docs/mailer
 ```php
 'modules' => [
     'user' => [
-        'class' => 'dektrium\user\Module',
+        'class' => 'ddmtechdev\user\Module',
         'mailer' => [
             'sender' => 'noreply@myhost.com',
         ],

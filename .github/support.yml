@@ -10,7 +10,7 @@ supportComment: >
 
   Only PRs are being evaluated (there is no deadline for evaluation).
 
-  Read more here: https://github.com/dektrium/yii2-user/issues/903
+  Read more here: https://github.com/ddmtechdev/yii2-user/issues/903
 
 # Close issues marked as support requests
 close: true

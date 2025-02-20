@@ -1,17 +1,17 @@
 <?php
 
 /*
- * This file is part of the Dektrium project.
+ * This file is part of the DDMTechDev project.
  *
- * (c) Dektrium project <http://github.com/dektrium/>
+ * (c) DDMTechDev project <http://github.com/ddmtechdev/>
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
 
-namespace dektrium\user\models;
+namespace ddmtechdev\user\models;
 
-use dektrium\user\traits\ModuleTrait;
+use ddmtechdev\user\traits\ModuleTrait;
 use yii\db\ActiveRecord;
 
 /**
@@ -33,7 +33,7 @@ use yii\db\ActiveRecord;
 class Profile extends ActiveRecord
 {
     use ModuleTrait;
-    /** @var \dektrium\user\Module */
+    /** @var \ddmtechdev\user\Module */
     protected $module;
 
     /** @inheritdoc */

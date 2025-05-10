@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 /*
  * This file is part of the Dektrium project.
@@ -9,10 +10,12 @@
  * file that was distributed with this source code.
  */
 
-namespace dektrium\user\models;
+namespace AlexeiKaDev\Yii2User\models;
 
-use dektrium\user\Finder;
-use dektrium\user\Mailer;
+use AlexeiKaDev\Yii2User\Finder;
+use AlexeiKaDev\Yii2User\Mailer;
+use AlexeiKaDev\Yii2User\models\enums\TokenType;
+use Yii;
 use yii\base\Model;
 
 /**
@@ -23,27 +26,19 @@ use yii\base\Model;
  */
 class ResendForm extends Model
 {
-    /**
-     * @var string
-     */
-    public $email;
+    /** @var string User's email address. */
+    public ?string $email = null;
+
+    protected Mailer $mailer;
+    protected Finder $finder;
 
     /**
-     * @var Mailer
-     */
-    protected $mailer;
-
-    /**
-     * @var Finder
-     */
-    protected $finder;
-
-    /**
+     * ResendForm constructor.
      * @param Mailer $mailer
      * @param Finder $finder
      * @param array  $config
      */
-    public function __construct(Mailer $mailer, Finder $finder, $config = [])
+    public function __construct(Mailer $mailer, Finder $finder, array $config = [])
     {
         $this->mailer = $mailer;
         $this->finder = $finder;
@@ -53,7 +48,7 @@ class ResendForm extends Model
     /**
      * @inheritdoc
      */
-    public function rules()
+    public function rules(): array
     {
         return [
             'emailRequired' => ['email', 'required'],
@@ -64,17 +59,17 @@ class ResendForm extends Model
     /**
      * @inheritdoc
      */
-    public function attributeLabels()
+    public function attributeLabels(): array
     {
         return [
-            'email' => \Yii::t('user', 'Email'),
+            'email' => Yii::t('user', 'Email'),
         ];
     }
 
     /**
      * @inheritdoc
      */
-    public function formName()
+    public function formName(): string
     {
         return 'resend-form';
     }
@@ -84,28 +79,28 @@ class ResendForm extends Model
      *
      * @return bool
      */
-    public function resend()
+    public function resend(): bool
     {
         if (!$this->validate()) {
             return false;
         }
 
-        $user = $this->finder->findUserByEmail($this->email);
+        $user = $this->finder->findUserByEmail((string)$this->email);
 
         if ($user instanceof User && !$user->isConfirmed) {
             /** @var Token $token */
-            $token = \Yii::createObject([
-                'class' => Token::className(),
+            $token = Yii::createObject([
+                'class' => Token::class,
                 'user_id' => $user->id,
-                'type' => Token::TYPE_CONFIRMATION,
+                'type' => TokenType::CONFIRMATION,
             ]);
             $token->save(false);
             $this->mailer->sendConfirmationMessage($user, $token);
         }
 
-        \Yii::$app->session->setFlash(
+        Yii::$app->session->setFlash(
             'info',
-            \Yii::t(
+            Yii::t(
                 'user',
                 'A message has been sent to your email address. It contains a confirmation link that you must click to complete registration.'
             )

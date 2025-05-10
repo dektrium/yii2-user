@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Message translations.
  *
@@ -16,7 +17,7 @@
  *
  * NOTE: this file must be saved in UTF-8 encoding.
  */
-return array (
+return  [
   '#' => '',
   '(not set)' => '',
   'A confirmation message has been sent to your new email address' => '',
@@ -188,4 +189,4 @@ return array (
   'Your password on {0} has been changed' => '',
   'Your profile has been updated' => '',
   '{0, date, MMMM dd, YYYY HH:mm}' => '',
-);
+];

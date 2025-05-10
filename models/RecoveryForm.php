@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of the Dektrium project.
  *
@@ -9,10 +11,12 @@
  * file that was distributed with this source code.
  */
 
-namespace dektrium\user\models;
+namespace AlexeiKaDev\Yii2User\models;
 
-use dektrium\user\Finder;
-use dektrium\user\Mailer;
+use AlexeiKaDev\Yii2User\Finder;
+use AlexeiKaDev\Yii2User\models\enums\TokenType;
+use AlexeiKaDev\Yii2User\services\PasswordRecoveryService;
+use Yii;
 use yii\base\Model;
 
 /**
@@ -22,56 +26,55 @@ use yii\base\Model;
  */
 class RecoveryForm extends Model
 {
-    const SCENARIO_REQUEST = 'request';
-    const SCENARIO_RESET = 'reset';
+    public const SCENARIO_REQUEST = 'request';
+
+    public const SCENARIO_RESET = 'reset';
 
     /**
-     * @var string
+     * @var string|null
      */
-    public $email;
+    public ?string $email = null;
 
     /**
-     * @var string
+     * @var string|null
      */
-    public $password;
+    public ?string $password = null;
+
+    /** @var Finder The user finder instance. */
+    protected Finder $finder;
+    /** @var PasswordRecoveryService The password recovery service instance. */
+    protected PasswordRecoveryService $passwordRecoveryService;
 
     /**
-     * @var Mailer
+     * @param Finder $finder The user finder instance.
+     * @param PasswordRecoveryService $passwordRecoveryService The password recovery service instance.
+     * @param array  $config Name-value pairs that will be used to initialize the object properties.
      */
-    protected $mailer;
-
-    /**
-     * @var Finder
-     */
-    protected $finder;
-
-    /**
-     * @param Mailer $mailer
-     * @param Finder $finder
-     * @param array  $config
-     */
-    public function __construct(Mailer $mailer, Finder $finder, $config = [])
-    {
-        $this->mailer = $mailer;
+    public function __construct(
+        Finder $finder,
+        PasswordRecoveryService $passwordRecoveryService,
+        array $config = []
+    ) {
         $this->finder = $finder;
+        $this->passwordRecoveryService = $passwordRecoveryService;
         parent::__construct($config);
     }
 
     /**
      * @inheritdoc
      */
-    public function attributeLabels()
+    public function attributeLabels(): array
     {
         return [
-            'email'    => \Yii::t('user', 'Email'),
-            'password' => \Yii::t('user', 'Password'),
+            'email' => Yii::t('user', 'Email'),
+            'password' => Yii::t('user', 'Password'),
         ];
     }
 
     /**
      * @inheritdoc
      */
-    public function scenarios()
+    public function scenarios(): array
     {
         return [
             self::SCENARIO_REQUEST => ['email'],
@@ -82,7 +85,7 @@ class RecoveryForm extends Model
     /**
      * @inheritdoc
      */
-    public function rules()
+    public function rules(): array
     {
         return [
             'emailTrim' => ['email', 'trim'],
@@ -98,37 +101,30 @@ class RecoveryForm extends Model
      *
      * @return bool
      */
-    public function sendRecoveryMessage()
+    public function sendRecoveryMessage(): bool
     {
         if (!$this->validate()) {
             return false;
         }
 
-        $user = $this->finder->findUserByEmail($this->email);
+        $user = $this->finder->findUserByEmail((string)$this->email);
 
         if ($user instanceof User) {
-            /** @var Token $token */
-            $token = \Yii::createObject([
-                'class' => Token::className(),
-                'user_id' => $user->id,
-                'type' => Token::TYPE_RECOVERY,
-            ]);
-
-            if (!$token->save(false)) {
-                return false;
-            }
-
-            if (!$this->mailer->sendRecoveryMessage($user, $token)) {
-                return false;
-            }
+            // Delegate to PasswordRecoveryService
+            // The service handles token creation, saving, and sending the message.
+            // It also sets flash messages.
+            return $this->passwordRecoveryService->request($user);
+        } else {
+            // User not found, set a generic flash message like the service would for other errors.
+            // Or, let the controller handle this if user not found is a specific case for the form.
+            // For now, mimic the original behavior of setting a generic success/info message.
+             Yii::$app->session->setFlash(
+                'info',
+                Yii::t('user', 'If an account matching your email exists, then an email has been sent with instructions for resetting your password.')
+            );
+            // Return true because we don't want to leak whether an email exists or not (security through obscurity)
+            return true;
         }
-
-        \Yii::$app->session->setFlash(
-            'info',
-            \Yii::t('user', 'An email has been sent with instructions for resetting your password')
-        );
-
-        return true;
     }
 
     /**
@@ -138,29 +134,20 @@ class RecoveryForm extends Model
      *
      * @return bool
      */
-    public function resetPassword(Token $token)
+    public function resetPassword(Token $token): bool
     {
         if (!$this->validate() || $token->user === null) {
             return false;
         }
 
-        if ($token->user->resetPassword($this->password)) {
-            \Yii::$app->session->setFlash('success', \Yii::t('user', 'Your password has been changed successfully.'));
-            $token->delete();
-        } else {
-            \Yii::$app->session->setFlash(
-                'danger',
-                \Yii::t('user', 'An error occurred and your password has not been changed. Please try again later.')
-            );
-        }
-
-        return true;
+        // Delegate to PasswordRecoveryService
+        return $this->passwordRecoveryService->reset($token->user, $token->code, (string)$this->password);
     }
 
     /**
      * @inheritdoc
      */
-    public function formName()
+    public function formName(): string
     {
         return 'recovery-form';
     }

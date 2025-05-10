@@ -15,14 +15,15 @@ class RegistrationPage extends BasePage
     public $route = '/user/registration/register';
 
     /**
-     * @param $username
-     * @param $email
-     * @param $password
+     * @param string $email
+     * @param string|null $username
+     * @param string|null $password
      */
-    public function register($email, $username = null, $password = null)
+    public function register(string $email, ?string $username = null, ?string $password = null): void
     {
         $this->actor->fillField('#register-form-email', $email);
         $this->actor->fillField('#register-form-username', $username);
+
         if ($password !== null) {
             $this->actor->fillField('#register-form-password', $password);
         }

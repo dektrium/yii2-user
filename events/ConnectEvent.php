@@ -9,10 +9,10 @@
  * file that was distributed with this source code.
  */
 
-namespace dektrium\user\events;
+namespace AlexeiKaDev\Yii2User\events;
 
-use dektrium\user\models\User;
-use dektrium\user\models\Account;
+use AlexeiKaDev\Yii2User\models\Account;
+use AlexeiKaDev\Yii2User\models\User;
 use yii\base\Event;
 
 /**
@@ -25,17 +25,17 @@ class ConnectEvent extends Event
     /**
      * @var User
      */
-    private $_user;
+    private User $_user;
 
     /**
      * @var Account
      */
-    private $_account;
+    private Account $_account;
 
     /**
      * @return Account
      */
-    public function getAccount()
+    public function getAccount(): Account
     {
         return $this->_account;
     }
@@ -43,7 +43,7 @@ class ConnectEvent extends Event
     /**
      * @param Account $account
      */
-    public function setAccount(Account $account)
+    public function setAccount(Account $account): void
     {
         $this->_account = $account;
     }
@@ -51,15 +51,15 @@ class ConnectEvent extends Event
     /**
      * @return User
      */
-    public function getUser()
+    public function getUser(): User
     {
         return $this->_user;
     }
 
     /**
-     * @param User $form
+     * @param User $user
      */
-    public function setUser(User $user)
+    public function setUser(User $user): void
     {
         $this->_user = $user;
     }

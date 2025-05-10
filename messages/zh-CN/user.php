@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Message translations.
  *
@@ -16,7 +17,7 @@
  *
  * NOTE: this file must be saved in UTF-8 encoding.
  */
-return array (
+return  [
   '#' => '',
   'Are you sure? There is no going back' => '',
   'Delete account' => '',
@@ -188,4 +189,4 @@ return array (
   'Your password on {0} has been changed' => '您的 {0} 密码已更改',
   'Your profile has been updated' => '属性信息设置已被成功保存',
   '{0, date, MMMM dd, YYYY HH:mm}' => '{0, date, YYYY年MM月dd日 HH:mm}',
-);
+];

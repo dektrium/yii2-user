@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of the Dektrium project.
  *
@@ -9,43 +11,46 @@
  * file that was distributed with this source code.
  */
 
-namespace dektrium\user\controllers;
+namespace AlexeiKaDev\Yii2User\controllers;
 
-use dektrium\user\Finder;
+use AlexeiKaDev\Yii2User\Finder;
+use AlexeiKaDev\Yii2User\Module;
+use Yii;
 use yii\filters\AccessControl;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
+use yii\web\Response;
 
 /**
  * ProfileController shows users profiles.
  *
- * @property \dektrium\user\Module $module
+ * @property \AlexeiKaDev\Yii2User\Module $module
  *
  * @author Dmitry Erofeev <dmeroff@gmail.com>
  */
 class ProfileController extends Controller
 {
     /** @var Finder */
-    protected $finder;
+    protected Finder $finder;
 
     /**
      * @param string           $id
-     * @param \yii\base\Module $module
+     * @param Module $module
      * @param Finder           $finder
      * @param array            $config
      */
-    public function __construct($id, $module, Finder $finder, $config = [])
+    public function __construct(string $id, Module $module, Finder $finder, array $config = [])
     {
         $this->finder = $finder;
         parent::__construct($id, $module, $config);
     }
 
     /** @inheritdoc */
-    public function behaviors()
+    public function behaviors(): array
     {
         return [
             'access' => [
-                'class' => AccessControl::className(),
+                'class' => AccessControl::class,
                 'rules' => [
                     ['allow' => true, 'actions' => ['index'], 'roles' => ['@']],
                     ['allow' => true, 'actions' => ['show'], 'roles' => ['?', '@']],
@@ -59,9 +64,9 @@ class ProfileController extends Controller
      *
      * @return \yii\web\Response
      */
-    public function actionIndex()
+    public function actionIndex(): Response
     {
-        return $this->redirect(['show', 'id' => \Yii::$app->user->getId()]);
+        return $this->redirect(['show', 'id' => Yii::$app->user->getId()]);
     }
 
     /**
@@ -69,10 +74,10 @@ class ProfileController extends Controller
      *
      * @param int $id
      *
-     * @return \yii\web\Response
+     * @return string|Response
      * @throws \yii\web\NotFoundHttpException
      */
-    public function actionShow($id)
+    public function actionShow(int $id): string|Response
     {
         $profile = $this->finder->findProfileById($id);
 

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of the Dektrium project.
  *
@@ -9,9 +11,10 @@
  * file that was distributed with this source code.
  */
 
-namespace dektrium\user\commands;
+namespace AlexeiKaDev\Yii2User\commands;
 
-use dektrium\user\Finder;
+use AlexeiKaDev\Yii2User\Finder;
+use AlexeiKaDev\Yii2User\Module;
 use Yii;
 use yii\console\Controller;
 use yii\helpers\Console;
@@ -19,22 +22,21 @@ use yii\helpers\Console;
 /**
  * Updates user's password.
  *
- * @property \dektrium\user\Module $module
+ * @property \AlexeiKaDev\Yii2User\Module $module
  *
  * @author Dmitry Erofeev <dmeroff@gmail.com>
  */
 class PasswordController extends Controller
 {
-    /** @var Finder */
-    protected $finder;
+    protected Finder $finder;
 
     /**
      * @param string           $id
-     * @param \yii\base\Module $module
+     * @param Module $module
      * @param Finder           $finder
      * @param array            $config
      */
-    public function __construct($id, $module, Finder $finder, $config = [])
+    public function __construct(string $id, Module $module, Finder $finder, array $config = [])
     {
         $this->finder = $finder;
         parent::__construct($id, $module, $config);
@@ -46,9 +48,10 @@ class PasswordController extends Controller
      * @param string $search   Email or username
      * @param string $password New password
      */
-    public function actionIndex($search, $password)
+    public function actionIndex(string $search, string $password): void
     {
         $user = $this->finder->findUserByUsernameOrEmail($search);
+
         if ($user === null) {
             $this->stdout(Yii::t('user', 'User is not found') . "\n", Console::FG_RED);
         } else {

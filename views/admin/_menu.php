@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 /*
  * This file is part of the Dektrium project
@@ -9,14 +10,13 @@
  * file that was distributed with this source code.
  */
 
-use yii\bootstrap\Nav;
+use yii\bootstrap5\Nav;
 
 ?>
 
 <?= Nav::widget([
     'options' => [
-        'class' => 'nav-tabs',
-        'style' => 'margin-bottom: 15px',
+        'class' => 'nav-tabs mb-3',
     ],
     'items' => [
         [
@@ -35,7 +35,7 @@ use yii\bootstrap\Nav;
         ],
         [
             'label' => \Yii::t('user', 'Rules'),
-            'url'   => ['/rbac/rule/index'],
+            'url' => ['/rbac/rule/index'],
             'visible' => isset(Yii::$app->extensions['dektrium/yii2-rbac']),
         ],
         [
@@ -57,7 +57,7 @@ use yii\bootstrap\Nav;
                 ],
                 [
                     'label' => \Yii::t('user', 'New rule'),
-                    'url'   => ['/rbac/rule/create'],
+                    'url' => ['/rbac/rule/create'],
                     'visible' => isset(Yii::$app->extensions['dektrium/yii2-rbac']),
                 ]
             ],

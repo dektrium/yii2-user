@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of the Dektrium project
  *
@@ -9,7 +11,7 @@
  * file that was distributed with this source code.
  */
 
-namespace dektrium\user\filters;
+namespace AlexeiKaDev\Yii2User\filters;
 
 use yii\base\ActionFilter;
 use yii\web\NotFoundHttpException;

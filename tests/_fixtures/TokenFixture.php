@@ -6,7 +6,7 @@ use yii\test\ActiveFixture;
 
 class TokenFixture extends ActiveFixture
 {
-    public $modelClass = 'dektrium\user\models\Token';
+    public $modelClass = 'AlexeiKaDev\Yii2User\models\Token';
 
     public $depends = [
         'tests\_fixtures\UserFixture'

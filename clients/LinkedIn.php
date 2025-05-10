@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of the Dektrium project
+ * This file is part of the Dektrium project.
  *
  * (c) Dektrium project <http://github.com/dektrium>
  *
@@ -9,7 +9,7 @@
  * file that was distributed with this source code.
  */
 
-namespace dektrium\user\clients;
+namespace AlexeiKaDev\Yii2User\clients;
 
 use yii\authclient\clients\LinkedIn as BaseLinkedIn;
 
@@ -19,7 +19,7 @@ use yii\authclient\clients\LinkedIn as BaseLinkedIn;
 class LinkedIn extends BaseLinkedIn implements ClientInterface
 {
     /** @inheritdoc */
-    public function getEmail()
+    public function getEmail(): ?string
     {
         return isset($this->getUserAttributes()['email-address'])
             ? $this->getUserAttributes()['email-address']
@@ -27,8 +27,8 @@ class LinkedIn extends BaseLinkedIn implements ClientInterface
     }
 
     /** @inheritdoc */
-    public function getUsername()
+    public function getUsername(): ?string
     {
-        return;
+        return null;
     }
 }

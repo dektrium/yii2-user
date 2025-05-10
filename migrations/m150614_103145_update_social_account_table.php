@@ -1,11 +1,13 @@
 <?php
 
+declare(strict_types=1);
+
+use AlexeiKaDev\Yii2User\migrations\Migration;
 use yii\db\Query;
-use dektrium\user\migrations\Migration;
 
 class m150614_103145_update_social_account_table extends Migration
 {
-    public function up()
+    public function up(): void
     {
         $this->addColumn('{{%social_account}}', 'code', $this->string(32)->null());
         $this->addColumn('{{%social_account}}', 'created_at', $this->integer()->null());
@@ -16,6 +18,7 @@ class m150614_103145_update_social_account_table extends Migration
         $accounts = (new Query())->from('{{%social_account}}')->select('id')->all($this->db);
 
         $transaction = $this->db->beginTransaction();
+
         try {
             foreach ($accounts as $account) {
                 $this->db->createCommand()->update('{{%social_account}}', [
@@ -25,11 +28,12 @@ class m150614_103145_update_social_account_table extends Migration
             $transaction->commit();
         } catch (Exception $e) {
             $transaction->rollBack();
+
             throw $e;
         }
     }
 
-    public function down()
+    public function down(): void
     {
         $this->dropIndex('{{%account_unique_code}}', '{{%social_account}}');
         $this->dropColumn('{{%social_account}}', 'email');

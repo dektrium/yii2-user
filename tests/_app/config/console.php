@@ -1,15 +1,16 @@
 <?php
 
 return [
-    'id' => 'yii2-test-console',
+    'id' => 'yii2-user-tests-console',
     'basePath' => dirname(__DIR__),
     'aliases' => [
-        '@dektrium/user' => dirname(dirname(dirname(__DIR__))),
+        '@AlexeiKaDev/Yii2User' => dirname(dirname(dirname(__DIR__))),
         '@tests' => dirname(dirname(__DIR__)),
+        '@vendor' => VENDOR_DIR,
     ],
     'components' => [
-        'log'   => null,
+        'log' => null,
         'cache' => null,
-        'db'    => require __DIR__ . '/db.php',
+        'db' => require __DIR__ . '/db.php',
     ],
 ];

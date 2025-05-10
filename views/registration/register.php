@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 /*
  * This file is part of the Dektrium project.
@@ -14,20 +15,20 @@ use yii\widgets\ActiveForm;
 
 /**
  * @var yii\web\View $this
- * @var dektrium\user\models\User $model
- * @var dektrium\user\Module $module
+ * @var AlexeiKaDev\Yii2User\models\RegistrationForm $model
+ * @var AlexeiKaDev\Yii2User\Module $module
  */
 
 $this->title = Yii::t('user', 'Sign up');
 $this->params['breadcrumbs'][] = $this->title;
 ?>
-<div class="row">
-    <div class="col-md-4 col-md-offset-4 col-sm-6 col-sm-offset-3">
-        <div class="panel panel-default">
-            <div class="panel-heading">
-                <h3 class="panel-title"><?= Html::encode($this->title) ?></h3>
+<div class="row justify-content-center">
+    <div class="col-md-4 col-sm-6">
+        <div class="card">
+            <div class="card-header">
+                <h3 class="card-title"><?= Html::encode($this->title) ?></h3>
             </div>
-            <div class="panel-body">
+            <div class="card-body">
                 <?php $form = ActiveForm::begin([
                     'id' => 'registration-form',
                     'enableAjaxValidation' => true,
@@ -42,12 +43,12 @@ $this->params['breadcrumbs'][] = $this->title;
                     <?= $form->field($model, 'password')->passwordInput() ?>
                 <?php endif ?>
 
-                <?= Html::submitButton(Yii::t('user', 'Sign up'), ['class' => 'btn btn-success btn-block']) ?>
+                <?= Html::submitButton(Yii::t('user', 'Sign up'), ['class' => 'btn btn-success w-100']) ?>
 
                 <?php ActiveForm::end(); ?>
             </div>
         </div>
-        <p class="text-center">
+        <p class="text-center mt-3">
             <?= Html::a(Yii::t('user', 'Already registered? Sign in!'), ['/user/security/login']) ?>
         </p>
     </div>

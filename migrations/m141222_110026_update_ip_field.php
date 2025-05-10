@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of the Dektrium project.
  *
@@ -9,18 +11,23 @@
  * file that was distributed with this source code.
  */
 
-use dektrium\user\migrations\Migration;
+use AlexeiKaDev\Yii2User\migrations\Migration;
 use yii\db\Query;
 
+/**
+ * @author Dmitry Erofeev <dmeroff@gmail.com>
+ */
 class m141222_110026_update_ip_field extends Migration
 {
-    public function up()
+    public function up(): void
     {
         $users = (new Query())->from('{{%user}}')->select('id, registration_ip ip')->all($this->db);
 
         $transaction = $this->db->beginTransaction();
+
         try {
             $this->alterColumn('{{%user}}', 'registration_ip', $this->string(45));
+
             foreach ($users as $user) {
                 if ($user['ip'] == null) {
                     continue;
@@ -32,15 +39,17 @@ class m141222_110026_update_ip_field extends Migration
             $transaction->commit();
         } catch (Exception $e) {
             $transaction->rollBack();
+
             throw $e;
         }
     }
 
-    public function down()
+    public function down(): void
     {
         $users = (new Query())->from('{{%user}}')->select('id, registration_ip ip')->all($this->db);
 
         $transaction = $this->db->beginTransaction();
+
         try {
             foreach ($users as $user) {
                 if ($user['ip'] == null) {
@@ -50,6 +59,7 @@ class m141222_110026_update_ip_field extends Migration
                     'registration_ip' => ip2long($user['ip'])
                 ], 'id = ' . $user['id'])->execute();
             }
+
             if ($this->dbType == 'pgsql') {
                 $this->alterColumn('{{%user}}', 'registration_ip', $this->bigInteger() . ' USING registration_ip::bigint');
             } else {
@@ -59,6 +69,7 @@ class m141222_110026_update_ip_field extends Migration
             $transaction->commit();
         } catch (Exception $e) {
             $transaction->rollBack();
+
             throw $e;
         }
     }

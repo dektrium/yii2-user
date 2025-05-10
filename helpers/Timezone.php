@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of the Dektrium project.
  *
@@ -9,7 +11,11 @@
  * file that was distributed with this source code.
  */
 
-namespace dektrium\user\helpers;
+namespace AlexeiKaDev\Yii2User\helpers;
+
+use DateTime;
+use DateTimeZone;
+use yii\helpers\ArrayHelper;
 
 /**
  * Timezone helper.
@@ -18,29 +24,28 @@ namespace dektrium\user\helpers;
  */
 class Timezone
 {
-
     /**
      * Get all of the time zones with the offsets sorted by their offset
      *
-     * @return array
+     * @return array<int, array{timezone: string, name: string, offset: int}>
      */
-    public static function getAll()
+    public static function getAll(): array
     {
         $timeZones = [];
-        $timeZoneIdentifiers = \DateTimeZone::listIdentifiers();
+        $timeZoneIdentifiers = DateTimeZone::listIdentifiers();
 
         foreach ($timeZoneIdentifiers as $timeZone) {
-            $date = new \DateTime('now', new \DateTimeZone($timeZone));
+            $date = new DateTime('now', new DateTimeZone($timeZone));
             $offset = $date->getOffset();
-            $tz = ($offset > 0 ? '+' : '-') . gmdate('H:i', abs($offset));
+            $tz = ($offset >= 0 ? '+' : '-') . gmdate('H:i', abs($offset));
             $timeZones[] = [
                 'timezone' => $timeZone,
-                'name' => "{$timeZone} (UTC {$tz})",
+                'name' => sprintf('%s (UTC %s)', $timeZone, $tz),
                 'offset' => $offset
             ];
         }
 
-        \yii\helpers\ArrayHelper::multisort($timeZones, 'offset', SORT_DESC, SORT_NUMERIC);
+        ArrayHelper::multisort($timeZones, 'offset', SORT_DESC, SORT_NUMERIC);
 
         return $timeZones;
     }

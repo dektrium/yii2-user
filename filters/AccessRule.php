@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of the Dektrium project.
  *
@@ -9,11 +11,15 @@
  * file that was distributed with this source code.
  */
 
-namespace dektrium\user\filters;
+namespace AlexeiKaDev\Yii2User\filters;
+
+use AlexeiKaDev\Yii2User\models\User;
+use Yii;
 
 /**
  * Access rule class for simpler RBAC.
- * @see http://yii2-user.dmeroff.ru/docs/custom-access-control
+ * Allows using 'admin' role for checking User::isAdmin property.
+ * @see https://github.com/dektrium/yii2-user/blob/master/docs/custom-access-control.md
  * @author Dmitry Erofeev <dmeroff@gmail.com>
  */
 class AccessRule extends \yii\filters\AccessRule
@@ -21,7 +27,7 @@ class AccessRule extends \yii\filters\AccessRule
     /**
      * @inheritdoc
      * */
-    protected function matchRole($user)
+    protected function matchRole($user): bool // Parameter $user is typically the yii\web\User component instance
     {
         if (empty($this->roles)) {
             return true;
@@ -29,18 +35,21 @@ class AccessRule extends \yii\filters\AccessRule
 
         foreach ($this->roles as $role) {
             if ($role === '?') {
-                if (\Yii::$app->user->isGuest) {
+                if (Yii::$app->user->isGuest) {
                     return true;
                 }
             } elseif ($role === '@') {
-                if (!\Yii::$app->user->isGuest) {
+                if (!Yii::$app->user->isGuest) {
                     return true;
                 }
             } elseif ($role === 'admin') {
-                if (!\Yii::$app->user->isGuest && \Yii::$app->user->identity->isAdmin) {
+                $identity = Yii::$app->user->identity;
+
+                if ($identity instanceof User && $identity->getIsAdmin()) { // Check against our User model
                     return true;
                 }
-            } elseif ($user->can($role)) {
+                // Check standard RBAC roles if $user component has checkAccess method
+            } elseif (!$user->isGuest && $user->can($role)) {
                 return true;
             }
         }

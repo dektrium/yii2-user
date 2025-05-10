@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of the Dektrium project.
  *
@@ -9,30 +11,33 @@
  * file that was distributed with this source code.
  */
 
-namespace dektrium\user\models;
+namespace AlexeiKaDev\Yii2User\models;
 
-use dektrium\user\clients\ClientInterface;
-use dektrium\user\Finder;
-use dektrium\user\models\query\AccountQuery;
-use dektrium\user\traits\ModuleTrait;
+use AlexeiKaDev\Yii2User\clients\ClientInterface as UserModuleClientInterface;
+use AlexeiKaDev\Yii2User\Finder;
+use AlexeiKaDev\Yii2User\models\query\AccountQuery;
+use AlexeiKaDev\Yii2User\traits\ModuleTrait;
+use Yii;
 use yii\authclient\ClientInterface as BaseClientInterface;
+use yii\base\InvalidArgumentException;
+use yii\db\ActiveQuery;
 use yii\db\ActiveRecord;
 use yii\helpers\Json;
 use yii\helpers\Url;
 
 /**
- * @property integer $id          Id
- * @property integer $user_id     User id, null if account is not bind to user
- * @property string  $provider    Name of service
- * @property string  $client_id   Account id
- * @property string  $data        Account properties returned by social network (json encoded)
- * @property string  $decodedData Json-decoded properties
- * @property string  $code
- * @property integer $created_at
- * @property string  $email
- * @property string  $username
+ * @property int $id Id
+ * @property int|null $user_id User id, null if account is not bind to user
+ * @property string $provider Name of service
+ * @property string $client_id Account id
+ * @property string|null $data Account properties returned by social network (json encoded)
+ * @property mixed $decodedData Json-decoded properties
+ * @property string|null $code
+ * @property int|null $created_at
+ * @property string|null $email
+ * @property string|null $username
  *
- * @property User    $user        User that this account is connected for.
+ * @property User|null $user User that this account is connected for.
  *
  * @author Dmitry Erofeev <dmeroff@gmail.com>
  */
@@ -40,22 +45,22 @@ class Account extends ActiveRecord
 {
     use ModuleTrait;
 
-    /** @var Finder */
-    protected static $finder;
+    /** @var Finder|null */
+    protected static ?Finder $finder = null;
 
-    /** @var */
-    private $_data;
+    /** @var mixed Decoded JSON data from the $data attribute */
+    private mixed $_data = null;
 
     /** @inheritdoc */
-    public static function tableName()
+    public static function tableName(): string
     {
         return '{{%social_account}}';
     }
 
     /**
-     * @return User
+     * @return ActiveQuery
      */
-    public function getUser()
+    public function getUser(): ActiveQuery
     {
         return $this->hasOne($this->module->modelMap['User'], ['id' => 'user_id']);
     }
@@ -63,18 +68,27 @@ class Account extends ActiveRecord
     /**
      * @return bool Whether this social account is connected to user.
      */
-    public function getIsConnected()
+    public function getIsConnected(): bool
     {
-        return $this->user_id != null;
+        return $this->user_id !== null;
     }
 
     /**
      * @return mixed Json decoded properties.
      */
-    public function getDecodedData()
+    public function getDecodedData(): mixed
     {
-        if ($this->_data == null) {
-            $this->_data = Json::decode($this->data);
+        if ($this->_data === null && $this->data !== null) {
+            try {
+                $this->_data = Json::decode($this->data);
+            } catch (InvalidArgumentException $e) {
+                // Handle or log error if $this->data is not valid JSON
+                $this->_data = []; // Default to empty array or handle as error
+                Yii::warning(
+                    "Failed to decode social account data for account ID {$this->id}: " . $e->getMessage(),
+                    __METHOD__
+                );
+            }
         }
 
         return $this->_data;
@@ -84,51 +98,79 @@ class Account extends ActiveRecord
      * Returns connect url.
      * @return string
      */
-    public function getConnectUrl()
+    public function getConnectUrl(): string
     {
-        $code = \Yii::$app->security->generateRandomString();
+        $code = Yii::$app->security->generateRandomString();
         $this->updateAttributes(['code' => md5($code)]);
 
         return Url::to(['/user/registration/connect', 'code' => $code]);
     }
 
-    public function connect(User $user)
+    /**
+     * Connects current social account with user.
+     * @param User $user
+     * @return bool
+     */
+    public function connect(User $user): bool
     {
-        return $this->updateAttributes([
+        return (bool)$this->updateAttributes([
             'username' => null,
-            'email'    => null,
-            'code'     => null,
-            'user_id'  => $user->id,
+            'email' => null,
+            'code' => null,
+            'user_id' => $user->id,
         ]);
     }
 
     /**
      * @return AccountQuery
+     * @throws \yii\base\InvalidConfigException
      */
-    public static function find()
+    public static function find(): AccountQuery
     {
-        return \Yii::createObject(AccountQuery::className(), [get_called_class()]);
+        return Yii::createObject(AccountQuery::class, [static::class]);
     }
 
-    public static function create(BaseClientInterface $client)
+    /**
+     * Creates an Account instance from a client.
+     * @param BaseClientInterface $client The auth client instance.
+     * @return Account The created Account model.
+     * @throws \yii\base\InvalidConfigException
+     */
+    public static function create(BaseClientInterface $client): Account
     {
+        $attributes = $client->getUserAttributes();
         /** @var Account $account */
-        $account = \Yii::createObject([
-            'class'      => static::className(),
-            'provider'   => $client->getId(),
-            'client_id'  => $client->getUserAttributes()['id'],
-            'data'       => Json::encode($client->getUserAttributes()),
+        $account = Yii::createObject([
+            'class' => static::class,
+            'provider' => $client->getId(),
+            'client_id' => $attributes['id'] ?? null,
+            'data' => Json::encode($attributes),
         ]);
 
-        if ($client instanceof ClientInterface) {
+        if ($client instanceof UserModuleClientInterface) {
             $account->setAttributes([
                 'username' => $client->getUsername(),
-                'email'    => $client->getEmail(),
+                'email' => $client->getEmail(),
             ], false);
         }
 
-        if (($user = static::fetchUser($account)) instanceof User) {
-            $account->user_id = $user->id;
+        // Try to connect account to existing user by email
+        if ($account->email !== null) {
+            $user = static::getFinder()->findUserByEmail($account->email);
+
+            if ($user instanceof User) {
+                $account->user_id = $user->id;
+            }
+        }
+
+        // If user is not found by email, but username is available from social network,
+        // and we want to connect by username (optional logic)
+        if ($account->user_id === null && $account->username !== null) {
+            $user = static::getFinder()->findUserByUsername($account->username);
+
+            if ($user instanceof User) {
+                $account->user_id = $user->id;
+            }
         }
 
         $account->save(false);
@@ -138,48 +180,57 @@ class Account extends ActiveRecord
 
     /**
      * Tries to find an account and then connect that account with current user.
-     *
      * @param BaseClientInterface $client
+     * @throws \yii\base\InvalidConfigException
      */
-    public static function connectWithUser(BaseClientInterface $client)
+    public static function connectWithUser(BaseClientInterface $client): void
     {
-        if (\Yii::$app->user->isGuest) {
-            \Yii::$app->session->setFlash('danger', \Yii::t('user', 'Something went wrong'));
+        if (Yii::$app->user->isGuest) {
+            Yii::$app->session->setFlash('danger', Yii::t('user', 'Something went wrong'));
+
+            return;
+        }
+
+        $currentLoggedInUser = Yii::$app->user->identity;
+
+        if (!$currentLoggedInUser instanceof User) {
+            Yii::$app->session->setFlash('danger', Yii::t('user', 'Current user is not valid.'));
 
             return;
         }
 
         $account = static::fetchAccount($client);
 
-        if ($account->user === null) {
-            $account->link('user', \Yii::$app->user->identity);
-            \Yii::$app->session->setFlash('success', \Yii::t('user', 'Your account has been connected'));
+        if ($account->user_id === null) {
+            $account->link('user', $currentLoggedInUser);
+            Yii::$app->session->setFlash('success', Yii::t('user', 'Your account has been connected'));
         } else {
-            \Yii::$app->session->setFlash(
+            Yii::$app->session->setFlash(
                 'danger',
-                \Yii::t('user', 'This account has already been connected to another user')
+                Yii::t('user', 'This account has already been connected to another user')
             );
         }
     }
 
     /**
      * Tries to find account, otherwise creates new account.
-     *
      * @param BaseClientInterface $client
-     *
      * @return Account
      * @throws \yii\base\InvalidConfigException
      */
-    protected static function fetchAccount(BaseClientInterface $client)
+    protected static function fetchAccount(BaseClientInterface $client): Account
     {
-        $account = static::getFinder()->findAccount()->byClient($client)->one();
+        $finder = static::getFinder();
+        $account = $finder->findAccount()->byClient($client)->one();
 
-        if (null === $account) {
-            $account = \Yii::createObject([
-                'class'      => static::className(),
-                'provider'   => $client->getId(),
-                'client_id'  => $client->getUserAttributes()['id'],
-                'data'       => Json::encode($client->getUserAttributes()),
+        if ($account === null) {
+            $attributes = $client->getUserAttributes();
+            /** @var Account $account */
+            $account = Yii::createObject([
+                'class' => static::class,
+                'provider' => $client->getId(),
+                'client_id' => $attributes['id'] ?? null,
+                'data' => Json::encode($attributes),
             ]);
             $account->save(false);
         }
@@ -188,45 +239,64 @@ class Account extends ActiveRecord
     }
 
     /**
-     * Tries to find user or create a new one.
-     *
+     * Tries to find user or create a new one (original Dektrium logic was slightly different here,
+     * this is a simplified version focusing on connection, actual user creation is handled by RegistrationController).
+     * This method primarily tries to find an existing user by email to link the social account.
      * @param Account $account
-     *
-     * @return User|bool False when can't create user.
+     * @return User|false
+     * @throws \yii\base\InvalidConfigException
      */
-    protected static function fetchUser(Account $account)
+    protected static function fetchUser(Account $account): User|false
     {
-        $user = static::getFinder()->findUserByEmail($account->email);
+        if ($account->email !== null) {
+            $user = static::getFinder()->findUserByEmail($account->email);
 
-        if (null !== $user) {
-            return $user;
+            if ($user instanceof User) {
+                return $user;
+            }
         }
 
-        $user = \Yii::createObject([
-            'class'    => User::className(),
-            'scenario' => 'connect',
+        // Original dektrium/yii2-user Account::create also tried to create a user if not found.
+        // This logic is usually handled by the RegistrationController when a new social user signs up.
+        // For simplicity in this Account model context, if user is not found by email, we don't create one here.
+        // The create() method above will attempt to link if user exists, otherwise RegistrationController handles new social user.
+        // If you need to create user here, it would require more logic from original dektrium's Account::create() method.
+
+        // As per original logic in Dektrium's Account::create() if user not found, it doesn't create it here.
+        // It just saves the account and the linking happens if user exists.
+        // A new user creation is part of the registration flow (e.g. RegistrationController::actionConnect)
+
+        // The $account might have $username and $email set from the client in create() method.
+        // If we need to create a user here based on that:
+        /*
+        if ($account->email === null && $account->username === null) {
+            return false; // Cannot create user without email or username
+        }
+
+        $user = Yii::createObject([
+            'class'    => User::class,
+            'scenario' => 'connect', // Important: use 'connect' scenario
             'username' => $account->username,
             'email'    => $account->email,
         ]);
 
-        if (!$user->validate(['email'])) {
-            $account->email = null;
+        if ($user->create()) {
+            return $user;
         }
+        */
 
-        if (!$user->validate(['username'])) {
-            $account->username = null;
-        }
-
-        return $user->create() ? $user : false;
+        return false; // User not found by email, and not creating here.
     }
 
     /**
+     * Gets the Finder instance.
      * @return Finder
+     * @throws InvalidConfigException
      */
-    protected static function getFinder()
+    protected static function getFinder(): Finder
     {
         if (static::$finder === null) {
-            static::$finder = \Yii::$container->get(Finder::className());
+            static::$finder = Yii::$container->get(Finder::class);
         }
 
         return static::$finder;

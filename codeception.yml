@@ -2,16 +2,18 @@ actor: Tester
 paths:
     tests: tests
     log: tests/_output
+    output: tests/_output/output
     data: tests/_data
     helpers: tests/_support
 settings:
-    bootstrap: _bootstrap.php
     colors: true
     memory_limit: 1024M
 modules:
     config:
         Yii2:
             configFile: 'tests/_app/config/test.php'
+            part: console
+            # appconfig: tests/_app/config/appconfig_loader.php
 coverage:
     enabled: true
     include:

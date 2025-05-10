@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of the Dektrium project
  *
@@ -9,7 +11,7 @@
  * file that was distributed with this source code.
  */
 
-namespace dektrium\user\clients;
+namespace AlexeiKaDev\Yii2User\clients;
 
 use yii\authclient\ClientInterface as BaseInterface;
 
@@ -22,8 +24,8 @@ use yii\authclient\ClientInterface as BaseInterface;
 interface ClientInterface extends BaseInterface
 {
     /** @return string|null User's email */
-    public function getEmail();
+    public function getEmail(): ?string;
 
     /** @return string|null User's username */
-    public function getUsername();
+    public function getUsername(): ?string;
 }

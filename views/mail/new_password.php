@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 /*
  * This file is part of the Dektrium project.
@@ -9,12 +10,12 @@
  * file that was distributed with this source code.
  */
 
-use yii\helpers\Html;
 
 /**
- * @var dektrium\user\Module          $module
- * @var dektrium\user\models\User     $user
- * @var dektrium\user\models\Password $password
+ * @var yii\web\View $this
+ * @var AlexeiKaDev\Yii2User\Module $module
+ * @var AlexeiKaDev\Yii2User\models\User $user
+ * @var string $password
  */
 
 ?>

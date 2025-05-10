@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of the Dektrium project.
  *
@@ -9,35 +11,44 @@
  * file that was distributed with this source code.
  */
 
-namespace dektrium\user\events;
+namespace AlexeiKaDev\Yii2User\events;
 
-use dektrium\user\models\Profile;
+use AlexeiKaDev\Yii2User\models\Profile;
 use yii\base\Event;
 
 /**
- * @property Profile $model
+ * Represents an event triggered for a user profile.
+ *
+ * @property Profile $profile The profile model associated with the event.
  * @author Dmitry Erofeev <dmeroff@gmail.com>
  */
 class ProfileEvent extends Event
 {
     /**
-     * @var Profile
+     * @var Profile The profile model associated with this event.
      */
-    private $_profile;
+    private Profile $_profile;
+
+    // Add constructor to potentially satisfy linter
+    public function __construct(Profile $profile, $config = [])
+    {
+        $this->_profile = $profile;
+        parent::__construct($config);
+    }
 
     /**
      * @return Profile
      */
-    public function getProfile()
+    public function getProfile(): Profile
     {
         return $this->_profile;
     }
 
     /**
-     * @param Profile $form
+     * @param Profile $profile
      */
-    public function setProfile(Profile $form)
+    public function setProfile(Profile $profile): void
     {
-        $this->_profile = $form;
+        $this->_profile = $profile;
     }
 }

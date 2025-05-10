@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of the Dektrium project.
  *
@@ -9,25 +11,28 @@
  * file that was distributed with this source code.
  */
 
-namespace dektrium\user\controllers;
+namespace AlexeiKaDev\Yii2User\controllers;
 
-use dektrium\user\Finder;
-use dektrium\user\models\Profile;
-use dektrium\user\models\SettingsForm;
-use dektrium\user\models\User;
-use dektrium\user\Module;
-use dektrium\user\traits\AjaxValidationTrait;
-use dektrium\user\traits\EventTrait;
+use AlexeiKaDev\Yii2User\Finder;
+use AlexeiKaDev\Yii2User\models\Account;
+use AlexeiKaDev\Yii2User\models\Profile;
+use AlexeiKaDev\Yii2User\models\SettingsForm;
+use AlexeiKaDev\Yii2User\models\User;
+use AlexeiKaDev\Yii2User\Module;
+use AlexeiKaDev\Yii2User\traits\AjaxValidationTrait;
+use AlexeiKaDev\Yii2User\traits\EventTrait;
+use Yii;
 use yii\filters\AccessControl;
 use yii\filters\VerbFilter;
 use yii\web\Controller;
 use yii\web\ForbiddenHttpException;
 use yii\web\NotFoundHttpException;
+use yii\web\Response;
 
 /**
  * SettingsController manages updating user settings (e.g. profile, email and password).
  *
- * @property \dektrium\user\Module $module
+ * @property \AlexeiKaDev\Yii2User\Module $module
  *
  * @author Dmitry Erofeev <dmeroff@gmail.com>
  */
@@ -38,105 +43,105 @@ class SettingsController extends Controller
 
     /**
      * Event is triggered before updating user's profile.
-     * Triggered with \dektrium\user\events\UserEvent.
+     * Triggered with \AlexeiKaDev\Yii2User\events\ProfileEvent.
      */
-    const EVENT_BEFORE_PROFILE_UPDATE = 'beforeProfileUpdate';
+    public const EVENT_BEFORE_PROFILE_UPDATE = 'beforeProfileUpdate';
 
     /**
      * Event is triggered after updating user's profile.
-     * Triggered with \dektrium\user\events\UserEvent.
+     * Triggered with \AlexeiKaDev\Yii2User\events\ProfileEvent.
      */
-    const EVENT_AFTER_PROFILE_UPDATE = 'afterProfileUpdate';
+    public const EVENT_AFTER_PROFILE_UPDATE = 'afterProfileUpdate';
 
     /**
      * Event is triggered before updating user's account settings.
-     * Triggered with \dektrium\user\events\FormEvent.
+     * Triggered with \AlexeiKaDev\Yii2User\events\FormEvent.
      */
-    const EVENT_BEFORE_ACCOUNT_UPDATE = 'beforeAccountUpdate';
+    public const EVENT_BEFORE_ACCOUNT_UPDATE = 'beforeAccountUpdate';
 
     /**
      * Event is triggered after updating user's account settings.
-     * Triggered with \dektrium\user\events\FormEvent.
+     * Triggered with \AlexeiKaDev\Yii2User\events\FormEvent.
      */
-    const EVENT_AFTER_ACCOUNT_UPDATE = 'afterAccountUpdate';
+    public const EVENT_AFTER_ACCOUNT_UPDATE = 'afterAccountUpdate';
 
     /**
      * Event is triggered before changing users' email address.
-     * Triggered with \dektrium\user\events\UserEvent.
+     * Triggered with \AlexeiKaDev\Yii2User\events\UserEvent.
      */
-    const EVENT_BEFORE_CONFIRM = 'beforeConfirm';
+    public const EVENT_BEFORE_CONFIRM = 'beforeConfirm';
 
     /**
      * Event is triggered after changing users' email address.
-     * Triggered with \dektrium\user\events\UserEvent.
+     * Triggered with \AlexeiKaDev\Yii2User\events\UserEvent.
      */
-    const EVENT_AFTER_CONFIRM = 'afterConfirm';
+    public const EVENT_AFTER_CONFIRM = 'afterConfirm';
 
     /**
      * Event is triggered before disconnecting social account from user.
-     * Triggered with \dektrium\user\events\ConnectEvent.
+     * Triggered with \AlexeiKaDev\Yii2User\events\ConnectEvent.
      */
-    const EVENT_BEFORE_DISCONNECT = 'beforeDisconnect';
+    public const EVENT_BEFORE_DISCONNECT = 'beforeDisconnect';
 
     /**
      * Event is triggered after disconnecting social account from user.
-     * Triggered with \dektrium\user\events\ConnectEvent.
+     * Triggered with \AlexeiKaDev\Yii2User\events\ConnectEvent.
      */
-    const EVENT_AFTER_DISCONNECT = 'afterDisconnect';
+    public const EVENT_AFTER_DISCONNECT = 'afterDisconnect';
 
     /**
      * Event is triggered before deleting user's account.
-     * Triggered with \dektrium\user\events\UserEvent.
+     * Triggered with \AlexeiKaDev\Yii2User\events\UserEvent.
      */
-    const EVENT_BEFORE_DELETE = 'beforeDelete';
+    public const EVENT_BEFORE_DELETE = 'beforeDelete';
 
     /**
      * Event is triggered after deleting user's account.
-     * Triggered with \dektrium\user\events\UserEvent.
+     * Triggered with \AlexeiKaDev\Yii2User\events\UserEvent.
      */
-    const EVENT_AFTER_DELETE = 'afterDelete';
+    public const EVENT_AFTER_DELETE = 'afterDelete';
 
     /** @inheritdoc */
-    public $defaultAction = 'profile';
+    public string $defaultAction = 'profile';
 
     /** @var Finder */
-    protected $finder;
+    protected Finder $finder;
 
     /**
-     * @param string           $id
-     * @param \yii\base\Module $module
-     * @param Finder           $finder
-     * @param array            $config
+     * @param string $id
+     * @param Module $module
+     * @param Finder $finder
+     * @param array $config
      */
-    public function __construct($id, $module, Finder $finder, $config = [])
+    public function __construct(string $id, Module $module, Finder $finder, array $config = [])
     {
         $this->finder = $finder;
         parent::__construct($id, $module, $config);
     }
 
     /** @inheritdoc */
-    public function behaviors()
+    public function behaviors(): array
     {
         return [
             'verbs' => [
-                'class' => VerbFilter::className(),
+                'class' => VerbFilter::class,
                 'actions' => [
                     'disconnect' => ['post'],
-                    'delete'     => ['post'],
+                    'delete' => ['post'],
                 ],
             ],
             'access' => [
-                'class' => AccessControl::className(),
+                'class' => AccessControl::class,
                 'rules' => [
                     [
-                        'allow'   => true,
+                        'allow' => true,
                         'actions' => ['profile', 'account', 'networks', 'disconnect', 'delete'],
-                        'roles'   => ['@'],
+                        'roles' => ['@'],
                     ],
                     [
-                        'allow'   => true,
+                        'allow' => true,
                         'actions' => ['confirm'],
-                        'roles'   => ['?', '@'],
+                        'roles' => ['?', '@'],
                     ],
                 ],
             ],
@@ -146,15 +151,15 @@ class SettingsController extends Controller
     /**
      * Shows profile settings form.
      *
-     * @return string|\yii\web\Response
+     * @return string|Response
      */
-    public function actionProfile()
+    public function actionProfile(): string|Response
     {
-        $model = $this->finder->findProfileById(\Yii::$app->user->identity->getId());
+        $model = $this->finder->findProfileById(Yii::$app->user->identity->getId());
 
-        if ($model == null) {
-            $model = \Yii::createObject(Profile::className());
-            $model->link('user', \Yii::$app->user->identity);
+        if ($model === null) {
+            $model = Yii::createObject(Profile::class);
+            $model->link('user', Yii::$app->user->identity);
         }
 
         $event = $this->getProfileEvent($model);
@@ -162,9 +167,11 @@ class SettingsController extends Controller
         $this->performAjaxValidation($model);
 
         $this->trigger(self::EVENT_BEFORE_PROFILE_UPDATE, $event);
-        if ($model->load(\Yii::$app->request->post()) && $model->save()) {
-            \Yii::$app->getSession()->setFlash('success', \Yii::t('user', 'Your profile has been updated'));
+
+        if ($model->load(Yii::$app->request->post()) && $model->save()) {
+            Yii::$app->getSession()->setFlash('success', Yii::t('user', 'Your profile has been updated'));
             $this->trigger(self::EVENT_AFTER_PROFILE_UPDATE, $event);
+
             return $this->refresh();
         }
 
@@ -176,20 +183,22 @@ class SettingsController extends Controller
     /**
      * Displays page where user can update account settings (username, email or password).
      *
-     * @return string|\yii\web\Response
+     * @return string|Response
      */
-    public function actionAccount()
+    public function actionAccount(): string|Response
     {
         /** @var SettingsForm $model */
-        $model = \Yii::createObject(SettingsForm::className());
+        $model = Yii::createObject(SettingsForm::class);
         $event = $this->getFormEvent($model);
 
         $this->performAjaxValidation($model);
 
         $this->trigger(self::EVENT_BEFORE_ACCOUNT_UPDATE, $event);
-        if ($model->load(\Yii::$app->request->post()) && $model->save()) {
-            \Yii::$app->session->setFlash('success', \Yii::t('user', 'Your account details have been updated'));
+
+        if ($model->load(Yii::$app->request->post()) && $model->save()) {
+            Yii::$app->session->setFlash('success', Yii::t('user', 'Your account details have been updated'));
             $this->trigger(self::EVENT_AFTER_ACCOUNT_UPDATE, $event);
+
             return $this->refresh();
         }
 
@@ -204,10 +213,10 @@ class SettingsController extends Controller
      * @param int    $id
      * @param string $code
      *
-     * @return string
-     * @throws \yii\web\HttpException
+     * @return Response
+     * @throws NotFoundHttpException
      */
-    public function actionConfirm($id, $code)
+    public function actionConfirm(int $id, string $code): Response
     {
         $user = $this->finder->findUserById($id);
 
@@ -229,10 +238,10 @@ class SettingsController extends Controller
      *
      * @return string
      */
-    public function actionNetworks()
+    public function actionNetworks(): string
     {
         return $this->render('networks', [
-            'user' => \Yii::$app->user->identity,
+            'user' => Yii::$app->user->identity,
         ]);
     }
 
@@ -241,18 +250,19 @@ class SettingsController extends Controller
      *
      * @param int $id
      *
-     * @return \yii\web\Response
-     * @throws \yii\web\NotFoundHttpException
-     * @throws \yii\web\ForbiddenHttpException
+     * @return Response
+     * @throws NotFoundHttpException
+     * @throws ForbiddenHttpException
      */
-    public function actionDisconnect($id)
+    public function actionDisconnect(int $id): Response
     {
         $account = $this->finder->findAccount()->byId($id)->one();
 
         if ($account === null) {
             throw new NotFoundHttpException();
         }
-        if ($account->user_id != \Yii::$app->user->id) {
+
+        if ($account->user_id != Yii::$app->user->id) {
             throw new ForbiddenHttpException();
         }
 
@@ -266,29 +276,41 @@ class SettingsController extends Controller
     }
 
     /**
-     * Completely deletes user's account.
+     * Deletes user's account. Has to be confirmed by password.
      *
-     * @return \yii\web\Response
-     * @throws \Exception
+     * @return string|Response
+     * @throws ForbiddenHttpException
      */
-    public function actionDelete()
+    public function actionDelete(): string|Response
     {
         if (!$this->module->enableAccountDelete) {
-            throw new NotFoundHttpException(\Yii::t('user', 'Not found'));
+            throw new ForbiddenHttpException(Yii::t('user', 'Account deletion is disabled.'));
         }
-
         /** @var User $user */
-        $user  = \Yii::$app->user->identity;
+        $user = Yii::$app->user->identity;
         $event = $this->getUserEvent($user);
 
-        \Yii::$app->user->logout();
+        /** @var SettingsForm $model */
+        $model = Yii::createObject([
+            'class' => SettingsForm::class,
+            'scenario' => SettingsForm::SCENARIO_DELETE
+        ]);
 
-        $this->trigger(self::EVENT_BEFORE_DELETE, $event);
-        $user->delete();
-        $this->trigger(self::EVENT_AFTER_DELETE, $event);
+        $this->performAjaxValidation($model);
 
-        \Yii::$app->session->setFlash('info', \Yii::t('user', 'Your account has been completely deleted'));
+        if ($model->load(Yii::$app->request->post()) && $model->validate()) {
+            $this->trigger(self::EVENT_BEFORE_DELETE, $event);
+            $user->delete();
+            $this->trigger(self::EVENT_AFTER_DELETE, $event);
+            Yii::$app->user->logout();
+            Yii::$app->session->setFlash('success', Yii::t('user', 'Your account has been completely deleted'));
 
-        return $this->goHome();
+            return $this->goHome();
+        }
+
+        return $this->render('delete', [
+            'model' => $model,
+            'user' => $user,
+        ]);
     }
 }

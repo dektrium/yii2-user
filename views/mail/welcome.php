@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 /*
  * This file is part of the Dektrium project.
@@ -12,9 +13,10 @@
 use yii\helpers\Html;
 
 /**
- * @var dektrium\user\Module $module
- * @var dektrium\user\models\User $user
- * @var dektrium\user\models\Token $token
+ * @var yii\web\View $this
+ * @var AlexeiKaDev\Yii2User\Module $module
+ * @var AlexeiKaDev\Yii2User\models\User $user
+ * @var AlexeiKaDev\Yii2User\models\Token|null $token
  * @var bool $showPassword
  */
 ?>
@@ -25,9 +27,8 @@ use yii\helpers\Html;
 <p style="font-family: 'Helvetica Neue', 'Helvetica', Helvetica, Arial, sans-serif; font-size: 14px; line-height: 1.6; font-weight: normal; margin: 0 0 10px; padding: 0;">
     <?= Yii::t('user', 'Your account on {0} has been created', Yii::$app->name) ?>.
     <?php if ($showPassword || $module->enableGeneratingPassword): ?>
-        <?= Yii::t('user', 'We have generated a password for you') ?>: <strong><?= $user->password ?></strong>
-    <?php endif ?>
-
+        <?= Yii::t('user', 'If a password was generated for you, you will be prompted to change it upon first login or after confirming your email.') ?>
+    <?php endif; ?>
 </p>
 
 <?php if ($token !== null): ?>
@@ -40,7 +41,7 @@ use yii\helpers\Html;
     <p style="font-family: 'Helvetica Neue', 'Helvetica', Helvetica, Arial, sans-serif; font-size: 14px; line-height: 1.6; font-weight: normal; margin: 0 0 10px; padding: 0;">
         <?= Yii::t('user', 'If you cannot click the link, please try pasting the text into your browser') ?>.
     </p>
-<?php endif ?>
+<?php endif; ?>
 
 <p style="font-family: 'Helvetica Neue', 'Helvetica', Helvetica, Arial, sans-serif; font-size: 14px; line-height: 1.6; font-weight: normal; margin: 0 0 10px; padding: 0;">
     <?= Yii::t('user', 'If you did not make this request you can ignore this email') ?>.

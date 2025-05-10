@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Message translations.
  *
@@ -16,7 +17,7 @@
  *
  * NOTE: this file must be saved in UTF-8 encoding.
  */
-return array (
+return  [
   '#' => '',
   'Are you sure you want to switch to this user for the rest of this Session?' => '',
   'Are you sure?' => '',
@@ -188,4 +189,4 @@ return array (
   'Your password has been changed successfully.' => 'A sua password foi alterada com sucesso.',
   'Your profile has been updated' => 'O seu perfil foi atualizado',
   '{0, date, MMMM dd, YYYY HH:mm}' => '{0, date, dd MMMM, YYYY HH:mm}',
-);
+];

@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 /*
  * This file is part of the Dektrium project.
@@ -9,26 +10,27 @@
  * file that was distributed with this source code.
  */
 
+use AlexeiKaDev\Yii2User\widgets\UserMenu;
 use yii\helpers\Html;
-use dektrium\user\widgets\UserMenu;
+use yii\web\View;
 
 /**
- * @var dektrium\user\models\User $user
+ * @var View $this
  */
 
-$user = Yii::$app->user->identity;
 ?>
-<div class="panel panel-default">
-    <div class="panel-heading">
-        <h3 class="panel-title">
-            <?= Html::img($user->profile->getAvatarUrl(24), [
-                'class' => 'img-rounded',
-                'alt' => $user->username,
+
+<div class="card">
+    <div class="card-header">
+        <h3 class="card-title">
+            <?= Html::img(Yii::$app->user->identity->profile->getAvatarUrl(24), [
+                'class' => 'rounded',
+                'alt' => Yii::$app->user->identity->username,
             ]) ?>
-            <?= $user->username ?>
+            <?= Yii::$app->user->identity->username ?>
         </h3>
     </div>
-    <div class="panel-body">
+    <div class="card-body">
         <?= UserMenu::widget() ?>
     </div>
 </div>

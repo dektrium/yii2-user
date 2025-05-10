@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 /*
  * This file is part of the Dektrium project.
@@ -9,8 +10,10 @@
  * file that was distributed with this source code.
  */
 
+
 /**
- * @var dektrium\user\models\Token $token
+ * @var AlexeiKaDev\Yii2User\models\User   $user
+ * @var AlexeiKaDev\Yii2User\models\Token  $token
  */
 ?>
 <?= Yii::t('user', 'Hello') ?>,

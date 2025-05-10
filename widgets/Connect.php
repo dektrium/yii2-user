@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of the Dektrium project.
  *
@@ -9,8 +11,9 @@
  * file that was distributed with this source code.
  */
 
-namespace dektrium\user\widgets;
+namespace AlexeiKaDev\Yii2User\widgets;
 
+use AlexeiKaDev\Yii2User\models\Account;
 use Yii;
 use yii\authclient\ClientInterface;
 use yii\authclient\widgets\AuthChoice;
@@ -24,9 +27,9 @@ use yii\helpers\Url;
 class Connect extends AuthChoice
 {
     /**
-     * @var array|null An array of user's accounts
+     * @var array<string, Account>|null An array of user's accounts, indexed by provider ID.
      */
-    public $accounts;
+    public ?array $accounts = null;
 
     /**
      * @inheritdoc
@@ -36,11 +39,12 @@ class Connect extends AuthChoice
     /**
      * @inheritdoc
      */
-    public function init()
+    public function init(): void
     {
-        AuthChoiceAsset::register(Yii::$app->view);
+        AuthChoiceAsset::register(Yii::$app->getView());
+
         if ($this->popupMode) {
-            Yii::$app->view->registerJs("\$('#" . $this->getId() . "').authchoice();");
+            Yii::$app->getView()->registerJs("\$('#" . $this->getId() . "').authchoice();");
         }
         $this->options['id'] = $this->getId();
         echo Html::beginTag('div', $this->options);
@@ -48,8 +52,10 @@ class Connect extends AuthChoice
 
     /**
      * @inheritdoc
+     * @param ClientInterface $provider
+     * @return string
      */
-    public function createClientUrl($provider)
+    public function createClientUrl($provider): string
     {
         if ($this->isConnected($provider)) {
             return Url::to(['/user/settings/disconnect', 'id' => $this->accounts[$provider->getId()]->id]);
@@ -65,8 +71,8 @@ class Connect extends AuthChoice
      *
      * @return bool
      */
-    public function isConnected(ClientInterface $provider)
+    public function isConnected(ClientInterface $provider): bool
     {
-        return $this->accounts != null && isset($this->accounts[$provider->getId()]);
+        return $this->accounts !== null && isset($this->accounts[$provider->getId()]);
     }
 }

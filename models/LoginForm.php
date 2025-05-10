@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of the Dektrium project.
  *
@@ -9,15 +11,16 @@
  * file that was distributed with this source code.
  */
 
-namespace dektrium\user\models;
+namespace AlexeiKaDev\Yii2User\models;
 
-use dektrium\user\Finder;
-use dektrium\user\helpers\Password;
-use dektrium\user\traits\ModuleTrait;
-use yii\helpers\ArrayHelper;
-use yii\helpers\Html;
+use AlexeiKaDev\Yii2User\Finder;
+use AlexeiKaDev\Yii2User\helpers\Password;
+use AlexeiKaDev\Yii2User\Module;
+use AlexeiKaDev\Yii2User\traits\ModuleTrait; // Required by ModuleTrait and for static calls
+// Added for type hinting
 use Yii;
 use yii\base\Model;
+use yii\helpers\ArrayHelper;
 
 /**
  * LoginForm get user's login and password, validates them and logs the user in. If user has been blocked, it adds
@@ -30,27 +33,26 @@ class LoginForm extends Model
     use ModuleTrait;
 
     /** @var string User's email or username */
-    public $login;
+    public ?string $login = null;
 
-    /** @var string User's plain password */
-    public $password;
+    /** @var string|null User's plain password. Nullable if module debug is enabled. */
+    public ?string $password = null;
 
-    /** @var string Whether to remember the user */
-    public $rememberMe = false;
+    /** @var bool Whether to remember the user */
+    public bool $rememberMe = false;
 
-    /** @var \dektrium\user\models\User */
-    protected $user;
-
-    /** @var Finder */
-    protected $finder;
+    /** @var User|null The user found based on login field */
+    protected ?User $user = null;
 
     /**
+     * LoginForm constructor.
      * @param Finder $finder
      * @param array  $config
      */
-    public function __construct(Finder $finder, $config = [])
-    {
-        $this->finder = $finder;
+    public function __construct(
+        protected Finder $finder,
+        array $config = []
+    ) {
         parent::__construct($config);
     }
 
@@ -58,80 +60,80 @@ class LoginForm extends Model
      * Gets all users to generate the dropdown list when in debug mode.
      *
      * @return array
+     * @throws \yii\base\InvalidConfigException
      */
-    public static function loginList()
+    public static function loginList(): array
     {
-        /** @var \dektrium\user\Module $module */
-        $module = \Yii::$app->getModule('user');
+        /** @var Module $module */
+        $module = Yii::$app->getModule('user');
 
-        $userModel = $module->modelMap['User'];
+        if (!$module->debug) {
+            return []; // Only available in debug mode
+        }
 
-        return ArrayHelper::map($userModel::find()->where(['blocked_at' => null])->all(), 'username', function ($user) {
-            return sprintf('%s (%s)', Html::encode($user->username), Html::encode($user->email));
-        });
+        /** @var User $userModel */
+        $userModelClass = $module->modelMap['User'];
+        $users = $userModelClass::find()->where(['blocked_at' => null])->all();
+
+        return ArrayHelper::map($users, 'username', fn (User $user) => $user->username . ' (' . $user->email . ')');
     }
 
     /** @inheritdoc */
-    public function attributeLabels()
+    public function attributeLabels(): array
     {
         return [
-            'login'      => Yii::t('user', 'Login'),
-            'password'   => Yii::t('user', 'Password'),
+            'login' => Yii::t('user', 'Login'),
+            'password' => Yii::t('user', 'Password'),
             'rememberMe' => Yii::t('user', 'Remember me next time'),
         ];
     }
 
     /** @inheritdoc */
-    public function rules()
+    public function rules(): array
     {
+        /** @var Module $module */
+        $module = $this->module; // Use trait getter
+
         $rules = [
             'loginTrim' => ['login', 'trim'],
             'requiredFields' => [['login'], 'required'],
-            'confirmationValidate' => [
+            'loginValidation' => [
                 'login',
-                function ($attribute) {
-                    if ($this->user !== null) {
-                        $confirmationRequired = $this->module->enableConfirmation
-                            && !$this->module->enableUnconfirmedLogin;
-                        if ($confirmationRequired && !$this->user->getIsConfirmed()) {
-                            $this->addError($attribute, Yii::t('user', 'You need to confirm your email address'));
-                        }
-                        if ($this->user->getIsBlocked()) {
-                            $this->addError($attribute, Yii::t('user', 'Your account has been blocked'));
-                        }
+                function (string $attribute) use ($module) {
+                    if ($this->user === null) {
+                        $this->addError($attribute, Yii::t('user', 'Invalid login or password')); // Generic error if user not found
+
+                        return;
+                    }
+                    $confirmationRequired = $module->enableConfirmation && !$module->enableUnconfirmedLogin;
+
+                    if ($confirmationRequired && !$this->user->getIsConfirmed()) {
+                        $this->addError($attribute, Yii::t('user', 'You need to confirm your email address'));
+                    }
+
+                    if ($this->user->getIsBlocked()) {
+                        $this->addError($attribute, Yii::t('user', 'Your account has been blocked'));
                     }
                 }
             ],
             'rememberMe' => ['rememberMe', 'boolean'],
         ];
 
-        if (!$this->module->debug) {
-            $rules = array_merge($rules, [
-                'requiredFields' => [['login', 'password'], 'required'],
-                'passwordValidate' => [
-                    'password',
-                    function ($attribute) {
-                        if ($this->user === null || !Password::validate($this->password, $this->user->password_hash)) {
-                            $this->addError($attribute, Yii::t('user', 'Invalid login or password'));
-                        }
+        // Add password validation rules only if not in debug mode
+        // or if password is required (original logic was slightly different)
+        if (!$module->debug) {
+            $rules['passwordRequired'] = ['password', 'required'];
+            $rules['passwordValidate'] = [
+                'password',
+                function (string $attribute) {
+                    if ($this->user === null || $this->password === null || !Password::validate($this->password, $this->user->password_hash)) {
+                        $this->addError($attribute, Yii::t('user', 'Invalid login or password'));
                     }
-                ]
-            ]);
+                }
+            ];
         }
 
         return $rules;
-    }
-
-    /**
-     * Validates if the hash of the given password is identical to the saved hash in the database.
-     * It will always succeed if the module is in DEBUG mode.
-     *
-     * @return void
-     */
-    public function validatePassword($attribute, $params)
-    {
-      if ($this->user === null || !Password::validate($this->password, $this->user->password_hash))
-        $this->addError($attribute, Yii::t('user', 'Invalid login or password'));
     }
 
     /**
@@ -139,37 +141,44 @@ class LoginForm extends Model
      *
      * @return bool whether the user is logged in successfully
      */
-    public function login()
+    public function login(): bool
     {
-        if ($this->validate() && $this->user) {
-            $isLogged = Yii::$app->getUser()->login($this->user, $this->rememberMe ? $this->module->rememberFor : 0);
+        if ($this->validate()) { // Ensure user property is populated by beforeValidate()
+            if ($this->user instanceof User) {
+                $isLogged = Yii::$app->getUser()->login($this->user, $this->rememberMe ? $this->module->rememberFor : 0);
 
-            if ($isLogged) {
-                $this->user->updateAttributes(['last_login_at' => time()]);
+                if ($isLogged) {
+                    $this->user->updateAttributes(['last_login_at' => time()]);
+                }
+
+                return $isLogged;
+            } else {
+                // This case should technically not be reached if validation passes,
+                // but added for safety.
+                Yii::warning('Login validation passed but user object is not available.', __METHOD__);
+
+                return false;
             }
-
-            return $isLogged;
         }
 
         return false;
     }
 
-
     /** @inheritdoc */
-    public function formName()
+    public function formName(): string
     {
         return 'login-form';
     }
 
     /** @inheritdoc */
-    public function beforeValidate()
+    public function beforeValidate(): bool
     {
         if (parent::beforeValidate()) {
-            $this->user = $this->finder->findUserByUsernameOrEmail(trim($this->login));
+            $this->user = $this->finder->findUserByUsernameOrEmail(trim((string)$this->login));
 
             return true;
-        } else {
-            return false;
         }
+
+        return false;
     }
 }

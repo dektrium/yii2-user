@@ -5,8 +5,8 @@
  */
 
 use tests\_fixtures\UserFixture;
-use tests\_pages\UpdatePage;
 use tests\_pages\LoginPage;
+use tests\_pages\UpdatePage;
 
 $I = new FunctionalTester($scenario);
 $I->wantTo('ensure that user update works');

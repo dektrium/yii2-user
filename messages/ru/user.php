@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Message translations.
  *
@@ -16,7 +17,7 @@
  *
  * NOTE: this file must be saved in UTF-8 encoding.
  */
-return array (
+return  [
   '#' => '',
   'Error while trying to generate new password' => '',
   'Impersonate user is disabled in the application configuration' => '',
@@ -188,4 +189,4 @@ return array (
   'Your password has been changed successfully.' => 'Ваш пароль был успешно изменен.',
   'Your profile has been updated' => 'Настройки профиля были успешно сохранены',
   '{0, date, MMMM dd, YYYY HH:mm}' => '{0, date, dd MMMM, YYYY HH:mm}',
-);
+];

@@ -4,14 +4,14 @@
  * @var Codeception\Scenario $scenario
  */
 
+use AlexeiKaDev\Yii2User\models\Token;
+use AlexeiKaDev\Yii2User\models\User;
 use tests\_fixtures\TokenFixture;
 use tests\_fixtures\UserFixture;
-use tests\_pages\RecoveryPage;
 use tests\_pages\LoginPage;
+use tests\_pages\RecoveryPage;
 use yii\helpers\Html;
 use yii\helpers\Url;
-use dektrium\user\models\User;
-use dektrium\user\models\Token;
 
 $I = new FunctionalTester($scenario);
 $I->wantTo('ensure that password recovery works');

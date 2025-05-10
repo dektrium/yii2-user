@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 /*
  * This file is part of the Dektrium project.
@@ -9,9 +10,11 @@
  * file that was distributed with this source code.
  */
 
+use yii\widgets\ActiveForm;
+
 /**
- * @var yii\widgets\ActiveForm $form
- * @var dektrium\user\models\User $user
+ * @var ActiveForm $form
+ * @var AlexeiKaDev\Yii2User\models\User $user
  */
 ?>
 

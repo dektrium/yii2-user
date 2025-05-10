@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 /*
  * This file is part of the Dektrium project.
@@ -12,7 +13,9 @@
 use yii\helpers\Html;
 
 /**
- * @var dektrium\user\models\Token $token
+ * @var yii\web\View $this
+ * @var AlexeiKaDev\Yii2User\models\User $user
+ * @var AlexeiKaDev\Yii2User\models\Token $token
  */
 ?>
 <p style="font-family: 'Helvetica Neue', 'Helvetica', Helvetica, Arial, sans-serif; font-size: 14px; line-height: 1.6; font-weight: normal; margin: 0 0 10px; padding: 0;">

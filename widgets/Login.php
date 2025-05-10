@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of the Dektrium project.
  *
@@ -9,9 +11,10 @@
  * file that was distributed with this source code.
  */
 
-namespace dektrium\user\widgets;
+namespace AlexeiKaDev\Yii2User\widgets;
 
-use dektrium\user\models\LoginForm;
+use AlexeiKaDev\Yii2User\models\LoginForm;
+use Yii;
 use yii\base\Widget;
 
 /**
@@ -22,17 +25,19 @@ use yii\base\Widget;
 class Login extends Widget
 {
     /**
-     * @var bool
+     * @var bool Whether to register related assets. Defaults to true.
+     * This property is not directly used in the provided run() method,
+     * but kept for compatibility or future use.
      */
-    public $validate = true;
+    public bool $validate = true;
 
     /**
      * @inheritdoc
      */
-    public function run()
+    public function run(): string
     {
         return $this->render('login', [
-            'model' => \Yii::createObject(LoginForm::className()),
+            'model' => Yii::createObject(LoginForm::class),
         ]);
     }
 }

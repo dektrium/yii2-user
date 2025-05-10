@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of the Dektrium project.
  *
@@ -9,8 +11,9 @@
  * file that was distributed with this source code.
  */
 
-namespace dektrium\user\helpers;
+namespace AlexeiKaDev\Yii2User\helpers;
 
+use AlexeiKaDev\Yii2User\Module;
 use Yii;
 
 /**
@@ -23,24 +26,27 @@ class Password
     /**
      * Wrapper for yii security helper method.
      *
-     * @param $password
+     * @param string $password
      *
      * @return string
      */
-    public static function hash($password)
+    public static function hash(string $password): string
     {
-        return Yii::$app->security->generatePasswordHash($password, Yii::$app->getModule('user')->cost);
+        /** @var Module $module */
+        $module = Yii::$app->getModule('user');
+
+        return Yii::$app->security->generatePasswordHash($password, $module->cost);
     }
 
     /**
      * Wrapper for yii security helper method.
      *
-     * @param $password
-     * @param $hash
+     * @param string $password
+     * @param string $hash
      *
      * @return bool
      */
-    public static function validate($password, $hash)
+    public static function validate(string $password, string $hash): bool
     {
         return Yii::$app->security->validatePassword($password, $hash);
     }
@@ -51,11 +57,11 @@ class Password
      *
      * @see https://gist.github.com/tylerhall/521810
      *
-     * @param $length
+     * @param int $length
      *
      * @return string
      */
-    public static function generate($length)
+    public static function generate(int $length): string
     {
         $sets = [
             'abcdefghjkmnpqrstuvwxyz',
@@ -64,18 +70,26 @@ class Password
         ];
         $all = '';
         $password = '';
+
+        // Гарантированно добавляем по одному символу из каждого набора
         foreach ($sets as $set) {
-            $password .= $set[array_rand(str_split($set))];
+            $password .= $set[array_rand(str_split($set))]; // Оригинальный метод Dektrium
+            // Альтернатива для PHP 7+: $password .= $set[random_int(0, mb_strlen($set) - 1)];
             $all .= $set;
         }
 
-        $all = str_split($all);
-        for ($i = 0; $i < $length - count($sets); $i++) {
-            $password .= $all[array_rand($all)];
+        $allCharacters = str_split($all);
+        $remainingLength = $length - count($sets);
+
+        // Добавляем оставшиеся символы из объединенного набора
+        if ($remainingLength > 0) { // Проверка, что длина >= кол-ва наборов
+            for ($i = 0; $i < $remainingLength; $i++) {
+                $password .= $allCharacters[array_rand($allCharacters)];
+                // Альтернатива для PHP 7+: $password .= $allCharacters[random_int(0, count($allCharacters) - 1)];
+            }
         }
 
-        $password = str_shuffle($password);
-
-        return $password;
+        // Перемешиваем результат, чтобы гарантированные символы не были в начале
+        return str_shuffle($password);
     }
 }

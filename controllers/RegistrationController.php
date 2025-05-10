@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of the Dektrium project.
  *
@@ -9,23 +11,27 @@
  * file that was distributed with this source code.
  */
 
-namespace dektrium\user\controllers;
+namespace AlexeiKaDev\Yii2User\controllers;
 
-use dektrium\user\Finder;
-use dektrium\user\models\RegistrationForm;
-use dektrium\user\models\ResendForm;
-use dektrium\user\models\User;
-use dektrium\user\traits\AjaxValidationTrait;
-use dektrium\user\traits\EventTrait;
+use AlexeiKaDev\Yii2User\Finder;
+use AlexeiKaDev\Yii2User\models\RegistrationForm;
+use AlexeiKaDev\Yii2User\models\ResendForm;
+use AlexeiKaDev\Yii2User\models\User;
+use AlexeiKaDev\Yii2User\Module;
+use AlexeiKaDev\Yii2User\services\UserConfirmationService;
+use AlexeiKaDev\Yii2User\traits\AjaxValidationTrait;
+use AlexeiKaDev\Yii2User\traits\EventTrait;
+use Yii;
 use yii\filters\AccessControl;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
+use yii\web\Response;
 
 /**
  * RegistrationController is responsible for all registration process, which includes registration of a new account,
  * resending confirmation tokens, email confirmation and registration via social networks.
  *
- * @property \dektrium\user\Module $module
+ * @property Module $module
  *
  * @author Dmitry Erofeev <dmeroff@gmail.com>
  */
@@ -36,76 +42,84 @@ class RegistrationController extends Controller
 
     /**
      * Event is triggered after creating RegistrationForm class.
-     * Triggered with \dektrium\user\events\FormEvent.
+     * Triggered with \AlexeiKaDev\Yii2User\events\FormEvent.
      */
-    const EVENT_BEFORE_REGISTER = 'beforeRegister';
+    public const EVENT_BEFORE_REGISTER = 'beforeRegister';
 
     /**
      * Event is triggered after successful registration.
-     * Triggered with \dektrium\user\events\FormEvent.
+     * Triggered with \AlexeiKaDev\Yii2User\events\FormEvent.
      */
-    const EVENT_AFTER_REGISTER = 'afterRegister';
+    public const EVENT_AFTER_REGISTER = 'afterRegister';
 
     /**
      * Event is triggered before connecting user to social account.
-     * Triggered with \dektrium\user\events\UserEvent.
+     * Triggered with \AlexeiKaDev\Yii2User\events\UserEvent.
      */
-    const EVENT_BEFORE_CONNECT = 'beforeConnect';
+    public const EVENT_BEFORE_CONNECT = 'beforeConnect';
 
     /**
      * Event is triggered after connecting user to social account.
-     * Triggered with \dektrium\user\events\UserEvent.
+     * Triggered with \AlexeiKaDev\Yii2User\events\UserEvent.
      */
-    const EVENT_AFTER_CONNECT = 'afterConnect';
+    public const EVENT_AFTER_CONNECT = 'afterConnect';
 
     /**
      * Event is triggered before confirming user.
-     * Triggered with \dektrium\user\events\UserEvent.
+     * Triggered with \AlexeiKaDev\Yii2User\events\UserEvent.
      */
-    const EVENT_BEFORE_CONFIRM = 'beforeConfirm';
+    public const EVENT_BEFORE_CONFIRM = 'beforeConfirm';
 
     /**
      * Event is triggered before confirming user.
-     * Triggered with \dektrium\user\events\UserEvent.
+     * Triggered with \AlexeiKaDev\Yii2User\events\UserEvent.
      */
-    const EVENT_AFTER_CONFIRM = 'afterConfirm';
+    public const EVENT_AFTER_CONFIRM = 'afterConfirm';
 
     /**
      * Event is triggered after creating ResendForm class.
-     * Triggered with \dektrium\user\events\FormEvent.
+     * Triggered with \AlexeiKaDev\Yii2User\events\FormEvent.
      */
-    const EVENT_BEFORE_RESEND = 'beforeResend';
+    public const EVENT_BEFORE_RESEND = 'beforeResend';
 
     /**
      * Event is triggered after successful resending of confirmation email.
-     * Triggered with \dektrium\user\events\FormEvent.
+     * Triggered with \AlexeiKaDev\Yii2User\events\FormEvent.
      */
-    const EVENT_AFTER_RESEND = 'afterResend';
+    public const EVENT_AFTER_RESEND = 'afterResend';
 
-    /** @var Finder */
-    protected $finder;
+    protected Finder $finder;
+    protected UserConfirmationService $userConfirmationService;
 
-    /**
-     * @param string           $id
-     * @param \yii\base\Module $module
-     * @param Finder           $finder
-     * @param array            $config
-     */
-    public function __construct($id, $module, Finder $finder, $config = [])
-    {
+    public function __construct(
+        string $id,
+        Module $module,
+        Finder $finder,
+        UserConfirmationService $userConfirmationService,
+        array $config = []
+    ) {
         $this->finder = $finder;
+        $this->userConfirmationService = $userConfirmationService;
         parent::__construct($id, $module, $config);
     }
 
     /** @inheritdoc */
-    public function behaviors()
+    public function behaviors(): array
     {
         return [
             'access' => [
-                'class' => AccessControl::className(),
+                'class' => AccessControl::class,
                 'rules' => [
-                    ['allow' => true, 'actions' => ['register', 'connect'], 'roles' => ['?']],
-                    ['allow' => true, 'actions' => ['confirm', 'resend'], 'roles' => ['?', '@']],
+                    [
+                        'allow' => true,
+                        'actions' => ['register', 'connect'],
+                        'roles' => ['?'],
+                    ],
+                    [
+                        'allow' => true,
+                        'actions' => ['confirm', 'resend'],
+                        'roles' => ['?', '@'],
+                    ],
                 ],
             ],
         ];
@@ -116,34 +130,35 @@ class RegistrationController extends Controller
      * After successful registration if enableConfirmation is enabled shows info message otherwise
      * redirects to home page.
      *
-     * @return string
+     * @return string|Response
      * @throws \yii\web\HttpException
+     * @throws \yii\base\InvalidConfigException
      */
-    public function actionRegister()
+    public function actionRegister(): string|Response
     {
         if (!$this->module->enableRegistration) {
             throw new NotFoundHttpException();
         }
 
         /** @var RegistrationForm $model */
-        $model = \Yii::createObject(RegistrationForm::className());
+        $model = Yii::createObject(RegistrationForm::class);
         $event = $this->getFormEvent($model);
 
         $this->trigger(self::EVENT_BEFORE_REGISTER, $event);
 
         $this->performAjaxValidation($model);
 
-        if ($model->load(\Yii::$app->request->post()) && $model->register()) {
+        if ($model->load(Yii::$app->request->post()) && $model->register()) {
             $this->trigger(self::EVENT_AFTER_REGISTER, $event);
 
             return $this->render('/message', [
-                'title'  => \Yii::t('user', 'Your account has been created'),
+                'title' => Yii::t('user', 'Your account has been created'),
                 'module' => $this->module,
             ]);
         }
 
         return $this->render('register', [
-            'model'  => $model,
+            'model' => $model,
             'module' => $this->module,
         ]);
     }
@@ -153,10 +168,11 @@ class RegistrationController extends Controller
      *
      * @param string $code
      *
-     * @return string
+     * @return string|Response
      * @throws NotFoundHttpException
+     * @throws \yii\base\InvalidConfigException
      */
-    public function actionConnect($code)
+    public function actionConnect(string $code): string|Response
     {
         $account = $this->finder->findAccount()->byCode($code)->one();
 
@@ -165,26 +181,27 @@ class RegistrationController extends Controller
         }
 
         /** @var User $user */
-        $user = \Yii::createObject([
-            'class'    => User::className(),
+        $user = Yii::createObject([
+            'class' => User::class,
             'scenario' => 'connect',
             'username' => $account->username,
-            'email'    => $account->email,
+            'email' => $account->email,
         ]);
 
         $event = $this->getConnectEvent($account, $user);
 
         $this->trigger(self::EVENT_BEFORE_CONNECT, $event);
 
-        if ($user->load(\Yii::$app->request->post()) && $user->create()) {
+        if ($user->load(Yii::$app->request->post()) && $user->create()) {
             $account->connect($user);
             $this->trigger(self::EVENT_AFTER_CONNECT, $event);
-            \Yii::$app->user->login($user, $this->module->rememberFor);
+            Yii::$app->user->login($user, $this->module->rememberFor);
+
             return $this->goBack();
         }
 
         return $this->render('connect', [
-            'model'   => $user,
+            'model' => $user,
             'account' => $account,
         ]);
     }
@@ -196,27 +213,25 @@ class RegistrationController extends Controller
      * @param int    $id
      * @param string $code
      *
-     * @return string
-     * @throws \yii\web\HttpException
+     * @return string|Response
+     * @throws NotFoundHttpException
      */
-    public function actionConfirm($id, $code)
+    public function actionConfirm(int $id, string $code): string|Response
     {
         $user = $this->finder->findUserById($id);
 
-        if ($user === null || $this->module->enableConfirmation == false) {
+        if ($user === null || !$this->module->enableConfirmation) {
             throw new NotFoundHttpException();
         }
 
-        $event = $this->getUserEvent($user);
-
-        $this->trigger(self::EVENT_BEFORE_CONFIRM, $event);
-
-        $user->attemptConfirmation($code);
-
-        $this->trigger(self::EVENT_AFTER_CONFIRM, $event);
+        if ($this->userConfirmationService->attempt($user, $code)) {
+            if (Yii::$app->getUser()->getIsGuest()) {
+                Yii::$app->user->login($user, $this->module->rememberFor);
+            }
+        }
 
         return $this->render('/message', [
-            'title'  => \Yii::t('user', 'Account confirmation'),
+            'title' => Yii::t('user', 'Account confirmation'),
             'module' => $this->module,
         ]);
     }
@@ -224,28 +239,29 @@ class RegistrationController extends Controller
     /**
      * Displays page where user can request new confirmation token. If resending was successful, displays message.
      *
-     * @return string
-     * @throws \yii\web\HttpException
+     * @return string|Response
+     * @throws NotFoundHttpException
+     * @throws \yii\base\InvalidConfigException
      */
-    public function actionResend()
+    public function actionResend(): string|Response
     {
-        if ($this->module->enableConfirmation == false) {
+        if (!$this->module->enableConfirmation) {
             throw new NotFoundHttpException();
         }
 
         /** @var ResendForm $model */
-        $model = \Yii::createObject(ResendForm::className());
+        $model = Yii::createObject(ResendForm::class);
         $event = $this->getFormEvent($model);
 
         $this->trigger(self::EVENT_BEFORE_RESEND, $event);
 
         $this->performAjaxValidation($model);
 
-        if ($model->load(\Yii::$app->request->post()) && $model->resend()) {
+        if ($model->load(Yii::$app->request->post()) && $model->resend()) {
             $this->trigger(self::EVENT_AFTER_RESEND, $event);
 
             return $this->render('/message', [
-                'title'  => \Yii::t('user', 'A new confirmation link has been sent'),
+                'title' => Yii::t('user', 'A new confirmation link has been sent'),
                 'module' => $this->module,
             ]);
         }

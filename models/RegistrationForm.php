@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 /*
  * This file is part of the Dektrium project.
@@ -9,9 +10,10 @@
  * file that was distributed with this source code.
  */
 
-namespace dektrium\user\models;
+namespace AlexeiKaDev\Yii2User\models;
 
-use dektrium\user\traits\ModuleTrait;
+use AlexeiKaDev\Yii2User\services\RegistrationService;
+use AlexeiKaDev\Yii2User\traits\ModuleTrait;
 use Yii;
 use yii\base\Model;
 
@@ -23,20 +25,35 @@ use yii\base\Model;
 class RegistrationForm extends Model
 {
     use ModuleTrait;
+
     /**
      * @var string User email address
      */
-    public $email;
+    public ?string $email = null;
 
     /**
      * @var string Username
      */
-    public $username;
+    public ?string $username = null;
 
     /**
      * @var string Password
      */
-    public $password;
+    public ?string $password = null;
+
+    /** @var RegistrationService The registration service instance. */
+    private RegistrationService $registrationService;
+
+    /**
+     * RegistrationForm constructor.
+     * @param RegistrationService $registrationService
+     * @param array $config
+     */
+    public function __construct(RegistrationService $registrationService, array $config = [])
+    {
+        $this->registrationService = $registrationService;
+        parent::__construct($config);
+    }
 
     /**
      * @inheritdoc
@@ -47,21 +64,21 @@ class RegistrationForm extends Model
 
         return [
             // username rules
-            'usernameTrim'     => ['username', 'trim'],
-            'usernameLength'   => ['username', 'string', 'min' => 3, 'max' => 255],
-            'usernamePattern'  => ['username', 'match', 'pattern' => $user::$usernameRegexp],
+            'usernameTrim' => ['username', 'trim'],
+            'usernameLength' => ['username', 'string', 'min' => 3, 'max' => 255],
+            'usernamePattern' => ['username', 'match', 'pattern' => $user::$usernameRegexp],
             'usernameRequired' => ['username', 'required'],
-            'usernameUnique'   => [
+            'usernameUnique' => [
                 'username',
                 'unique',
                 'targetClass' => $user,
                 'message' => Yii::t('user', 'This username has already been taken')
             ],
             // email rules
-            'emailTrim'     => ['email', 'trim'],
+            'emailTrim' => ['email', 'trim'],
             'emailRequired' => ['email', 'required'],
-            'emailPattern'  => ['email', 'email'],
-            'emailUnique'   => [
+            'emailPattern' => ['email', 'email'],
+            'emailUnique' => [
                 'email',
                 'unique',
                 'targetClass' => $user,
@@ -69,7 +86,7 @@ class RegistrationForm extends Model
             ],
             // password rules
             'passwordRequired' => ['password', 'required', 'skipOnEmpty' => $this->module->enableGeneratingPassword],
-            'passwordLength'   => ['password', 'string', 'min' => 6, 'max' => 72],
+            'passwordLength' => ['password', 'string', 'min' => 6, 'max' => 72],
         ];
     }
 
@@ -79,7 +96,7 @@ class RegistrationForm extends Model
     public function attributeLabels()
     {
         return [
-            'email'    => Yii::t('user', 'Email'),
+            'email' => Yii::t('user', 'Email'),
             'username' => Yii::t('user', 'Username'),
             'password' => Yii::t('user', 'Password'),
         ];
@@ -94,47 +111,31 @@ class RegistrationForm extends Model
     }
 
     /**
-     * Registers a new user account. If registration was successful it will set flash message.
+     * Registers a new user account using RegistrationService.
+     * If registration was successful it will set flash message.
      *
-     * @return bool
+     * @return bool True if registration was successful
      */
-    public function register()
+    public function register(): bool
     {
         if (!$this->validate()) {
             return false;
         }
 
-        /** @var User $user */
-        $user = Yii::createObject(User::className());
-        $user->setScenario('register');
-        $this->loadAttributes($user);
+        $user = $this->registrationService->register($this);
 
-        if (!$user->register()) {
+        if ($user instanceof User) {
+            Yii::$app->session->setFlash(
+                'info',
+                Yii::t(
+                    'user',
+                    'Your account has been created and a message with further instructions has been sent to your email'
+                )
+            );
+
+            return true;
+        } else {
             return false;
         }
-
-        Yii::$app->session->setFlash(
-            'info',
-            Yii::t(
-                'user',
-                'Your account has been created and a message with further instructions has been sent to your email'
-            )
-        );
-
-        return true;
-    }
-
-    /**
-     * Loads attributes to the user model. You should override this method if you are going to add new fields to the
-     * registration form. You can read more in special guide.
-     *
-     * By default this method set all attributes of this model to the attributes of User model, so you should properly
-     * configure safe attributes of your User model.
-     *
-     * @param User $user
-     */
-    protected function loadAttributes(User $user)
-    {
-        $user->setAttributes($this->attributes);
     }
 }

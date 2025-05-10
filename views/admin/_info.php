@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 /*
  * This file is part of the Dektrium project
@@ -9,13 +10,15 @@
  * file that was distributed with this source code.
  */
 
+use yii\web\View;
+
 /**
- * @var yii\web\View $this
- * @var dektrium\user\models\User $user
+ * @var View $this
+ * @var AlexeiKaDev\Yii2User\models\User $user
  */
 ?>
 
-<?php $this->beginContent('@dektrium/user/views/admin/update.php', ['user' => $user]) ?>
+<?php $this->beginContent('@AlexeiKaDev/Yii2User/views/admin/update.php', ['user' => $user]) ?>
 
 <table class="table">
     <tr>

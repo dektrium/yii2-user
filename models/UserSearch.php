@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of the Dektrium project.
  *
@@ -9,9 +11,10 @@
  * file that was distributed with this source code.
  */
 
-namespace dektrium\user\models;
+namespace AlexeiKaDev\Yii2User\models;
 
-use dektrium\user\Finder;
+use AlexeiKaDev\Yii2User\Finder;
+// Import User for table name
 use Yii;
 use yii\base\Model;
 use yii\data\ActiveDataProvider;
@@ -21,66 +24,67 @@ use yii\data\ActiveDataProvider;
  */
 class UserSearch extends Model
 {
-    /** @var integer */
-    public $id;
+    /** @var int|null */
+    public ?int $id = null;
 
-    /** @var string */
-    public $username;
+    /** @var string|null */
+    public ?string $username = null;
 
-    /** @var string */
-    public $email;
+    /** @var string|null */
+    public ?string $email = null;
 
-    /** @var int */
-    public $created_at;
+    /** @var int|string|null Date range or timestamp */
+    public mixed $created_at = null;
 
-    /** @var int */
-    public $last_login_at;
+    /** @var int|string|null Date range or timestamp */
+    public mixed $last_login_at = null;
 
-    /** @var string */
-    public $registration_ip;
-
-    /** @var Finder */
-    protected $finder;
+    /** @var string|null */
+    public ?string $registration_ip = null;
 
     /**
-     * @param Finder $finder
-     * @param array  $config
+     * @param Finder $finder The finder instance.
+     * @param array  $config Name-value pairs that will be used to initialize the object properties.
      */
-    public function __construct(Finder $finder, $config = [])
-    {
-        $this->finder = $finder;
+    public function __construct(
+        protected Finder $finder,
+        array $config = []
+    ) {
         parent::__construct($config);
     }
 
     /** @inheritdoc */
-    public function rules()
+    public function rules(): array
     {
         return [
             'fieldsSafe' => [['id', 'username', 'email', 'registration_ip', 'created_at', 'last_login_at'], 'safe'],
-            'createdDefault' => ['created_at', 'default', 'value' => null],
-            'lastloginDefault' => ['last_login_at', 'default', 'value' => null],
+            // Setting default to null might not be necessary if properties are already nullable
+            // 'createdDefault' => ['created_at', 'default', 'value' => null],
+            // 'lastloginDefault' => ['last_login_at', 'default', 'value' => null],
         ];
     }
 
     /** @inheritdoc */
-    public function attributeLabels()
+    public function attributeLabels(): array
     {
         return [
-            'id'              => Yii::t('user', '#'),
-            'username'        => Yii::t('user', 'Username'),
-            'email'           => Yii::t('user', 'Email'),
-            'created_at'      => Yii::t('user', 'Registration time'),
-            'last_login_at'   => Yii::t('user', 'Last login'),
+            'id' => Yii::t('user', '#'),
+            'username' => Yii::t('user', 'Username'),
+            'email' => Yii::t('user', 'Email'),
+            'created_at' => Yii::t('user', 'Registration time'),
+            'last_login_at' => Yii::t('user', 'Last login'),
             'registration_ip' => Yii::t('user', 'Registration ip'),
         ];
     }
 
     /**
-     * @param $params
+     * Creates data provider instance with search query applied.
+     *
+     * @param array<string, mixed> $params The data array. This is usually `Yii::$app->request->queryParams`.
      *
      * @return ActiveDataProvider
      */
-    public function search($params)
+    public function search(array $params): ActiveDataProvider
     {
         $query = $this->finder->getUserQuery();
 
@@ -93,18 +97,40 @@ class UserSearch extends Model
             return $dataProvider;
         }
 
+        /** @var class-string<User> $modelClass */
         $modelClass = $query->modelClass;
-        $table_name = $modelClass::tableName();
+        $tableName = $modelClass::tableName();
 
-        if ($this->created_at !== null) {
-            $date = strtotime($this->created_at);
-            $query->andFilterWhere(['between', $table_name . '.created_at', $date, $date + 3600 * 24]);
+        // Apply date range filter for created_at if it's a string (potentially from a date range picker)
+        if (is_string($this->created_at) && !empty($this->created_at)) {
+            // Example assumes 'YYYY-MM-DD - YYYY-MM-DD' format or similar
+            // Needs specific parsing logic based on the expected date format
+            $dateParts = explode(' - ', $this->created_at);
+
+            if (count($dateParts) === 2) {
+                $startDate = strtotime($dateParts[0] . ' 00:00:00');
+                $endDate = strtotime($dateParts[1] . ' 23:59:59');
+
+                if ($startDate && $endDate) {
+                    $query->andFilterWhere(['between', $tableName . '.created_at', $startDate, $endDate]);
+                }
+            } else { // Handle single date
+                $date = strtotime($this->created_at);
+
+                if ($date) {
+                    $query->andFilterWhere(['between', $tableName . '.created_at', $date, $date + 86399]); // 24 hours - 1 second
+                }
+            }
+        } elseif (is_numeric($this->created_at)) { // Handle timestamp if provided directly
+            $query->andFilterWhere([$tableName . '.created_at' => $this->created_at]);
         }
 
-        $query->andFilterWhere(['like', $table_name . '.username', $this->username])
-              ->andFilterWhere(['like', $table_name . '.email', $this->email])
-              ->andFilterWhere([$table_name . '.id' => $this->id])
-              ->andFilterWhere([$table_name . '.registration_ip' => $this->registration_ip]);
+        // Similar logic could be applied for last_login_at if needed
+
+        $query->andFilterWhere(['like', $tableName . '.username', $this->username])
+              ->andFilterWhere(['like', $tableName . '.email', $this->email])
+              ->andFilterWhere([$tableName . '.id' => $this->id])
+              ->andFilterWhere(['like', $tableName . '.registration_ip', $this->registration_ip]); // Use like for IP search
 
         return $dataProvider;
     }

@@ -1,9 +1,8 @@
 <?php
 
-
-use dektrium\user\models\Token;
-use dektrium\user\models\User;
-use dektrium\user\Module;
+use AlexeiKaDev\Yii2User\models\Token;
+use AlexeiKaDev\Yii2User\models\User;
+use AlexeiKaDev\Yii2User\Module;
 use tests\_fixtures\UserFixture;
 use tests\_pages\LoginPage;
 use tests\_pages\RegistrationPage;
@@ -19,7 +18,7 @@ class RegistrationCest
     public function _after(FunctionalTester $I)
     {
         \Yii::$container->set(Module::className(), [
-            'enableConfirmation'       => true,
+            'enableConfirmation' => true,
             'enableGeneratingPassword' => false,
         ]);
     }
@@ -31,7 +30,7 @@ class RegistrationCest
     public function testRegistration(FunctionalTester $I)
     {
         \Yii::$container->set(Module::className(), [
-            'enableConfirmation'       => false,
+            'enableConfirmation' => false,
             'enableGeneratingPassword' => false,
         ]);
 
@@ -72,7 +71,7 @@ class RegistrationCest
         $page = RegistrationPage::openBy($I);
         $page->register('tester@example.com', 'tester', 'tester');
         $I->see('Your account has been created and a message with further instructions has been sent to your email');
-        $user  = $I->grabRecord(User::className(), ['email' => 'tester@example.com']);
+        $user = $I->grabRecord(User::className(), ['email' => 'tester@example.com']);
         $token = $I->grabRecord(Token::className(), ['user_id' => $user->id, 'type' => Token::TYPE_CONFIRMATION]);
         /** @var yii\swiftmailer\Message $message */
         $message = $I->grabLastSentEmail();
@@ -88,7 +87,7 @@ class RegistrationCest
     public function testRegistrationWithoutPassword(FunctionalTester $I)
     {
         \Yii::$container->set(Module::className(), [
-            'enableConfirmation'       => false,
+            'enableConfirmation' => false,
             'enableGeneratingPassword' => true,
         ]);
         $page = RegistrationPage::openBy($I);

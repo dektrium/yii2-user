@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of the Dektrium project.
  *
@@ -9,14 +11,14 @@
  * file that was distributed with this source code.
  */
 
-use dektrium\user\migrations\Migration;
+use AlexeiKaDev\Yii2User\migrations\Migration;
 
 /**
  * @author Dmitry Erofeev <dmeroff@gmail.com>
  */
 class m140504_113157_update_tables extends Migration
 {
-    public function up()
+    public function up(): void
     {
         // user table
         $this->dropIndex('{{%user_confirmation}}', '{{%user}}');
@@ -34,7 +36,7 @@ class m140504_113157_update_tables extends Migration
         $this->renameColumn('{{%account}}', 'properties', 'data');
     }
 
-    public function down()
+    public function down(): void
     {
         // account table
         $this->renameColumn('{{%account}}', 'data', 'properties');

@@ -9,57 +9,57 @@
  * file that was distributed with this source code.
  */
 
-namespace dektrium\user\events;
+namespace AlexeiKaDev\Yii2User\events;
 
-use dektrium\user\models\RecoveryForm;
-use dektrium\user\models\Token;
+use AlexeiKaDev\Yii2User\models\RecoveryForm;
+use AlexeiKaDev\Yii2User\models\Token;
 use yii\base\Event;
 
 /**
- * @property Token        $token
- * @property RecoveryForm $form
+ * @property Token|null        $token
+ * @property RecoveryForm|null $form
  * @author Dmitry Erofeev <dmeroff@gmail.com>
  */
 class ResetPasswordEvent extends Event
 {
     /**
-     * @var RecoveryForm
+     * @var RecoveryForm|null
      */
-    private $_form;
+    private ?RecoveryForm $_form = null;
 
     /**
-     * @var Token
+     * @var Token|null
      */
-    private $_token;
+    private ?Token $_token = null;
 
     /**
-     * @return Token
+     * @return Token|null
      */
-    public function getToken()
+    public function getToken(): ?Token
     {
         return $this->_token;
     }
 
     /**
-     * @param Token $token
+     * @param Token|null $token
      */
-    public function setToken(Token $token = null)
+    public function setToken(?Token $token = null): void
     {
         $this->_token = $token;
     }
 
     /**
-     * @return RecoveryForm
+     * @return RecoveryForm|null
      */
-    public function getForm()
+    public function getForm(): ?RecoveryForm
     {
         return $this->_form;
     }
 
     /**
-     * @param RecoveryForm $form
+     * @param RecoveryForm|null $form
      */
-    public function setForm(RecoveryForm $form = null)
+    public function setForm(?RecoveryForm $form = null): void
     {
         $this->_form = $form;
     }

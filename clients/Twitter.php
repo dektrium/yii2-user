@@ -9,7 +9,7 @@
  * file that was distributed with this source code.
  */
 
-namespace dektrium\user\clients;
+namespace AlexeiKaDev\Yii2User\clients;
 
 use yii\authclient\clients\Twitter as BaseTwitter;
 use yii\helpers\ArrayHelper;
@@ -20,9 +20,9 @@ use yii\helpers\ArrayHelper;
 class Twitter extends BaseTwitter implements ClientInterface
 {
     /**
-     * @return string
+     * @return string|null
      */
-    public function getUsername()
+    public function getUsername(): ?string
     {
         return ArrayHelper::getValue($this->getUserAttributes(), 'screen_name');
     }
@@ -32,7 +32,7 @@ class Twitter extends BaseTwitter implements ClientInterface
      * unless elevated permissions have been granted
      * https://dev.twitter.com/rest/reference/get/account/verify_credentials
      */
-    public function getEmail()
+    public function getEmail(): ?string
     {
         return ArrayHelper::getValue($this->getUserAttributes(), 'email');
     }

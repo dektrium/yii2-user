@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Message translations.
  *
@@ -16,7 +17,7 @@
  *
  * NOTE: this file must be saved in UTF-8 encoding.
  */
-return array (
+return  [
   '#' => '',
   '(not set)' => '(niet gedefinieerd)',
   'A confirmation message has been sent to your new email address' => 'Een bevestigingsbericht is verzonden naar je nieuwe e-mailadres',
@@ -188,4 +189,4 @@ return array (
   'Your password on {0} has been changed' => 'Je wachtwoord op {0} is veranderd',
   'Your profile has been updated' => 'Je profiel is geüpdatet',
   '{0, date, MMMM dd, YYYY HH:mm}' => '{0, date, dd MMMM, YYYY HH:mm}',
-);
+];

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of the Dektrium project.
  *
@@ -9,9 +11,9 @@
  * file that was distributed with this source code.
  */
 
-namespace dektrium\user\commands;
+namespace AlexeiKaDev\Yii2User\commands;
 
-use dektrium\user\models\User;
+use AlexeiKaDev\Yii2User\models\User;
 use Yii;
 use yii\console\Controller;
 use yii\helpers\Console;
@@ -19,7 +21,7 @@ use yii\helpers\Console;
 /**
  * Creates new user account.
  *
- * @property \dektrium\user\Module $module
+ * @property \AlexeiKaDev\Yii2User\Module $module
  *
  * @author Dmitry Erofeev <dmeroff@gmail.com>
  */
@@ -32,14 +34,15 @@ class CreateController extends Controller
      *
      * @param string      $email    Email address
      * @param string      $username Username
-     * @param null|string $password Password (if null it will be generated automatically)
+     * @param string|null $password Password (if null it will be generated automatically)
      */
-    public function actionIndex($email, $username, $password = null)
+    public function actionIndex(string $email, string $username, ?string $password = null): void
     {
+        /** @var User $user */
         $user = Yii::createObject([
-            'class'    => User::className(),
+            'class' => User::class,
             'scenario' => 'create',
-            'email'    => $email,
+            'email' => $email,
             'username' => $username,
             'password' => $password,
         ]);
@@ -48,6 +51,7 @@ class CreateController extends Controller
             $this->stdout(Yii::t('user', 'User has been created') . "!\n", Console::FG_GREEN);
         } else {
             $this->stdout(Yii::t('user', 'Please fix following errors:') . "\n", Console::FG_RED);
+
             foreach ($user->errors as $errors) {
                 foreach ($errors as $error) {
                     $this->stdout(' - ' . $error . "\n", Console::FG_RED);

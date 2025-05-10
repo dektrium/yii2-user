@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 /*
  * This file is part of the Dektrium project.
@@ -9,15 +10,15 @@
  * file that was distributed with this source code.
  */
 
-use yii\helpers\Html;
-use dektrium\user\helpers\Timezone;
-use yii\widgets\ActiveForm;
+use AlexeiKaDev\Yii2User\helpers\Timezone;
 use yii\helpers\ArrayHelper;
+use yii\helpers\Html;
+use yii\widgets\ActiveForm;
 
 /**
  * @var yii\web\View $this
  * @var yii\widgets\ActiveForm $form
- * @var dektrium\user\models\Profile $model
+ * @var AlexeiKaDev\Yii2User\models\Profile $model
  */
 
 $this->title = Yii::t('user', 'Profile settings');
@@ -31,18 +32,13 @@ $this->params['breadcrumbs'][] = $this->title;
         <?= $this->render('_menu') ?>
     </div>
     <div class="col-md-9">
-        <div class="panel panel-default">
-            <div class="panel-heading">
+        <div class="card">
+            <div class="card-header">
                 <?= Html::encode($this->title) ?>
             </div>
-            <div class="panel-body">
+            <div class="card-body">
                 <?php $form = ActiveForm::begin([
                     'id' => 'profile-form',
-                    'options' => ['class' => 'form-horizontal'],
-                    'fieldConfig' => [
-                        'template' => "{label}\n<div class=\"col-lg-9\">{input}</div>\n<div class=\"col-sm-offset-3 col-lg-9\">{error}\n{hint}</div>",
-                        'labelOptions' => ['class' => 'col-lg-3 control-label'],
-                    ],
                     'enableAjaxValidation' => true,
                     'enableClientValidation' => false,
                     'validateOnBlur' => false,
@@ -72,11 +68,8 @@ $this->params['breadcrumbs'][] = $this->title;
 
                 <?= $form->field($model, 'bio')->textarea() ?>
 
-                <div class="form-group">
-                    <div class="col-lg-offset-3 col-lg-9">
-                        <?= Html::submitButton(Yii::t('user', 'Save'), ['class' => 'btn btn-block btn-success']) ?>
-                        <br>
-                    </div>
+                <div class="mt-3">
+                    <?= Html::submitButton(Yii::t('user', 'Save'), ['class' => 'btn btn-success w-100']) ?>
                 </div>
 
                 <?php ActiveForm::end(); ?>

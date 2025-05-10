@@ -9,7 +9,7 @@
  * file that was distributed with this source code.
  */
 
-namespace dektrium\user\events;
+namespace AlexeiKaDev\Yii2User\events;
 
 use yii\base\Event;
 use yii\base\Model;
@@ -23,12 +23,12 @@ class FormEvent extends Event
     /**
      * @var Model
      */
-    private $_form;
+    private Model $_form;
 
     /**
      * @return Model
      */
-    public function getForm()
+    public function getForm(): Model
     {
         return $this->_form;
     }
@@ -36,7 +36,7 @@ class FormEvent extends Event
     /**
      * @param Model $form
      */
-    public function setForm(Model $form)
+    public function setForm(Model $form): void
     {
         $this->_form = $form;
     }

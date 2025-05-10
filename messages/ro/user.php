@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Message translations.
  *
@@ -16,7 +17,7 @@
  *
  * NOTE: this file must be saved in UTF-8 encoding.
  */
-return array (
+return  [
     '#' => '',
     'Are you sure you want to switch to this user for the rest of this Session?' => 'Sigur doriți să comutați la acest utilizator pentru restul acestei sesiuni?',
     'Are you sure?' => 'Esti sigur?',
@@ -188,4 +189,4 @@ return array (
     'Your password has been changed successfully.' => 'Parola dvs. a fost modificată cu succes.',
     'Your profile has been updated' => 'Profilul dvs. a fost actualizat cu succes',
     '{0, date, MMMM dd, YYYY HH:mm}' => '{0, date, dd MMMM, YYYY HH:mm}',
-);
+];

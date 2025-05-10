@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of the Dektrium project
  *
@@ -9,8 +11,9 @@
  * file that was distributed with this source code.
  */
 
-namespace dektrium\user\traits;
+namespace AlexeiKaDev\Yii2User\traits;
 
+use Yii;
 use yii\base\Model;
 use yii\web\Response;
 use yii\widgets\ActiveForm;
@@ -27,13 +30,13 @@ trait AjaxValidationTrait
      *
      * @throws \yii\base\ExitException
      */
-    protected function performAjaxValidation(Model $model)
+    protected function performAjaxValidation(Model $model): void
     {
-        if (\Yii::$app->request->isAjax && $model->load(\Yii::$app->request->post())) {
-            \Yii::$app->response->format = Response::FORMAT_JSON;
-            \Yii::$app->response->data   = ActiveForm::validate($model);
-            \Yii::$app->response->send();
-            \Yii::$app->end();
+        if (Yii::$app->request->isAjax && $model->load(Yii::$app->request->post())) {
+            Yii::$app->response->format = Response::FORMAT_JSON;
+            Yii::$app->response->data = ActiveForm::validate($model);
+            Yii::$app->response->send();
+            Yii::$app->end();
         }
     }
 }

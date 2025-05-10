@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of the Dektrium project.
  *
@@ -9,53 +11,74 @@
  * file that was distributed with this source code.
  */
 
-namespace dektrium\user\models;
+namespace AlexeiKaDev\Yii2User\models;
 
-use dektrium\user\traits\ModuleTrait;
+use AlexeiKaDev\Yii2User\Module;
+use AlexeiKaDev\Yii2User\traits\ModuleTrait;
+use DateTime;
+use DateTimeZone;
+use Exception;
+use Yii;
+use yii\db\ActiveQuery;
 use yii\db\ActiveRecord;
 
 /**
  * This is the model class for table "profile".
  *
- * @property integer $user_id
- * @property string  $name
- * @property string  $public_email
- * @property string  $gravatar_email
- * @property string  $gravatar_id
- * @property string  $location
- * @property string  $website
- * @property string  $bio
- * @property string  $timezone
- * @property User    $user
+ * @property int $user_id
+ * @property string|null $name
+ * @property string|null $public_email
+ * @property string|null $gravatar_email
+ * @property string|null $gravatar_id
+ * @property string|null $location
+ * @property string|null $website
+ * @property string|null $bio
+ * @property string|null $timezone
+ * @property User $user User relation defined by getUser().
  *
- * @author Dmitry Erofeev <dmeroff@gmail.com
+ * @author Dmitry Erofeev <dmeroff@gmail.com>
  */
 class Profile extends ActiveRecord
 {
     use ModuleTrait;
-    /** @var \dektrium\user\Module */
-    protected $module;
+
+    /** @var Module The user module instance */
+    protected Module $module;
 
     /** @inheritdoc */
-    public function init()
+    public function init(): void
     {
-        $this->module = \Yii::$app->getModule('user');
+        parent::init(); // Call parent::init() at the beginning
+        /** @var Module $userModule */
+        $userModule = Yii::$app->getModule('user');
+        $this->module = $userModule;
     }
 
     /**
-     * Returns avatar url or null if avatar is not set.
-     * @param  int $size
-     * @return string|null
+     * Returns avatar url.
+     * @param int $size Size in pixels.
+     * @return string
      */
-    public function getAvatarUrl($size = 200)
+    public function getAvatarUrl(int $size = 200): string
     {
-        return '//gravatar.com/avatar/' . $this->gravatar_id . '?s=' . $size;
+        // Используем coalesce оператор для краткости
+        $emailToHash = strtolower(trim((string)($this->gravatar_email ?? $this->public_email ?? $this->user->email ?? '')));
+        $gravatarId = $this->gravatar_id ?: md5($emailToHash);
+
+        // Если gravatarId все еще пуст (например, email не был найден или пуст)
+        if (empty($gravatarId)) {
+            // Можно вернуть дефолтный аватар или использовать другую логику
+            // md5('') вернет 'd41d8cd98f00b204e9800998ecf8427e', что тоже даст Gravatar
+            $gravatarId = md5('');
+        }
+
+        return '//gravatar.com/avatar/' . $gravatarId . '?s=' . $size . '&d=mp'; // d=mp для дефолтного аватара
     }
 
     /**
-     * @return \yii\db\ActiveQueryInterface
+     * @return ActiveQuery
      */
-    public function getUser()
+    public function getUser(): ActiveQuery
     {
         return $this->hasOne($this->module->modelMap['User'], ['id' => 'user_id']);
     }
@@ -63,35 +86,35 @@ class Profile extends ActiveRecord
     /**
      * @inheritdoc
      */
-    public function rules()
+    public function rules(): array
     {
         return [
-            'bioString'            => ['bio', 'string'],
-            'timeZoneValidation'   => ['timezone', 'validateTimeZone'],
-            'publicEmailPattern'   => ['public_email', 'email'],
-            'gravatarEmailPattern' => ['gravatar_email', 'email'],
-            'websiteUrl'           => ['website', 'url'],
-            'nameLength'           => ['name', 'string', 'max' => 255],
-            'publicEmailLength'    => ['public_email', 'string', 'max' => 255],
-            'gravatarEmailLength'  => ['gravatar_email', 'string', 'max' => 255],
-            'locationLength'       => ['location', 'string', 'max' => 255],
-            'websiteLength'        => ['website', 'string', 'max' => 255],
+            ['bio', 'string'],
+            ['timezone', 'validateTimeZone'],
+            ['public_email', 'email'],
+            ['gravatar_email', 'email'],
+            ['website', 'url'],
+            ['name', 'string', 'max' => 255],
+            ['public_email', 'string', 'max' => 255],
+            ['gravatar_email', 'string', 'max' => 255],
+            ['location', 'string', 'max' => 255],
+            ['website', 'string', 'max' => 255],
         ];
     }
 
     /**
      * @inheritdoc
      */
-    public function attributeLabels()
+    public function attributeLabels(): array
     {
         return [
-            'name'           => \Yii::t('user', 'Name'),
-            'public_email'   => \Yii::t('user', 'Email (public)'),
-            'gravatar_email' => \Yii::t('user', 'Gravatar email'),
-            'location'       => \Yii::t('user', 'Location'),
-            'website'        => \Yii::t('user', 'Website'),
-            'bio'            => \Yii::t('user', 'Bio'),
-            'timezone'       => \Yii::t('user', 'Time zone'),
+            'name' => Yii::t('user', 'Name'),
+            'public_email' => Yii::t('user', 'Email (public)'),
+            'gravatar_email' => Yii::t('user', 'Gravatar email'),
+            'location' => Yii::t('user', 'Location'),
+            'website' => Yii::t('user', 'Website'),
+            'bio' => Yii::t('user', 'Bio'),
+            'timezone' => Yii::t('user', 'Time zone'),
         ];
     }
 
@@ -99,60 +122,78 @@ class Profile extends ActiveRecord
      * Validates the timezone attribute.
      * Adds an error when the specified time zone doesn't exist.
      * @param string $attribute the attribute being validated
-     * @param array $params values for the placeholders in the error message
+     * @param array|null $params values for the placeholders in the error message
      */
-    public function validateTimeZone($attribute, $params)
+    public function validateTimeZone(string $attribute, ?array $params = null): void
     {
-        if (!in_array($this->$attribute, timezone_identifiers_list())) {
-            $this->addError($attribute, \Yii::t('user', 'Time zone is not valid'));
+        /** @var string|null $value */
+        $value = $this->$attribute; // Доступ к свойству напрямую
+
+        if ($value === null || $value === '') {
+            return;
+        }
+
+        if (!in_array($value, DateTimeZone::listIdentifiers(), true)) {
+            $this->addError($attribute, Yii::t('user', 'Time zone is not valid'));
         }
     }
 
     /**
      * Get the user's time zone.
      * Defaults to the application timezone if not specified by the user.
-     * @return \DateTimeZone
+     * @return DateTimeZone
      */
-    public function getTimeZone()
+    public function getTimeZone(): DateTimeZone
     {
         try {
-            return new \DateTimeZone($this->timezone);
-        } catch (\Exception $e) {
-            // Default to application time zone if the user hasn't set their time zone
-            return new \DateTimeZone(\Yii::$app->timeZone);
+            if (!empty($this->timezone)) {
+                return new DateTimeZone($this->timezone);
+            }
+        } catch (Exception $e) { // Используем импортированный Exception
+            // Log error if needed:
+            Yii::warning(
+                "Invalid timezone '{$this->timezone}' for user {$this->user_id}: " . $e->getMessage(),
+                __METHOD__
+            );
         }
+
+        // Возвращаем таймзону приложения как fallback
+        return new DateTimeZone(Yii::$app->timeZone);
     }
 
     /**
      * Set the user's time zone.
-     * @param \DateTimeZone $timezone the timezone to save to the user's profile
+     * @param DateTimeZone $timeZone the timezone to save to the user's profile
      */
-    public function setTimeZone(\DateTimeZone $timeZone)
+    public function setTimeZone(DateTimeZone $timeZone): void
     {
         $this->setAttribute('timezone', $timeZone->getName());
     }
 
     /**
      * Converts DateTime to user's local time
-     * @param \DateTime the datetime to convert
-     * @return \DateTime
+     * @param DateTime|null $dateTime the datetime to convert, defaults to current time
+     * @return DateTime
      */
-    public function toLocalTime(\DateTime $dateTime = null)
+    public function toLocalTime(?DateTime $dateTime = null): DateTime
     {
-        if ($dateTime === null) {
-            $dateTime = new \DateTime();
-        }
+        $dateTime = $dateTime ?? new DateTime();
 
         return $dateTime->setTimezone($this->getTimeZone());
     }
 
     /**
      * @inheritdoc
+     * @param bool $insert
      */
-    public function beforeSave($insert)
+    public function beforeSave($insert): bool // <<< Добавлен тип bool для $insert
     {
-        if ($this->isAttributeChanged('gravatar_email')) {
-            $this->setAttribute('gravatar_id', md5(strtolower(trim($this->getAttribute('gravatar_email')))));
+        $gravatarEmail = $this->getAttribute('gravatar_email');
+        $isGravatarEmailChanged = $this->isAttributeChanged('gravatar_email');
+
+        if ($isGravatarEmailChanged || ($insert && !empty($gravatarEmail))) {
+            $emailToHash = strtolower(trim((string)$gravatarEmail));
+            $this->setAttribute('gravatar_id', !empty($emailToHash) ? md5($emailToHash) : null);
         }
 
         return parent::beforeSave($insert);
@@ -161,7 +202,7 @@ class Profile extends ActiveRecord
     /**
      * @inheritdoc
      */
-    public static function tableName()
+    public static function tableName(): string
     {
         return '{{%profile}}';
     }

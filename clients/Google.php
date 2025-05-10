@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of the Dektrium project
+ * This file is part of the Dektrium project.
  *
  * (c) Dektrium project <http://github.com/dektrium>
  *
@@ -9,7 +9,7 @@
  * file that was distributed with this source code.
  */
 
-namespace dektrium\user\clients;
+namespace AlexeiKaDev\Yii2User\clients;
 
 use yii\authclient\clients\Google as BaseGoogle;
 
@@ -34,9 +34,9 @@ class Google extends BaseGoogle implements ClientInterface
 
         return parent::buildAuthUrl($params);
     }
-    
+
     /** @inheritdoc */
-    public function getEmail()
+    public function getEmail(): ?string
     {
         return isset($this->getUserAttributes()['emails'][0]['value'])
             ? $this->getUserAttributes()['emails'][0]['value']
@@ -44,8 +44,8 @@ class Google extends BaseGoogle implements ClientInterface
     }
 
     /** @inheritdoc */
-    public function getUsername()
+    public function getUsername(): ?string
     {
-        return;
+        return null;
     }
 }

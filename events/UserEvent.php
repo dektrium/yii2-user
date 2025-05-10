@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of the Dektrium project.
  *
@@ -9,35 +11,37 @@
  * file that was distributed with this source code.
  */
 
-namespace dektrium\user\events;
+namespace AlexeiKaDev\Yii2User\events;
 
-use dektrium\user\models\User;
+use AlexeiKaDev\Yii2User\models\User;
 use yii\base\Event;
 
 /**
- * @property User $model
+ * Represents an event triggered for a user.
+ *
+ * @property User $user The user model associated with the event.
  * @author Dmitry Erofeev <dmeroff@gmail.com>
  */
 class UserEvent extends Event
 {
     /**
-     * @var User
+     * @var User The user model associated with this event.
      */
-    private $_user;
+    private User $_user;
 
     /**
      * @return User
      */
-    public function getUser()
+    public function getUser(): User
     {
         return $this->_user;
     }
 
     /**
-     * @param User $form
+     * @param User $user
      */
-    public function setUser(User $form)
+    public function setUser(User $user): void
     {
-        $this->_user = $form;
+        $this->_user = $user;
     }
 }

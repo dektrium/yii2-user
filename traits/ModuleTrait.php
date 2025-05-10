@@ -1,30 +1,37 @@
 <?php
 
-namespace dektrium\user\traits;
+namespace AlexeiKaDev\Yii2User\traits;
 
-use dektrium\user\Module;
+use AlexeiKaDev\Yii2User\Module;
+use Yii;
 
 /**
  * Trait ModuleTrait
  *
  * @property-read Module $module
- * @package dektrium\user\traits
+ * @package AlexeiKaDev\Yii2User\traits
  */
 trait ModuleTrait
 {
     /**
      * @return Module
      */
-    public function getModule()
+    public function getModule(): Module
     {
-        return \Yii::$app->getModule('user');
+        /** @var Module $module */
+        $module = Yii::$app->getModule('user');
+
+        return $module;
     }
 
     /**
-     * @return string
+     * @return \yii\db\Connection
      */
-    public static function getDb()
+    public static function getDb(): \yii\db\Connection
     {
-        return \Yii::$app->getModule('user')->getDb();
+        /** @var Module $module */
+        $module = Yii::$app->getModule('user');
+
+        return $module->getDb();
     }
 }

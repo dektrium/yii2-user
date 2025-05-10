@@ -9,7 +9,7 @@
  * file that was distributed with this source code.
  */
 
-namespace dektrium\user\clients;
+namespace AlexeiKaDev\Yii2User\clients;
 
 use Yii;
 use yii\authclient\clients\VKontakte as BaseVKontakte;
@@ -23,13 +23,13 @@ class VKontakte extends BaseVKontakte implements ClientInterface
     public $scope = 'email';
 
     /** @inheritdoc */
-    public function getEmail()
+    public function getEmail(): ?string
     {
         return $this->getAccessToken()->getParam('email');
     }
 
     /** @inheritdoc */
-    public function getUsername()
+    public function getUsername(): ?string
     {
         return isset($this->getUserAttributes()['screen_name'])
             ? $this->getUserAttributes()['screen_name']

@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 /*
  * This file is part of the Dektrium project
@@ -9,17 +10,18 @@
  * file that was distributed with this source code.
  */
 
-use yii\bootstrap\ActiveForm;
+use yii\bootstrap5\ActiveForm;
 use yii\helpers\Html;
 
 /**
  * @var yii\web\View $this
- * @var dektrium\user\models\User $user
- * @var dektrium\user\models\Profile $profile
+ * @var AlexeiKaDev\Yii2User\models\User $user
+ * @var AlexeiKaDev\Yii2User\models\Profile $profile
+ * @var yii\widgets\ActiveForm $form
  */
 ?>
 
-<?php $this->beginContent('@dektrium/user/views/admin/update.php', ['user' => $user]) ?>
+<?php $this->beginContent('@AlexeiKaDev/Yii2User/views/admin/update.php', ['user' => $user]) ?>
 
 <?php $form = ActiveForm::begin([
     'layout' => 'horizontal',
@@ -40,8 +42,8 @@ use yii\helpers\Html;
 <?= $form->field($profile, 'bio')->textarea() ?>
 
 <div class="form-group">
-    <div class="col-lg-offset-3 col-lg-9">
-        <?= Html::submitButton(Yii::t('user', 'Update'), ['class' => 'btn btn-block btn-success']) ?>
+    <div class="offset-lg-3 col-lg-9">
+        <?= Html::submitButton(Yii::t('user', 'Update'), ['class' => 'btn btn-success w-100']) ?>
     </div>
 </div>
 

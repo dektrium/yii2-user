@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of the Dektrium project
+ * This file is part of the Dektrium project.
  *
  * (c) Dektrium project <http://github.com/dektrium>
  *
@@ -9,7 +9,7 @@
  * file that was distributed with this source code.
  */
 
-namespace dektrium\user\clients;
+namespace AlexeiKaDev\Yii2User\clients;
 
 use Yii;
 use yii\authclient\clients\Yandex as BaseYandex;
@@ -20,7 +20,7 @@ use yii\authclient\clients\Yandex as BaseYandex;
 class Yandex extends BaseYandex implements ClientInterface
 {
     /** @inheritdoc */
-    public function getEmail()
+    public function getEmail(): ?string
     {
         $emails = isset($this->getUserAttributes()['emails'])
             ? $this->getUserAttributes()['emails']
@@ -34,7 +34,7 @@ class Yandex extends BaseYandex implements ClientInterface
     }
 
     /** @inheritdoc */
-    public function getUsername()
+    public function getUsername(): ?string
     {
         return isset($this->getUserAttributes()['login'])
             ? $this->getUserAttributes()['login']

@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 /*
  * This file is part of the Dektrium project.
@@ -9,30 +10,30 @@
  * file that was distributed with this source code.
  */
 
-use dektrium\user\widgets\Connect;
-use dektrium\user\models\LoginForm;
+use AlexeiKaDev\Yii2User\models\LoginForm;
+use AlexeiKaDev\Yii2User\widgets\Connect;
 use yii\helpers\Html;
 use yii\widgets\ActiveForm;
 
 /**
  * @var yii\web\View $this
- * @var dektrium\user\models\LoginForm $model
- * @var dektrium\user\Module $module
+ * @var AlexeiKaDev\Yii2User\models\LoginForm $model
+ * @var AlexeiKaDev\Yii2User\Module $module
  */
 
 $this->title = Yii::t('user', 'Sign in');
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 
-<?= $this->render('/_alert', ['module' => Yii::$app->getModule('user')]) ?>
+<?= $this->render('/_alert', ['module' => $module]) ?>
 
-<div class="row">
-    <div class="col-md-4 col-md-offset-4 col-sm-6 col-sm-offset-3">
-        <div class="panel panel-default">
-            <div class="panel-heading">
-                <h3 class="panel-title"><?= Html::encode($this->title) ?></h3>
+<div class="row justify-content-center">
+    <div class="col-md-4 col-sm-6">
+        <div class="card">
+            <div class="card-header">
+                <h3 class="card-title"><?= Html::encode($this->title) ?></h3>
             </div>
-            <div class="panel-body">
+            <div class="card-body">
                 <?php $form = ActiveForm::begin([
                     'id' => 'login-form',
                     'enableAjaxValidation' => true,
@@ -85,14 +86,14 @@ $this->params['breadcrumbs'][] = $this->title;
 
                 <?= Html::submitButton(
                     Yii::t('user', 'Sign in'),
-                    ['class' => 'btn btn-primary btn-block', 'tabindex' => '4']
+                    ['class' => 'btn btn-primary w-100', 'tabindex' => '4']
                 ) ?>
 
                 <?php ActiveForm::end(); ?>
             </div>
         </div>
         <?php if ($module->enableConfirmation): ?>
-            <p class="text-center">
+            <p class="text-center mt-3">
                 <?= Html::a(Yii::t('user', 'Didn\'t receive confirmation message?'), ['/user/registration/resend']) ?>
             </p>
         <?php endif ?>

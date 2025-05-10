@@ -9,7 +9,7 @@
  * file that was distributed with this source code.
  */
 
-namespace dektrium\user;
+namespace AlexeiKaDev\Yii2User;
 
 use Yii;
 use yii\authclient\Collection;
@@ -26,47 +26,47 @@ use yii\i18n\PhpMessageSource;
 class Bootstrap implements BootstrapInterface
 {
     /** @var array Model's map */
-    private $_modelMap = [
-        'User'             => 'dektrium\user\models\User',
-        'Account'          => 'dektrium\user\models\Account',
-        'Profile'          => 'dektrium\user\models\Profile',
-        'Token'            => 'dektrium\user\models\Token',
-        'RegistrationForm' => 'dektrium\user\models\RegistrationForm',
-        'ResendForm'       => 'dektrium\user\models\ResendForm',
-        'LoginForm'        => 'dektrium\user\models\LoginForm',
-        'SettingsForm'     => 'dektrium\user\models\SettingsForm',
-        'RecoveryForm'     => 'dektrium\user\models\RecoveryForm',
-        'UserSearch'       => 'dektrium\user\models\UserSearch',
+    private array $_modelMap = [
+        'User' => 'AlexeiKaDev\Yii2User\models\User',
+        'Account' => 'AlexeiKaDev\Yii2User\models\Account',
+        'Profile' => 'AlexeiKaDev\Yii2User\models\Profile',
+        'Token' => 'AlexeiKaDev\Yii2User\models\Token',
+        'RegistrationForm' => 'AlexeiKaDev\Yii2User\models\RegistrationForm',
+        'ResendForm' => 'AlexeiKaDev\Yii2User\models\ResendForm',
+        'LoginForm' => 'AlexeiKaDev\Yii2User\models\LoginForm',
+        'SettingsForm' => 'AlexeiKaDev\Yii2User\models\SettingsForm',
+        'RecoveryForm' => 'AlexeiKaDev\Yii2User\models\RecoveryForm',
+        'UserSearch' => 'AlexeiKaDev\Yii2User\models\UserSearch',
     ];
 
     /** @inheritdoc */
-    public function bootstrap($app)
+    public function bootstrap($app): void
     {
         /** @var Module $module */
         /** @var \yii\db\ActiveRecord $modelName */
         if ($app->hasModule('user') && ($module = $app->getModule('user')) instanceof Module) {
             $this->_modelMap = array_merge($this->_modelMap, $module->modelMap);
+
             foreach ($this->_modelMap as $name => $definition) {
-                $class = "dektrium\\user\\models\\" . $name;
+                $class = "AlexeiKaDev\\Yii2User\\models\\" . $name;
                 Yii::$container->set($class, $definition);
                 $modelName = is_array($definition) ? $definition['class'] : $definition;
                 $module->modelMap[$name] = $modelName;
+
                 if (in_array($name, ['User', 'Profile', 'Token', 'Account'])) {
-                    Yii::$container->set($name . 'Query', function () use ($modelName) {
-                        return $modelName::find();
-                    });
+                    Yii::$container->set($name . 'Query', fn () => $modelName::find());
                 }
             }
 
-            Yii::$container->setSingleton(Finder::className(), [
-                'userQuery'    => Yii::$container->get('UserQuery'),
+            Yii::$container->setSingleton(Finder::class, [
+                'userQuery' => Yii::$container->get('UserQuery'),
                 'profileQuery' => Yii::$container->get('ProfileQuery'),
-                'tokenQuery'   => Yii::$container->get('TokenQuery'),
+                'tokenQuery' => Yii::$container->get('TokenQuery'),
                 'accountQuery' => Yii::$container->get('AccountQuery'),
             ]);
 
             if ($app instanceof ConsoleApplication) {
-                $module->controllerNamespace = 'dektrium\user\commands';
+                $module->controllerNamespace = 'AlexeiKaDev\Yii2User\commands';
             } else {
                 Yii::$container->set('yii\web\User', [
                     'enableAutoLogin' => true,
@@ -76,7 +76,7 @@ class Bootstrap implements BootstrapInterface
 
                 $configUrlRule = [
                     'prefix' => $module->urlPrefix,
-                    'rules'  => $module->urlRules,
+                    'rules' => $module->urlRules,
                 ];
 
                 if ($module->urlPrefix != 'user') {
@@ -90,41 +90,50 @@ class Bootstrap implements BootstrapInterface
 
                 if (!$app->has('authClientCollection')) {
                     $app->set('authClientCollection', [
-                        'class' => Collection::className(),
+                        'class' => Collection::class,
                     ]);
                 }
             }
 
-            if (!isset($app->get('i18n')->translations['user*'])) {
-                $app->get('i18n')->translations['user*'] = [
-                    'class' => PhpMessageSource::className(),
+            if (!isset($app->get('i18n')->translations['user*']) && !isset($app->get('i18n')->translations['AlexeiKaDev/Yii2User/*'])) {
+                $app->get('i18n')->translations['AlexeiKaDev/Yii2User'] = [
+                    'class' => PhpMessageSource::class,
                     'basePath' => __DIR__ . '/messages',
                     'sourceLanguage' => 'en-US'
                 ];
             }
 
-            Yii::$container->set('dektrium\user\Mailer', $module->mailer);
+            Yii::$container->set(Mailer::class, $module->mailer);
 
             $module->debug = $this->ensureCorrectDebugSetting();
         }
     }
 
     /** Ensure the module is not in DEBUG mode on production environments */
-    public function ensureCorrectDebugSetting()
+    public function ensureCorrectDebugSetting(): bool
     {
         if (!defined('YII_DEBUG')) {
             return false;
         }
+
         if (!defined('YII_ENV')) {
             return false;
         }
+
         if (defined('YII_ENV') && YII_ENV !== 'dev') {
             return false;
         }
+
         if (defined('YII_DEBUG') && YII_DEBUG !== true) {
             return false;
         }
 
-        return Yii::$app->getModule('user')->debug;
+        $userModule = Yii::$app->getModule('user');
+
+        if ($userModule instanceof Module) {
+            return $userModule->debug;
+        }
+
+        return false;
     }
 }

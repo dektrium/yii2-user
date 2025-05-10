@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 /*
  * This file is part of the Dektrium project.
@@ -9,9 +10,11 @@
  * file that was distributed with this source code.
  */
 
+
 /**
  * @var yii\web\View $this
- * @var dektrium\user\Module $module
+ * @var AlexeiKaDev\Yii2User\Module $module
+ * @var string $title
  */
 
 $this->title = $title;

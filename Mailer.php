@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of the Dektrium project.
  *
@@ -9,12 +11,14 @@
  * file that was distributed with this source code.
  */
 
-namespace dektrium\user;
+namespace AlexeiKaDev\Yii2User;
 
-use dektrium\user\models\Token;
-use dektrium\user\models\User;
+use AlexeiKaDev\Yii2User\models\enums\TokenType;
+use AlexeiKaDev\Yii2User\models\Token;
+use AlexeiKaDev\Yii2User\models\User;
 use Yii;
 use yii\base\Component;
+use yii\mail\BaseMailer;
 
 /**
  * Mailer.
@@ -23,150 +27,114 @@ use yii\base\Component;
  */
 class Mailer extends Component
 {
-    /** @var string */
-    public $viewPath = '@dektrium/user/views/mail';
+    /** @var string Path to mail view files. */
+    public string $viewPath = '@AlexeiKaDev/Yii2User/views/mail';
 
-    /** @var string|array Default: `Yii::$app->params['adminEmail']` OR `no-reply@example.com` */
-    public $sender;
+    /** @var string|array|null Sender email address or array ['email' => 'name']. If null, uses a default value. */
+    public string|array|null $sender = null;
 
-    /** @var \yii\mail\BaseMailer Default: `Yii::$app->mailer` */
-    public $mailerComponent;
+    /** @var BaseMailer|null The mailer component instance. If null, uses Yii::$app->mailer. */
+    public ?BaseMailer $mailerComponent = null;
 
-    /** @var string */
-    protected $welcomeSubject;
+    /** @var string|null Subject for the welcome message. */
+    protected ?string $welcomeSubject = null;
 
-    /** @var string */
-    protected $newPasswordSubject;
+    /** @var string|null Subject for the new password message. */
+    protected ?string $newPasswordSubject = null;
 
-    /** @var string */
-    protected $confirmationSubject;
+    /** @var string|null Subject for the confirmation message. */
+    protected ?string $confirmationSubject = null;
 
-    /** @var string */
-    protected $reconfirmationSubject;
+    /** @var string|null Subject for the reconfirmation message. */
+    protected ?string $reconfirmationSubject = null;
 
-    /** @var string */
-    protected $recoverySubject;
+    /** @var string|null Subject for the recovery message. */
+    protected ?string $recoverySubject = null;
 
-    /** @var \dektrium\user\Module */
-    protected $module;
+    /** @var Module The user module instance. */
+    protected Module $module;
 
-    /**
-     * @return string
-     */
-    public function getWelcomeSubject()
+    public function getWelcomeSubject(): string
     {
-        if ($this->welcomeSubject == null) {
+        if ($this->welcomeSubject === null) {
             $this->setWelcomeSubject(Yii::t('user', 'Welcome to {0}', Yii::$app->name));
         }
 
         return $this->welcomeSubject;
     }
 
-    /**
-     * @param string $welcomeSubject
-     */
-    public function setWelcomeSubject($welcomeSubject)
+    public function setWelcomeSubject(string $welcomeSubject): void
     {
         $this->welcomeSubject = $welcomeSubject;
     }
 
-    /**
-     * @return string
-     */
-    public function getNewPasswordSubject()
+    public function getNewPasswordSubject(): string
     {
-        if ($this->newPasswordSubject == null) {
+        if ($this->newPasswordSubject === null) {
             $this->setNewPasswordSubject(Yii::t('user', 'Your password on {0} has been changed', Yii::$app->name));
         }
 
         return $this->newPasswordSubject;
     }
 
-    /**
-     * @param string $newPasswordSubject
-     */
-    public function setNewPasswordSubject($newPasswordSubject)
+    public function setNewPasswordSubject(string $newPasswordSubject): void
     {
         $this->newPasswordSubject = $newPasswordSubject;
     }
 
-    /**
-     * @return string
-     */
-    public function getConfirmationSubject()
+    public function getConfirmationSubject(): string
     {
-        if ($this->confirmationSubject == null) {
+        if ($this->confirmationSubject === null) {
             $this->setConfirmationSubject(Yii::t('user', 'Confirm account on {0}', Yii::$app->name));
         }
 
         return $this->confirmationSubject;
     }
 
-    /**
-     * @param string $confirmationSubject
-     */
-    public function setConfirmationSubject($confirmationSubject)
+    public function setConfirmationSubject(string $confirmationSubject): void
     {
         $this->confirmationSubject = $confirmationSubject;
     }
 
-    /**
-     * @return string
-     */
-    public function getReconfirmationSubject()
+    public function getReconfirmationSubject(): string
     {
-        if ($this->reconfirmationSubject == null) {
+        if ($this->reconfirmationSubject === null) {
             $this->setReconfirmationSubject(Yii::t('user', 'Confirm email change on {0}', Yii::$app->name));
         }
 
         return $this->reconfirmationSubject;
     }
 
-    /**
-     * @param string $reconfirmationSubject
-     */
-    public function setReconfirmationSubject($reconfirmationSubject)
+    public function setReconfirmationSubject(string $reconfirmationSubject): void
     {
         $this->reconfirmationSubject = $reconfirmationSubject;
     }
 
-    /**
-     * @return string
-     */
-    public function getRecoverySubject()
+    public function getRecoverySubject(): string
     {
-        if ($this->recoverySubject == null) {
+        if ($this->recoverySubject === null) {
             $this->setRecoverySubject(Yii::t('user', 'Complete password reset on {0}', Yii::$app->name));
         }
 
         return $this->recoverySubject;
     }
 
-    /**
-     * @param string $recoverySubject
-     */
-    public function setRecoverySubject($recoverySubject)
+    public function setRecoverySubject(string $recoverySubject): void
     {
         $this->recoverySubject = $recoverySubject;
     }
 
-    /** @inheritdoc */
-    public function init()
+    public function init(): void
     {
-        $this->module = Yii::$app->getModule('user');
         parent::init();
+        $this->module = Yii::$app->getModule('user');
+
+        $this->sender = $this->sender ?? Yii::$app->params['adminEmail'] ?? 'no-reply@example.com';
+
+        $this->mailerComponent = $this->mailerComponent ?? Yii::$app->mailer;
     }
 
-    /**
-     * Sends an email to a user after registration.
-     *
-     * @param User  $user
-     * @param Token $token
-     * @param bool  $showPassword
-     *
-     * @return bool
-     */
-    public function sendWelcomeMessage(User $user, Token $token = null, $showPassword = false)
+    public function sendWelcomeMessage(User $user, ?Token $token = null, bool $showPassword = false): bool
     {
         return $this->sendMessage(
             $user->email,
@@ -176,15 +144,7 @@ class Mailer extends Component
         );
     }
 
-    /**
-     * Sends a new generated password to a user.
-     *
-     * @param User  $user
-     * @param Password $password
-     *
-     * @return bool
-     */
-    public function sendGeneratedPassword(User $user, $password)
+    public function sendGeneratedPassword(User $user, string $password): bool
     {
         return $this->sendMessage(
             $user->email,
@@ -194,15 +154,7 @@ class Mailer extends Component
         );
     }
 
-    /**
-     * Sends an email to a user with confirmation link.
-     *
-     * @param User  $user
-     * @param Token $token
-     *
-     * @return bool
-     */
-    public function sendConfirmationMessage(User $user, Token $token)
+    public function sendConfirmationMessage(User $user, Token $token): bool
     {
         return $this->sendMessage(
             $user->email,
@@ -212,39 +164,23 @@ class Mailer extends Component
         );
     }
 
-    /**
-     * Sends an email to a user with reconfirmation link.
-     *
-     * @param User  $user
-     * @param Token $token
-     *
-     * @return bool
-     */
-    public function sendReconfirmationMessage(User $user, Token $token)
+    public function sendReconfirmationMessage(User $user, Token $token): bool
     {
-        if ($token->type == Token::TYPE_CONFIRM_NEW_EMAIL) {
-            $email = $user->unconfirmed_email;
-        } else {
-            $email = $user->email;
-        }
+        $tokenType = ($token->type instanceof TokenType) ? $token->type : TokenType::from((int)$token->type);
+
+        $email = ($tokenType === TokenType::CONFIRM_NEW_EMAIL && !empty($user->unconfirmed_email))
+            ? $user->unconfirmed_email
+            : $user->email;
 
         return $this->sendMessage(
-            $email,
+            (string)$email,
             $this->getReconfirmationSubject(),
             'reconfirmation',
             ['user' => $user, 'token' => $token]
         );
     }
 
-    /**
-     * Sends an email to a user with recovery link.
-     *
-     * @param User  $user
-     * @param Token $token
-     *
-     * @return bool
-     */
-    public function sendRecoveryMessage(User $user, Token $token)
+    public function sendRecoveryMessage(User $user, Token $token): bool
     {
         return $this->sendMessage(
             $user->email,
@@ -254,24 +190,20 @@ class Mailer extends Component
         );
     }
 
-    /**
-     * @param string $to
-     * @param string $subject
-     * @param string $view
-     * @param array  $params
-     *
-     * @return bool
-     */
-    protected function sendMessage($to, $subject, $view, $params = [])
+    protected function sendMessage(string $to, string $subject, string $view, array $params = []): bool
     {
-        $mailer = $this->mailerComponent === null ? Yii::$app->mailer : Yii::$app->get($this->mailerComponent);
+        $mailer = $this->mailerComponent;
+
+        if (!$mailer instanceof BaseMailer) {
+            Yii::error('Mailer component is not configured or invalid.', __METHOD__);
+
+            return false;
+        }
         $mailer->viewPath = $this->viewPath;
         $mailer->getView()->theme = Yii::$app->view->theme;
 
         if ($this->sender === null) {
-            $this->sender = isset(Yii::$app->params['adminEmail']) ?
-                Yii::$app->params['adminEmail']
-                : 'no-reply@example.com';
+            $this->sender = Yii::$app->params['adminEmail'] ?? 'no-reply@example.com';
         }
 
         return $mailer->compose(['html' => $view, 'text' => 'text/' . $view], $params)

@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 /*
  * This file is part of the Dektrium project
@@ -9,21 +10,32 @@
  * file that was distributed with this source code.
  */
 
-use dektrium\rbac\widgets\Assignments;
+use yii\bootstrap5\Alert;
+use yii\rbac\Item;
+use yii\web\View;
+use yii2developer\rbac\widgets\Assignments;
 
 /**
- * @var yii\web\View $this
- * @var dektrium\user\models\User $user
+ * @var View $this
+ * @var AlexeiKaDev\Yii2User\models\User $user
+ * @var array $assignments Array of Item objects
+ * @var string[] $available
+ * @var string[] $assigned
  */
+
+$this->title = Yii::t('user', 'Assignments');
+$this->params['breadcrumbs'][] = ['label' => Yii::t('user', 'Users'), 'url' => ['index']];
+$this->params['breadcrumbs'][] = $this->title;
+
 ?>
 
-<?php $this->beginContent('@dektrium/user/views/admin/update.php', ['user' => $user]) ?>
+<?php $this->beginContent('@AlexeiKaDev/Yii2User/views/admin/update.php', ['user' => $user]) ?>
 
-<?= yii\bootstrap\Alert::widget([
+<?= Alert::widget([
     'options' => [
-        'class' => 'alert-info alert-dismissible',
+        'class' => 'alert-success alert-dismissible',
     ],
-    'body' => Yii::t('user', 'You can assign multiple roles or permissions to user by using the form below'),
+    'body' => Yii::$app->session->getFlash('success'),
 ]) ?>
 
 <?= Assignments::widget(['userId' => $user->id]) ?>

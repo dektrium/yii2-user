@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Message translations.
  *
@@ -16,7 +17,7 @@
  *
  * NOTE: this file must be saved in UTF-8 encoding.
  */
-return array (
+return  [
   '#' => '',
   'A confirmation message has been sent to your new email address' => '',
   'A message has been sent to your email address. It contains a confirmation link that you must click to complete registration.' => '',
@@ -188,4 +189,4 @@ return array (
   'Your account has been blocked' => 'El teu compte ha sigut bloquejat',
   'Your account has been created' => 'S\'ha creat el teu compte',
   '{0, date, MMMM dd, YYYY HH:mm}' => '{0, date, dd MMMM, YYYY HH:mm}',
-);
+];

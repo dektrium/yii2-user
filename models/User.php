@@ -88,7 +88,7 @@ class User extends ActiveRecord implements IdentityInterface
     private $_profile = null;
 
     /** @var string Default username regexp */
-    public $usernameRegexp = '/^[-a-zA-Z0-9_\.@]+$/';
+    public static $usernameRegexp = '/^[-a-zA-Z0-9_\.@]+$/';
 
     /** @var int Maximum username length */
     private const USERNAME_MAX_LENGTH = 255;

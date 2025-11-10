@@ -39,8 +39,11 @@ class Bootstrap implements BootstrapInterface
         'UserSearch' => 'AlexeiKaDev\Yii2User\models\UserSearch',
     ];
 
-    /** @inheritdoc */
-    public function bootstrap($app): void
+    /**
+     * @inheritdoc
+     * @param mixed $app
+     */
+    public function bootstrap($app)
     {
         /** @var Module $module */
         /** @var \yii\db\ActiveRecord $modelName */
@@ -111,8 +114,11 @@ class Bootstrap implements BootstrapInterface
         }
     }
 
-    /** Ensure the module is not in DEBUG mode on production environments */
-    public function ensureCorrectDebugSetting(): bool
+    /**
+     * Ensure the module is not in DEBUG mode on production environments
+     * @return bool
+     */
+    public function ensureCorrectDebugSetting()
     {
         if (!defined('YII_DEBUG')) {
             return false;

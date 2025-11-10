@@ -50,7 +50,7 @@ class LoginForm extends Model
      * @param Finder $finder
      * @param array  $config
      */
-    public function __construct(Finder $finder, array $config = [])
+    public function __construct($finder, $config = [])
     {
         $this->finder = $finder;
         parent::__construct($config);
@@ -62,7 +62,7 @@ class LoginForm extends Model
      * @return array
      * @throws \yii\base\InvalidConfigException
      */
-    public static function loginList(): array
+    public static function loginList()
     {
         /** @var Module $module */
         $module = Yii::$app->getModule('user');
@@ -75,13 +75,16 @@ class LoginForm extends Model
         $userModelClass = $module->modelMap['User'];
         $users = $userModelClass::find()->where(['blocked_at' => null])->all();
 
-        return ArrayHelper::map($users, 'username', function (User $user) {
+        return ArrayHelper::map($users, 'username', function ($user) {
             return $user->username . ' (' . $user->email . ')';
         });
     }
 
-    /** @inheritdoc */
-    public function attributeLabels(): array
+    /**
+     * @inheritdoc
+     * @return array
+     */
+    public function attributeLabels()
     {
         return [
             'login' => Yii::t('user', 'Login'),
@@ -90,8 +93,11 @@ class LoginForm extends Model
         ];
     }
 
-    /** @inheritdoc */
-    public function rules(): array
+    /**
+     * @inheritdoc
+     * @return array
+     */
+    public function rules()
     {
         /** @var Module $module */
         $module = $this->module; // Use trait getter
@@ -101,7 +107,7 @@ class LoginForm extends Model
             'requiredFields' => [['login'], 'required'],
             'loginValidation' => [
                 'login',
-                function (string $attribute) use ($module) {
+                function ($attribute) use ($module) {
                     if ($this->user === null) {
                         $this->addError($attribute, Yii::t('user', 'Invalid login or password')); // Generic error if user not found
 
@@ -127,7 +133,7 @@ class LoginForm extends Model
             $rules['passwordRequired'] = ['password', 'required'];
             $rules['passwordValidate'] = [
                 'password',
-                function (string $attribute) {
+                function ($attribute) {
                     if ($this->user === null || $this->password === null || !Password::validate($this->password, $this->user->password_hash)) {
                         $this->addError($attribute, Yii::t('user', 'Invalid login or password'));
                     }
@@ -143,7 +149,7 @@ class LoginForm extends Model
      *
      * @return bool whether the user is logged in successfully
      */
-    public function login(): bool
+    public function login()
     {
         if ($this->validate()) { // Ensure user property is populated by beforeValidate()
             if ($this->user instanceof User) {
@@ -166,14 +172,20 @@ class LoginForm extends Model
         return false;
     }
 
-    /** @inheritdoc */
-    public function formName(): string
+    /**
+     * @inheritdoc
+     * @return string
+     */
+    public function formName()
     {
         return 'login-form';
     }
 
-    /** @inheritdoc */
-    public function beforeValidate(): bool
+    /**
+     * @inheritdoc
+     * @return bool
+     */
+    public function beforeValidate()
     {
         if (parent::beforeValidate()) {
             $this->user = $this->finder->findUserByUsernameOrEmail(trim((string)$this->login));

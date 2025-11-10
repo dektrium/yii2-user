@@ -26,7 +26,10 @@ class UserMenu extends Widget
      */
     public $items = [];
 
-    public function init(): void // Added return type
+    /**
+     * @inheritdoc
+     */
+    public function init()
     {
         parent::init();
 
@@ -48,8 +51,9 @@ class UserMenu extends Widget
 
     /**
      * @inheritdoc
+     * @return string
      */
-    public function run(): string // Added return type
+    public function run()
     {
         return Menu::widget([
             'options' => [

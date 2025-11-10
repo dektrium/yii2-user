@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 /*
  * This file is part of the Dektrium project.
  *
@@ -30,7 +28,7 @@ class Password
      *
      * @return string
      */
-    public static function hash(string $password): string
+    public static function hash($password)
     {
         /** @var Module $module */
         $module = Yii::$app->getModule('user');
@@ -46,7 +44,7 @@ class Password
      *
      * @return bool
      */
-    public static function validate(string $password, string $hash): bool
+    public static function validate($password, $hash)
     {
         return Yii::$app->security->validatePassword($password, $hash);
     }
@@ -63,7 +61,7 @@ class Password
      * @return string
      * @throws \Exception
      */
-    public static function generate(int $length): string
+    public static function generate($length)
     {
         $sets = [
             'abcdefghjkmnpqrstuvwxyz',

@@ -111,14 +111,14 @@ class SettingsController extends Controller
      * @param Finder $finder
      * @param array $config
      */
-    public function __construct($id, $module, Finder $finder, array $config = [])
+    public function __construct($id, $module, $finder, $config = [])
     {
         $this->finder = $finder;
         parent::__construct($id, $module, $config);
     }
 
     /** @inheritdoc */
-    public function behaviors(): array
+    public function behaviors()
     {
         return [
             'verbs' => [
@@ -214,7 +214,7 @@ class SettingsController extends Controller
      * @return Response
      * @throws NotFoundHttpException
      */
-    public function actionConfirm(int $id, string $code): Response
+    public function actionConfirm($id, $code)
     {
         $user = $this->finder->findUserById($id);
 
@@ -236,7 +236,7 @@ class SettingsController extends Controller
      *
      * @return string
      */
-    public function actionNetworks(): string
+    public function actionNetworks()
     {
         return $this->render('networks', [
             'user' => Yii::$app->user->identity,
@@ -252,7 +252,7 @@ class SettingsController extends Controller
      * @throws NotFoundHttpException
      * @throws ForbiddenHttpException
      */
-    public function actionDisconnect(int $id): Response
+    public function actionDisconnect($id)
     {
         $account = $this->finder->findAccount()->byId($id)->one();
 

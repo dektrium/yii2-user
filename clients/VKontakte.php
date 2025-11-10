@@ -23,13 +23,13 @@ class VKontakte extends BaseVKontakte implements ClientInterface
     public $scope = 'email';
 
     /** @inheritdoc */
-    public function getEmail(): ?string
+    public function getEmail()
     {
         return $this->getAccessToken()->getParam('email');
     }
 
     /** @inheritdoc */
-    public function getUsername(): ?string
+    public function getUsername()
     {
         return isset($this->getUserAttributes()['screen_name'])
             ? $this->getUserAttributes()['screen_name']

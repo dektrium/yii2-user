@@ -96,14 +96,14 @@ class SecurityController extends Controller
      * @param Finder $finder
      * @param array  $config
      */
-    public function __construct($id, $module, Finder $finder, array $config = [])
+    public function __construct($id, $module, $finder, $config = [])
     {
         $this->finder = $finder;
         parent::__construct($id, $module, $config);
     }
 
     /** @inheritdoc */
-    public function behaviors(): array
+    public function behaviors()
     {
         return [
             'access' => [
@@ -131,7 +131,7 @@ class SecurityController extends Controller
     }
 
     /** @inheritdoc */
-    public function actions(): array
+    public function actions()
     {
         return [
             'auth' => [
@@ -182,7 +182,7 @@ class SecurityController extends Controller
      *
      * @return Response
      */
-    public function actionLogout(): Response
+    public function actionLogout()
     {
         $identity = Yii::$app->user->identity;
         $event = null;
@@ -213,7 +213,7 @@ class SecurityController extends Controller
      * @throws \yii\base\InvalidConfigException
      * @return void
      */
-    public function authenticate(BaseClientInterface $client): void
+    public function authenticate($client)
     {
         $account = $this->finder->findAccount()->byClient($client)->one();
 
@@ -265,7 +265,7 @@ class SecurityController extends Controller
      * @param BaseClientInterface $client The auth client instance.
      * @return void
      */
-    public function connect(BaseClientInterface $client): void
+    public function connect($client)
     {
         /** @var Account $account */
         // Account::connectWithUser($client) уже содержит логику поиска или создания Account

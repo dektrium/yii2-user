@@ -1,6 +1,5 @@
 <?php
 
-declare(strict_types=1);
 
 namespace AlexeiKaDev\Yii2User\services;
 
@@ -26,9 +25,9 @@ class RegistrationService extends Component
 
     public const EVENT_AFTER_REGISTER = 'afterRegister';
 
-    private Module $module;
+    private $module;
 
-    private UserCreationService $userCreationService;
+    private $userCreationService;
 
     public function __construct(
         Module $module,
@@ -47,7 +46,7 @@ class RegistrationService extends Component
      * @return User|null Зарегистрированный пользователь или null в случае ошибки.
      * @throws \yii\base\InvalidConfigException
      */
-    public function register(RegistrationForm $form): ?User
+    public function register($form)
     {
         /** @var User $user */
         $user = Yii::createObject(User::class);

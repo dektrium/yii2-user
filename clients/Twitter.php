@@ -22,7 +22,7 @@ class Twitter extends BaseTwitter implements ClientInterface
     /**
      * @return string|null
      */
-    public function getUsername(): ?string
+    public function getUsername()
     {
         return ArrayHelper::getValue($this->getUserAttributes(), 'screen_name');
     }
@@ -32,7 +32,7 @@ class Twitter extends BaseTwitter implements ClientInterface
      * unless elevated permissions have been granted
      * https://dev.twitter.com/rest/reference/get/account/verify_credentials
      */
-    public function getEmail(): ?string
+    public function getEmail()
     {
         return ArrayHelper::getValue($this->getUserAttributes(), 'email');
     }

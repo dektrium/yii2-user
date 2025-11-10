@@ -1,6 +1,5 @@
 <?php
 
-declare(strict_types=1);
 
 /*
  * This file is part of the Dektrium project.
@@ -18,7 +17,7 @@ use AlexeiKaDev\Yii2User\migrations\Migration;
  */
 class m141222_135246_alter_username_length extends Migration
 {
-    public function up(): void
+    public function up()
     {
         if ($this->dbType == 'sqlsrv') {
             $this->dropIndex('{{%user_unique_username}}', '{{%user}}');
@@ -35,7 +34,7 @@ class m141222_135246_alter_username_length extends Migration
         }
     }
 
-    public function down(): void
+    public function down()
     {
         if ($this->dbType == 'sqlsrv') {
             $this->dropIndex('{{%user_unique_username}}', '{{%user}}');

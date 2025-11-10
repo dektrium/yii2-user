@@ -1,6 +1,5 @@
 <?php
 
-declare(strict_types=1);
 
 namespace AlexeiKaDev\Yii2User\Tests\Unit\Models;
 
@@ -11,9 +10,9 @@ use UnitTester; // Это Actor класс для unit тестов
 
 class TokenTest extends Unit
 {
-    protected UnitTester $tester;
+    protected $tester;
 
-    public function testTokenTypeConversionOnNewRecord(): void
+    public function testTokenTypeConversionOnNewRecord()
     {
         $token = new Token();
         $token->type = TokenType::CONFIRMATION;
@@ -31,7 +30,7 @@ class TokenTest extends Unit
         $this->assertSame(TokenType::CONFIRMATION->value, $token->type);
     }
 
-    public function testTokenTypeConversionOnExistingRecord(): void
+    public function testTokenTypeConversionOnExistingRecord()
     {
         $token = new Token();
         // Имитируем, что тип загружен из БД как int
@@ -46,7 +45,7 @@ class TokenTest extends Unit
         $this->assertSame(TokenType::RECOVERY, $token->type);
     }
 
-    public function testIsExpiredDefaultsToTrueForUnknownType(): void
+    public function testIsExpiredDefaultsToTrueForUnknownType()
     {
         $token = new Token();
         // Устанавливаем заведомо неизвестный int тип, который не соответствует ни одному enum case

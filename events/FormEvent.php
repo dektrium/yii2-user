@@ -23,12 +23,12 @@ class FormEvent extends Event
     /**
      * @var Model
      */
-    private Model $_form;
+    private $_form;
 
     /**
      * @return Model
      */
-    public function getForm(): Model
+    public function getForm()
     {
         return $this->_form;
     }
@@ -36,7 +36,7 @@ class FormEvent extends Event
     /**
      * @param Model $form
      */
-    public function setForm(Model $form): void
+    public function setForm($form)
     {
         $this->_form = $form;
     }

@@ -20,7 +20,7 @@ use yii\authclient\clients\Yandex as BaseYandex;
 class Yandex extends BaseYandex implements ClientInterface
 {
     /** @inheritdoc */
-    public function getEmail(): ?string
+    public function getEmail()
     {
         $emails = isset($this->getUserAttributes()['emails'])
             ? $this->getUserAttributes()['emails']
@@ -34,7 +34,7 @@ class Yandex extends BaseYandex implements ClientInterface
     }
 
     /** @inheritdoc */
-    public function getUsername(): ?string
+    public function getUsername()
     {
         return isset($this->getUserAttributes()['login'])
             ? $this->getUserAttributes()['login']

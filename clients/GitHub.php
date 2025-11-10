@@ -19,7 +19,7 @@ use yii\authclient\clients\GitHub as BaseGitHub;
 class GitHub extends BaseGitHub implements ClientInterface
 {
     /** @inheritdoc */
-    public function getEmail(): ?string
+    public function getEmail()
     {
         return isset($this->getUserAttributes()['email'])
             ? $this->getUserAttributes()['email']
@@ -27,7 +27,7 @@ class GitHub extends BaseGitHub implements ClientInterface
     }
 
     /** @inheritdoc */
-    public function getUsername(): ?string
+    public function getUsername()
     {
         return isset($this->getUserAttributes()['login'])
             ? $this->getUserAttributes()['login']

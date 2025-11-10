@@ -54,7 +54,10 @@ class SettingsForm extends Model
     /** @var Mailer The mailer instance. */
     protected $mailer;
 
-    public function getUser(): User
+    /**
+     * @return User
+     */
+    public function getUser()
     {
         if ($this->_user === null) {
             $this->_user = Yii::$app->user->identity;
@@ -67,7 +70,7 @@ class SettingsForm extends Model
      * @param Mailer $mailer The mailer instance.
      * @param array $config Name-value pairs that will be used to initialize the object properties.
      */
-    public function __construct(Mailer $mailer, array $config = [])
+    public function __construct($mailer, $config = [])
     {
         $this->mailer = $mailer;
         parent::__construct($config);
@@ -81,8 +84,11 @@ class SettingsForm extends Model
         }
     }
 
-    /** @inheritdoc */
-    public function scenarios(): array
+    /**
+     * @inheritdoc
+     * @return array
+     */
+    public function scenarios()
     {
         $scenarios = parent::scenarios();
         $scenarios[self::SCENARIO_PROFILE] = ['email', 'username'];
@@ -92,7 +98,10 @@ class SettingsForm extends Model
         return $scenarios;
     }
 
-    public function rules(): array
+    /**
+     * @return array
+     */
+    public function rules()
     {
         return [
             'usernameTrim' => ['username', 'trim'],
@@ -117,7 +126,7 @@ class SettingsForm extends Model
             'newPasswordLength' => ['new_password', 'string', 'max' => 72, 'min' => 6, 'on' => self::SCENARIO_ACCOUNT],
 
             'currentPasswordRequired' => ['current_password', 'required', 'on' => [self::SCENARIO_ACCOUNT, self::SCENARIO_DELETE]],
-            'currentPasswordValidate' => ['current_password', function (string $attribute) {
+            'currentPasswordValidate' => ['current_password', function ($attribute) {
                 if (!Password::validate((string)$this->$attribute, $this->getUser()->password_hash)) {
                     $this->addError($attribute, Yii::t('user', 'Current password is not valid'));
                 }
@@ -125,7 +134,10 @@ class SettingsForm extends Model
         ];
     }
 
-    public function attributeLabels(): array
+    /**
+     * @return array
+     */
+    public function attributeLabels()
     {
         return [
             'email' => Yii::t('user', 'Email'),
@@ -135,12 +147,18 @@ class SettingsForm extends Model
         ];
     }
 
-    public function formName(): string
+    /**
+     * @return string
+     */
+    public function formName()
     {
         return 'settings-form';
     }
 
-    public function save(): bool
+    /**
+     * @return bool
+     */
+    public function save()
     {
         if ($this->validate()) {
             $user = $this->getUser();
@@ -185,7 +203,7 @@ class SettingsForm extends Model
      * Performs insecure email change.
      * @param User $user The user whose email needs to be changed.
      */
-    protected function insecureEmailChange(User $user): void
+    protected function insecureEmailChange($user)
     {
         $user->email = (string)$this->email;
         Yii::$app->session->setFlash('success', Yii::t('user', 'Your email address has been changed'));
@@ -195,7 +213,7 @@ class SettingsForm extends Model
      * Performs default email change (sends confirmation to new email).
      * @param User $user The user whose email needs to be changed.
      */
-    protected function defaultEmailChange(User $user): void
+    protected function defaultEmailChange($user)
     {
         $user->unconfirmed_email = (string)$this->email;
         /** @var Token $token */
@@ -216,7 +234,7 @@ class SettingsForm extends Model
      * Performs secure email change (sends confirmation to both old and new emails).
      * @param User $user The user whose email needs to be changed.
      */
-    protected function secureEmailChange(User $user): void
+    protected function secureEmailChange($user)
     {
         $this->defaultEmailChange($user);
         /** @var Token $token */

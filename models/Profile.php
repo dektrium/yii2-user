@@ -43,8 +43,10 @@ class Profile extends ActiveRecord
     /** @var Module The user module instance */
     protected $module;
 
-    /** @inheritdoc */
-    public function init(): void
+    /**
+     * @inheritdoc
+     */
+    public function init()
     {
         parent::init(); // Call parent::init() at the beginning
         /** @var Module $userModule */
@@ -57,7 +59,7 @@ class Profile extends ActiveRecord
      * @param int $size Size in pixels.
      * @return string
      */
-    public function getAvatarUrl(int $size = 200): string
+    public function getAvatarUrl($size = 200)
     {
         // Используем coalesce оператор для краткости
         $emailToHash = strtolower(trim((string)($this->gravatar_email ?? $this->public_email ?? $this->user->email ?? '')));
@@ -76,15 +78,16 @@ class Profile extends ActiveRecord
     /**
      * @return ActiveQuery
      */
-    public function getUser(): ActiveQuery
+    public function getUser()
     {
         return $this->hasOne($this->module->modelMap['User'], ['id' => 'user_id']);
     }
 
     /**
      * @inheritdoc
+     * @return array
      */
-    public function rules(): array
+    public function rules()
     {
         return [
             ['bio', 'string'],
@@ -102,8 +105,9 @@ class Profile extends ActiveRecord
 
     /**
      * @inheritdoc
+     * @return array
      */
-    public function attributeLabels(): array
+    public function attributeLabels()
     {
         return [
             'name' => Yii::t('user', 'Name'),
@@ -122,7 +126,7 @@ class Profile extends ActiveRecord
      * @param string $attribute the attribute being validated
      * @param array|null $params values for the placeholders in the error message
      */
-    public function validateTimeZone(string $attribute, ?array $params = null): void
+    public function validateTimeZone($attribute, $params = null)
     {
         /** @var string|null $value */
         $value = $this->$attribute; // Доступ к свойству напрямую
@@ -141,13 +145,13 @@ class Profile extends ActiveRecord
      * Defaults to the application timezone if not specified by the user.
      * @return DateTimeZone
      */
-    public function getTimeZone(): DateTimeZone
+    public function getTimeZone()
     {
         try {
             if (!empty($this->timezone)) {
                 return new DateTimeZone($this->timezone);
             }
-        } catch (Exception $e) { // Используем импортированный Exception
+        } catch ($e) { // Используем импортированный Exception
             // Log error if needed:
             Yii::warning(
                 "Invalid timezone '{$this->timezone}' for user {$this->user_id}: " . $e->getMessage(),
@@ -163,7 +167,7 @@ class Profile extends ActiveRecord
      * Set the user's time zone.
      * @param DateTimeZone $timeZone the timezone to save to the user's profile
      */
-    public function setTimeZone(DateTimeZone $timeZone): void
+    public function setTimeZone($timeZone)
     {
         $this->setAttribute('timezone', $timeZone->getName());
     }
@@ -173,7 +177,7 @@ class Profile extends ActiveRecord
      * @param DateTime|null $dateTime the datetime to convert, defaults to current time
      * @return DateTime
      */
-    public function toLocalTime(?DateTime $dateTime = null): DateTime
+    public function toLocalTime($dateTime = null)
     {
         $dateTime = $dateTime ?? new DateTime();
 
@@ -183,8 +187,9 @@ class Profile extends ActiveRecord
     /**
      * @inheritdoc
      * @param bool $insert
+     * @return bool
      */
-    public function beforeSave($insert): bool // <<< Добавлен тип bool для $insert
+    public function beforeSave($insert)
     {
         $gravatarEmail = $this->getAttribute('gravatar_email');
         $isGravatarEmailChanged = $this->isAttributeChanged('gravatar_email');
@@ -199,8 +204,9 @@ class Profile extends ActiveRecord
 
     /**
      * @inheritdoc
+     * @return string
      */
-    public static function tableName(): string
+    public static function tableName()
     {
         return '{{%profile}}';
     }

@@ -48,7 +48,7 @@ class RegistrationForm extends Model
      * @param RegistrationService $registrationService
      * @param array $config
      */
-    public function __construct(RegistrationService $registrationService, array $config = [])
+    public function __construct($registrationService, $config = [])
     {
         $this->registrationService = $registrationService;
         parent::__construct($config);
@@ -115,7 +115,7 @@ class RegistrationForm extends Model
      *
      * @return bool True if registration was successful
      */
-    public function register(): bool
+    public function register()
     {
         if (!$this->validate()) {
             return false;

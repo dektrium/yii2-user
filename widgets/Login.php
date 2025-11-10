@@ -32,7 +32,7 @@ class Login extends Widget
     /**
      * @inheritdoc
      */
-    public function run(): string
+    public function run()
     {
         return $this->render('login', [
             'model' => Yii::createObject(LoginForm::class),

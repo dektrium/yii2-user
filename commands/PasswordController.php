@@ -1,6 +1,5 @@
 <?php
 
-declare(strict_types=1);
 
 /*
  * This file is part of the Dektrium project.
@@ -28,7 +27,7 @@ use yii\helpers\Console;
  */
 class PasswordController extends Controller
 {
-    protected Finder $finder;
+    protected $finder;
 
     /**
      * @param string           $id
@@ -36,7 +35,7 @@ class PasswordController extends Controller
      * @param Finder           $finder
      * @param array            $config
      */
-    public function __construct(string $id, Module $module, Finder $finder, array $config = [])
+    public function __construct($id, $module, $finder, $config = [])
     {
         $this->finder = $finder;
         parent::__construct($id, $module, $config);
@@ -48,7 +47,7 @@ class PasswordController extends Controller
      * @param string $search   Email or username
      * @param string $password New password
      */
-    public function actionIndex(string $search, string $password): void
+    public function actionIndex($search, $password)
     {
         $user = $this->finder->findUserByUsernameOrEmail($search);
 

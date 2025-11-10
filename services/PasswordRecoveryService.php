@@ -1,6 +1,5 @@
 <?php
 
-declare(strict_types=1);
 
 namespace AlexeiKaDev\Yii2User\services;
 
@@ -16,13 +15,13 @@ use yii\base\Component;
 class PasswordRecoveryService extends Component
 {
     /** @var Finder The finder instance. */
-    private Finder $finder;
+    private $finder;
     /** @var Mailer The mailer instance. */
-    private Mailer $mailer;
+    private $mailer;
     /** @var Module The user module instance. */
-    private Module $module;
+    private $module;
 
-    public function __construct(Finder $finder, Mailer $mailer, Module $module, array $config = [])
+    public function __construct($finder, $mailer, $module, $config = [])
     {
         $this->finder = $finder;
         $this->mailer = $mailer;
@@ -36,7 +35,7 @@ class PasswordRecoveryService extends Component
      * @param User $user
      * @return bool True if the request was processed successfully (email sent or error handled).
      */
-    public function request(User $user): bool
+    public function request($user)
     {
         if (!$this->module->enablePasswordRecovery) {
             Yii::$app->session->setFlash('warning', Yii::t('user', 'Password recovery is disabled.'));
@@ -82,7 +81,7 @@ class PasswordRecoveryService extends Component
      * @param string $newPassword The new plain password.
      * @return bool True if the password was reset successfully.
      */
-    public function reset(User $user, string $code, string $newPassword): bool
+    public function reset($user, $code, $newPassword)
     {
         /** @var Token|null $token */
         $token = $this->finder->findToken([

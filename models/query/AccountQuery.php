@@ -59,7 +59,7 @@ class AccountQuery extends ActiveQuery
      * @param  BaseClientInterface $client
      * @return self The query object itself
      */
-    public function byClient(BaseClientInterface $client)
+    public function byClient($client)
     {
         $attributes = $client->getUserAttributes();
         return $this->andWhere([

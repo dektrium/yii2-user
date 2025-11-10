@@ -47,14 +47,17 @@ class UserSearch extends Model
      * @param Finder $finder The finder instance.
      * @param array  $config Name-value pairs that will be used to initialize the object properties.
      */
-    public function __construct(Finder $finder, array $config = [])
+    public function __construct($finder, $config = [])
     {
         $this->finder = $finder;
         parent::__construct($config);
     }
 
-    /** @inheritdoc */
-    public function rules(): array
+    /**
+     * @inheritdoc
+     * @return array
+     */
+    public function rules()
     {
         return [
             'fieldsSafe' => [['id', 'username', 'email', 'registration_ip', 'created_at', 'last_login_at'], 'safe'],
@@ -64,8 +67,11 @@ class UserSearch extends Model
         ];
     }
 
-    /** @inheritdoc */
-    public function attributeLabels(): array
+    /**
+     * @inheritdoc
+     * @return array
+     */
+    public function attributeLabels()
     {
         return [
             'id' => Yii::t('user', '#'),
@@ -84,7 +90,7 @@ class UserSearch extends Model
      *
      * @return ActiveDataProvider
      */
-    public function search(array $params): ActiveDataProvider
+    public function search($params)
     {
         $query = $this->finder->getUserQuery();
 

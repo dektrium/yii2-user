@@ -77,7 +77,7 @@ class Migration extends \yii\db\Migration
      * @param string $column The name of the column whose default constraint is to be dropped.
      * @throws \yii\db\Exception
      */
-    public function dropColumnConstraints(string $table, string $column): void
+    public function dropColumnConstraints($table, $column)
     {
         if ($this->dbType !== 'sqlsrv') {
             return;

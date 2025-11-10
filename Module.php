@@ -124,7 +124,7 @@ class Module extends BaseModule
     /**
      * @return Connection
      */
-    public function getDb(): Connection
+    public function getDb()
     {
         return \Yii::$app->get($this->dbConnection);
     }

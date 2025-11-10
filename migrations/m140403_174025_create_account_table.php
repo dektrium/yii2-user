@@ -1,6 +1,5 @@
 <?php
 
-declare(strict_types=1);
 
 /*
  * This file is part of the Dektrium project.
@@ -18,7 +17,7 @@ use AlexeiKaDev\Yii2User\migrations\Migration;
  */
 class m140403_174025_create_account_table extends Migration
 {
-    public function up(): void
+    public function up()
     {
         $this->createTable('{{%account}}', [
             'id' => $this->primaryKey(),
@@ -32,7 +31,7 @@ class m140403_174025_create_account_table extends Migration
         $this->addForeignKey('{{%fk_user_account}}', '{{%account}}', 'user_id', '{{%user}}', 'id', $this->cascade, $this->restrict);
     }
 
-    public function down(): void
+    public function down()
     {
         $this->dropTable('{{%account}}');
     }

@@ -1,6 +1,5 @@
 <?php
 
-declare(strict_types=1);
 
 namespace AlexeiKaDev\Yii2User\services;
 
@@ -18,11 +17,11 @@ use yii\base\Component;
 class UserCreationService extends Component
 {
     /** @var Mailer The mailer instance. */
-    private Mailer $mailer;
+    private $mailer;
     /** @var Module The user module instance. */
-    private Module $module;
+    private $module;
 
-    public function __construct(Mailer $mailer, Module $module, array $config = [])
+    public function __construct($mailer, $module, $config = [])
     {
         $this->mailer = $mailer;
         $this->module = $module;
@@ -37,7 +36,7 @@ class UserCreationService extends Component
      * @return bool True if user was created successfully, false otherwise.
      * @throws \RuntimeException If called on an existing user.
      */
-    public function create(User $user): bool
+    public function create($user)
     {
         if (!$user->getIsNewRecord()) {
             throw new \RuntimeException('Calling UserCreationService::create() on an existing user.');

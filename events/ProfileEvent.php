@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 /*
  * This file is part of the Dektrium project.
  *
@@ -27,10 +25,10 @@ class ProfileEvent extends Event
     /**
      * @var Profile The profile model associated with this event.
      */
-    private Profile $_profile;
+    private $_profile;
 
     // Add constructor to potentially satisfy linter
-    public function __construct(Profile $profile, $config = [])
+    public function __construct($profile, $config = [])
     {
         $this->_profile = $profile;
         parent::__construct($config);
@@ -39,7 +37,7 @@ class ProfileEvent extends Event
     /**
      * @return Profile
      */
-    public function getProfile(): Profile
+    public function getProfile()
     {
         return $this->_profile;
     }
@@ -47,7 +45,7 @@ class ProfileEvent extends Event
     /**
      * @param Profile $profile
      */
-    public function setProfile(Profile $profile): void
+    public function setProfile($profile)
     {
         $this->_profile = $profile;
     }

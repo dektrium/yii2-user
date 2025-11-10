@@ -1,6 +1,5 @@
 <?php
 
-declare(strict_types=1);
 
 /*
  * This file is part of the Dektrium project.
@@ -18,7 +17,7 @@ use AlexeiKaDev\Yii2User\migrations\Migration;
  */
 class m140504_130429_create_token_table extends Migration
 {
-    public function up(): void
+    public function up()
     {
         $this->createTable('{{%token}}', [
             'user_id' => $this->integer()->notNull(),
@@ -31,7 +30,7 @@ class m140504_130429_create_token_table extends Migration
         $this->addForeignKey('{{%fk_user_token}}', '{{%token}}', 'user_id', '{{%user}}', 'id', $this->cascade, $this->restrict);
     }
 
-    public function down(): void
+    public function down()
     {
         $this->dropTable('{{%token}}');
     }

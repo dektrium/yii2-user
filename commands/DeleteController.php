@@ -1,6 +1,5 @@
 <?php
 
-declare(strict_types=1);
 
 /*
  * This file is part of the Dektrium project.
@@ -28,7 +27,7 @@ use yii\helpers\Console;
  */
 class DeleteController extends Controller
 {
-    protected Finder $finder;
+    protected $finder;
 
     /**
      * @param string           $id
@@ -36,7 +35,7 @@ class DeleteController extends Controller
      * @param Finder           $finder
      * @param array            $config
      */
-    public function __construct(string $id, Module $module, Finder $finder, array $config = [])
+    public function __construct($id, $module, $finder, $config = [])
     {
         $this->finder = $finder;
         parent::__construct($id, $module, $config);
@@ -47,7 +46,7 @@ class DeleteController extends Controller
      *
      * @param string $search Email or username
      */
-    public function actionIndex(string $search): void
+    public function actionIndex($search)
     {
         if ($this->confirm(Yii::t('user', 'Are you sure? Deleted user can not be restored'))) {
             $user = $this->finder->findUserByUsernameOrEmail($search);

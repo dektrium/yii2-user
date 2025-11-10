@@ -172,7 +172,7 @@ class Mailer extends Component
      * @param bool $showPassword
      * @return bool
      */
-    public function sendWelcomeMessage(User $user, $token = null, $showPassword = false)
+    public function sendWelcomeMessage($user, $token = null, $showPassword = false)
     {
         return $this->sendMessage(
             $user->email,
@@ -187,7 +187,7 @@ class Mailer extends Component
      * @param string $password
      * @return bool
      */
-    public function sendGeneratedPassword(User $user, $password)
+    public function sendGeneratedPassword($user, $password)
     {
         return $this->sendMessage(
             $user->email,
@@ -202,7 +202,7 @@ class Mailer extends Component
      * @param Token $token
      * @return bool
      */
-    public function sendConfirmationMessage(User $user, Token $token)
+    public function sendConfirmationMessage($user, $token)
     {
         return $this->sendMessage(
             $user->email,
@@ -217,7 +217,7 @@ class Mailer extends Component
      * @param Token $token
      * @return bool
      */
-    public function sendReconfirmationMessage(User $user, Token $token)
+    public function sendReconfirmationMessage($user, $token)
     {
         // Token type is now always stored as integer
         $tokenType = (int)$token->type;
@@ -239,7 +239,7 @@ class Mailer extends Component
      * @param Token $token
      * @return bool
      */
-    public function sendRecoveryMessage(User $user, Token $token)
+    public function sendRecoveryMessage($user, $token)
     {
         return $this->sendMessage(
             $user->email,
@@ -256,7 +256,7 @@ class Mailer extends Component
      * @param array $params
      * @return bool
      */
-    protected function sendMessage($to, $subject, $view, array $params = [])
+    protected function sendMessage($to, $subject, $view, $params = [])
     {
         $mailer = $this->mailerComponent;
 

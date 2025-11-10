@@ -50,8 +50,8 @@ class RecoveryForm extends Model
      * @param array  $config Name-value pairs that will be used to initialize the object properties.
      */
     public function __construct(
-        Finder $finder,
-        PasswordRecoveryService $passwordRecoveryService,
+        $finder,
+        $passwordRecoveryService,
         array $config = []
     ) {
         $this->finder = $finder;
@@ -61,8 +61,9 @@ class RecoveryForm extends Model
 
     /**
      * @inheritdoc
+     * @return array
      */
-    public function attributeLabels(): array
+    public function attributeLabels()
     {
         return [
             'email' => Yii::t('user', 'Email'),
@@ -72,8 +73,9 @@ class RecoveryForm extends Model
 
     /**
      * @inheritdoc
+     * @return array
      */
-    public function scenarios(): array
+    public function scenarios()
     {
         return [
             self::SCENARIO_REQUEST => ['email'],
@@ -83,8 +85,9 @@ class RecoveryForm extends Model
 
     /**
      * @inheritdoc
+     * @return array
      */
-    public function rules(): array
+    public function rules()
     {
         return [
             'emailTrim' => ['email', 'trim'],
@@ -100,7 +103,7 @@ class RecoveryForm extends Model
      *
      * @return bool
      */
-    public function sendRecoveryMessage(): bool
+    public function sendRecoveryMessage()
     {
         if (!$this->validate()) {
             return false;
@@ -133,7 +136,7 @@ class RecoveryForm extends Model
      *
      * @return bool
      */
-    public function resetPassword(Token $token): bool
+    public function resetPassword($token)
     {
         if (!$this->validate() || $token->user === null) {
             return false;
@@ -145,8 +148,9 @@ class RecoveryForm extends Model
 
     /**
      * @inheritdoc
+     * @return string
      */
-    public function formName(): string
+    public function formName()
     {
         return 'recovery-form';
     }

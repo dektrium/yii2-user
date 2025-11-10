@@ -1,6 +1,5 @@
 <?php
 
-declare(strict_types=1);
 
 /*
  * This file is part of the Dektrium project.
@@ -29,7 +28,7 @@ class Connect extends AuthChoice
     /**
      * @var array<string, Account>|null An array of user's accounts, indexed by provider ID.
      */
-    public ?array $accounts = null;
+    public $accounts = null;
 
     /**
      * @inheritdoc
@@ -39,7 +38,7 @@ class Connect extends AuthChoice
     /**
      * @inheritdoc
      */
-    public function init(): void
+    public function init()
     {
         AuthChoiceAsset::register(Yii::$app->getView());
 
@@ -55,7 +54,7 @@ class Connect extends AuthChoice
      * @param ClientInterface $provider
      * @return string
      */
-    public function createClientUrl($provider): string
+    public function createClientUrl($provider)
     {
         if ($this->isConnected($provider)) {
             return Url::to(['/user/settings/disconnect', 'id' => $this->accounts[$provider->getId()]->id]);
@@ -71,7 +70,7 @@ class Connect extends AuthChoice
      *
      * @return bool
      */
-    public function isConnected(ClientInterface $provider): bool
+    public function isConnected($provider)
     {
         return $this->accounts !== null && isset($this->accounts[$provider->getId()]);
     }

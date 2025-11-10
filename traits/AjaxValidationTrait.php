@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 /*
  * This file is part of the Dektrium project
  *
@@ -30,7 +28,7 @@ trait AjaxValidationTrait
      *
      * @throws \yii\base\ExitException
      */
-    protected function performAjaxValidation(Model $model): void
+    protected function performAjaxValidation($model)
     {
         if (Yii::$app->request->isAjax && $model->load(Yii::$app->request->post())) {
             Yii::$app->response->format = Response::FORMAT_JSON;

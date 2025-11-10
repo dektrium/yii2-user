@@ -26,7 +26,7 @@ use yii\i18n\PhpMessageSource;
 class Bootstrap implements BootstrapInterface
 {
     /** @var array Model's map */
-    private array $_modelMap = [
+    private $_modelMap = [
         'User' => 'AlexeiKaDev\Yii2User\models\User',
         'Account' => 'AlexeiKaDev\Yii2User\models\Account',
         'Profile' => 'AlexeiKaDev\Yii2User\models\Profile',
@@ -54,7 +54,9 @@ class Bootstrap implements BootstrapInterface
                 $module->modelMap[$name] = $modelName;
 
                 if (in_array($name, ['User', 'Profile', 'Token', 'Account'])) {
-                    Yii::$container->set($name . 'Query', fn () => $modelName::find());
+                    Yii::$container->set($name . 'Query', function () use ($modelName) {
+                        return $modelName::find();
+                    });
                 }
             }
 

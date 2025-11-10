@@ -96,12 +96,13 @@ class Account extends ActiveRecord
 
     /**
      * Returns connect url.
+     * Uses SHA-256 for secure hashing instead of deprecated MD5.
      * @return string
      */
     public function getConnectUrl(): string
     {
         $code = Yii::$app->security->generateRandomString();
-        $this->updateAttributes(['code' => md5($code)]);
+        $this->updateAttributes(['code' => hash('sha256', $code)]);
 
         return Url::to(['/user/registration/connect', 'code' => $code]);
     }
@@ -246,7 +247,7 @@ class Account extends ActiveRecord
      * @return User|false
      * @throws \yii\base\InvalidConfigException
      */
-    protected static function fetchUser(Account $account): User|false
+    protected static function fetchUser(Account $account)
     {
         if ($account->email !== null) {
             $user = static::getFinder()->findUserByEmail($account->email);

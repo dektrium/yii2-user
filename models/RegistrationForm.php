@@ -1,5 +1,4 @@
 <?php
-declare(strict_types=1);
 
 /*
  * This file is part of the Dektrium project.
@@ -27,22 +26,22 @@ class RegistrationForm extends Model
     use ModuleTrait;
 
     /**
-     * @var string User email address
+     * @var string|null User email address
      */
-    public ?string $email = null;
+    public $email = null;
 
     /**
-     * @var string Username
+     * @var string|null Username
      */
-    public ?string $username = null;
+    public $username = null;
 
     /**
-     * @var string Password
+     * @var string|null Password
      */
-    public ?string $password = null;
+    public $password = null;
 
     /** @var RegistrationService The registration service instance. */
-    private RegistrationService $registrationService;
+    private $registrationService;
 
     /**
      * RegistrationForm constructor.

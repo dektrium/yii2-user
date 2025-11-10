@@ -1,5 +1,4 @@
 <?php
-declare(strict_types=1);
 
 /*
  * This file is part of the Dektrium project.
@@ -26,11 +25,14 @@ use yii\base\Model;
  */
 class ResendForm extends Model
 {
-    /** @var string User's email address. */
-    public ?string $email = null;
+    /** @var string|null User's email address. */
+    public $email = null;
 
-    protected Mailer $mailer;
-    protected Finder $finder;
+    /** @var Mailer */
+    protected $mailer;
+
+    /** @var Finder */
+    protected $finder;
 
     /**
      * ResendForm constructor.

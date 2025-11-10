@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 /*
  * This file is part of the Dektrium project.
  *
@@ -102,10 +100,10 @@ class SettingsController extends Controller
     public const EVENT_AFTER_DELETE = 'afterDelete';
 
     /** @inheritdoc */
-    public string $defaultAction = 'profile';
+    public $defaultAction = 'profile';
 
     /** @var Finder */
-    protected Finder $finder;
+    protected $finder;
 
     /**
      * @param string $id
@@ -113,7 +111,7 @@ class SettingsController extends Controller
      * @param Finder $finder
      * @param array $config
      */
-    public function __construct(string $id, Module $module, Finder $finder, array $config = [])
+    public function __construct($id, $module, Finder $finder, array $config = [])
     {
         $this->finder = $finder;
         parent::__construct($id, $module, $config);
@@ -153,7 +151,7 @@ class SettingsController extends Controller
      *
      * @return string|Response
      */
-    public function actionProfile(): string|Response
+    public function actionProfile()
     {
         $model = $this->finder->findProfileById(Yii::$app->user->identity->getId());
 
@@ -185,7 +183,7 @@ class SettingsController extends Controller
      *
      * @return string|Response
      */
-    public function actionAccount(): string|Response
+    public function actionAccount()
     {
         /** @var SettingsForm $model */
         $model = Yii::createObject(SettingsForm::class);
@@ -281,7 +279,7 @@ class SettingsController extends Controller
      * @return string|Response
      * @throws ForbiddenHttpException
      */
-    public function actionDelete(): string|Response
+    public function actionDelete()
     {
         if (!$this->module->enableAccountDelete) {
             throw new ForbiddenHttpException(Yii::t('user', 'Account deletion is disabled.'));

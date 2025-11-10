@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 /*
  * This file is part of the Dektrium project.
  *
@@ -90,7 +88,7 @@ class SecurityController extends Controller
     public const EVENT_AFTER_CONNECT = 'afterConnect';
 
     /** @var Finder */
-    protected Finder $finder;
+    protected $finder;
 
     /**
      * @param string $id
@@ -98,7 +96,7 @@ class SecurityController extends Controller
      * @param Finder $finder
      * @param array  $config
      */
-    public function __construct(string $id, Module $module, Finder $finder, array $config = [])
+    public function __construct($id, $module, Finder $finder, array $config = [])
     {
         $this->finder = $finder;
         parent::__construct($id, $module, $config);
@@ -153,7 +151,7 @@ class SecurityController extends Controller
      * @return string|Response
      * @throws \yii\base\InvalidConfigException
      */
-    public function actionLogin(): string|Response
+    public function actionLogin()
     {
         if (!Yii::$app->user->isGuest) {
             return $this->goHome();

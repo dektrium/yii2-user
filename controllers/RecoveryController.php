@@ -156,7 +156,7 @@ class RecoveryController extends Controller
         $token = $this->finder->findToken([
             'user_id' => $id,
             'code' => $code,
-            'type' => TokenType::RECOVERY->value
+            'type' => TokenType::RECOVERY
         ])->one();
 
         // Yii::warning is missing from use statements, assuming it's available globally or via Yii class.

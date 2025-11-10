@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 /*
  * This file is part of the Dektrium project.
  *
@@ -43,7 +41,7 @@ class Profile extends ActiveRecord
     use ModuleTrait;
 
     /** @var Module The user module instance */
-    protected Module $module;
+    protected $module;
 
     /** @inheritdoc */
     public function init(): void

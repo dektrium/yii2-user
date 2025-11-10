@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 /*
  * This file is part of the Dektrium project.
  *
@@ -84,13 +82,13 @@ class User extends ActiveRecord implements IdentityInterface
     public const NEW_EMAIL_CONFIRMED = 0b10;
 
     /** @var string|null Plain password. Used for model validation. */
-    public ?string $password = null;
+    public $password = null;
 
     /** @var Profile|null Referenced by $this->getProfile() */
-    private ?Profile $_profile = null;
+    private $_profile = null;
 
     /** @var string Default username regexp */
-    public static string $usernameRegexp = '/^[-a-zA-Z0-9_\.@]+$/';
+    public static $usernameRegexp = '/^[-a-zA-Z0-9_\.@]+$/';
 
     /** @var int Maximum username length */
     private const USERNAME_MAX_LENGTH = 255;
@@ -271,7 +269,9 @@ class User extends ActiveRecord implements IdentityInterface
                 'unconfirmed_email',
                 'unique',
                 'message' => Yii::t('user', 'This email address has already been taken'),
-                'when' => fn ($model) => (bool)$model->unconfirmed_email
+                'when' => function ($model) {
+                    return (bool)$model->unconfirmed_email;
+                }
             ],
 
             // password rules
@@ -395,7 +395,7 @@ class User extends ActiveRecord implements IdentityInterface
     public function attemptEmailChange(string $code): bool
     {
         /** @var Token|null $token */
-        $token = $this->getFinder()->findTokenByParams($this->id, $code, TokenType::CONFIRM_NEW_EMAIL->value);
+        $token = $this->getFinder()->findTokenByParams($this->id, $code, TokenType::CONFIRM_NEW_EMAIL);
 
         if (empty($this->unconfirmed_email) || $token === null || $token->isExpired) {
             Yii::$app->session->setFlash(
@@ -465,13 +465,17 @@ class User extends ActiveRecord implements IdentityInterface
 
     /**
      * Generates new username based on email address, or a random string if email is unavailable.
+     * Uses cryptographically secure random generation for PHP 7.2+.
      * @param bool $generateRandomString Whether to generate random string if username generation fails.
+     * @throws \yii\base\Exception
      */
-    public function generateUsername(bool $generateRandomString = false): void
+    public function generateUsername($generateRandomString = false)
     {
         if ($generateRandomString) {
-            // try to generate username the random string
-            $randomString = md5(uniqid((string)mt_rand(), true));
+            // Generate username using cryptographically secure random string
+            $randomString = Yii::$app->security->generateRandomString(32);
+            // Convert to alphanumeric only
+            $randomString = preg_replace('/[^a-zA-Z0-9]/', '', base64_encode($randomString));
             $this->username = substr(strtolower($randomString), 0, self::USERNAME_MAX_LENGTH);
         } else {
             // try to generate username from email
@@ -516,12 +520,12 @@ class User extends ActiveRecord implements IdentityInterface
     }
 
     /** @inheritdoc */
-    public function afterSave($insert, $changedAttributes): void
+    public function afterSave($insert, $changedAttributes)
     {
         parent::afterSave($insert, $changedAttributes);
 
-        if ($insert) {
-            $this->_profile?->save(false);
+        if ($insert && $this->_profile !== null) {
+            $this->_profile->save(false);
         }
     }
 

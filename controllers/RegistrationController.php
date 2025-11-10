@@ -134,7 +134,7 @@ class RegistrationController extends Controller
      * @throws \yii\web\HttpException
      * @throws \yii\base\InvalidConfigException
      */
-    public function actionRegister(): string|Response
+    public function actionRegister()
     {
         if (!$this->module->enableRegistration) {
             throw new NotFoundHttpException();
@@ -172,7 +172,7 @@ class RegistrationController extends Controller
      * @throws NotFoundHttpException
      * @throws \yii\base\InvalidConfigException
      */
-    public function actionConnect(string $code): string|Response
+    public function actionConnect(string $code)
     {
         $account = $this->finder->findAccount()->byCode($code)->one();
 
@@ -216,7 +216,7 @@ class RegistrationController extends Controller
      * @return string|Response
      * @throws NotFoundHttpException
      */
-    public function actionConfirm(int $id, string $code): string|Response
+    public function actionConfirm(int $id, string $code)
     {
         $user = $this->finder->findUserById($id);
 
@@ -243,7 +243,7 @@ class RegistrationController extends Controller
      * @throws NotFoundHttpException
      * @throws \yii\base\InvalidConfigException
      */
-    public function actionResend(): string|Response
+    public function actionResend()
     {
         if (!$this->module->enableConfirmation) {
             throw new NotFoundHttpException();

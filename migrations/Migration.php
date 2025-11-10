@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 /*
  * This file is part of the Dektrium project.
  *
@@ -18,33 +16,54 @@ namespace AlexeiKaDev\Yii2User\migrations;
  */
 class Migration extends \yii\db\Migration
 {
-    protected ?string $tableOptions = null;
+    /** @var string|null */
+    protected $tableOptions = null;
 
-    protected string $restrict = 'RESTRICT';
+    /** @var string */
+    protected $restrict = 'RESTRICT';
 
-    protected string $cascade = 'CASCADE';
+    /** @var string */
+    protected $cascade = 'CASCADE';
 
-    protected ?string $dbType = null;
+    /** @var string|null */
+    protected $dbType = null;
 
     /**
      * @inheritdoc
      */
-    public function init(): void
+    public function init()
     {
         parent::init();
 
-        $this->dbType = match ($this->db->driverName) {
-            'mysql' => 'mysql',
-            'pgsql' => 'pgsql',
-            'dblib', 'mssql', 'sqlsrv' => 'sqlsrv',
-            default => throw new \RuntimeException('Your database is not supported!'),
-        };
+        switch ($this->db->driverName) {
+            case 'mysql':
+                $this->dbType = 'mysql';
+                break;
+            case 'pgsql':
+                $this->dbType = 'pgsql';
+                break;
+            case 'dblib':
+            case 'mssql':
+            case 'sqlsrv':
+                $this->dbType = 'sqlsrv';
+                break;
+            default:
+                throw new \RuntimeException('Your database is not supported!');
+        }
 
-        $this->tableOptions = match ($this->db->driverName) {
-            'mysql' => 'CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci ENGINE=InnoDB',
-            'pgsql', 'dblib', 'mssql', 'sqlsrv' => null,
-            default => throw new \RuntimeException('Your database is not supported!'), // Should be caught by dbType match
-        };
+        switch ($this->db->driverName) {
+            case 'mysql':
+                $this->tableOptions = 'CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci ENGINE=InnoDB';
+                break;
+            case 'pgsql':
+            case 'dblib':
+            case 'mssql':
+            case 'sqlsrv':
+                $this->tableOptions = null;
+                break;
+            default:
+                throw new \RuntimeException('Your database is not supported!');
+        }
 
         if (in_array($this->db->driverName, ['dblib', 'mssql', 'sqlsrv'], true)) {
             $this->restrict = 'NO ACTION';

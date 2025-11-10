@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 /*
  * This file is part of the Dektrium project.
  *
@@ -33,17 +31,18 @@ class RecoveryForm extends Model
     /**
      * @var string|null
      */
-    public ?string $email = null;
+    public $email = null;
 
     /**
      * @var string|null
      */
-    public ?string $password = null;
+    public $password = null;
 
     /** @var Finder The user finder instance. */
-    protected Finder $finder;
+    protected $finder;
+
     /** @var PasswordRecoveryService The password recovery service instance. */
-    protected PasswordRecoveryService $passwordRecoveryService;
+    protected $passwordRecoveryService;
 
     /**
      * @param Finder $finder The user finder instance.

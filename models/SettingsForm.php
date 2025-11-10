@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 /*
  * This file is part of the Dektrium project.
  *
@@ -39,18 +37,22 @@ class SettingsForm extends Model
     public const SCENARIO_DELETE = 'delete';
 
     /** @var string|null */
-    public ?string $email = null;
+    public $email = null;
 
     /** @var string|null */
-    public ?string $username = null;
+    public $username = null;
 
     /** @var string|null */
-    public ?string $new_password = null;
+    public $new_password = null;
 
     /** @var string|null */
-    public ?string $current_password = null;
+    public $current_password = null;
 
-    private ?User $_user = null;
+    /** @var User|null */
+    private $_user = null;
+
+    /** @var Mailer The mailer instance. */
+    protected $mailer;
 
     public function getUser(): User
     {
@@ -65,10 +67,9 @@ class SettingsForm extends Model
      * @param Mailer $mailer The mailer instance.
      * @param array $config Name-value pairs that will be used to initialize the object properties.
      */
-    public function __construct(
-        protected Mailer $mailer,
-        array $config = []
-    ) {
+    public function __construct(Mailer $mailer, array $config = [])
+    {
+        $this->mailer = $mailer;
         parent::__construct($config);
         $user = $this->getUser();
 
@@ -107,7 +108,9 @@ class SettingsForm extends Model
                 ['email', 'username'],
                 'unique',
                 'targetClass' => $this->module->modelMap['User'],
-                'when' => fn ($model, $attribute) => $this->getUser()->$attribute != $model->$attribute,
+                'when' => function ($model, $attribute) {
+                    return $this->getUser()->$attribute != $model->$attribute;
+                },
                 'on' => [self::SCENARIO_ACCOUNT, self::SCENARIO_PROFILE]
             ],
 
@@ -154,12 +157,19 @@ class SettingsForm extends Model
                 if ($user->unconfirmed_email !== null && $this->email === $user->email) {
                     $user->unconfirmed_email = null;
                 } else {
-                    match ($this->module->emailChangeStrategy) {
-                        Module::STRATEGY_INSECURE => $this->insecureEmailChange($user),
-                        Module::STRATEGY_DEFAULT => $this->defaultEmailChange($user),
-                        Module::STRATEGY_SECURE => $this->secureEmailChange($user),
-                        default => throw new \OutOfBoundsException('Invalid email changing strategy'),
-                    };
+                    switch ($this->module->emailChangeStrategy) {
+                        case Module::STRATEGY_INSECURE:
+                            $this->insecureEmailChange($user);
+                            break;
+                        case Module::STRATEGY_DEFAULT:
+                            $this->defaultEmailChange($user);
+                            break;
+                        case Module::STRATEGY_SECURE:
+                            $this->secureEmailChange($user);
+                            break;
+                        default:
+                            throw new \OutOfBoundsException('Invalid email changing strategy');
+                    }
                 }
             } elseif ($this->email === $user->email && $user->unconfirmed_email !== null) {
                 $user->unconfirmed_email = null;

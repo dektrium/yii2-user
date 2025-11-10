@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 /*
  * This file is part of the Dektrium project.
  *
@@ -32,27 +30,29 @@ class LoginForm extends Model
 {
     use ModuleTrait;
 
-    /** @var string User's email or username */
-    public ?string $login = null;
+    /** @var string|null User's email or username */
+    public $login = null;
 
     /** @var string|null User's plain password. Nullable if module debug is enabled. */
-    public ?string $password = null;
+    public $password = null;
 
     /** @var bool Whether to remember the user */
-    public bool $rememberMe = false;
+    public $rememberMe = false;
 
     /** @var User|null The user found based on login field */
-    protected ?User $user = null;
+    protected $user = null;
+
+    /** @var Finder */
+    protected $finder;
 
     /**
      * LoginForm constructor.
      * @param Finder $finder
      * @param array  $config
      */
-    public function __construct(
-        protected Finder $finder,
-        array $config = []
-    ) {
+    public function __construct(Finder $finder, array $config = [])
+    {
+        $this->finder = $finder;
         parent::__construct($config);
     }
 
@@ -75,7 +75,9 @@ class LoginForm extends Model
         $userModelClass = $module->modelMap['User'];
         $users = $userModelClass::find()->where(['blocked_at' => null])->all();
 
-        return ArrayHelper::map($users, 'username', fn (User $user) => $user->username . ' (' . $user->email . ')');
+        return ArrayHelper::map($users, 'username', function (User $user) {
+            return $user->username . ' (' . $user->email . ')';
+        });
     }
 
     /** @inheritdoc */

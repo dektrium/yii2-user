@@ -77,7 +77,7 @@ class ProfileController extends Controller
      * @return string|Response
      * @throws \yii\web\NotFoundHttpException
      */
-    public function actionShow(int $id): string|Response
+    public function actionShow(int $id)
     {
         $profile = $this->finder->findProfileById($id);
 

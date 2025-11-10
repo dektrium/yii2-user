@@ -232,7 +232,7 @@ class AdminController extends Controller
      * @return string|Response
      * @throws \yii\base\InvalidConfigException
      */
-    public function actionCreate(): string|Response
+    public function actionCreate()
     {
         /** @var User $user */
         $user = Yii::createObject([
@@ -271,7 +271,7 @@ class AdminController extends Controller
      * @return string|Response
      * @throws NotFoundHttpException
      */
-    public function actionUpdate(int $id): string|Response
+    public function actionUpdate(int $id)
     {
         Url::remember('', 'actions-redirect');
         $user = $this->findModel($id);
@@ -301,7 +301,7 @@ class AdminController extends Controller
      * @return string|Response
      * @throws NotFoundHttpException
      */
-    public function actionUpdateProfile(int $id): string|Response
+    public function actionUpdateProfile(int $id)
     {
         Url::remember('', 'actions-redirect');
         $user = $this->findModel($id);
@@ -559,7 +559,7 @@ class AdminController extends Controller
      * @param Model|Model[] $model The model(s) to be validated
      * @throws ExitException
      */
-    protected function performAjaxValidation(Model|array $model): void
+    protected function performAjaxValidation($model): void
     {
         if (Yii::$app->request->isAjax && !Yii::$app->request->isPjax) {
             if ($model->load(Yii::$app->request->post())) {

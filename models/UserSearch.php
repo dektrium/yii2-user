@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 /*
  * This file is part of the Dektrium project.
  *
@@ -25,31 +23,33 @@ use yii\data\ActiveDataProvider;
 class UserSearch extends Model
 {
     /** @var int|null */
-    public ?int $id = null;
+    public $id = null;
 
     /** @var string|null */
-    public ?string $username = null;
+    public $username = null;
 
     /** @var string|null */
-    public ?string $email = null;
+    public $email = null;
 
     /** @var int|string|null Date range or timestamp */
-    public mixed $created_at = null;
+    public $created_at = null;
 
     /** @var int|string|null Date range or timestamp */
-    public mixed $last_login_at = null;
+    public $last_login_at = null;
 
     /** @var string|null */
-    public ?string $registration_ip = null;
+    public $registration_ip = null;
+
+    /** @var Finder The finder instance. */
+    protected $finder;
 
     /**
      * @param Finder $finder The finder instance.
      * @param array  $config Name-value pairs that will be used to initialize the object properties.
      */
-    public function __construct(
-        protected Finder $finder,
-        array $config = []
-    ) {
+    public function __construct(Finder $finder, array $config = [])
+    {
+        $this->finder = $finder;
         parent::__construct($config);
     }
 

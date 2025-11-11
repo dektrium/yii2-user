@@ -85,7 +85,7 @@ class RegistrationForm extends Model
             ],
             // password rules
             'passwordRequired' => ['password', 'required', 'skipOnEmpty' => $this->module->enableGeneratingPassword],
-            'passwordLength' => ['password', 'string', 'min' => 6, 'max' => 72],
+            'passwordLength' => ['password', 'string', 'min' => 12, 'max' => 72],
         ];
     }
 

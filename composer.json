@@ -34,6 +34,12 @@
         "codeception/specify": "^0.4.3",
         "codeception/verify": "^0.3.1"
     },
+    "suggest": {
+        "hiqdev/yii2-mfa": "For Two-Factor Authentication (TOTP) support",
+        "vxm/yii2-mfa": "Alternative Two-Factor Authentication module",
+        "google/recaptcha": "For reCAPTCHA protection against bots",
+        "yiisoft/yii2-httpclient": "For external API integrations"
+    },
     "autoload": {
         "psr-4": {
             "AlexeiKaDev\\Yii2User\\": ""

@@ -123,7 +123,7 @@ class SettingsForm extends Model
                 'on' => [self::SCENARIO_ACCOUNT, self::SCENARIO_PROFILE]
             ],
 
-            'newPasswordLength' => ['new_password', 'string', 'max' => 72, 'min' => 6, 'on' => self::SCENARIO_ACCOUNT],
+            'newPasswordLength' => ['new_password', 'string', 'max' => 72, 'min' => 12, 'on' => self::SCENARIO_ACCOUNT],
 
             'currentPasswordRequired' => ['current_password', 'required', 'on' => [self::SCENARIO_ACCOUNT, self::SCENARIO_DELETE]],
             'currentPasswordValidate' => ['current_password', function ($attribute) {

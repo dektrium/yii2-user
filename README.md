@@ -9,6 +9,9 @@ Flexible user registration and authentication module for Yii2 with **full PHP 7.
 
 - ✅ **PHP 7.2-8.4 Compatibility** - Works on all modern PHP versions
 - 🔒 **Enhanced Security** - Cryptographically secure password generation, SHA-256 hashing
+- 🔐 **Two-Factor Authentication (2FA)** - Optional TOTP support via external modules
+- 🚦 **Rate Limiting** - Built-in brute-force protection
+- 🔑 **Strong Passwords** - Minimum 12 characters (2024 security standards)
 - 📧 Registration with optional email confirmation
 - 🌐 Registration via social networks (Facebook, Google, GitHub, VKontakte, etc.)
 - 🔑 Password recovery
@@ -97,11 +100,14 @@ This fork has been completely rebuilt for **PHP 7.2-8.4 compatibility**:
 - ✅ Compatible with PHP 7.2, 7.3, 7.4, 8.0, 8.1, 8.2, 8.3, 8.4
 - ✅ 100 files refactored for maximum compatibility
 
-### Security Enhancements
+### Security Enhancements (2024 Standards)
 - 🔒 **Cryptographically secure password generation** using `random_int()`
 - 🔒 **SHA-256 hashing** for account codes (replaces MD5)
 - 🔒 **Secure username generation** via Yii Security component
 - 🔒 **Fisher-Yates shuffle** algorithm for password randomization
+- 🔒 **12-character minimum passwords** (up from 6, following 2024 best practices)
+- 🔒 **Two-Factor Authentication support** via TwoFactorInterface
+- 🔒 **Rate limiting** to prevent brute-force attacks
 - 🔒 Full CSRF, XSS, and SQL Injection protection
 
 ### Dependencies
@@ -183,6 +189,118 @@ Configure social providers in your `config/web.php`:
         ],
     ],
 ],
+```
+
+## Two-Factor Authentication (2FA)
+
+Enable 2FA support by implementing the `TwoFactorInterface` in your User model:
+
+### 1. Install a 2FA Module
+
+```bash
+composer require hiqdev/yii2-mfa
+# or
+composer require vxm/yii2-mfa
+```
+
+### 2. Run 2FA Migration
+
+```bash
+./yii migrate/up --migrationPath=@vendor/alexeikadev/yii2-user/migrations
+```
+
+This adds `two_factor_enabled` and `two_factor_secret` columns to the user table.
+
+### 3. Implement TwoFactorInterface
+
+```php
+use AlexeiKaDev\Yii2User\interfaces\TwoFactorInterface;
+
+class User extends ActiveRecord implements TwoFactorInterface
+{
+    public function getIsTwoFactorEnabled()
+    {
+        return (bool)$this->two_factor_enabled;
+    }
+
+    public function getTwoFactorSecret()
+    {
+        return $this->two_factor_secret;
+    }
+
+    public function setTwoFactorSecret($secret)
+    {
+        $this->two_factor_secret = $secret;
+        return $this->save(false, ['two_factor_secret']);
+    }
+
+    public function enableTwoFactor()
+    {
+        $this->two_factor_enabled = 1;
+        return $this->save(false, ['two_factor_enabled']);
+    }
+
+    public function disableTwoFactor()
+    {
+        $this->two_factor_enabled = 0;
+        $this->two_factor_secret = null;
+        return $this->save(false, ['two_factor_enabled', 'two_factor_secret']);
+    }
+}
+```
+
+## Rate Limiting (Brute-Force Protection)
+
+Protect your login forms from brute-force attacks with rate limiting:
+
+### 1. Run Rate Limiting Migration
+
+```bash
+./yii migrate/up --migrationPath=@vendor/alexeikadev/yii2-user/migrations
+```
+
+This adds `allowance` and `allowance_updated_at` columns to the user table.
+
+### 2. Implement RateLimitableInterface
+
+```php
+use AlexeiKaDev\Yii2User\interfaces\RateLimitableInterface;
+
+class User extends ActiveRecord implements RateLimitableInterface
+{
+    public function getRateLimit($request, $action)
+    {
+        return [5, 60]; // 5 attempts per 60 seconds
+    }
+
+    public function loadAllowance($request, $action)
+    {
+        return [$this->allowance, $this->allowance_updated_at];
+    }
+
+    public function saveAllowance($request, $action, $allowance, $timestamp)
+    {
+        $this->allowance = $allowance;
+        $this->allowance_updated_at = $timestamp;
+        $this->save(false, ['allowance', 'allowance_updated_at']);
+    }
+}
+```
+
+### 3. Configure Rate Limiter in Controller
+
+```php
+use AlexeiKaDev\Yii2User\filters\RateLimitFilter;
+
+public function behaviors()
+{
+    return [
+        'rateLimiter' => [
+            'class' => RateLimitFilter::class,
+            'only' => ['login'],
+        ],
+    ];
+}
 ```
 
 ## Testing

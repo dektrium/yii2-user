@@ -94,7 +94,7 @@ class RecoveryForm extends Model
             'emailRequired' => ['email', 'required'],
             'emailPattern' => ['email', 'email'],
             'passwordRequired' => ['password', 'required'],
-            'passwordLength' => ['password', 'string', 'max' => 72, 'min' => 12],
+            'passwordLength' => ['password', 'string', 'max' => 72, 'min' => 15],
         ];
     }
 

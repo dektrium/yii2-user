@@ -35,8 +35,10 @@
         "codeception/verify": "^0.3.1"
     },
     "suggest": {
-        "hiqdev/yii2-mfa": "For Two-Factor Authentication (TOTP) support",
+        "hiqdev/yii2-mfa": "For Two-Factor Authentication (TOTP) support with recovery codes",
+        "simialbi/yii2-mfa": "Modern 2FA module (updated 2025, requires PHP 8.1+)",
         "vxm/yii2-mfa": "Alternative Two-Factor Authentication module",
+        "lbuchs/webauthn": "For WebAuthn/Passkey passwordless authentication (2025 standard)",
         "google/recaptcha": "For reCAPTCHA protection against bots",
         "yiisoft/yii2-httpclient": "For external API integrations"
     },

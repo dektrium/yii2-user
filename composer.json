@@ -1,7 +1,7 @@
 {
     "name": "alexeikadev/yii2-user",
-    "description": "Flexible user registration and authentication module for Yii2 (AlexeiKaDev fork)",
-    "keywords": ["yii2", "yii2-user", "user management", "alexeikadev"],
+    "description": "Flexible user registration and authentication module for Yii2 with 2FA, rate limiting, and advanced security features (OWASP 2025, NIST 800-63B). Full Russian localization included. (AlexeiKaDev fork)",
+    "keywords": ["yii2", "yii2-user", "user management", "alexeikadev", "2fa", "authentication", "security", "russian", "локализация", "owasp", "nist"],
     "type": "yii2-extension",
     "license": "MIT",
     "support": {

@@ -1,0 +1,93 @@
+version: '3.8'
+
+services:
+  # PHP Development Environment
+  php:
+    image: yiisoftware/yii2-php:8.2-apache
+    ports:
+      - "8080:80"
+    volumes:
+      - .:/app
+      - ./tests/_app:/app/web
+    environment:
+      - YII_ENV=dev
+      - YII_DEBUG=true
+    depends_on:
+      - mysql
+      - postgres
+    networks:
+      - yii2-user-network
+
+  # MySQL Database
+  mysql:
+    image: mysql:8.0
+    ports:
+      - "3306:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: yii2_user_test
+      MYSQL_USER: yii2
+      MYSQL_PASSWORD: yii2
+    volumes:
+      - mysql-data:/var/lib/mysql
+    command: --default-authentication-plugin=mysql_native_password
+    networks:
+      - yii2-user-network
+
+  # PostgreSQL Database
+  postgres:
+    image: postgres:15-alpine
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_DB: yii2_user_test
+      POSTGRES_USER: yii2
+      POSTGRES_PASSWORD: yii2
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    networks:
+      - yii2-user-network
+
+  # phpMyAdmin for MySQL
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin:latest
+    ports:
+      - "8081:80"
+    environment:
+      PMA_HOST: mysql
+      PMA_USER: root
+      PMA_PASSWORD: root
+    depends_on:
+      - mysql
+    networks:
+      - yii2-user-network
+
+  # Adminer (supports both MySQL and PostgreSQL)
+  adminer:
+    image: adminer:latest
+    ports:
+      - "8082:8080"
+    environment:
+      ADMINER_DEFAULT_SERVER: mysql
+    depends_on:
+      - mysql
+      - postgres
+    networks:
+      - yii2-user-network
+
+  # MailHog for email testing
+  mailhog:
+    image: mailhog/mailhog:latest
+    ports:
+      - "1025:1025"  # SMTP server
+      - "8025:8025"  # Web UI
+    networks:
+      - yii2-user-network
+
+networks:
+  yii2-user-network:
+    driver: bridge
+
+volumes:
+  mysql-data:
+  postgres-data:

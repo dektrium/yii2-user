@@ -1,6 +1,5 @@
 <?php
 
-declare(strict_types=1);
 
 /*
  * This file is part of the Dektrium project.
@@ -150,8 +149,8 @@ class AdminController extends Controller
     public const ORIGINAL_USER_SESSION_KEY = 'original_user_id';
 
     /** @var Finder */
-    protected Finder $finder;
-    protected UserCreationService $userCreationService;
+    protected $finder;
+    protected $userCreationService;
 
     /**
      * @param string $id
@@ -173,7 +172,7 @@ class AdminController extends Controller
     }
 
     /** @inheritdoc */
-    public function behaviors(): array
+    public function behaviors()
     {
         return [
             'verbs' => [
@@ -212,7 +211,7 @@ class AdminController extends Controller
      * @return string
      * @throws \yii\base\InvalidConfigException
      */
-    public function actionIndex(): string
+    public function actionIndex()
     {
         Url::remember('', 'actions-redirect');
         /** @var UserSearch $searchModel */
@@ -232,7 +231,7 @@ class AdminController extends Controller
      * @return string|Response
      * @throws \yii\base\InvalidConfigException
      */
-    public function actionCreate(): string|Response
+    public function actionCreate()
     {
         /** @var User $user */
         $user = Yii::createObject([
@@ -271,7 +270,7 @@ class AdminController extends Controller
      * @return string|Response
      * @throws NotFoundHttpException
      */
-    public function actionUpdate(int $id): string|Response
+    public function actionUpdate($id)
     {
         Url::remember('', 'actions-redirect');
         $user = $this->findModel($id);
@@ -301,7 +300,7 @@ class AdminController extends Controller
      * @return string|Response
      * @throws NotFoundHttpException
      */
-    public function actionUpdateProfile(int $id): string|Response
+    public function actionUpdateProfile($id)
     {
         Url::remember('', 'actions-redirect');
         $user = $this->findModel($id);
@@ -337,7 +336,7 @@ class AdminController extends Controller
      * @return string
      * @throws NotFoundHttpException
      */
-    public function actionInfo(int $id): string
+    public function actionInfo($id)
     {
         Url::remember('', 'actions-redirect');
         $user = $this->findModel($id);
@@ -356,7 +355,7 @@ class AdminController extends Controller
      * @throws ForbiddenHttpException
      * @throws NotFoundHttpException
      */
-    public function actionSwitch(int $id): Response
+    public function actionSwitch($id)
     {
         /** @var Module $userModule */
         $userModule = Yii::$app->getModule('user');
@@ -391,7 +390,7 @@ class AdminController extends Controller
      * @return Response
      * @throws ForbiddenHttpException
      */
-    public function actionSwitchBack(): Response
+    public function actionSwitchBack()
     {
         /** @var Module $userModule */
         $userModule = Yii::$app->getModule('user');
@@ -422,7 +421,7 @@ class AdminController extends Controller
      * @return string
      * @throws NotFoundHttpException
      */
-    public function actionAssignments(int $id): string
+    public function actionAssignments($id)
     {
         if (!isset(Yii::$app->extensions['yii2-developer/yii2-rbac'])) {
             throw new NotFoundHttpException('yii2-rbac extension is not installed');
@@ -442,7 +441,7 @@ class AdminController extends Controller
      * @return Response
      * @throws NotFoundHttpException
      */
-    public function actionConfirm(int $id): Response
+    public function actionConfirm($id)
     {
         $model = $this->findModel($id);
         $event = $this->getUserEvent($model);
@@ -466,7 +465,7 @@ class AdminController extends Controller
      * @throws \Throwable
      * @throws yii\db\StaleObjectException
      */
-    public function actionDelete(int $id): Response
+    public function actionDelete($id)
     {
         if ($id == Yii::$app->user->getId()) {
             Yii::$app->getSession()->setFlash('danger', Yii::t('user', 'You can not remove your own account'));
@@ -490,7 +489,7 @@ class AdminController extends Controller
      * @throws NotFoundHttpException
      * @throws ForbiddenHttpException
      */
-    public function actionBlock(int $id): Response
+    public function actionBlock($id)
     {
         if ($id == Yii::$app->user->getId()) {
             Yii::$app->getSession()->setFlash('danger', Yii::t('user', 'You can not block your own account'));
@@ -521,7 +520,7 @@ class AdminController extends Controller
      * @return Response
      * @throws NotFoundHttpException
      */
-    public function actionResendPassword(int $id): Response
+    public function actionResendPassword($id)
     {
         $user = $this->findModel($id);
 
@@ -542,7 +541,7 @@ class AdminController extends Controller
      * @return User the loaded model
      * @throws NotFoundHttpException if the model cannot be found
      */
-    protected function findModel(int $id): User
+    protected function findModel($id)
     {
         $user = $this->finder->findUserById($id);
 
@@ -559,7 +558,7 @@ class AdminController extends Controller
      * @param Model|Model[] $model The model(s) to be validated
      * @throws ExitException
      */
-    protected function performAjaxValidation(Model|array $model): void
+    protected function performAjaxValidation($model)
     {
         if (Yii::$app->request->isAjax && !Yii::$app->request->isPjax) {
             if ($model->load(Yii::$app->request->post())) {

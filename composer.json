@@ -1,7 +1,7 @@
 {
     "name": "alexeikadev/yii2-user",
-    "description": "Flexible user registration and authentication module for Yii2 (AlexeiKaDev fork)",
-    "keywords": ["yii2", "yii2-user", "user management", "alexeikadev"],
+    "description": "Flexible user registration and authentication module for Yii2 with 2FA, rate limiting, and advanced security features (OWASP 2025, NIST 800-63B). Full Russian localization included. (AlexeiKaDev fork)",
+    "keywords": ["yii2", "yii2-user", "user management", "alexeikadev", "2fa", "authentication", "security", "russian", "локализация", "owasp", "nist"],
     "type": "yii2-extension",
     "license": "MIT",
     "support": {
@@ -23,16 +23,24 @@
     ],
     "minimum-stability": "dev",
     "require": {
-        "php": ">=8.3",
-        "yiisoft/yii2": "^2.0.52",
-        "yiisoft/yii2-symfonymailer": "^4.0.0",
-        "yiisoft/yii2-authclient": "^2.1.0",
+        "php": ">=7.2 <8.5",
+        "yiisoft/yii2": "^2.0.40",
+        "yiisoft/yii2-symfonymailer": "^2.0.3|^3.0|^4.0",
+        "yiisoft/yii2-authclient": "^2.1.0|^2.2|^3.0",
         "yiisoft/yii2-bootstrap5": "^2.0.0"
     },
     "require-dev": {
         "yiisoft/yii2-codeception": "^2.0.0",
         "codeception/specify": "^0.4.3",
         "codeception/verify": "^0.3.1"
+    },
+    "suggest": {
+        "hiqdev/yii2-mfa": "For Two-Factor Authentication (TOTP) support with recovery codes",
+        "simialbi/yii2-mfa": "Modern 2FA module (updated 2025, requires PHP 8.1+)",
+        "vxm/yii2-mfa": "Alternative Two-Factor Authentication module",
+        "lbuchs/webauthn": "For WebAuthn/Passkey passwordless authentication (2025 standard)",
+        "google/recaptcha": "For reCAPTCHA protection against bots",
+        "yiisoft/yii2-httpclient": "For external API integrations"
     },
     "autoload": {
         "psr-4": {

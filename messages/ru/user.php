@@ -189,4 +189,211 @@ return  [
   'Your password has been changed successfully.' => 'Ваш пароль был успешно изменен.',
   'Your profile has been updated' => 'Настройки профиля были успешно сохранены',
   '{0, date, MMMM dd, YYYY HH:mm}' => '{0, date, dd MMMM, YYYY HH:mm}',
+
+  // Activity Log
+  'Logged in' => 'Выполнен вход',
+  'Logged out' => 'Выполнен выход',
+  'Registered' => 'Зарегистрирован',
+  'Changed password' => 'Изменен пароль',
+  'Reset password' => 'Сброшен пароль',
+  'Updated profile' => 'Обновлен профиль',
+  'Changed email' => 'Изменен email',
+  'Deleted account' => 'Удален аккаунт',
+  'Enabled 2FA' => 'Включена 2FA',
+  'Disabled 2FA' => 'Отключена 2FA',
+  'Connected social account' => 'Подключен социальный аккаунт',
+  'Disconnected social account' => 'Отключен социальный аккаунт',
+  'Failed login attempt' => 'Неудачная попытка входа',
+  'Account blocked' => 'Аккаунт заблокирован',
+  'Account confirmed' => 'Аккаунт подтвержден',
+
+  // HaveIBeenPwned
+  'This password has been found in {count} data breaches. Please choose a different password.' => 'Этот пароль был обнаружен в {count} утечках данных. Пожалуйста, выберите другой пароль.',
+  'This password has been compromised in data breaches ({count} times). Please choose a different password.' => 'Этот пароль был скомпрометирован в утечках данных ({count} раз). Пожалуйста, выберите другой пароль.',
+
+  // Security Notifications
+  'New device login to your account' => 'Новый вход в ваш аккаунт с нового устройства',
+  'Hello {username},
+
+We noticed a new login to your account:
+
+Device: {device}
+IP Address: {ip}
+{location}Time: {time}
+
+If this was you, you can ignore this message.
+
+If you don\'t recognize this activity, please:
+1. Change your password immediately
+2. Review your account security settings
+3. Check your active sessions and log out suspicious ones
+
+Stay secure!' => 'Здравствуйте, {username}!
+
+Мы заметили новый вход в ваш аккаунт:
+
+Устройство: {device}
+IP-адрес: {ip}
+{location}Время: {time}
+
+Если это были вы, можете игнорировать это сообщение.
+
+Если вы не узнаете это действие, пожалуйста:
+1. Немедленно измените пароль
+2. Проверьте настройки безопасности аккаунта
+3. Проверьте активные сессии и завершите подозрительные
+
+Будьте в безопасности!',
+
+  'Your password has been changed' => 'Ваш пароль был изменен',
+  'Hello {username},
+
+Your password was successfully changed.
+
+IP Address: {ip}
+Time: {time}
+
+If you didn\'t make this change, please contact us immediately and:
+1. Reset your password using the recovery form
+2. Review your account security settings
+3. Enable two-factor authentication if not already enabled
+
+Stay secure!' => 'Здравствуйте, {username}!
+
+Ваш пароль был успешно изменен.
+
+IP-адрес: {ip}
+Время: {time}
+
+Если вы не делали это изменение, пожалуйста, немедленно свяжитесь с нами и:
+1. Сбросьте пароль используя форму восстановления
+2. Проверьте настройки безопасности аккаунта
+3. Включите двухфакторную аутентификацию, если еще не включена
+
+Будьте в безопасности!',
+
+  'Multiple failed login attempts detected' => 'Обнаружено несколько неудачных попыток входа',
+  'Hello {username},
+
+We detected {count} failed login attempts on your account.
+
+IP Address: {ip}
+Time: {time}
+
+If this was you, you can ignore this message.
+
+If you don\'t recognize this activity:
+1. Change your password immediately
+2. Enable two-factor authentication
+3. Review your active sessions
+
+Your account is still secure, but we recommend taking action.
+
+Stay secure!' => 'Здравствуйте, {username}!
+
+Мы обнаружили {count} неудачных попыток входа в ваш аккаунт.
+
+IP-адрес: {ip}
+Время: {time}
+
+Если это были вы, можете игнорировать это сообщение.
+
+Если вы не узнаете это действие:
+1. Немедленно измените пароль
+2. Включите двухфакторную аутентификацию
+3. Проверьте ваши активные сессии
+
+Ваш аккаунт все еще защищен, но мы рекомендуем принять меры.
+
+Будьте в безопасности!',
+
+  'Your email address has been changed' => 'Ваш email был изменен',
+  'Hello {username},
+
+Your email address was changed from {old_email} to {new_email}.
+
+IP Address: {ip}
+Time: {time}
+
+If you didn\'t make this change, please contact us immediately.
+
+Stay secure!' => 'Здравствуйте, {username}!
+
+Ваш email был изменен с {old_email} на {new_email}.
+
+IP-адрес: {ip}
+Время: {time}
+
+Если вы не делали это изменение, пожалуйста, немедленно свяжитесь с нами.
+
+Будьте в безопасности!',
+
+  'Two-Factor Authentication has been {action}' => 'Двухфакторная аутентификация была {action}',
+  'Hello {username},
+
+Two-Factor Authentication (2FA) was {action} on your account.
+
+IP Address: {ip}
+Time: {time}
+
+If you didn\'t make this change, please:
+1. Change your password immediately
+2. Review your account security settings
+3. Contact us if you need help
+
+Stay secure!' => 'Здравствуйте, {username}!
+
+Двухфакторная аутентификация (2FA) была {action} в вашем аккаунте.
+
+IP-адрес: {ip}
+Время: {time}
+
+Если вы не делали это изменение, пожалуйста:
+1. Немедленно измените пароль
+2. Проверьте настройки безопасности аккаунта
+3. Свяжитесь с нами, если нужна помощь
+
+Будьте в безопасности!',
+
+  'Your account has been temporarily locked' => 'Ваш аккаунт был временно заблокирован',
+  'Hello {username},
+
+Your account was temporarily locked due to suspicious activity:
+{reason}
+
+Time: {time}
+
+To unlock your account:
+1. Use the password recovery form to reset your password
+2. Or contact our support team
+
+This is a security measure to protect your account.
+
+Stay secure!' => 'Здравствуйте, {username}!
+
+Ваш аккаунт был временно заблокирован из-за подозрительной активности:
+{reason}
+
+Время: {time}
+
+Чтобы разблокировать аккаунт:
+1. Используйте форму восстановления пароля для сброса пароля
+2. Или свяжитесь с нашей службой поддержки
+
+Это мера безопасности для защиты вашего аккаунта.
+
+Будьте в безопасности!',
+
+  // Session Management
+  'Just now' => 'Только что',
+  '{n} minute ago' => '{n} минуту назад|{n} минуты назад|{n} минут назад',
+  '{n} hour ago' => '{n} час назад|{n} часа назад|{n} часов назад',
+  '{n} day ago' => '{n} день назад|{n} дня назад|{n} дней назад',
+  'Unknown Device' => 'Неизвестное устройство',
+  'Unknown Browser' => 'Неизвестный браузер',
+  'Unknown OS' => 'Неизвестная ОС',
+
+  // Backup Codes
+  'Used on {date}' => 'Использован {date}',
+  'Available' => 'Доступен',
 ];

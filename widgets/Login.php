@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 /*
  * This file is part of the Dektrium project.
  *
@@ -29,12 +27,12 @@ class Login extends Widget
      * This property is not directly used in the provided run() method,
      * but kept for compatibility or future use.
      */
-    public bool $validate = true;
+    public $validate = true;
 
     /**
      * @inheritdoc
      */
-    public function run(): string
+    public function run()
     {
         return $this->render('login', [
             'model' => Yii::createObject(LoginForm::class),

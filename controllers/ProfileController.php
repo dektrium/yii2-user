@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 /*
  * This file is part of the Dektrium project.
  *
@@ -31,7 +29,7 @@ use yii\web\Response;
 class ProfileController extends Controller
 {
     /** @var Finder */
-    protected Finder $finder;
+    protected $finder;
 
     /**
      * @param string           $id
@@ -39,14 +37,14 @@ class ProfileController extends Controller
      * @param Finder           $finder
      * @param array            $config
      */
-    public function __construct(string $id, Module $module, Finder $finder, array $config = [])
+    public function __construct($id, $module, $finder, $config = [])
     {
         $this->finder = $finder;
         parent::__construct($id, $module, $config);
     }
 
     /** @inheritdoc */
-    public function behaviors(): array
+    public function behaviors()
     {
         return [
             'access' => [
@@ -64,7 +62,7 @@ class ProfileController extends Controller
      *
      * @return \yii\web\Response
      */
-    public function actionIndex(): Response
+    public function actionIndex()
     {
         return $this->redirect(['show', 'id' => Yii::$app->user->getId()]);
     }
@@ -77,7 +75,7 @@ class ProfileController extends Controller
      * @return string|Response
      * @throws \yii\web\NotFoundHttpException
      */
-    public function actionShow(int $id): string|Response
+    public function actionShow($id)
     {
         $profile = $this->finder->findProfileById($id);
 

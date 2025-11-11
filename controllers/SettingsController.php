@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 /*
  * This file is part of the Dektrium project.
  *
@@ -102,10 +100,10 @@ class SettingsController extends Controller
     public const EVENT_AFTER_DELETE = 'afterDelete';
 
     /** @inheritdoc */
-    public string $defaultAction = 'profile';
+    public $defaultAction = 'profile';
 
     /** @var Finder */
-    protected Finder $finder;
+    protected $finder;
 
     /**
      * @param string $id
@@ -113,14 +111,14 @@ class SettingsController extends Controller
      * @param Finder $finder
      * @param array $config
      */
-    public function __construct(string $id, Module $module, Finder $finder, array $config = [])
+    public function __construct($id, $module, $finder, $config = [])
     {
         $this->finder = $finder;
         parent::__construct($id, $module, $config);
     }
 
     /** @inheritdoc */
-    public function behaviors(): array
+    public function behaviors()
     {
         return [
             'verbs' => [
@@ -153,7 +151,7 @@ class SettingsController extends Controller
      *
      * @return string|Response
      */
-    public function actionProfile(): string|Response
+    public function actionProfile()
     {
         $model = $this->finder->findProfileById(Yii::$app->user->identity->getId());
 
@@ -185,7 +183,7 @@ class SettingsController extends Controller
      *
      * @return string|Response
      */
-    public function actionAccount(): string|Response
+    public function actionAccount()
     {
         /** @var SettingsForm $model */
         $model = Yii::createObject(SettingsForm::class);
@@ -216,7 +214,7 @@ class SettingsController extends Controller
      * @return Response
      * @throws NotFoundHttpException
      */
-    public function actionConfirm(int $id, string $code): Response
+    public function actionConfirm($id, $code)
     {
         $user = $this->finder->findUserById($id);
 
@@ -238,7 +236,7 @@ class SettingsController extends Controller
      *
      * @return string
      */
-    public function actionNetworks(): string
+    public function actionNetworks()
     {
         return $this->render('networks', [
             'user' => Yii::$app->user->identity,
@@ -254,7 +252,7 @@ class SettingsController extends Controller
      * @throws NotFoundHttpException
      * @throws ForbiddenHttpException
      */
-    public function actionDisconnect(int $id): Response
+    public function actionDisconnect($id)
     {
         $account = $this->finder->findAccount()->byId($id)->one();
 
@@ -281,7 +279,7 @@ class SettingsController extends Controller
      * @return string|Response
      * @throws ForbiddenHttpException
      */
-    public function actionDelete(): string|Response
+    public function actionDelete()
     {
         if (!$this->module->enableAccountDelete) {
             throw new ForbiddenHttpException(Yii::t('user', 'Account deletion is disabled.'));

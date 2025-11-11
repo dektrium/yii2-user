@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 /*
  * This file is part of the Dektrium project.
  *
@@ -33,17 +31,18 @@ class RecoveryForm extends Model
     /**
      * @var string|null
      */
-    public ?string $email = null;
+    public $email = null;
 
     /**
      * @var string|null
      */
-    public ?string $password = null;
+    public $password = null;
 
     /** @var Finder The user finder instance. */
-    protected Finder $finder;
+    protected $finder;
+
     /** @var PasswordRecoveryService The password recovery service instance. */
-    protected PasswordRecoveryService $passwordRecoveryService;
+    protected $passwordRecoveryService;
 
     /**
      * @param Finder $finder The user finder instance.
@@ -51,8 +50,8 @@ class RecoveryForm extends Model
      * @param array  $config Name-value pairs that will be used to initialize the object properties.
      */
     public function __construct(
-        Finder $finder,
-        PasswordRecoveryService $passwordRecoveryService,
+        $finder,
+        $passwordRecoveryService,
         array $config = []
     ) {
         $this->finder = $finder;
@@ -62,8 +61,9 @@ class RecoveryForm extends Model
 
     /**
      * @inheritdoc
+     * @return array
      */
-    public function attributeLabels(): array
+    public function attributeLabels()
     {
         return [
             'email' => Yii::t('user', 'Email'),
@@ -73,8 +73,9 @@ class RecoveryForm extends Model
 
     /**
      * @inheritdoc
+     * @return array
      */
-    public function scenarios(): array
+    public function scenarios()
     {
         return [
             self::SCENARIO_REQUEST => ['email'],
@@ -84,15 +85,16 @@ class RecoveryForm extends Model
 
     /**
      * @inheritdoc
+     * @return array
      */
-    public function rules(): array
+    public function rules()
     {
         return [
             'emailTrim' => ['email', 'trim'],
             'emailRequired' => ['email', 'required'],
             'emailPattern' => ['email', 'email'],
             'passwordRequired' => ['password', 'required'],
-            'passwordLength' => ['password', 'string', 'max' => 72, 'min' => 6],
+            'passwordLength' => ['password', 'string', 'max' => 72, 'min' => 15],
         ];
     }
 
@@ -101,7 +103,7 @@ class RecoveryForm extends Model
      *
      * @return bool
      */
-    public function sendRecoveryMessage(): bool
+    public function sendRecoveryMessage()
     {
         if (!$this->validate()) {
             return false;
@@ -134,7 +136,7 @@ class RecoveryForm extends Model
      *
      * @return bool
      */
-    public function resetPassword(Token $token): bool
+    public function resetPassword($token)
     {
         if (!$this->validate() || $token->user === null) {
             return false;
@@ -146,8 +148,9 @@ class RecoveryForm extends Model
 
     /**
      * @inheritdoc
+     * @return string
      */
-    public function formName(): string
+    public function formName()
     {
         return 'recovery-form';
     }

@@ -1,5 +1,4 @@
 <?php
-declare(strict_types=1);
 
 /*
  * This file is part of the Dektrium project.
@@ -27,29 +26,29 @@ class RegistrationForm extends Model
     use ModuleTrait;
 
     /**
-     * @var string User email address
+     * @var string|null User email address
      */
-    public ?string $email = null;
+    public $email = null;
 
     /**
-     * @var string Username
+     * @var string|null Username
      */
-    public ?string $username = null;
+    public $username = null;
 
     /**
-     * @var string Password
+     * @var string|null Password
      */
-    public ?string $password = null;
+    public $password = null;
 
     /** @var RegistrationService The registration service instance. */
-    private RegistrationService $registrationService;
+    private $registrationService;
 
     /**
      * RegistrationForm constructor.
      * @param RegistrationService $registrationService
      * @param array $config
      */
-    public function __construct(RegistrationService $registrationService, array $config = [])
+    public function __construct($registrationService, $config = [])
     {
         $this->registrationService = $registrationService;
         parent::__construct($config);
@@ -86,7 +85,7 @@ class RegistrationForm extends Model
             ],
             // password rules
             'passwordRequired' => ['password', 'required', 'skipOnEmpty' => $this->module->enableGeneratingPassword],
-            'passwordLength' => ['password', 'string', 'min' => 6, 'max' => 72],
+            'passwordLength' => ['password', 'string', 'min' => 15, 'max' => 72],
         ];
     }
 
@@ -116,7 +115,7 @@ class RegistrationForm extends Model
      *
      * @return bool True if registration was successful
      */
-    public function register(): bool
+    public function register()
     {
         if (!$this->validate()) {
             return false;

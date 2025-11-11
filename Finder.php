@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 /*
  * This file is part of the Dektrium project.
  *
@@ -29,21 +27,21 @@ use yii\db\ActiveQuery;
 class Finder extends BaseObject
 {
     /** @var ActiveQuery */
-    protected ActiveQuery $userQuery;
+    protected $userQuery;
 
     /** @var ActiveQuery */
-    protected ActiveQuery $tokenQuery;
+    protected $tokenQuery;
 
     /** @var AccountQuery */
-    protected AccountQuery $accountQuery;
+    protected $accountQuery;
 
     /** @var ActiveQuery */
-    protected ActiveQuery $profileQuery;
+    protected $profileQuery;
 
     /**
      * @return ActiveQuery
      */
-    public function getUserQuery(): ActiveQuery
+    public function getUserQuery()
     {
         return $this->userQuery;
     }
@@ -51,7 +49,7 @@ class Finder extends BaseObject
     /**
      * @return ActiveQuery
      */
-    public function getTokenQuery(): ActiveQuery
+    public function getTokenQuery()
     {
         return $this->tokenQuery;
     }
@@ -59,7 +57,7 @@ class Finder extends BaseObject
     /**
      * @return AccountQuery
      */
-    public function getAccountQuery(): AccountQuery
+    public function getAccountQuery()
     {
         return $this->accountQuery;
     }
@@ -67,31 +65,31 @@ class Finder extends BaseObject
     /**
      * @return ActiveQuery
      */
-    public function getProfileQuery(): ActiveQuery
+    public function getProfileQuery()
     {
         return $this->profileQuery;
     }
 
     /** @param AccountQuery $accountQuery */
-    public function setAccountQuery(AccountQuery $accountQuery): void
+    public function setAccountQuery($accountQuery)
     {
         $this->accountQuery = $accountQuery;
     }
 
     /** @param ActiveQuery $userQuery */
-    public function setUserQuery(ActiveQuery $userQuery): void
+    public function setUserQuery($userQuery)
     {
         $this->userQuery = $userQuery;
     }
 
     /** @param ActiveQuery $tokenQuery */
-    public function setTokenQuery(ActiveQuery $tokenQuery): void
+    public function setTokenQuery($tokenQuery)
     {
         $this->tokenQuery = $tokenQuery;
     }
 
     /** @param ActiveQuery $profileQuery */
-    public function setProfileQuery(ActiveQuery $profileQuery): void
+    public function setProfileQuery($profileQuery)
     {
         $this->profileQuery = $profileQuery;
     }
@@ -103,7 +101,7 @@ class Finder extends BaseObject
      *
      * @return User|null
      */
-    public function findUserById(int $id): ?User
+    public function findUserById($id)
     {
         return $this->findUser(['id' => $id])->one();
     }
@@ -115,7 +113,7 @@ class Finder extends BaseObject
      *
      * @return User|null
      */
-    public function findUserByUsername(string $username): ?User
+    public function findUserByUsername($username)
     {
         return $this->findUser(['username' => $username])->one();
     }
@@ -127,7 +125,7 @@ class Finder extends BaseObject
      *
      * @return User|null
      */
-    public function findUserByEmail(string $email): ?User
+    public function findUserByEmail($email)
     {
         return $this->findUser(['email' => $email])->one();
     }
@@ -139,7 +137,7 @@ class Finder extends BaseObject
      *
      * @return User|null
      */
-    public function findUserByUsernameOrEmail(string $usernameOrEmail): ?User
+    public function findUserByUsernameOrEmail($usernameOrEmail)
     {
         if (filter_var($usernameOrEmail, FILTER_VALIDATE_EMAIL)) {
             return $this->findUserByEmail($usernameOrEmail);
@@ -155,7 +153,7 @@ class Finder extends BaseObject
      *
      * @return ActiveQuery
      */
-    public function findUser(mixed $condition): ActiveQuery
+    public function findUser($condition)
     {
         return $this->userQuery->where($condition);
     }
@@ -163,7 +161,7 @@ class Finder extends BaseObject
     /**
      * @return AccountQuery
      */
-    public function findAccount(): AccountQuery
+    public function findAccount()
     {
         return $this->accountQuery;
     }
@@ -175,7 +173,7 @@ class Finder extends BaseObject
      *
      * @return Account|null
      */
-    public function findAccountById(int $id): ?Account
+    public function findAccountById($id)
     {
         return $this->accountQuery->where(['id' => $id])->one();
     }
@@ -187,7 +185,7 @@ class Finder extends BaseObject
      *
      * @return ActiveQuery
      */
-    public function findToken(mixed $condition): ActiveQuery
+    public function findToken($condition)
     {
         return $this->tokenQuery->where($condition);
     }
@@ -201,7 +199,7 @@ class Finder extends BaseObject
      *
      * @return Token|null
      */
-    public function findTokenByParams(int $userId, string $code, int $type): ?Token
+    public function findTokenByParams($userId, $code, $type)
     {
         return $this->findToken([
             'user_id' => $userId,
@@ -217,7 +215,7 @@ class Finder extends BaseObject
      *
      * @return Profile|null
      */
-    public function findProfileById(int $id): ?Profile
+    public function findProfileById($id)
     {
         return $this->findProfile(['user_id' => $id])->one();
     }
@@ -229,7 +227,7 @@ class Finder extends BaseObject
      *
      * @return ActiveQuery
      */
-    public function findProfile(mixed $condition): ActiveQuery
+    public function findProfile($condition)
     {
         return $this->profileQuery->where($condition);
     }

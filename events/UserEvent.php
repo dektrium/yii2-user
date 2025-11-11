@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 /*
  * This file is part of the Dektrium project.
  *
@@ -27,12 +25,12 @@ class UserEvent extends Event
     /**
      * @var User The user model associated with this event.
      */
-    private User $_user;
+    private $_user;
 
     /**
      * @return User
      */
-    public function getUser(): User
+    public function getUser()
     {
         return $this->_user;
     }
@@ -40,7 +38,7 @@ class UserEvent extends Event
     /**
      * @param User $user
      */
-    public function setUser(User $user): void
+    public function setUser($user)
     {
         $this->_user = $user;
     }

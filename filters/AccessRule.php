@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 /*
  * This file is part of the Dektrium project.
  *
@@ -27,7 +25,7 @@ class AccessRule extends \yii\filters\AccessRule
     /**
      * @inheritdoc
      * */
-    protected function matchRole($user): bool // Parameter $user is typically the yii\web\User component instance
+    protected function matchRole($user) // Parameter $user is typically the yii\web\User component instance
     {
         if (empty($this->roles)) {
             return true;

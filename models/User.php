@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 /*
  * This file is part of the Dektrium project.
  *
@@ -84,13 +82,13 @@ class User extends ActiveRecord implements IdentityInterface
     public const NEW_EMAIL_CONFIRMED = 0b10;
 
     /** @var string|null Plain password. Used for model validation. */
-    public ?string $password = null;
+    public $password = null;
 
     /** @var Profile|null Referenced by $this->getProfile() */
-    private ?Profile $_profile = null;
+    private $_profile = null;
 
     /** @var string Default username regexp */
-    public static string $usernameRegexp = '/^[-a-zA-Z0-9_\.@]+$/';
+    public static $usernameRegexp = '/^[-a-zA-Z0-9_\.@]+$/';
 
     /** @var int Maximum username length */
     private const USERNAME_MAX_LENGTH = 255;
@@ -99,7 +97,7 @@ class User extends ActiveRecord implements IdentityInterface
      * @return Finder
      * @throws InvalidConfigException
      */
-    protected function getFinder(): Finder
+    protected function getFinder()
     {
         return Yii::$container->get(Finder::class);
     }
@@ -108,7 +106,7 @@ class User extends ActiveRecord implements IdentityInterface
      * @return Mailer
      * @throws InvalidConfigException
      */
-    protected function getMailer(): Mailer
+    protected function getMailer()
     {
         return Yii::$container->get(Mailer::class);
     }
@@ -116,7 +114,7 @@ class User extends ActiveRecord implements IdentityInterface
     /**
      * @return bool Whether the user is confirmed or not.
      */
-    public function getIsConfirmed(): bool
+    public function getIsConfirmed()
     {
         return $this->confirmed_at !== null;
     }
@@ -124,7 +122,7 @@ class User extends ActiveRecord implements IdentityInterface
     /**
      * @return bool Whether the user is blocked or not.
      */
-    public function getIsBlocked(): bool
+    public function getIsBlocked()
     {
         return $this->blocked_at !== null;
     }
@@ -132,7 +130,7 @@ class User extends ActiveRecord implements IdentityInterface
     /**
      * @return bool Whether the user is an admin or not.
      */
-    public function getIsAdmin(): bool
+    public function getIsAdmin()
     {
         $authManager = Yii::$app->getAuthManager();
         $isAdminByRbac = false;
@@ -149,7 +147,7 @@ class User extends ActiveRecord implements IdentityInterface
     /**
      * @return ActiveQuery
      */
-    public function getProfile(): ActiveQuery
+    public function getProfile()
     {
         return $this->hasOne($this->module->modelMap['Profile'], ['user_id' => 'id']);
     }
@@ -157,7 +155,7 @@ class User extends ActiveRecord implements IdentityInterface
     /**
      * @param Profile $profile
      */
-    public function setProfile(Profile $profile): void
+    public function setProfile($profile)
     {
         $this->_profile = $profile;
     }
@@ -165,7 +163,7 @@ class User extends ActiveRecord implements IdentityInterface
     /**
      * @return Account[] Connected accounts ($provider => $account)
      */
-    public function getAccounts(): array
+    public function getAccounts()
     {
         $connected = [];
         /** @var Account[] $accounts */
@@ -183,7 +181,7 @@ class User extends ActiveRecord implements IdentityInterface
      * @param  string $provider
      * @return Account|null
      */
-    public function getAccountByProvider(string $provider): ?Account
+    public function getAccountByProvider($provider)
     {
         /** @var Account|null $account */
         $account = $this->hasMany($this->module->modelMap['Account'], ['user_id' => 'id'])
@@ -193,20 +191,29 @@ class User extends ActiveRecord implements IdentityInterface
         return $account;
     }
 
-    /** @inheritdoc */
-    public function getId(): int
+    /**
+     * @inheritdoc
+     * @return int
+     */
+    public function getId()
     {
         return (int)$this->getAttribute('id');
     }
 
-    /** @inheritdoc */
-    public function getAuthKey(): ?string
+    /**
+     * @inheritdoc
+     * @return string|null
+     */
+    public function getAuthKey()
     {
         return $this->getAttribute('auth_key');
     }
 
-    /** @inheritdoc */
-    public function attributeLabels(): array
+    /**
+     * @inheritdoc
+     * @return array
+     */
+    public function attributeLabels()
     {
         return [
             'username' => Yii::t('user', 'Username'),
@@ -220,16 +227,22 @@ class User extends ActiveRecord implements IdentityInterface
         ];
     }
 
-    /** @inheritdoc */
-    public function behaviors(): array
+    /**
+     * @inheritdoc
+     * @return array
+     */
+    public function behaviors()
     {
         return [
             TimestampBehavior::class,
         ];
     }
 
-    /** @inheritdoc */
-    public function scenarios(): array
+    /**
+     * @inheritdoc
+     * @return array
+     */
+    public function scenarios()
     {
         $scenarios = parent::scenarios();
 
@@ -242,8 +255,11 @@ class User extends ActiveRecord implements IdentityInterface
         ]);
     }
 
-    /** @inheritdoc */
-    public function rules(): array
+    /**
+     * @inheritdoc
+     * @return array
+     */
+    public function rules()
     {
         return [
             // username rules
@@ -271,7 +287,9 @@ class User extends ActiveRecord implements IdentityInterface
                 'unconfirmed_email',
                 'unique',
                 'message' => Yii::t('user', 'This email address has already been taken'),
-                'when' => fn ($model) => (bool)$model->unconfirmed_email
+                'when' => function ($model) {
+                    return (bool)$model->unconfirmed_email;
+                }
             ],
 
             // password rules
@@ -280,8 +298,12 @@ class User extends ActiveRecord implements IdentityInterface
         ];
     }
 
-    /** @inheritdoc */
-    public function validateAuthKey($authKey): ?bool
+    /**
+     * @inheritdoc
+     * @param string $authKey
+     * @return bool|null
+     */
+    public function validateAuthKey($authKey)
     {
         return $this->getAttribute('auth_key') === $authKey;
     }
@@ -291,7 +313,7 @@ class User extends ActiveRecord implements IdentityInterface
      * with credentials.
      * @return bool True if user was successfully created
      */
-    public function create(): bool
+    public function create()
     {
         if ($this->getIsNewRecord() === false) {
             throw new \RuntimeException('Calling "create()" on existing user');
@@ -321,7 +343,7 @@ class User extends ActiveRecord implements IdentityInterface
             $transaction->commit();
 
             return true;
-        } catch (\Throwable $e) {
+        } catch ($e) {
             $transaction->rollBack();
             Yii::warning($e->getMessage());
 
@@ -334,7 +356,7 @@ class User extends ActiveRecord implements IdentityInterface
      * @param string $code Confirmation code.
      * @return bool True if confirmation was successful.
      */
-    public function attemptConfirmation(string $code): bool
+    public function attemptConfirmation($code)
     {
         /** @var Token $token */
         $token = $this->finder->findToken([
@@ -363,7 +385,7 @@ class User extends ActiveRecord implements IdentityInterface
      * Confirms the user by setting 'confirmed_at' field to current time.
      * @return bool True if user was successfully confirmed.
      */
-    public function confirm(): bool
+    public function confirm()
     {
         // BEFORE_CONFIRM and AFTER_CONFIRM events are expected to be handled by the caller (e.g., UserConfirmationService)
         $this->confirmed_at = time();
@@ -374,7 +396,7 @@ class User extends ActiveRecord implements IdentityInterface
      * Resends the password recovery email.
      * @return bool True if password recovery email was sent successfully.
      */
-    public function resendPassword(): bool
+    public function resendPassword()
     {
         if (!$this->module->enablePasswordRecovery) {
             return false;
@@ -392,10 +414,10 @@ class User extends ActiveRecord implements IdentityInterface
      * @param string $code Confirmation code for email change.
      * @return bool True if email change was successful.
      */
-    public function attemptEmailChange(string $code): bool
+    public function attemptEmailChange($code)
     {
         /** @var Token|null $token */
-        $token = $this->getFinder()->findTokenByParams($this->id, $code, TokenType::CONFIRM_NEW_EMAIL->value);
+        $token = $this->getFinder()->findTokenByParams($this->id, $code, TokenType::CONFIRM_NEW_EMAIL);
 
         if (empty($this->unconfirmed_email) || $token === null || $token->isExpired) {
             Yii::$app->session->setFlash(
@@ -437,7 +459,7 @@ class User extends ActiveRecord implements IdentityInterface
      * @param string $password The new password.
      * @return bool True if password was reset successfully.
      */
-    public function resetPassword(string $password): bool
+    public function resetPassword($password)
     {
         return (bool)$this->updateAttributes(['password_hash' => Password::hash($password)]);
     }
@@ -446,7 +468,7 @@ class User extends ActiveRecord implements IdentityInterface
      * Blocks the user by setting 'blocked_at' field to current time.
      * @return bool True if user was successfully blocked.
      */
-    public function block(): bool
+    public function block()
     {
         return (bool)$this->updateAttributes([
             'blocked_at' => time(),
@@ -458,20 +480,24 @@ class User extends ActiveRecord implements IdentityInterface
      * Unblocks the user by setting 'blocked_at' field to null.
      * @return bool True if user was successfully unblocked.
      */
-    public function unblock(): bool
+    public function unblock()
     {
         return (bool)$this->updateAttributes(['blocked_at' => null]);
     }
 
     /**
      * Generates new username based on email address, or a random string if email is unavailable.
+     * Uses cryptographically secure random generation for PHP 7.2+.
      * @param bool $generateRandomString Whether to generate random string if username generation fails.
+     * @throws \yii\base\Exception
      */
-    public function generateUsername(bool $generateRandomString = false): void
+    public function generateUsername($generateRandomString = false)
     {
         if ($generateRandomString) {
-            // try to generate username the random string
-            $randomString = md5(uniqid((string)mt_rand(), true));
+            // Generate username using cryptographically secure random string
+            $randomString = Yii::$app->security->generateRandomString(32);
+            // Convert to alphanumeric only
+            $randomString = preg_replace('/[^a-zA-Z0-9]/', '', base64_encode($randomString));
             $this->username = substr(strtolower($randomString), 0, self::USERNAME_MAX_LENGTH);
         } else {
             // try to generate username from email
@@ -497,8 +523,12 @@ class User extends ActiveRecord implements IdentityInterface
         }
     }
 
-    /** @inheritdoc */
-    public function beforeSave($insert): bool
+    /**
+     * @inheritdoc
+     * @param bool $insert
+     * @return bool
+     */
+    public function beforeSave($insert)
     {
         if ($insert) {
             $this->setAttribute('auth_key', Yii::$app->security->generateRandomString());
@@ -516,29 +546,41 @@ class User extends ActiveRecord implements IdentityInterface
     }
 
     /** @inheritdoc */
-    public function afterSave($insert, $changedAttributes): void
+    public function afterSave($insert, $changedAttributes)
     {
         parent::afterSave($insert, $changedAttributes);
 
-        if ($insert) {
-            $this->_profile?->save(false);
+        if ($insert && $this->_profile !== null) {
+            $this->_profile->save(false);
         }
     }
 
-    /** @inheritdoc */
-    public static function tableName(): string
+    /**
+     * @inheritdoc
+     * @return string
+     */
+    public static function tableName()
     {
         return '{{%user}}';
     }
 
-    /** @inheritdoc */
-    public static function findIdentity($id): ?static
+    /**
+     * @inheritdoc
+     * @param int $id
+     * @return static|null
+     */
+    public static function findIdentity($id)
     {
         return static::findOne($id);
     }
 
-    /** @inheritdoc */
-    public static function findIdentityByAccessToken($token, $type = null): ?static
+    /**
+     * @inheritdoc
+     * @param string $token
+     * @param mixed $type
+     * @return static|null
+     */
+    public static function findIdentityByAccessToken($token, $type = null)
     {
         throw new NotSupportedException('"findIdentityByAccessToken" is not implemented.');
     }

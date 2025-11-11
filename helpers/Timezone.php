@@ -1,6 +1,5 @@
 <?php
 
-declare(strict_types=1);
 
 /*
  * This file is part of the Dektrium project.
@@ -29,7 +28,7 @@ class Timezone
      *
      * @return array<int, array{timezone: string, name: string, offset: int}>
      */
-    public static function getAll(): array
+    public static function getAll()
     {
         $timeZones = [];
         $timeZoneIdentifiers = DateTimeZone::listIdentifiers();

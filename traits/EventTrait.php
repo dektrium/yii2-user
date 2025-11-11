@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 /*
  * This file is part of the Dektrium project.
  *
@@ -38,7 +36,7 @@ trait EventTrait
      * @return FormEvent
      * @throws \yii\base\InvalidConfigException
      */
-    protected function getFormEvent(Model $form): FormEvent
+    protected function getFormEvent($form)
     {
         return Yii::createObject(['class' => FormEvent::class, 'form' => $form]);
     }
@@ -48,7 +46,7 @@ trait EventTrait
      * @return UserEvent
      * @throws \yii\base\InvalidConfigException
      */
-    protected function getUserEvent(User $user): UserEvent
+    protected function getUserEvent($user)
     {
         return Yii::createObject(['class' => UserEvent::class, 'user' => $user]);
     }
@@ -58,7 +56,7 @@ trait EventTrait
      * @return ProfileEvent
      * @throws \yii\base\InvalidConfigException
      */
-    protected function getProfileEvent(Profile $profile): ProfileEvent
+    protected function getProfileEvent($profile)
     {
         return Yii::createObject(['class' => ProfileEvent::class, 'profile' => $profile]);
     }
@@ -69,7 +67,7 @@ trait EventTrait
      * @return ConnectEvent
      * @throws \yii\base\InvalidConfigException
      */
-    protected function getConnectEvent(Account $account, User $user): ConnectEvent
+    protected function getConnectEvent($account, $user)
     {
         return Yii::createObject(['class' => ConnectEvent::class, 'account' => $account, 'user' => $user]);
     }
@@ -80,7 +78,7 @@ trait EventTrait
      * @return AuthEvent
      * @throws \yii\base\InvalidConfigException
      */
-    protected function getAuthEvent(Account $account, BaseClientInterface $client): AuthEvent
+    protected function getAuthEvent($account, $client)
     {
         return Yii::createObject(['class' => AuthEvent::class, 'account' => $account, 'client' => $client]);
     }
@@ -91,7 +89,7 @@ trait EventTrait
      * @return ResetPasswordEvent
      * @throws \yii\base\InvalidConfigException
      */
-    protected function getResetPasswordEvent(?Token $token = null, ?RecoveryForm $form = null): ResetPasswordEvent
+    protected function getResetPasswordEvent($token = null, $form = null)
     {
         return Yii::createObject(['class' => ResetPasswordEvent::class, 'token' => $token, 'form' => $form]);
     }

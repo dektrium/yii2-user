@@ -16,7 +16,7 @@ trait ModuleTrait
     /**
      * @return Module
      */
-    public function getModule(): Module
+    public function getModule()
     {
         /** @var Module $module */
         $module = Yii::$app->getModule('user');
@@ -27,7 +27,7 @@ trait ModuleTrait
     /**
      * @return \yii\db\Connection
      */
-    public static function getDb(): \yii\db\Connection
+    public static function getDb()
     {
         /** @var Module $module */
         $module = Yii::$app->getModule('user');

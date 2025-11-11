@@ -10,12 +10,12 @@ use yii\helpers\Html;
 
 class RegistrationCest
 {
-    public function _before(FunctionalTester $I)
+    public function _before($I)
     {
         $I->haveFixtures(['user' => UserFixture::className()]);
     }
 
-    public function _after(FunctionalTester $I)
+    public function _after($I)
     {
         \Yii::$container->set(Module::className(), [
             'enableConfirmation' => true,
@@ -27,7 +27,7 @@ class RegistrationCest
      * Tests registration with email, username and password without any confirmation.
      * @param FunctionalTester $I
      */
-    public function testRegistration(FunctionalTester $I)
+    public function testRegistration($I)
     {
         \Yii::$container->set(Module::className(), [
             'enableConfirmation' => false,
@@ -63,7 +63,7 @@ class RegistrationCest
      * Tests registration when confirmation message is sent.
      * @param FunctionalTester $I
      */
-    public function testRegistrationWithConfirmation(FunctionalTester $I)
+    public function testRegistrationWithConfirmation($I)
     {
         \Yii::$container->set(Module::className(), [
             'enableConfirmation' => true,
@@ -84,7 +84,7 @@ class RegistrationCest
      * Tests registration when password is generated automatically and sent to user.
      * @param FunctionalTester $I
      */
-    public function testRegistrationWithoutPassword(FunctionalTester $I)
+    public function testRegistrationWithoutPassword($I)
     {
         \Yii::$container->set(Module::className(), [
             'enableConfirmation' => false,

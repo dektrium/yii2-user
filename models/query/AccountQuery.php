@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 /*
  * This file is part of the Dektrium project.
  *
@@ -14,7 +12,7 @@ declare(strict_types=1);
 namespace AlexeiKaDev\Yii2User\models\query;
 
 use AlexeiKaDev\Yii2User\models\Account;
-use yii\authclient\ClientInterface as BaseClientInterface; // Yii's own interface
+use yii\authclient\ClientInterface as BaseClientInterface;
 use yii\db\ActiveQuery;
 
 /**
@@ -27,30 +25,31 @@ class AccountQuery extends ActiveQuery
 {
     /**
      * Finds an account by code.
-     * @param  string       $code
-     * @return static The query object itself
+     * Uses SHA-256 for secure hashing instead of deprecated MD5.
+     * @param  string $code
+     * @return self The query object itself
      */
-    public function byCode(string $code): static
+    public function byCode($code)
     {
-        return $this->andWhere(['code' => md5($code)]); // Consider security implications of MD5
+        return $this->andWhere(['code' => hash('sha256', $code)]);
     }
 
     /**
      * Finds an account by id.
-     * @param  int      $id
-     * @return static The query object itself
+     * @param  int $id
+     * @return self The query object itself
      */
-    public function byId(int $id): static
+    public function byId($id)
     {
         return $this->andWhere(['id' => $id]);
     }
 
     /**
      * Finds accounts by user_id.
-     * @param  int      $userId
-     * @return static The query object itself
+     * @param  int $userId
+     * @return self The query object itself
      */
-    public function byUser(int $userId): static
+    public function byUser($userId)
     {
         return $this->andWhere(['user_id' => $userId]);
     }
@@ -58,13 +57,14 @@ class AccountQuery extends ActiveQuery
     /**
      * Finds an account by client.
      * @param  BaseClientInterface $client
-     * @return static The query object itself
+     * @return self The query object itself
      */
-    public function byClient(BaseClientInterface $client): static
+    public function byClient($client)
     {
+        $attributes = $client->getUserAttributes();
         return $this->andWhere([
             'provider' => $client->getId(),
-            'client_id' => $client->getUserAttributes()['id'] ?? null, // Check if ID exists
+            'client_id' => isset($attributes['id']) ? $attributes['id'] : null,
         ]);
     }
 }

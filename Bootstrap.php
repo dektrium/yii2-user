@@ -26,7 +26,7 @@ use yii\i18n\PhpMessageSource;
 class Bootstrap implements BootstrapInterface
 {
     /** @var array Model's map */
-    private array $_modelMap = [
+    private $_modelMap = [
         'User' => 'AlexeiKaDev\Yii2User\models\User',
         'Account' => 'AlexeiKaDev\Yii2User\models\Account',
         'Profile' => 'AlexeiKaDev\Yii2User\models\Profile',
@@ -39,8 +39,11 @@ class Bootstrap implements BootstrapInterface
         'UserSearch' => 'AlexeiKaDev\Yii2User\models\UserSearch',
     ];
 
-    /** @inheritdoc */
-    public function bootstrap($app): void
+    /**
+     * @inheritdoc
+     * @param mixed $app
+     */
+    public function bootstrap($app)
     {
         /** @var Module $module */
         /** @var \yii\db\ActiveRecord $modelName */
@@ -54,7 +57,9 @@ class Bootstrap implements BootstrapInterface
                 $module->modelMap[$name] = $modelName;
 
                 if (in_array($name, ['User', 'Profile', 'Token', 'Account'])) {
-                    Yii::$container->set($name . 'Query', fn () => $modelName::find());
+                    Yii::$container->set($name . 'Query', function () use ($modelName) {
+                        return $modelName::find();
+                    });
                 }
             }
 
@@ -109,8 +114,11 @@ class Bootstrap implements BootstrapInterface
         }
     }
 
-    /** Ensure the module is not in DEBUG mode on production environments */
-    public function ensureCorrectDebugSetting(): bool
+    /**
+     * Ensure the module is not in DEBUG mode on production environments
+     * @return bool
+     */
+    public function ensureCorrectDebugSetting()
     {
         if (!defined('YII_DEBUG')) {
             return false;

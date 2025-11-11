@@ -19,7 +19,7 @@ use yii\authclient\clients\LinkedIn as BaseLinkedIn;
 class LinkedIn extends BaseLinkedIn implements ClientInterface
 {
     /** @inheritdoc */
-    public function getEmail(): ?string
+    public function getEmail()
     {
         return isset($this->getUserAttributes()['email-address'])
             ? $this->getUserAttributes()['email-address']
@@ -27,7 +27,7 @@ class LinkedIn extends BaseLinkedIn implements ClientInterface
     }
 
     /** @inheritdoc */
-    public function getUsername(): ?string
+    public function getUsername()
     {
         return null;
     }

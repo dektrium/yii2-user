@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 /*
  * This file is part of the Dektrium project.
  *
@@ -25,36 +23,41 @@ use yii\data\ActiveDataProvider;
 class UserSearch extends Model
 {
     /** @var int|null */
-    public ?int $id = null;
+    public $id = null;
 
     /** @var string|null */
-    public ?string $username = null;
+    public $username = null;
 
     /** @var string|null */
-    public ?string $email = null;
+    public $email = null;
 
     /** @var int|string|null Date range or timestamp */
-    public mixed $created_at = null;
+    public $created_at = null;
 
     /** @var int|string|null Date range or timestamp */
-    public mixed $last_login_at = null;
+    public $last_login_at = null;
 
     /** @var string|null */
-    public ?string $registration_ip = null;
+    public $registration_ip = null;
+
+    /** @var Finder The finder instance. */
+    protected $finder;
 
     /**
      * @param Finder $finder The finder instance.
      * @param array  $config Name-value pairs that will be used to initialize the object properties.
      */
-    public function __construct(
-        protected Finder $finder,
-        array $config = []
-    ) {
+    public function __construct($finder, $config = [])
+    {
+        $this->finder = $finder;
         parent::__construct($config);
     }
 
-    /** @inheritdoc */
-    public function rules(): array
+    /**
+     * @inheritdoc
+     * @return array
+     */
+    public function rules()
     {
         return [
             'fieldsSafe' => [['id', 'username', 'email', 'registration_ip', 'created_at', 'last_login_at'], 'safe'],
@@ -64,8 +67,11 @@ class UserSearch extends Model
         ];
     }
 
-    /** @inheritdoc */
-    public function attributeLabels(): array
+    /**
+     * @inheritdoc
+     * @return array
+     */
+    public function attributeLabels()
     {
         return [
             'id' => Yii::t('user', '#'),
@@ -84,7 +90,7 @@ class UserSearch extends Model
      *
      * @return ActiveDataProvider
      */
-    public function search(array $params): ActiveDataProvider
+    public function search($params)
     {
         $query = $this->finder->getUserQuery();
 

@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 /*
  * This file is part of the Dektrium project.
  *
@@ -30,7 +28,7 @@ class Password
      *
      * @return string
      */
-    public static function hash(string $password): string
+    public static function hash($password)
     {
         /** @var Module $module */
         $module = Yii::$app->getModule('user');
@@ -46,7 +44,7 @@ class Password
      *
      * @return bool
      */
-    public static function validate(string $password, string $hash): bool
+    public static function validate($password, $hash)
     {
         return Yii::$app->security->validatePassword($password, $hash);
     }
@@ -54,14 +52,16 @@ class Password
     /**
      * Generates user-friendly random password containing at least one lower case letter, one uppercase letter and one
      * digit. The remaining characters in the password are chosen at random from those three sets.
+     * Uses cryptographically secure random_int() for PHP 7.2+.
      *
      * @see https://gist.github.com/tylerhall/521810
      *
      * @param int $length
      *
      * @return string
+     * @throws \Exception
      */
-    public static function generate(int $length): string
+    public static function generate($length)
     {
         $sets = [
             'abcdefghjkmnpqrstuvwxyz',
@@ -73,8 +73,7 @@ class Password
 
         // Гарантированно добавляем по одному символу из каждого набора
         foreach ($sets as $set) {
-            $password .= $set[array_rand(str_split($set))]; // Оригинальный метод Dektrium
-            // Альтернатива для PHP 7+: $password .= $set[random_int(0, mb_strlen($set) - 1)];
+            $password .= $set[random_int(0, strlen($set) - 1)];
             $all .= $set;
         }
 
@@ -84,12 +83,23 @@ class Password
         // Добавляем оставшиеся символы из объединенного набора
         if ($remainingLength > 0) { // Проверка, что длина >= кол-ва наборов
             for ($i = 0; $i < $remainingLength; $i++) {
-                $password .= $allCharacters[array_rand($allCharacters)];
-                // Альтернатива для PHP 7+: $password .= $allCharacters[random_int(0, count($allCharacters) - 1)];
+                $password .= $allCharacters[random_int(0, count($allCharacters) - 1)];
             }
         }
 
         // Перемешиваем результат, чтобы гарантированные символы не были в начале
-        return str_shuffle($password);
+        // Используем криптографически безопасный метод перемешивания
+        $passwordArray = str_split($password);
+        $passwordLength = count($passwordArray);
+
+        for ($i = $passwordLength - 1; $i > 0; $i--) {
+            $j = random_int(0, $i);
+            // Swap elements
+            $temp = $passwordArray[$i];
+            $passwordArray[$i] = $passwordArray[$j];
+            $passwordArray[$j] = $temp;
+        }
+
+        return implode('', $passwordArray);
     }
 }

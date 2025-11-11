@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 /*
  * This file is part of the Dektrium project.
  *
@@ -26,9 +24,12 @@ class UserMenu extends Widget
      * @var array<int, array<string, mixed>> The menu items for the yii\widgets\Menu.
      * Each item is an array configuring a single menu item.
      */
-    public array $items = []; // Typed property, initialized to empty array
+    public $items = [];
 
-    public function init(): void // Added return type
+    /**
+     * @inheritdoc
+     */
+    public function init()
     {
         parent::init();
 
@@ -50,8 +51,9 @@ class UserMenu extends Widget
 
     /**
      * @inheritdoc
+     * @return string
      */
-    public function run(): string // Added return type
+    public function run()
     {
         return Menu::widget([
             'options' => [

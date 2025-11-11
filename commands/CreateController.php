@@ -1,6 +1,5 @@
 <?php
 
-declare(strict_types=1);
 
 /*
  * This file is part of the Dektrium project.
@@ -36,7 +35,7 @@ class CreateController extends Controller
      * @param string      $username Username
      * @param string|null $password Password (if null it will be generated automatically)
      */
-    public function actionIndex(string $email, string $username, ?string $password = null): void
+    public function actionIndex($email, $username, $password = null)
     {
         /** @var User $user */
         $user = Yii::createObject([

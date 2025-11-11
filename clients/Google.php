@@ -26,7 +26,7 @@ class Google extends BaseGoogle implements ClientInterface
     /**
      * {@inheritdoc}
      */
-    public function buildAuthUrl(array $params = [])
+    public function buildAuthUrl($params = [])
     {
         if ($this->hostedDomain) {
             $params['hd'] = $this->hostedDomain;
@@ -36,7 +36,7 @@ class Google extends BaseGoogle implements ClientInterface
     }
 
     /** @inheritdoc */
-    public function getEmail(): ?string
+    public function getEmail()
     {
         return isset($this->getUserAttributes()['emails'][0]['value'])
             ? $this->getUserAttributes()['emails'][0]['value']
@@ -44,7 +44,7 @@ class Google extends BaseGoogle implements ClientInterface
     }
 
     /** @inheritdoc */
-    public function getUsername(): ?string
+    public function getUsername()
     {
         return null;
     }

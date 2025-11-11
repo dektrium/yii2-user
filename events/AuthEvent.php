@@ -43,7 +43,7 @@ class AuthEvent extends Event
     /**
      * @param Account $account
      */
-    public function setAccount(Account $account)
+    public function setAccount($account)
     {
         $this->_account = $account;
     }
@@ -59,7 +59,7 @@ class AuthEvent extends Event
     /**
      * @param ClientInterface $client
      */
-    public function setClient(ClientInterface $client)
+    public function setClient($client)
     {
         $this->_client = $client;
     }

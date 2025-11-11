@@ -1,6 +1,5 @@
 <?php
 
-declare(strict_types=1);
 
 /*
  * This file is part of the Dektrium project.
@@ -88,8 +87,8 @@ class RegistrationController extends Controller
      */
     public const EVENT_AFTER_RESEND = 'afterResend';
 
-    protected Finder $finder;
-    protected UserConfirmationService $userConfirmationService;
+    protected $finder;
+    protected $userConfirmationService;
 
     public function __construct(
         string $id,
@@ -104,7 +103,7 @@ class RegistrationController extends Controller
     }
 
     /** @inheritdoc */
-    public function behaviors(): array
+    public function behaviors()
     {
         return [
             'access' => [
@@ -134,7 +133,7 @@ class RegistrationController extends Controller
      * @throws \yii\web\HttpException
      * @throws \yii\base\InvalidConfigException
      */
-    public function actionRegister(): string|Response
+    public function actionRegister()
     {
         if (!$this->module->enableRegistration) {
             throw new NotFoundHttpException();
@@ -172,7 +171,7 @@ class RegistrationController extends Controller
      * @throws NotFoundHttpException
      * @throws \yii\base\InvalidConfigException
      */
-    public function actionConnect(string $code): string|Response
+    public function actionConnect($code)
     {
         $account = $this->finder->findAccount()->byCode($code)->one();
 
@@ -216,7 +215,7 @@ class RegistrationController extends Controller
      * @return string|Response
      * @throws NotFoundHttpException
      */
-    public function actionConfirm(int $id, string $code): string|Response
+    public function actionConfirm($id, $code)
     {
         $user = $this->finder->findUserById($id);
 
@@ -243,7 +242,7 @@ class RegistrationController extends Controller
      * @throws NotFoundHttpException
      * @throws \yii\base\InvalidConfigException
      */
-    public function actionResend(): string|Response
+    public function actionResend()
     {
         if (!$this->module->enableConfirmation) {
             throw new NotFoundHttpException();

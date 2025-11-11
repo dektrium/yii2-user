@@ -19,7 +19,7 @@ use yii\authclient\clients\Facebook as BaseFacebook;
 class Facebook extends BaseFacebook implements ClientInterface
 {
     /** @inheritdoc */
-    public function getEmail(): ?string
+    public function getEmail()
     {
         return isset($this->getUserAttributes()['email'])
             ? $this->getUserAttributes()['email']
@@ -27,7 +27,7 @@ class Facebook extends BaseFacebook implements ClientInterface
     }
 
     /** @inheritdoc */
-    public function getUsername(): ?string
+    public function getUsername()
     {
         return null;
     }

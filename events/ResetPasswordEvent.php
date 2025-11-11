@@ -25,17 +25,17 @@ class ResetPasswordEvent extends Event
     /**
      * @var RecoveryForm|null
      */
-    private ?RecoveryForm $_form = null;
+    private $_form = null;
 
     /**
      * @var Token|null
      */
-    private ?Token $_token = null;
+    private $_token = null;
 
     /**
      * @return Token|null
      */
-    public function getToken(): ?Token
+    public function getToken()
     {
         return $this->_token;
     }
@@ -43,7 +43,7 @@ class ResetPasswordEvent extends Event
     /**
      * @param Token|null $token
      */
-    public function setToken(?Token $token = null): void
+    public function setToken($token = null)
     {
         $this->_token = $token;
     }
@@ -51,7 +51,7 @@ class ResetPasswordEvent extends Event
     /**
      * @return RecoveryForm|null
      */
-    public function getForm(): ?RecoveryForm
+    public function getForm()
     {
         return $this->_form;
     }
@@ -59,7 +59,7 @@ class ResetPasswordEvent extends Event
     /**
      * @param RecoveryForm|null $form
      */
-    public function setForm(?RecoveryForm $form = null): void
+    public function setForm($form = null)
     {
         $this->_form = $form;
     }

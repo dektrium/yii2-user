@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 /*
  * This file is part of the Dektrium project.
  *
@@ -46,13 +44,16 @@ class Account extends ActiveRecord
     use ModuleTrait;
 
     /** @var Finder|null */
-    protected static ?Finder $finder = null;
+    protected $finder = null;
 
     /** @var mixed Decoded JSON data from the $data attribute */
-    private mixed $_data = null;
+    private $_data = null;
 
-    /** @inheritdoc */
-    public static function tableName(): string
+    /**
+     * @inheritdoc
+     * @return string
+     */
+    public static function tableName()
     {
         return '{{%social_account}}';
     }
@@ -60,7 +61,7 @@ class Account extends ActiveRecord
     /**
      * @return ActiveQuery
      */
-    public function getUser(): ActiveQuery
+    public function getUser()
     {
         return $this->hasOne($this->module->modelMap['User'], ['id' => 'user_id']);
     }
@@ -68,7 +69,7 @@ class Account extends ActiveRecord
     /**
      * @return bool Whether this social account is connected to user.
      */
-    public function getIsConnected(): bool
+    public function getIsConnected()
     {
         return $this->user_id !== null;
     }
@@ -76,12 +77,12 @@ class Account extends ActiveRecord
     /**
      * @return mixed Json decoded properties.
      */
-    public function getDecodedData(): mixed
+    public function getDecodedData()
     {
         if ($this->_data === null && $this->data !== null) {
             try {
                 $this->_data = Json::decode($this->data);
-            } catch (InvalidArgumentException $e) {
+            } catch ($e) {
                 // Handle or log error if $this->data is not valid JSON
                 $this->_data = []; // Default to empty array or handle as error
                 Yii::warning(
@@ -96,12 +97,13 @@ class Account extends ActiveRecord
 
     /**
      * Returns connect url.
+     * Uses SHA-256 for secure hashing instead of deprecated MD5.
      * @return string
      */
-    public function getConnectUrl(): string
+    public function getConnectUrl()
     {
         $code = Yii::$app->security->generateRandomString();
-        $this->updateAttributes(['code' => md5($code)]);
+        $this->updateAttributes(['code' => hash('sha256', $code)]);
 
         return Url::to(['/user/registration/connect', 'code' => $code]);
     }
@@ -111,7 +113,7 @@ class Account extends ActiveRecord
      * @param User $user
      * @return bool
      */
-    public function connect(User $user): bool
+    public function connect($user)
     {
         return (bool)$this->updateAttributes([
             'username' => null,
@@ -125,7 +127,7 @@ class Account extends ActiveRecord
      * @return AccountQuery
      * @throws \yii\base\InvalidConfigException
      */
-    public static function find(): AccountQuery
+    public static function find()
     {
         return Yii::createObject(AccountQuery::class, [static::class]);
     }
@@ -136,7 +138,7 @@ class Account extends ActiveRecord
      * @return Account The created Account model.
      * @throws \yii\base\InvalidConfigException
      */
-    public static function create(BaseClientInterface $client): Account
+    public static function create($client)
     {
         $attributes = $client->getUserAttributes();
         /** @var Account $account */
@@ -183,7 +185,7 @@ class Account extends ActiveRecord
      * @param BaseClientInterface $client
      * @throws \yii\base\InvalidConfigException
      */
-    public static function connectWithUser(BaseClientInterface $client): void
+    public static function connectWithUser($client)
     {
         if (Yii::$app->user->isGuest) {
             Yii::$app->session->setFlash('danger', Yii::t('user', 'Something went wrong'));
@@ -218,7 +220,7 @@ class Account extends ActiveRecord
      * @return Account
      * @throws \yii\base\InvalidConfigException
      */
-    protected static function fetchAccount(BaseClientInterface $client): Account
+    protected static function fetchAccount($client)
     {
         $finder = static::getFinder();
         $account = $finder->findAccount()->byClient($client)->one();
@@ -246,7 +248,7 @@ class Account extends ActiveRecord
      * @return User|false
      * @throws \yii\base\InvalidConfigException
      */
-    protected static function fetchUser(Account $account): User|false
+    protected static function fetchUser($account)
     {
         if ($account->email !== null) {
             $user = static::getFinder()->findUserByEmail($account->email);
@@ -293,7 +295,7 @@ class Account extends ActiveRecord
      * @return Finder
      * @throws InvalidConfigException
      */
-    protected static function getFinder(): Finder
+    protected static function getFinder()
     {
         if (static::$finder === null) {
             static::$finder = Yii::$container->get(Finder::class);

@@ -1,5 +1,4 @@
 <?php
-declare(strict_types=1);
 
 /*
  * This file is part of the Dektrium project.
@@ -26,11 +25,14 @@ use yii\base\Model;
  */
 class ResendForm extends Model
 {
-    /** @var string User's email address. */
-    public ?string $email = null;
+    /** @var string|null User's email address. */
+    public $email = null;
 
-    protected Mailer $mailer;
-    protected Finder $finder;
+    /** @var Mailer */
+    protected $mailer;
+
+    /** @var Finder */
+    protected $finder;
 
     /**
      * ResendForm constructor.
@@ -38,7 +40,7 @@ class ResendForm extends Model
      * @param Finder $finder
      * @param array  $config
      */
-    public function __construct(Mailer $mailer, Finder $finder, array $config = [])
+    public function __construct($mailer, $finder, $config = [])
     {
         $this->mailer = $mailer;
         $this->finder = $finder;
@@ -47,8 +49,9 @@ class ResendForm extends Model
 
     /**
      * @inheritdoc
+     * @return array
      */
-    public function rules(): array
+    public function rules()
     {
         return [
             'emailRequired' => ['email', 'required'],
@@ -58,8 +61,9 @@ class ResendForm extends Model
 
     /**
      * @inheritdoc
+     * @return array
      */
-    public function attributeLabels(): array
+    public function attributeLabels()
     {
         return [
             'email' => Yii::t('user', 'Email'),
@@ -68,8 +72,9 @@ class ResendForm extends Model
 
     /**
      * @inheritdoc
+     * @return string
      */
-    public function formName(): string
+    public function formName()
     {
         return 'resend-form';
     }
@@ -79,7 +84,7 @@ class ResendForm extends Model
      *
      * @return bool
      */
-    public function resend(): bool
+    public function resend()
     {
         if (!$this->validate()) {
             return false;

@@ -1,6 +1,5 @@
 <?php
 
-declare(strict_types=1);
 
 namespace AlexeiKaDev\Yii2User\services;
 
@@ -15,11 +14,11 @@ use yii\base\Component;
 class UserConfirmationService extends Component
 {
     /** @var Finder The finder instance. */
-    private Finder $finder;
+    private $finder;
     /** @var Module The user module instance. */
-    private Module $module;
+    private $module;
 
-    public function __construct(Finder $finder, Module $module, array $config = [])
+    public function __construct($finder, $module, $config = [])
     {
         $this->finder = $finder;
         $this->module = $module;
@@ -33,7 +32,7 @@ class UserConfirmationService extends Component
      * @param string $code The confirmation code.
      * @return bool True if confirmation was successful, false otherwise.
      */
-    public function attempt(User $user, string $code): bool
+    public function attempt($user, $code)
     {
         if ($user->getIsConfirmed()) {
             Yii::$app->session->setFlash('info', Yii::t('user', 'Account has already been confirmed'));

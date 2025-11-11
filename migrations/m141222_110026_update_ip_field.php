@@ -1,6 +1,5 @@
 <?php
 
-declare(strict_types=1);
 
 /*
  * This file is part of the Dektrium project.
@@ -19,7 +18,7 @@ use yii\db\Query;
  */
 class m141222_110026_update_ip_field extends Migration
 {
-    public function up(): void
+    public function up()
     {
         $users = (new Query())->from('{{%user}}')->select('id, registration_ip ip')->all($this->db);
 
@@ -37,14 +36,14 @@ class m141222_110026_update_ip_field extends Migration
                 ], 'id = ' . $user['id'])->execute();
             }
             $transaction->commit();
-        } catch (Exception $e) {
+        } catch ($e) {
             $transaction->rollBack();
 
             throw $e;
         }
     }
 
-    public function down(): void
+    public function down()
     {
         $users = (new Query())->from('{{%user}}')->select('id, registration_ip ip')->all($this->db);
 
@@ -67,7 +66,7 @@ class m141222_110026_update_ip_field extends Migration
             }
 
             $transaction->commit();
-        } catch (Exception $e) {
+        } catch ($e) {
             $transaction->rollBack();
 
             throw $e;

@@ -1,6 +1,5 @@
 <?php
 
-declare(strict_types=1);
 
 /*
  * This file is part of the Dektrium project.
@@ -74,7 +73,7 @@ class RecoveryController extends Controller
     public const EVENT_AFTER_RESET = 'afterReset';
 
     /** @var Finder */
-    protected Finder $finder;
+    protected $finder;
 
     /**
      * @param string           $id
@@ -82,14 +81,14 @@ class RecoveryController extends Controller
      * @param Finder           $finder
      * @param array            $config
      */
-    public function __construct(string $id, Module $module, Finder $finder, array $config = [])
+    public function __construct($id, $module, $finder, $config = [])
     {
         $this->finder = $finder;
         parent::__construct($id, $module, $config);
     }
 
     /** @inheritdoc */
-    public function behaviors(): array
+    public function behaviors()
     {
         return [
             'access' => [
@@ -107,7 +106,7 @@ class RecoveryController extends Controller
      * @return string
      * @throws \yii\web\NotFoundHttpException
      */
-    public function actionRequest(): string
+    public function actionRequest()
     {
         if (!$this->module->enablePasswordRecovery) {
             throw new NotFoundHttpException();
@@ -146,7 +145,7 @@ class RecoveryController extends Controller
      * @return string
      * @throws \yii\web\NotFoundHttpException
      */
-    public function actionReset(int $id, string $code): string
+    public function actionReset($id, $code)
     {
         if (!$this->module->enablePasswordRecovery) {
             throw new NotFoundHttpException();
@@ -156,7 +155,7 @@ class RecoveryController extends Controller
         $token = $this->finder->findToken([
             'user_id' => $id,
             'code' => $code,
-            'type' => TokenType::RECOVERY->value
+            'type' => TokenType::RECOVERY
         ])->one();
 
         // Yii::warning is missing from use statements, assuming it's available globally or via Yii class.

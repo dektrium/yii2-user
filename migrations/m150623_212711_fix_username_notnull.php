@@ -1,6 +1,5 @@
 <?php
 
-declare(strict_types=1);
 
 /*
  * This file is part of the Dektrium project.
@@ -18,7 +17,7 @@ use AlexeiKaDev\Yii2User\migrations\Migration;
  */
 class m150623_212711_fix_username_notnull extends Migration
 {
-    public function up(): void
+    public function up()
     {
         if ($this->dbType == 'pgsql') {
             $this->alterColumn('{{%user}}', 'username', 'SET NOT NULL');
@@ -34,7 +33,7 @@ class m150623_212711_fix_username_notnull extends Migration
         }
     }
 
-    public function down(): void
+    public function down()
     {
         if ($this->dbType == "pgsql") {
             $this->alterColumn('{{%user}}', 'username', 'DROP NOT NULL');

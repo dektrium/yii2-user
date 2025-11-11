@@ -19,7 +19,7 @@ class RegistrationPage extends BasePage
      * @param string|null $username
      * @param string|null $password
      */
-    public function register(string $email, ?string $username = null, ?string $password = null): void
+    public function register($email, $username = null, $password = null)
     {
         $this->actor->fillField('#register-form-email', $email);
         $this->actor->fillField('#register-form-username', $username);

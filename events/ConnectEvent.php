@@ -25,17 +25,17 @@ class ConnectEvent extends Event
     /**
      * @var User
      */
-    private User $_user;
+    private $_user;
 
     /**
      * @var Account
      */
-    private Account $_account;
+    private $_account;
 
     /**
      * @return Account
      */
-    public function getAccount(): Account
+    public function getAccount()
     {
         return $this->_account;
     }
@@ -43,7 +43,7 @@ class ConnectEvent extends Event
     /**
      * @param Account $account
      */
-    public function setAccount(Account $account): void
+    public function setAccount($account)
     {
         $this->_account = $account;
     }
@@ -51,7 +51,7 @@ class ConnectEvent extends Event
     /**
      * @return User
      */
-    public function getUser(): User
+    public function getUser()
     {
         return $this->_user;
     }
@@ -59,7 +59,7 @@ class ConnectEvent extends Event
     /**
      * @param User $user
      */
-    public function setUser(User $user): void
+    public function setUser($user)
     {
         $this->_user = $user;
     }

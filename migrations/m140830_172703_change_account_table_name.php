@@ -1,6 +1,5 @@
 <?php
 
-declare(strict_types=1);
 
 /*
  * This file is part of the Dektrium project.
@@ -18,12 +17,12 @@ use AlexeiKaDev\Yii2User\migrations\Migration;
  */
 class m140830_172703_change_account_table_name extends Migration
 {
-    public function up(): void
+    public function up()
     {
         $this->renameTable('{{%account}}', '{{%social_account}}');
     }
 
-    public function down(): void
+    public function down()
     {
         $this->renameTable('{{%social_account}}', '{{%account}}');
     }

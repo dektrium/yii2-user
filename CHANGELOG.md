@@ -39,6 +39,36 @@ All notable changes to this project will be documented in this file.
 - **ADDED**: Modern 2FA modules (simialbi/yii2-mfa updated April 2025)
 - **ADDED**: Suggested packages for 2FA (hiqdev/yii2-mfa, vxm/yii2-mfa, simialbi/yii2-mfa) and security (google/recaptcha)
 
+#### Advanced Security Features (2025)
+- **ADDED**: Activity Log system (`ActivityLog` model) for GDPR Article 30 compliance
+  - Tracks all user actions (login, logout, password changes, profile updates, etc.)
+  - Supports automatic cleanup based on retention policy (default: 12 months)
+  - Includes failed login attempt tracking for security monitoring
+- **ADDED**: HaveIBeenPwned integration (`HaveIBeenPwned` helper) - NIST-recommended
+  - Privacy-preserving k-anonymity API (only sends first 5 chars of hash)
+  - Checks passwords against 15+ billion breached passwords
+  - Validator for automatic password breach detection during registration/password change
+  - 81% of security breaches involve stolen credentials
+- **ADDED**: Multi-device Session Management (`UserSession` model)
+  - Track active sessions across all devices
+  - View all active sessions with device information
+  - Remote session termination capability
+  - Automatic cleanup of expired sessions
+  - Session activity tracking
+- **ADDED**: Security Notification system (`SecurityNotification` helper)
+  - New device login alerts (73% faster breach detection)
+  - Password change confirmations
+  - Email address change notifications
+  - 2FA status change alerts
+  - Failed login attempt warnings
+  - Account lockout notifications
+- **ADDED**: 2FA Backup Codes (`BackupCode` model)
+  - Single-use recovery codes for 2FA
+  - Secure hashed storage (bcrypt)
+  - Generate 10 codes by default
+  - Low-code warning system (< 3 remaining)
+  - Code regeneration support
+
 ### 🔧 Technical Changes (100 files affected)
 
 - Removed 67 instances of `declare(strict_types=1)`
@@ -50,15 +80,23 @@ All notable changes to this project will be documented in this file.
 - Replaced 2 match expressions
 
 ### 📊 Statistics
-- **Files changed**: 106
-- **New files created**: 6
+- **Files changed**: 115+
+- **New files created**: 14
   - `interfaces/TwoFactorInterface.php`
   - `interfaces/RateLimitableInterface.php`
   - `filters/RateLimitFilter.php`
+  - `models/ActivityLog.php`
+  - `models/UserSession.php`
+  - `models/BackupCode.php`
+  - `helpers/HaveIBeenPwned.php`
+  - `helpers/SecurityNotification.php`
   - `migrations/m251111_120000_add_two_factor_columns.php`
   - `migrations/m251111_120100_add_rate_limiting_columns.php`
+  - `migrations/m251111_130000_create_activity_log_table.php`
+  - `migrations/m251111_130100_create_user_session_table.php`
+  - `migrations/m251111_130200_create_backup_code_table.php`
 - **Files modified**: 100+
-- **Lines added**: +800+
+- **Lines added**: +2000+
 - **Lines removed**: -402
 
 ### 📝 Breaking Changes

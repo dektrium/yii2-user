@@ -1,0 +1,31 @@
+parameters:
+    level: 5
+    paths:
+        - Bootstrap.php
+        - Finder.php
+        - Mailer.php
+        - Module.php
+        - clients
+        - commands
+        - controllers
+        - events
+        - filters
+        - helpers
+        - interfaces
+        - models
+        - services
+        - traits
+        - widgets
+
+    excludePaths:
+        - tests
+        - vendor
+
+    ignoreErrors:
+        # Ignore Yii2 magic properties
+        - '#Access to an undefined property yii\\base\\Module::\$[a-zA-Z]+#'
+        - '#Call to an undefined method yii\\base\\Module::[a-zA-Z]+\(\)#'
+        - '#Access to an undefined property yii\\db\\ActiveRecord::\$[a-zA-Z]+#'
+
+    checkMissingIterableValueType: false
+    checkGenericClassInNonGenericObjectType: false

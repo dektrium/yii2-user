@@ -1,0 +1,43 @@
+# Git
+.git
+.gitignore
+.gitattributes
+
+# GitHub
+.github
+
+# IDE
+.idea
+.vscode
+*.swp
+*.swo
+*~
+
+# Composer
+vendor/
+composer.lock
+
+# Tests
+tests/_output/
+tests/_support/_generated/
+
+# Build files
+.php-cs-fixer.cache
+.phpunit.result.cache
+
+# Documentation
+docs/
+*.md
+!README.md
+
+# CI/CD
+.travis.yml
+codeception.yml
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Temporary files
+*.log
+*.tmp

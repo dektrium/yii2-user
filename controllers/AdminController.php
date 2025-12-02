@@ -332,20 +332,17 @@ class AdminController extends Controller
      */
     public function actionSwitch($id = null)
     {
-        if (!$this->module->enableImpersonateUser) {
-            throw new ForbiddenHttpException(Yii::t('user', 'Impersonate user is disabled in the application configuration'));
-        }
-
-        if(!$id && Yii::$app->session->has(self::ORIGINAL_USER_SESSION_KEY)) {
+        if (!$id && Yii::$app->session->has(self::ORIGINAL_USER_SESSION_KEY)) { // Logout of impersonation
             $user = $this->findModel(Yii::$app->session->get(self::ORIGINAL_USER_SESSION_KEY));
 
             Yii::$app->session->remove(self::ORIGINAL_USER_SESSION_KEY);
         } else {
-            if (!Yii::$app->user->identity->isAdmin) {
+            $user = $this->findModel($id);
+
+            if (!self::impersonationIsAllowed(Yii::$app->user, $user)) {
                 throw new ForbiddenHttpException;
             }
 
-            $user = $this->findModel($id);
             Yii::$app->session->set(self::ORIGINAL_USER_SESSION_KEY, Yii::$app->user->id);
         }
 
@@ -358,6 +355,43 @@ class AdminController extends Controller
         $this->trigger(self::EVENT_AFTER_IMPERSONATE, $event);
 
         return $this->goHome();
+    }
+
+    /**
+     * The impersonation is only allowed for all roles in $allowImpersonationForRoles and
+     * is always denied if the target user has one of the roles listed in $denyImpersonationIntoRoles.
+     *
+     * It is also denied if we are already impersonated into someone else.
+     *
+     * @param $user the user that wants to impersonate (usually Yii::$app->user)
+     * @param $target_user the target user that we want to impersonate into
+     * @return bool
+     */
+    public static function impersonationIsAllowed($user, $target_user)
+    {
+        $module = Yii::$app->getModule('user');
+
+        if (!$module->enableImpersonateUser
+            || Yii::$app->session->has(self::ORIGINAL_USER_SESSION_KEY)
+            || $user->id == $target_user->id) {
+            return false;
+        }
+
+        $auth = Yii::$app->authManager;
+
+        foreach (Yii::$app->getModule('user')->denyImpersonateIntoRoles as $denied_role) {
+            if ($auth->checkAccess($target_user->id, $denied_role)) {
+                return false;
+            }
+        }
+
+        foreach (Yii::$app->getModule('user')->allowImpersonateForRoles as $allowed_role) {
+            if ($user->can($allowed_role)) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     /**
